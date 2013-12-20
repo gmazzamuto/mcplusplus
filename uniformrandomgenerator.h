@@ -10,7 +10,7 @@
 class UniformRandomGenerator
 {
 public:
-    UniformRandomGenerator();
+    UniformRandomGenerator(int seed);
     double generate();
 
 private:
