@@ -13,4 +13,8 @@ TARGET = MCPlusPlus
 TEMPLATE = app
 
 
-SOURCES += main.cpp
+SOURCES += main.cpp \
+    uniformrandomgenerator.cpp
+
+HEADERS += \
+    uniformrandomgenerator.h
