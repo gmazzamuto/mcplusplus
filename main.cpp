@@ -3,12 +3,11 @@
 
 int main(int argc, char *argv[])
 {
-    UniformRandomGenerator *cosThetaGenerator = new UniformRandomGenerator(0);
+    UniformRandomGenerator *uGenerator = new UniformRandomGenerator(0);
 
     for (int i = 0; i < 100; ++i) {
-        printf("%f\n", cosThetaGenerator->generate());
+        printf("%f\n", uGenerator->spin());
     }
-
 
     return 0;
 }

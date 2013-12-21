@@ -10,8 +10,8 @@
 class UniformRandomGenerator
 {
 public:
-    UniformRandomGenerator(int seed);
-    double generate();
+    UniformRandomGenerator(int seed, double min = 0, double max = 1);
+    double spin();
 
 private:
     boost::random::variate_generator<boost::random::mt19937, boost::random::uniform_real_distribution<double> > *generator;
