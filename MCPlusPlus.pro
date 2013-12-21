@@ -14,7 +14,9 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp \
-    uniformrandomgenerator.cpp
+    uniformrandomgenerator.cpp \
+    costhetagenerator.cpp
 
 HEADERS += \
-    uniformrandomgenerator.h
+    uniformrandomgenerator.h \
+    costhetagenerator.h
