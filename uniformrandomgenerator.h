@@ -7,6 +7,8 @@
 #include <boost/random/discrete_distribution.hpp>
 #include <boost/random/uniform_real_distribution.hpp>
 
+using namespace boost::random;
+
 class UniformRandomGenerator
 {
 public:
@@ -14,7 +16,7 @@ public:
     double spin();
 
 private:
-    boost::random::variate_generator<boost::random::mt19937, boost::random::uniform_real_distribution<double> > *generator;
+    variate_generator<mt19937, uniform_real_distribution<double> > *generator;
 };
 
 

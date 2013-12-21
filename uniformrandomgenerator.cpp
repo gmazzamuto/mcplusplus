@@ -2,10 +2,10 @@
 
 UniformRandomGenerator::UniformRandomGenerator(int seed, double min, double max)
 {
-    boost::random::mt19937 mersenneTwister = boost::random::mt19937(seed);
-    boost::random::uniform_real_distribution<double> uniformRealDistribution =
-            boost::random::uniform_real_distribution<double>(min,max);
-    generator = new boost::random::variate_generator<boost::random::mt19937, boost::random::uniform_real_distribution<double> >(mersenneTwister,uniformRealDistribution);
+    mt19937 mersenneTwister = mt19937(seed);
+    uniform_real_distribution<double> uniformRealDistribution =
+            uniform_real_distribution<double>(min,max);
+    generator = new variate_generator<mt19937, uniform_real_distribution<double> >(mersenneTwister,uniformRealDistribution);
 }
 
 double UniformRandomGenerator::spin() {
