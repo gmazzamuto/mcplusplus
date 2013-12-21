@@ -1,12 +1,12 @@
 #ifndef UNIFORMRANDOMGENERATOR_H
 #define UNIFORMRANDOMGENERATOR_H
 
-#include <boost/random/variate_generator.hpp>
-#include <boost/random/mersenne_twister.hpp>
-#include <boost/random/normal_distribution.hpp>
-#include <boost/random/uniform_real_distribution.hpp>
+#include <boost/random.hpp>
 
+using namespace boost;
 using namespace boost::random;
+
+typedef variate_generator<mt19937, uniform_real_distribution<double> > uniformGenerator;
 
 class UniformRandomGenerator
 {
@@ -15,7 +15,20 @@ public:
     double spin();
 
 private:
-    variate_generator<mt19937, uniform_real_distribution<double> > *generator;
+    uniformGenerator *generator;
+};
+
+typedef variate_generator<mt19937, exponential_distribution<double> > exponentialGenerator;
+
+
+class ExponentialRandomGenerator
+{
+public:
+    ExponentialRandomGenerator(int seed, double lambda);
+    double spin();
+
+private:
+    exponentialGenerator *generator;
 };
 
 
