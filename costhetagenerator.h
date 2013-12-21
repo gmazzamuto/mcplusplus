@@ -6,11 +6,17 @@ class AbstractCosThetaGenerator
 {
 public:
     AbstractCosThetaGenerator(int seed, double min = 0, double max = 1);
+    virtual ~AbstractCosThetaGenerator();
+
     virtual double spin() = 0;
+
 
 protected:
     UniformRandomGenerator *uRandom;
 };
+
+
+
 
 class IsotropicCosThetaGenerator : public AbstractCosThetaGenerator
 {
@@ -18,6 +24,9 @@ public:
     IsotropicCosThetaGenerator(int seed);
     double spin();
 };
+
+
+
 
 class AnisotropicCosThetaGenerator : public AbstractCosThetaGenerator
 {

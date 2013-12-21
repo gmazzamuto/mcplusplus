@@ -5,6 +5,11 @@ AbstractCosThetaGenerator::AbstractCosThetaGenerator(int seed, double min, doubl
     uRandom = new UniformRandomGenerator(seed,min,max);
 }
 
+AbstractCosThetaGenerator::~AbstractCosThetaGenerator()
+{
+    delete uRandom;
+}
+
 IsotropicCosThetaGenerator::IsotropicCosThetaGenerator(int seed) :
     AbstractCosThetaGenerator(seed,-1,1)
 {
