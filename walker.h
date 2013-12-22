@@ -5,8 +5,6 @@ class Walker
 {
 public:
     Walker();
-
-private:
     double r0[3];
     double r1[3];
     double k0[3];

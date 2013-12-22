@@ -13,7 +13,7 @@ public:
     AbstractDistribution();
     virtual ~AbstractDistribution();
 
-    inline virtual double spin() = 0;
+    virtual double spin() = 0;
 };
 
 

@@ -2,12 +2,18 @@
 #define SOURCE_H
 
 #include "walker.h"
+#include "distributions.h"
 
-class AbsractSource
+class Source
 {
 public:
-    AbsractSource();
-    virtual Walker *constructWalker() = 0;
+    Source();
+    virtual Walker *constructWalker();
+
+private:
+    AbstractDistribution *r0Distribution[3];
+    AbstractDistribution *k0Distribution[3];
+    AbstractDistribution *walkTimeDistribution;
 };
 
 #endif // SOURCE_H
