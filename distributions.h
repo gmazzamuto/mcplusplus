@@ -2,10 +2,14 @@
 #define DISTRIBUTIONS_H
 
 #include <boost/random.hpp>
+#include <math.h>
+//#include <boost/math/distributions.hpp>
 
 using namespace boost;
 using namespace boost::random;
+using namespace boost::math;
 
+// Abstract distribution
 
 class AbstractDistribution
 {
@@ -17,6 +21,7 @@ public:
 };
 
 
+// Dirac Delta distribution
 
 class DeltaDistribution : public AbstractDistribution
 {
@@ -29,8 +34,9 @@ private:
 };
 
 
+// Normal (Gaussian) distribution
 
-typedef variate_generator<mt19937, normal_distribution<double>  > normalGenerator;
+typedef variate_generator<mt19937, normal_distribution<double> > normalGenerator;
 
 class NormalDistribution : public AbstractDistribution
 {
@@ -45,7 +51,7 @@ private:
 };
 
 
-
+// Uniform disribution
 
 typedef variate_generator<mt19937, uniform_real_distribution<double> > uniformGenerator;
 
@@ -62,10 +68,9 @@ private:
 };
 
 
-
+// Exponential distribution
 
 typedef variate_generator<mt19937, exponential_distribution<double> > exponentialGenerator;
-
 
 class ExponentialDistribution : public AbstractDistribution
 {
@@ -77,6 +82,22 @@ public:
 
 private:
     exponentialGenerator *generator;
+};
+
+// Sech2 (Logistic) distribution - see <a href="http://en.wikipedia.org/wiki/Logistic_distribution">Wikpiedia</a> for further reference on quantile function
+
+class Sech2Distribution : public AbstractDistribution
+{
+public:
+    Sech2Distribution(int seed, double mean, double scale);
+    ~Sech2Distribution();
+
+    double spin();
+
+private:
+    UniformDistribution *uRandom;
+    double mean;
+    double scale;
 };
 
 

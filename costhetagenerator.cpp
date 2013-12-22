@@ -10,6 +10,8 @@ AbstractCosThetaGenerator::~AbstractCosThetaGenerator()
     delete uRandom;
 }
 
+
+
 IsotropicCosThetaGenerator::IsotropicCosThetaGenerator(int seed) :
     AbstractCosThetaGenerator(seed,-1,1)
 {
@@ -19,6 +21,8 @@ IsotropicCosThetaGenerator::IsotropicCosThetaGenerator(int seed) :
 double IsotropicCosThetaGenerator::spin() {
     return uRandom->spin();
 }
+
+
 
 AnisotropicCosThetaGenerator::AnisotropicCosThetaGenerator(int seed, double g) :
     AbstractCosThetaGenerator(seed,0,1)
