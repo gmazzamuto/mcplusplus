@@ -1,6 +1,6 @@
 #ifndef COSTHETAGENERATOR_H
 #define COSTHETAGENERATOR_H
-#include "uniformrandomgenerator.h"
+#include "distributions.h"
 
 class AbstractCosThetaGenerator
 {
@@ -12,7 +12,7 @@ public:
 
 
 protected:
-    UniformRandomGenerator *uRandom;
+    UniformRandomDistribution *uRandom;
 };
 
 

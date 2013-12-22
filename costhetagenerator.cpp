@@ -2,7 +2,7 @@
 
 AbstractCosThetaGenerator::AbstractCosThetaGenerator(int seed, double min, double max)
 {
-    uRandom = new UniformRandomGenerator(seed,min,max);
+    uRandom = new UniformRandomDistribution(seed,min,max);
 }
 
 AbstractCosThetaGenerator::~AbstractCosThetaGenerator()

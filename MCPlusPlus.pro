@@ -14,13 +14,13 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp \
-    uniformrandomgenerator.cpp \
     costhetagenerator.cpp \
     walker.cpp \
-    source.cpp
+    source.cpp \
+    distributions.cpp
 
 HEADERS += \
-    uniformrandomgenerator.h \
     costhetagenerator.h \
     walker.h \
-    source.h
+    source.h \
+    distributions.h
