@@ -19,3 +19,19 @@ Walker* Source::constructWalker() {
 
     return walker;
 }
+
+void Source::setr0Distribution(AbstractDistribution **distrArray) {
+    for (int i = 0; i < 3; ++i) {
+        r0Distribution[i] = distrArray[i];
+    }
+}
+
+void Source::setk0Distribution(AbstractDistribution **distrArray) {
+    for (int i = 0; i < 3; ++i) {
+        k0Distribution[i] = distrArray[i];
+    }
+}
+
+void Source::setWalkTimeDistribution(AbstractDistribution *distr) {
+    walkTimeDistribution = distr;
+}
