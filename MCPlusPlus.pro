@@ -15,8 +15,12 @@ TEMPLATE = app
 
 SOURCES += main.cpp \
     uniformrandomgenerator.cpp \
-    costhetagenerator.cpp
+    costhetagenerator.cpp \
+    walker.cpp \
+    source.cpp
 
 HEADERS += \
     uniformrandomgenerator.h \
-    costhetagenerator.h
+    costhetagenerator.h \
+    walker.h \
+    source.h
