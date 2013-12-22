@@ -12,7 +12,7 @@ public:
 
 
 protected:
-    UniformRandomDistribution *uRandom;
+    UniformDistribution *uRandom;
 };
 
 

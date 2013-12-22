@@ -11,18 +11,32 @@ AbstractDistribution::~AbstractDistribution() {
 
 
 
+
+
 DeltaDistribution::DeltaDistribution(double center) :
     AbstractDistribution()
 {
     x0 = center;
 }
 
-double DeltaDistribution::spin() {
-    return x0;
+
+
+
+NormalDistribution::NormalDistribution(int seed, double mean, double sigma) :
+    AbstractDistribution()
+{
+    mt19937 mersenneTwister(seed);
+    normal_distribution<double> normalDistribution(mean,sigma);
+    generator = new normalGenerator(mersenneTwister,normalDistribution);
+}
+
+NormalDistribution::~NormalDistribution() {
+    delete generator;
 }
 
 
-UniformRandomDistribution::UniformRandomDistribution(int seed, double min, double max) :
+
+UniformDistribution::UniformDistribution(int seed, double min, double max) :
     AbstractDistribution()
 {
     mt19937 mersenneTwister(seed);
@@ -30,18 +44,14 @@ UniformRandomDistribution::UniformRandomDistribution(int seed, double min, doubl
     generator = new uniformGenerator(mersenneTwister,uniformRealDistribution);
 }
 
-UniformRandomDistribution::~UniformRandomDistribution() {
+UniformDistribution::~UniformDistribution() {
     delete generator;
 }
 
-double UniformRandomDistribution::spin() {
-    return (*generator)();
-}
 
 
 
-
-ExponentialRandomDistribution::ExponentialRandomDistribution(int seed, double lambda) :
+ExponentialDistribution::ExponentialDistribution(int seed, double lambda) :
     AbstractDistribution()
 {
    mt19937 mersenneTwister(seed);
@@ -49,10 +59,6 @@ ExponentialRandomDistribution::ExponentialRandomDistribution(int seed, double la
    generator = new exponentialGenerator(mersenneTwister,exponentialRealDistribution);
 }
 
-ExponentialRandomDistribution::~ExponentialRandomDistribution() {
+ExponentialDistribution::~ExponentialDistribution() {
     delete generator;
-}
-
-double ExponentialRandomDistribution::spin() {
-    return (*generator)();
 }
