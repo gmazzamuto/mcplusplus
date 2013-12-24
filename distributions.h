@@ -53,7 +53,7 @@ private:
 
 // Normal (Gaussian) distribution
 
-typedef variate_generator<mt19937, normal_distribution<double> > normalGenerator;
+typedef variate_generator<mt19937&, normal_distribution<double> > normalGenerator;
 
 /**
  * @brief Normal (Gaussian) distribution \f$ f(x) = (2\pi \sigma)^{-\frac{1}{2}} \exp \left( -\frac{(x-\mu)^2}{2 \sigma^2} \right) \f$
@@ -82,7 +82,7 @@ private:
 
 // Uniform disribution
 
-typedef variate_generator<mt19937, uniform_real_distribution<double> > uniformGenerator;
+typedef variate_generator<mt19937&, uniform_real_distribution<double> > uniformGenerator;
 
 /**
  * @brief Uniform real distribution
@@ -105,7 +105,7 @@ private:
 
 // Exponential distribution
 
-typedef variate_generator<mt19937, exponential_distribution<double> > exponentialGenerator;
+typedef variate_generator<mt19937&, exponential_distribution<double> > exponentialGenerator;
 
 /**
  * @brief Exponential distribution \f$ f(x) = \lambda \exp ( -\lambda x) \f$
