@@ -5,7 +5,7 @@
 class AbstractCosThetaGenerator
 {
 public:
-    AbstractCosThetaGenerator(int seed, double min = 0, double max = 1);
+    AbstractCosThetaGenerator(mt19937 *mt = NULL, double min = 0, double max = 1);
     virtual ~AbstractCosThetaGenerator();
 
     virtual double spin() = 0;
@@ -21,7 +21,7 @@ protected:
 class IsotropicCosThetaGenerator : public AbstractCosThetaGenerator
 {
 public:
-    IsotropicCosThetaGenerator(int seed);
+    IsotropicCosThetaGenerator(mt19937 *mt);
     double spin();
 };
 
@@ -31,7 +31,7 @@ public:
 class AnisotropicCosThetaGenerator : public AbstractCosThetaGenerator
 {
 public:
-    AnisotropicCosThetaGenerator(int seed, double g);
+    AnisotropicCosThetaGenerator(mt19937 *mt, double g);
     double spin();
 
 private:

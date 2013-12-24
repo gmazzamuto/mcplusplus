@@ -3,7 +3,6 @@
 
 #include <boost/random.hpp>
 #include <math.h>
-//#include <boost/math/distributions.hpp>
 
 using namespace boost;
 using namespace boost::random;
@@ -13,10 +12,13 @@ using namespace boost::random;
 class AbstractDistribution
 {
 public:
-    AbstractDistribution();
+    AbstractDistribution(mt19937* mt = NULL);
     virtual ~AbstractDistribution();
 
     virtual double spin() = 0;
+
+private:
+    mt19937* mt;
 };
 
 
@@ -40,7 +42,7 @@ typedef variate_generator<mt19937, normal_distribution<double> > normalGenerator
 class NormalDistribution : public AbstractDistribution
 {
 public:
-    NormalDistribution(int seed, double mean, double sigma);
+    NormalDistribution(mt19937* mt, double mean, double sigma);
     ~NormalDistribution();
 
     inline double spin() {return (*generator)();}
@@ -57,7 +59,7 @@ typedef variate_generator<mt19937, uniform_real_distribution<double> > uniformGe
 class UniformDistribution : public AbstractDistribution
 {
 public:
-    UniformDistribution(int seed, double min = 0, double max = 1);
+    UniformDistribution(mt19937* mt, double min = 0, double max = 1);
     ~UniformDistribution();
 
     inline double spin() {return (*generator)();}
@@ -74,7 +76,7 @@ typedef variate_generator<mt19937, exponential_distribution<double> > exponentia
 class ExponentialDistribution : public AbstractDistribution
 {
 public:
-    ExponentialDistribution(int seed, double lambda);
+    ExponentialDistribution(mt19937* mt, double lambda);
     ~ExponentialDistribution();
 
     inline double spin() {return (*generator)();}
@@ -88,7 +90,7 @@ private:
 class Sech2Distribution : public AbstractDistribution
 {
 public:
-    Sech2Distribution(int seed, double mean, double scale);
+    Sech2Distribution(mt19937* mt, double mean, double scale);
     ~Sech2Distribution();
 
     double spin();
