@@ -1,11 +1,6 @@
 #include "distributions.h"
 
 
-
-/**
- * @brief Base distribution class. Provides a common interface to handle various distributions.
- */
-
 AbstractDistribution::AbstractDistribution(mt19937 *mt) {
     this->mt = mt;
 }
@@ -14,10 +9,6 @@ AbstractDistribution::~AbstractDistribution() {}
 
 
 
-/**
- * @brief Dirac Delta distribution \f$ f(x) = \delta (x) \f$
- * @param center
- */
 
 DeltaDistribution::DeltaDistribution(double center) :
     AbstractDistribution()
@@ -27,12 +18,6 @@ DeltaDistribution::DeltaDistribution(double center) :
 
 
 
-/**
- * @brief Normal (Gaussian) distribution \f$ f(x) = (2\pi \sigma)^{-\frac{1}{2}} \exp \left( -\frac{(x-\mu)^2}{2 \sigma^2} \right) \f$
- * @param seed
- * @param mean
- * @param sigma
- */
 
 NormalDistribution::NormalDistribution(mt19937 *mt, double mean, double sigma) :
     AbstractDistribution(mt)
@@ -47,12 +32,6 @@ NormalDistribution::~NormalDistribution() {
 
 
 
-/**
- * @brief Uniform real distribution
- * @param seed
- * @param min
- * @param max
- */
 
 UniformDistribution::UniformDistribution(mt19937 *mt, double min, double max) :
     AbstractDistribution(mt)
@@ -67,11 +46,6 @@ UniformDistribution::~UniformDistribution() {
 
 
 
-/**
- * @brief Exponential distribution \f$ f(x) = \lambda \exp ( -\lambda x) \f$
- * @param seed
- * @param lambda
- */
 
 ExponentialDistribution::ExponentialDistribution(mt19937 *mt, double lambda) :
     AbstractDistribution(mt)
@@ -86,12 +60,6 @@ ExponentialDistribution::~ExponentialDistribution() {
 
 
 
-/**
- * @brief Hyperbolic secant square distribution \f$ f(x) = (4s)^{-1} \, \textup{sech}^2 \left( \frac{x - \mu}{2s} \right) \f$
- * @param seed
- * @param mean
- * @param scale
- */
 
 Sech2Distribution::Sech2Distribution(mt19937 *mt, double mean, double scale) :
     AbstractDistribution()

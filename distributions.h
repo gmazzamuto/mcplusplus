@@ -9,6 +9,10 @@ using namespace boost::random;
 
 // Abstract distribution
 
+/**
+ * @brief Base distribution class. Provides a common interface to handle various distributions.
+ */
+
 class AbstractDistribution
 {
 public:
@@ -22,7 +26,13 @@ private:
 };
 
 
+
+
 // Dirac Delta distribution
+
+/**
+ * @brief Dirac Delta distribution \f$ f(x) = \delta (x) \f$
+ */
 
 class DeltaDistribution : public AbstractDistribution
 {
@@ -35,9 +45,15 @@ private:
 };
 
 
+
+
 // Normal (Gaussian) distribution
 
 typedef variate_generator<mt19937, normal_distribution<double> > normalGenerator;
+
+/**
+ * @brief Normal (Gaussian) distribution \f$ f(x) = (2\pi \sigma)^{-\frac{1}{2}} \exp \left( -\frac{(x-\mu)^2}{2 \sigma^2} \right) \f$
+ */
 
 class NormalDistribution : public AbstractDistribution
 {
@@ -52,9 +68,15 @@ private:
 };
 
 
+
+
 // Uniform disribution
 
 typedef variate_generator<mt19937, uniform_real_distribution<double> > uniformGenerator;
+
+/**
+ * @brief Uniform real distribution
+ */
 
 class UniformDistribution : public AbstractDistribution
 {
@@ -69,9 +91,15 @@ private:
 };
 
 
+
+
 // Exponential distribution
 
 typedef variate_generator<mt19937, exponential_distribution<double> > exponentialGenerator;
+
+/**
+ * @brief Exponential distribution \f$ f(x) = \lambda \exp ( -\lambda x) \f$
+ */
 
 class ExponentialDistribution : public AbstractDistribution
 {
@@ -85,7 +113,16 @@ private:
     exponentialGenerator *generator;
 };
 
-// Sech2 (Logistic) distribution - see <a href="http://en.wikipedia.org/wiki/Logistic_distribution">Wikpiedia</a> for further reference on quantile function
+
+
+
+// Sech2 (Logistic) distribution
+
+/**
+ * @brief Hyperbolic secant square distribution \f$ f(x) = (4s)^{-1} \, \textup{sech}^2 \left( \frac{x - \mu}{2s} \right) \f$
+ *
+ * See <a href="http://en.wikipedia.org/wiki/Logistic_distribution">Wikpiedia</a> for further reference on quantile function.
+ */
 
 class Sech2Distribution : public AbstractDistribution
 {
