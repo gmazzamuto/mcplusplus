@@ -144,8 +144,7 @@ public:
 
 private:
     UniformDistribution *uRandom;
-    double mean;
-    double scale;
+    double mean, scale;
 };
 
 

@@ -63,6 +63,8 @@ void NormalDistribution::setFWHM(double value) {
 }
 
 
+
+
 UniformDistribution::UniformDistribution(mt19937 *mt, double min, double max) :
     AbstractDistribution(mt)
 {
