@@ -26,6 +26,7 @@ DeltaDistribution::DeltaDistribution(double center) :
 NormalDistribution::NormalDistribution(mt19937 *mt, double mean, double sigma) :
     AbstractDistribution(mt)
 {
+    generator = NULL;
     this->mean = mean;
     this->sigma = sigma;
     reconstructGenerator();
