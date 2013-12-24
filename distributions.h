@@ -25,7 +25,7 @@ public:
      */
     virtual double spin() = 0;
 
-private:
+protected:
     mt19937* mt;
 };
 
@@ -66,9 +66,15 @@ public:
     ~NormalDistribution();
 
     inline double spin() {return (*generator)();}
+    void setMean(double value);
+    void setSigma(double value);
+    void setFWHM(double value);
 
 private:
+    void reconstructGenerator();
+
     normalGenerator *generator;
+    double mean, sigma;
 };
 
 
