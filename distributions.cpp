@@ -6,7 +6,9 @@
  * @brief AbstractDistribution::AbstractDistribution Base distribution class. Provides a common interface to handle various distributions.
  */
 
-AbstractDistribution::AbstractDistribution() {}
+AbstractDistribution::AbstractDistribution(mt19937 *mt) {
+    this->mt = mt;
+}
 
 AbstractDistribution::~AbstractDistribution() {}
 
@@ -32,12 +34,11 @@ DeltaDistribution::DeltaDistribution(double center) :
  * @param sigma
  */
 
-NormalDistribution::NormalDistribution(int seed, double mean, double sigma) :
-    AbstractDistribution()
+NormalDistribution::NormalDistribution(mt19937 *mt, double mean, double sigma) :
+    AbstractDistribution(mt)
 {
-    mt19937 mersenneTwister(seed);
     normal_distribution<double> normalDistribution(mean,sigma);
-    generator = new normalGenerator(mersenneTwister,normalDistribution);
+    generator = new normalGenerator(*mt,normalDistribution);
 }
 
 NormalDistribution::~NormalDistribution() {
@@ -53,12 +54,11 @@ NormalDistribution::~NormalDistribution() {
  * @param max
  */
 
-UniformDistribution::UniformDistribution(int seed, double min, double max) :
-    AbstractDistribution()
+UniformDistribution::UniformDistribution(mt19937 *mt, double min, double max) :
+    AbstractDistribution(mt)
 {
-    mt19937 mersenneTwister(seed);
     uniform_real_distribution<double> uniformRealDistribution(min,max);
-    generator = new uniformGenerator(mersenneTwister,uniformRealDistribution);
+    generator = new uniformGenerator(*mt,uniformRealDistribution);
 }
 
 UniformDistribution::~UniformDistribution() {
@@ -73,12 +73,11 @@ UniformDistribution::~UniformDistribution() {
  * @param lambda
  */
 
-ExponentialDistribution::ExponentialDistribution(int seed, double lambda) :
-    AbstractDistribution()
+ExponentialDistribution::ExponentialDistribution(mt19937 *mt, double lambda) :
+    AbstractDistribution(mt)
 {
-   mt19937 mersenneTwister(seed);
    exponential_distribution<double> exponentialRealDistribution(lambda);
-   generator = new exponentialGenerator(mersenneTwister,exponentialRealDistribution);
+   generator = new exponentialGenerator(*mt,exponentialRealDistribution);
 }
 
 ExponentialDistribution::~ExponentialDistribution() {
@@ -94,12 +93,12 @@ ExponentialDistribution::~ExponentialDistribution() {
  * @param scale
  */
 
-Sech2Distribution::Sech2Distribution(int seed, double mean, double scale) :
+Sech2Distribution::Sech2Distribution(mt19937 *mt, double mean, double scale) :
     AbstractDistribution()
 {
     this->mean = mean;
     this->scale = scale;
-    uRandom = new UniformDistribution(seed,0,1);
+    uRandom = new UniformDistribution(mt,0,1);
 }
 
 Sech2Distribution::~Sech2Distribution() {
