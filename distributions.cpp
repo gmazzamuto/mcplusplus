@@ -87,7 +87,7 @@ ExponentialDistribution::~ExponentialDistribution() {
 
 
 /**
- * @brief Hyperbolic secant square distribution \f$ f(x) = (4s)^{-1} \sech^2 \left( \frac{x - \mu}{2s} \right) \f$
+ * @brief Hyperbolic secant square distribution \f$ f(x) = (4s)^{-1} \, \textup{sech}^2 \left( \frac{x - \mu}{2s} \right) \f$
  * @param seed
  * @param mean
  * @param scale
