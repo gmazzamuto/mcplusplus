@@ -7,7 +7,6 @@
 
 using namespace boost;
 using namespace boost::random;
-using namespace boost::math;
 
 // Abstract distribution
 
