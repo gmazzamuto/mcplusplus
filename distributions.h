@@ -19,6 +19,10 @@ public:
     AbstractDistribution(mt19937* mt = NULL);
     virtual ~AbstractDistribution();
 
+    /**
+     * @brief Generate a new random number.
+     * @return The newly generated random number.
+     */
     virtual double spin() = 0;
 
 private:
