@@ -3,7 +3,7 @@
 
 
 /**
- * @brief AbstractDistribution::AbstractDistribution Base distribution class. Provides a common interface to handle various distributions.
+ * @brief Base distribution class. Provides a common interface to handle various distributions.
  */
 
 AbstractDistribution::AbstractDistribution() {}
@@ -13,7 +13,7 @@ AbstractDistribution::~AbstractDistribution() {}
 
 
 /**
- * @brief DeltaDistribution::DeltaDistribution Dirac Delta distribution \f$ f(x) = \delta (x) \f$
+ * @brief Dirac Delta distribution \f$ f(x) = \delta (x) \f$
  * @param center
  */
 
@@ -26,7 +26,7 @@ DeltaDistribution::DeltaDistribution(double center) :
 
 
 /**
- * @brief NormalDistribution::NormalDistribution Normal (Gaussian) distribution \f$ f(x) = (2\pi \sigma)^{-\frac{1}{2}} \exp \left( -\frac{(x-\mu)^2}{2 \sigma^2} \right) \f$
+ * @brief Normal (Gaussian) distribution \f$ f(x) = (2\pi \sigma)^{-\frac{1}{2}} \exp \left( -\frac{(x-\mu)^2}{2 \sigma^2} \right) \f$
  * @param seed
  * @param mean
  * @param sigma
@@ -47,7 +47,7 @@ NormalDistribution::~NormalDistribution() {
 
 
 /**
- * @brief UniformDistribution::UniformDistribution Uniform real distribution
+ * @brief Uniform real distribution
  * @param seed
  * @param min
  * @param max
@@ -68,7 +68,7 @@ UniformDistribution::~UniformDistribution() {
 
 
 /**
- * @brief ExponentialDistribution::ExponentialDistribution Exponential distribution \f$ f(x) = \lambda \exp ( -\lambda x) \f$
+ * @brief Exponential distribution \f$ f(x) = \lambda \exp ( -\lambda x) \f$
  * @param seed
  * @param lambda
  */
@@ -88,7 +88,7 @@ ExponentialDistribution::~ExponentialDistribution() {
 
 
 /**
- * @brief Sech2Distribution::Sech2Distribution Hyperbolic secant square distribution \f$ f(x) = (4s)^{-1} \sech^2 \left( \frac{x - \mu}{2s} \right) \f$
+ * @brief Hyperbolic secant square distribution \f$ f(x) = (4s)^{-1} \sech^2 \left( \frac{x - \mu}{2s} \right) \f$
  * @param seed
  * @param mean
  * @param scale
