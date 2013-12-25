@@ -35,3 +35,20 @@ void Source::setk0Distribution(AbstractDistribution **distrArray) {
 void Source::setWalkTimeDistribution(AbstractDistribution *distr) {
     walkTimeDistribution = distr;
 }
+
+
+
+
+PencilBeamSource::PencilBeamSource() :
+    Source()
+{
+
+}
+
+Walker* PencilBeamSource::constructWalker() {
+    Walker *walker = new Walker();
+    walker->k0[2] = 1;
+
+    return walker;
+
+}

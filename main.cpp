@@ -1,10 +1,11 @@
 #include <stdio.h>
+#include "source.h"
 #include "costhetagenerator.h"
 #include "psigenerator.h"
 
+
 int main(int argc, char *argv[])
 {
-
     mt19937* mersenneTwister = new mt19937(0);
 
 //    IsotropicCosThetaGenerator *isotrCosTheta = new IsotropicCosThetaGenerator(0);
