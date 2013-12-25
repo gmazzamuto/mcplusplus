@@ -116,3 +116,21 @@ double Sech2Distribution::spin() {
     temp = mean + scale*temp;
     return temp;
 }
+
+void Sech2Distribution::setScale(double value) {
+    scale = value;
+}
+
+void Sech2Distribution::setMean(double value) {
+    mean = value;
+}
+
+/**
+ * @brief Sets the FWHM of the sech2 distribution.
+ * @param value
+ * \todo Check that this function is working properly.
+ */
+
+void Sech2Distribution::setFWHM(double value) {
+    setScale(value/(4*log(1 + root_two<double>())));
+}

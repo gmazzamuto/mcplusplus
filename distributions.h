@@ -141,6 +141,9 @@ public:
     ~Sech2Distribution();
 
     double spin();
+    void setMean(double value);
+    void setScale(double value);
+    void setFWHM(double value);
 
 private:
     UniformDistribution *uRandom;
