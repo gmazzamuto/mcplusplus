@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "costhetagenerator.h"
+#include "psigenerator.h"
 
 int main(int argc, char *argv[])
 {
@@ -11,10 +12,11 @@ int main(int argc, char *argv[])
 //    ExponentialDistribution *stepLength = new ExponentialDistribution(0,0.01);
 //    DeltaDistribution *center = new DeltaDistribution(12.2);
 //    NormalDistribution *inputPos = new NormalDistribution(1,11.1,0.1);
-    Sech2Distribution *initTime = new Sech2Distribution(mersenneTwister,12,6.3);
+//    Sech2Distribution *initTime = new Sech2Distribution(mersenneTwister,12,6.3);
+    PsiGenerator *randomPsi = new PsiGenerator(mersenneTwister);
 
     for (int i = 0; i < 1000; ++i) {
-        printf("%lf\n", initTime->spin());
+        printf("%lf\n", randomPsi->spin());
     }
 
     return 0;

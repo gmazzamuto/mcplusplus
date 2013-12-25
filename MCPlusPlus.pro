@@ -17,10 +17,12 @@ SOURCES += main.cpp \
     costhetagenerator.cpp \
     walker.cpp \
     source.cpp \
-    distributions.cpp
+    distributions.cpp \
+    psigenerator.cpp
 
 HEADERS += \
     costhetagenerator.h \
     walker.h \
     source.h \
-    distributions.h
+    distributions.h \
+    psigenerator.h
