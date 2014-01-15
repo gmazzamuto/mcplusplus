@@ -1,33 +1,39 @@
 #include "costhetagenerator.h"
 
-AbstractCosThetaGenerator::AbstractCosThetaGenerator(mt19937 *mt, double min, double max)
-{
-    uRandom = new UniformDistribution(mt,min,max);
-}
-
-AbstractCosThetaGenerator::~AbstractCosThetaGenerator()
-{
-    delete uRandom;
-}
-
-
-
 IsotropicCosThetaGenerator::IsotropicCosThetaGenerator(mt19937 *mt) :
-    AbstractCosThetaGenerator(mt,-1,1)
+    UniformDistribution(-1,1,mt)
 {
 
 }
 
-double IsotropicCosThetaGenerator::spin() {
-    return uRandom->spin();
+IsotropicCosThetaGenerator::IsotropicCosThetaGenerator(int seed) :
+    UniformDistribution(-1,1,seed)
+{
+
 }
 
 
 
-AnisotropicCosThetaGenerator::AnisotropicCosThetaGenerator(mt19937 *mt, double g) :
-    AbstractCosThetaGenerator(mt,0,1)
+
+AnisotropicCosThetaGenerator::AnisotropicCosThetaGenerator(double g, mt19937 *mt) :
+    AbstractDistribution(mt)
 {
+    commonConstructor(g);
+}
+
+AnisotropicCosThetaGenerator::AnisotropicCosThetaGenerator(double g, int seed)  :
+    AbstractDistribution(seed)
+{
+    commonConstructor(g);
+}
+
+void AnisotropicCosThetaGenerator::commonConstructor(double g) {
     this->g = g;
+    uRandom = new UniformDistribution(0,1,mt);
+}
+
+AnisotropicCosThetaGenerator::~AnisotropicCosThetaGenerator() {
+    delete uRandom;
 }
 
 double AnisotropicCosThetaGenerator::spin() {

@@ -17,16 +17,20 @@ class AbstractDistribution
 {
 public:
     AbstractDistribution(mt19937* mt = NULL);
+    AbstractDistribution(int seed);
     virtual ~AbstractDistribution();
 
     /**
-     * @brief Generate a new random number.
+     * @brief Generates a new random number.
      * @return The newly generated random number.
      */
     virtual double spin() = 0;
+    virtual void reconstructGenerator() {}
+    void setSeed(int seed);
 
 protected:
     mt19937* mt;
+    bool usingInternalMt;
 };
 
 
@@ -56,13 +60,15 @@ private:
 typedef variate_generator<mt19937&, normal_distribution<double> > normalGenerator;
 
 /**
- * @brief Normal (Gaussian) distribution \f$ f(x) = (2\pi \sigma)^{-\frac{1}{2}} \exp \left( -\frac{(x-\mu)^2}{2 \sigma^2} \right) \f$
+ * @brief Normal (Gaussian) distribution \f$ f(x) = (2\pi \sigma)^{-\frac{1}{2}}
+ * \exp \left( -\frac{(x-\mu)^2}{2 \sigma^2} \right) \f$
  */
 
 class NormalDistribution : public AbstractDistribution
 {
 public:
-    NormalDistribution(mt19937* mt, double mean, double sigma);
+    NormalDistribution(double mean, double sigma, mt19937* mt);
+    NormalDistribution(double mean, double sigma, int seed);
     ~NormalDistribution();
 
     inline double spin() {return (*generator)();}
@@ -71,6 +77,7 @@ public:
     void setFWHM(double value);
 
 private:
+    void commonConstructor(double mean, double sigma);
     void reconstructGenerator();
 
     normalGenerator *generator;
@@ -91,13 +98,18 @@ typedef variate_generator<mt19937&, uniform_real_distribution<double> > uniformG
 class UniformDistribution : public AbstractDistribution
 {
 public:
-    UniformDistribution(mt19937* mt, double min = 0, double max = 1);
+    UniformDistribution(double min, double max, mt19937* mt);
+    UniformDistribution(double min, double max, int seed);
     ~UniformDistribution();
 
     inline double spin() {return (*generator)();}
 
-private:
+private:    
+    void commonConstructor(double min, double max);
+    void reconstructGenerator();
+
     uniformGenerator *generator;
+    double min, max;
 };
 
 
@@ -114,13 +126,18 @@ typedef variate_generator<mt19937&, exponential_distribution<double> > exponenti
 class ExponentialDistribution : public AbstractDistribution
 {
 public:
-    ExponentialDistribution(mt19937* mt, double lambda);
+    ExponentialDistribution(double lambda, mt19937* mt);
+    ExponentialDistribution(double lambda, int seed);
     ~ExponentialDistribution();
 
     inline double spin() {return (*generator)();}
 
 private:
+    void commonConstructor(double lambda);
+    void reconstructGenerator();
+
     exponentialGenerator *generator;
+    double lambda;
 };
 
 
@@ -129,15 +146,18 @@ private:
 // Sech2 (Logistic) distribution
 
 /**
- * @brief Hyperbolic secant square distribution \f$ f(x) = (4s)^{-1} \, \textup{sech}^2 \left( \frac{x - \mu}{2s} \right) \f$
+ * @brief Hyperbolic secant square distribution \f$ f(x) = (4s)^{-1} \,
+ * \textup{sech}^2 \left( \frac{x - \mu}{2s} \right) \f$
  *
- * See <a href="http://en.wikipedia.org/wiki/Logistic_distribution">Wikpiedia</a> for further reference on quantile function.
+ * See <a href="http://en.wikipedia.org/wiki/Logistic_distribution">Wikpiedia</a>
+ * for further reference on quantile function.
  */
 
 class Sech2Distribution : public AbstractDistribution
 {
 public:
-    Sech2Distribution(mt19937* mt, double mean, double scale);
+    Sech2Distribution(double mean, double scale, mt19937* mt);
+    Sech2Distribution(double mean, double scale, int seed);
     ~Sech2Distribution();
 
     double spin();
@@ -146,6 +166,8 @@ public:
     void setFWHM(double value);
 
 private:
+    void commonConstructor(double mean, double scale);
+
     UniformDistribution *uRandom;
     double mean, scale;
 };

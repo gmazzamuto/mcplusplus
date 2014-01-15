@@ -4,16 +4,14 @@
 
 using namespace boost::math::constants;
 
-PsiGenerator::PsiGenerator(mt19937 *mt)
+PsiGenerator::PsiGenerator(mt19937 *mt) :
+    UniformDistribution(0,2*pi<double>(),mt)
 {
-    uRandom = new UniformDistribution(mt,0,2*pi<double>());
+
 }
 
-PsiGenerator::~PsiGenerator()
+PsiGenerator::PsiGenerator(int seed) :
+    UniformDistribution(0,2*pi<double>(),seed)
 {
-    delete uRandom;
-}
 
-double PsiGenerator::spin() {
-    return uRandom->spin();
 }

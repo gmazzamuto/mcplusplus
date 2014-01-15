@@ -6,18 +6,28 @@
 
 int main(int argc, char *argv[])
 {
-    mt19937* mersenneTwister = new mt19937(0);
+    IsotropicCosThetaGenerator *isotrCosTheta = new IsotropicCosThetaGenerator(0);
+    AnisotropicCosThetaGenerator *anisCosTheta = new AnisotropicCosThetaGenerator(0.99,0);
+    ExponentialDistribution *stepLength = new ExponentialDistribution(0.01,0);
+    DeltaDistribution *center = new DeltaDistribution(12.2);
+    NormalDistribution *inputPos = new NormalDistribution(11.1,0.1,0);
+    Sech2Distribution *initTime = new Sech2Distribution(12,6.3,0);
+    PsiGenerator *randomPsi = new PsiGenerator(0);
+    UniformDistribution *uniform = new UniformDistribution(0,10,0);
 
-//    IsotropicCosThetaGenerator *isotrCosTheta = new IsotropicCosThetaGenerator(0);
-//    AnisotropicCosThetaGenerator *anisCosTheta = new AnisotropicCosThetaGenerator(0,0.99);
-//    ExponentialDistribution *stepLength = new ExponentialDistribution(0,0.01);
-//    DeltaDistribution *center = new DeltaDistribution(12.2);
-//    NormalDistribution *inputPos = new NormalDistribution(1,11.1,0.1);
-//    Sech2Distribution *initTime = new Sech2Distribution(mersenneTwister,12,6.3);
-    PsiGenerator *randomPsi = new PsiGenerator(mersenneTwister);
 
-    for (int i = 0; i < 1000; ++i) {
-        printf("%lf\n", randomPsi->spin());
+
+    AbstractDistribution *distribution = uniform;
+
+    for (int i = 0; i < 10; ++i) {
+        printf("%lf\n", distribution->spin());
+    }
+
+    printf("-----------\n");
+    distribution->setSeed(0);
+
+    for (int i = 0; i < 10; ++i) {
+        printf("%lf\n", distribution->spin());
     }
 
     return 0;

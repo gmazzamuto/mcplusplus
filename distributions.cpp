@@ -5,14 +5,37 @@
 
 using namespace boost::math::constants;
 
+
+// Abstract distribution
+
 AbstractDistribution::AbstractDistribution(mt19937 *mt) {
     this->mt = mt;
+    usingInternalMt = false;
 }
 
-AbstractDistribution::~AbstractDistribution() {}
+AbstractDistribution::AbstractDistribution(int seed) {
+    mt = new mt19937(seed);
+    usingInternalMt = true;
+}
+
+AbstractDistribution::~AbstractDistribution() {
+    if(usingInternalMt)
+        delete mt;
+}
+
+void AbstractDistribution::setSeed(int seed) {
+    if(!usingInternalMt)
+        return;
+    if(mt != NULL)
+        delete mt;
+    mt = new mt19937(seed);
+    reconstructGenerator();
+}
 
 
 
+
+// Dirac Delta distribution
 
 DeltaDistribution::DeltaDistribution(double center) :
     AbstractDistribution()
@@ -23,9 +46,21 @@ DeltaDistribution::DeltaDistribution(double center) :
 
 
 
-NormalDistribution::NormalDistribution(mt19937 *mt, double mean, double sigma) :
+// Normal (Gaussian) distribution
+
+NormalDistribution::NormalDistribution(double mean, double sigma, mt19937 *mt) :
     AbstractDistribution(mt)
 {
+    commonConstructor(mean, sigma);
+}
+
+NormalDistribution::NormalDistribution(double mean, double sigma, int seed) :
+    AbstractDistribution(seed)
+{
+    commonConstructor(mean, sigma);
+}
+
+void NormalDistribution::commonConstructor(double mean, double sigma) {
     generator = NULL;
     this->mean = mean;
     this->sigma = sigma;
@@ -66,40 +101,89 @@ void NormalDistribution::setFWHM(double value) {
 
 
 
-UniformDistribution::UniformDistribution(mt19937 *mt, double min, double max) :
+// Uniform disribution
+
+UniformDistribution::UniformDistribution(double min, double max, mt19937 *mt) :
     AbstractDistribution(mt)
 {
-    uniform_real_distribution<double> uniformRealDistribution(min,max);
-    generator = new uniformGenerator(*mt,uniformRealDistribution);
+    commonConstructor(min,max);
+}
+
+UniformDistribution::UniformDistribution(double min, double max, int seed) :
+    AbstractDistribution(seed)
+{
+    commonConstructor(min,max);
 }
 
 UniformDistribution::~UniformDistribution() {
     delete generator;
 }
 
+void UniformDistribution::commonConstructor(double min, double max) {
+    this->min = min;
+    this->max = max;
+    reconstructGenerator();
+}
+
+void UniformDistribution::reconstructGenerator() {
+    if(generator != NULL)
+        delete generator;
+    uniform_real_distribution<double> uniformRealDistribution(min,max);
+    generator = new uniformGenerator(*mt,uniformRealDistribution);
+}
 
 
 
-ExponentialDistribution::ExponentialDistribution(mt19937 *mt, double lambda) :
+
+// Exponential distribution
+
+ExponentialDistribution::ExponentialDistribution(double lambda, mt19937 *mt) :
     AbstractDistribution(mt)
 {
-   exponential_distribution<double> exponentialRealDistribution(lambda);
-   generator = new exponentialGenerator(*mt,exponentialRealDistribution);
+    commonConstructor(lambda);
+}
+
+ExponentialDistribution::ExponentialDistribution(double lambda, int seed) :
+    AbstractDistribution(seed)
+{
+    commonConstructor(lambda);
+}
+
+void ExponentialDistribution::commonConstructor(double lambda) {
+    this->lambda = lambda;
+    reconstructGenerator();
 }
 
 ExponentialDistribution::~ExponentialDistribution() {
     delete generator;
 }
 
+void ExponentialDistribution::reconstructGenerator() {
+    exponential_distribution<double> exponentialRealDistribution(lambda);
+    generator = new exponentialGenerator(*mt,exponentialRealDistribution);
+}
 
 
 
-Sech2Distribution::Sech2Distribution(mt19937 *mt, double mean, double scale) :
-    AbstractDistribution()
+
+// Sech2 (Logistic) distribution
+
+Sech2Distribution::Sech2Distribution(double mean, double scale, mt19937 *mt) :
+    AbstractDistribution(mt)
 {
+    commonConstructor(mean, scale);
+}
+
+Sech2Distribution::Sech2Distribution(double mean, double scale, int seed) :
+    AbstractDistribution(seed)
+{
+    commonConstructor(mean, scale);
+}
+
+void Sech2Distribution::commonConstructor(double mean, double scale) {
     this->mean = mean;
     this->scale = scale;
-    uRandom = new UniformDistribution(mt,0,1);
+    uRandom = new UniformDistribution(0,1,mt);
 }
 
 Sech2Distribution::~Sech2Distribution() {
