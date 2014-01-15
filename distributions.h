@@ -7,10 +7,26 @@
 using namespace boost;
 using namespace boost::random;
 
+/**
+  * \defgroup Distributions
+  * \brief Classes providing random distributions
+  */
+
 // Abstract distribution
 
 /**
- * @brief Base distribution class. Provides a common interface to handle various distributions.
+ * @brief Base distribution class. Provides a common interface to handle various
+ * distributions.
+ *
+ * This class is a wrapper around boost::variate_generator using a boost::mt19937
+ * random number generator. By using the appropriate constructor this class can
+ * use an external instance of the RNG or, alternatively, instantiate its own
+ * internal RNG with the given seed.
+ *
+ * A new random number can be drawn by calling the spin() method which must be
+ * reimplemented by derived classes.
+ *
+ * \ingroup Distributions
  */
 
 class AbstractDistribution
@@ -25,12 +41,12 @@ public:
      * @return The newly generated random number.
      */
     virtual double spin() = 0;
-    virtual void reconstructGenerator() {}
+    virtual void reconstructGenerator();
     void setSeed(int seed);
 
 protected:
     mt19937* mt;
-    bool usingInternalMt;
+    bool usingInternalMt; /**< \brief true if using its own internal RNG*/
 };
 
 
@@ -40,6 +56,7 @@ protected:
 
 /**
  * @brief Dirac Delta distribution \f$ f(x) = \delta (x) \f$
+ * \ingroup Distributions
  */
 
 class DeltaDistribution : public AbstractDistribution
@@ -62,6 +79,7 @@ typedef variate_generator<mt19937&, normal_distribution<double> > normalGenerato
 /**
  * @brief Normal (Gaussian) distribution \f$ f(x) = (2\pi \sigma)^{-\frac{1}{2}}
  * \exp \left( -\frac{(x-\mu)^2}{2 \sigma^2} \right) \f$
+ * \ingroup Distributions
  */
 
 class NormalDistribution : public AbstractDistribution
@@ -93,6 +111,7 @@ typedef variate_generator<mt19937&, uniform_real_distribution<double> > uniformG
 
 /**
  * @brief Uniform real distribution
+ * \ingroup Distributions
  */
 
 class UniformDistribution : public AbstractDistribution
@@ -121,6 +140,7 @@ typedef variate_generator<mt19937&, exponential_distribution<double> > exponenti
 
 /**
  * @brief Exponential distribution \f$ f(x) = \lambda \exp ( -\lambda x) \f$
+ * \ingroup Distributions
  */
 
 class ExponentialDistribution : public AbstractDistribution
@@ -151,6 +171,7 @@ private:
  *
  * See <a href="http://en.wikipedia.org/wiki/Logistic_distribution">Wikpiedia</a>
  * for further reference on quantile function.
+ * \ingroup Distributions
  */
 
 class Sech2Distribution : public AbstractDistribution

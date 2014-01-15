@@ -5,7 +5,8 @@
 #include "distributions.h"
 
 /**
- * @brief Base Source class: constructs and initializes a Walker according to given source term modeling.
+ * @brief Base Source class: constructs and initializes a Walker according to
+ * given source term modeling.
  */
 
 class Source
@@ -25,7 +26,8 @@ private:
 
 
 /**
- * @brief Pencil beam source \f$ \delta(\bm{r}) \, \delta (t) \, \delta (\bm{k}) \f$, with \f$ \bm{k} = (0,0,1) \f$.
+ * @brief Pencil beam source \f$ \delta(\bm{r}) \, \delta (t) \, \delta (\bm{k})
+ * \f$, with \f$ \bm{k} = (0,0,1) \f$.
  */
 
 class PencilBeamSource : public Source

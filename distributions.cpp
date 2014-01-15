@@ -23,6 +23,14 @@ AbstractDistribution::~AbstractDistribution() {
         delete mt;
 }
 
+/**
+ * @brief Sets a new seed for the RNG
+ * @param seed
+ *
+ *
+ * This function has no effect if using an external RNG.
+ */
+
 void AbstractDistribution::setSeed(int seed) {
     if(!usingInternalMt)
         return;
@@ -30,6 +38,26 @@ void AbstractDistribution::setSeed(int seed) {
         delete mt;
     mt = new mt19937(seed);
     reconstructGenerator();
+}
+
+/**
+ * @brief Reconstructs the underlying boost::variate_generator.
+ *
+ * Derived classes using a distribution which caches random numbers (such as
+ * boost::random::normal_distribution) must reimplement this function. This
+ * function is called by setSeed() so that numbers generated with the previous
+ * seed but not yet used are deleted. In principle this could be simply
+ * achieved by calling the reset() method that every boost distribution
+ * implements. Anyhow it is useful to have a function like this one, that
+ * completely destroys and recreates the variate_generator, to be used in the
+ * setter functions for the distribution parameters.
+ *
+ *
+ * The default implementation does nothing.
+ */
+
+void AbstractDistribution::reconstructGenerator() {
+
 }
 
 
