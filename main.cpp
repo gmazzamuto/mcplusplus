@@ -2,6 +2,7 @@
 #include "source.h"
 #include "costhetagenerator.h"
 #include "psigenerator.h"
+#include "simulation.h"
 
 
 int main(int argc, char *argv[])
@@ -14,8 +15,6 @@ int main(int argc, char *argv[])
     Sech2Distribution *initTime = new Sech2Distribution(12,6.3,0);
     PsiGenerator *randomPsi = new PsiGenerator(0);
     UniformDistribution *uniform = new UniformDistribution(0,10,0);
-
-
 
     AbstractDistribution *distribution = uniform;
 

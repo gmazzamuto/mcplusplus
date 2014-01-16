@@ -18,11 +18,15 @@ SOURCES += main.cpp \
     walker.cpp \
     source.cpp \
     distributions.cpp \
-    psigenerator.cpp
+    psigenerator.cpp \
+    simulation.cpp \
+    sample.cpp
 
 HEADERS += \
     costhetagenerator.h \
     walker.h \
     source.h \
     distributions.h \
-    psigenerator.h
+    psigenerator.h \
+    simulation.h \
+    sample.h

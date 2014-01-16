@@ -21,7 +21,7 @@ AnisotropicCosThetaGenerator::AnisotropicCosThetaGenerator(double g, mt19937 *mt
     commonConstructor(g);
 }
 
-AnisotropicCosThetaGenerator::AnisotropicCosThetaGenerator(double g, int seed)  :
+AnisotropicCosThetaGenerator::AnisotropicCosThetaGenerator(double g, int seed) :
     AbstractDistribution(seed)
 {
     commonConstructor(g);
