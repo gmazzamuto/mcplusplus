@@ -5,6 +5,6 @@ Sample::Sample()
     nLayers=0;
 }
 
-Sample::addLayer(Layer *layer) {
+void Sample::addLayer(Layer *layer) {
     nLayers++;
 }

@@ -4,7 +4,7 @@ Simulation::Simulation()
 {
 }
 
-Simulation::setTotalWalkers(int N) {
+void Simulation::setTotalWalkers(int N) {
     totalWalkers = N;
 }
 
