@@ -36,7 +36,13 @@ void Source::setWalkTimeDistribution(AbstractDistribution *distr) {
     walkTimeDistribution = distr;
 }
 
+void Source::setWavelength(double nm) {
+    wl = nm;
+}
 
+double Source::wavelength() {
+    return wl;
+}
 
 
 PencilBeamSource::PencilBeamSource() :

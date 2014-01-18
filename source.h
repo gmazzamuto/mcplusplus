@@ -17,8 +17,11 @@ public:
     void setr0Distribution(AbstractDistribution **distrArray);
     void setk0Distribution(AbstractDistribution **distrArray);
     void setWalkTimeDistribution(AbstractDistribution *distr);
+    void setWavelength(double nm);
+    double wavelength();
 
 private:
+    double wl;
     AbstractDistribution *r0Distribution[3];
     AbstractDistribution *k0Distribution[3];
     AbstractDistribution *walkTimeDistribution;
