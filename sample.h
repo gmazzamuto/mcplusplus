@@ -1,21 +1,16 @@
 #ifndef SAMPLE_H
 #define SAMPLE_H
 
+#include "layer.h"
+
 class Sample
 {
 public:
     Sample();
-    void setThickness(double L);
-    void setScatteringMeanFreePath(double ls);
-    void setScatteringAnisotropy(double g);
-    void setExtRefrIndex(double nExt);
-    void setIntRefrIndex(double nInt);
+    void addLayer(Layer *layer);
 
 protected:
-    double totalThickness;
-    double ls;
-    double g;
-    double nExt, nInt;
+    int nLayers;
 };
 
 #endif // SAMPLE_H
