@@ -27,6 +27,7 @@ AbstractDistribution::~AbstractDistribution() {
  * @brief Sets a new seed for the RNG
  * @param seed
  *
+ *
  * This function has no effect if using an external RNG.
  */
 
