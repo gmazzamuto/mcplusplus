@@ -17,6 +17,8 @@ protected:
     bool isRunning;
     int totalWalkers;
     int transmitted, reflected, ballistic, backreflected;
+    Sample *sample;
+    Source *source;
 };
 
 #endif // SIMULATION_H
