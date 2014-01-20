@@ -16,13 +16,15 @@ Sample::Sample()
  * finite thickness (measured along \f$ z \f$).
  */
 
-void Sample::addLayer(const Material &material, double thickness) {
-    layers.push_back(material);
+void Sample::addLayer(const Material *material, double thickness) {
+    Material mat;
+    mat = *material;
+    layers.push_back(mat);
     totThickness += thickness;
     zBoundaries.push_back(totThickness);
     nLayers++;
 }
 
-void Sample::setSurroundingEnvironment(const Material &material) {
-    environment = material;
+void Sample::setSurroundingEnvironment(const Material *material) {
+    environment = *material;
 }

@@ -10,8 +10,8 @@ class Sample
 {
 public:
     Sample();
-    void addLayer(const Material &material, double thickness);
-    void setSurroundingEnvironment(const Material &material);
+    void addLayer(const Material *material, double thickness);
+    void setSurroundingEnvironment(const Material *material);
     inline double totalThickness() {return totThickness;}
 
 private:
