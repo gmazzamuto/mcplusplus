@@ -61,10 +61,10 @@ void Simulation::run() {
                 walker->k1[1] = sinTheta*sinPsi;
                 walker->k1[2] = cosTheta*sign<double>(walker->k0[2]);
             }
-            else { //FIXME
-                walker->k1[0] = sinTheta*cosPsi;
-                walker->k1[1] = sinTheta*sinPsi;
-                walker->k1[2] = cosTheta*sign<double>(walker->k0[2]);
+            else { //check and set some intermediate temporary variables --> like sqrt(1-pow(walker->k1[3],2))
+                walker->k1[0] = (sinTheta*(walker->k1[0]*walker->k1[2]*cosPsi - walker->k1[1]*sinPsi))/sqrt(1-pow(walker->k1[3],2)) + cosTheta*walker->k1[0];
+                walker->k1[1] = (sinTheta*(walker->k1[1]*walker->k1[2]*cosPsi + walker->k1[0]*sinPsi))/sqrt(1-pow(walker->k1[3],2)) + cosTheta*walker->k1[1];
+                walker->k1[2] = -sinTheta*cosPsi*sqrt(1-pow(walker->k1[3],2)) + cosTheta*walker->k1[2];
             }
 
             walker->r1[0] = walker->r0[0] + step*walker->k1[0];
