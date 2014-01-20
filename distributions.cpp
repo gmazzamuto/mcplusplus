@@ -177,6 +177,16 @@ ExponentialDistribution::ExponentialDistribution(double lambda, int seed) :
     commonConstructor(lambda);
 }
 
+ExponentialDistribution::ExponentialDistribution(mt19937 *mt) :
+    AbstractDistribution(mt) {
+    commonConstructor(1);
+}
+
+ExponentialDistribution::ExponentialDistribution(int seed) :
+    AbstractDistribution(seed) {
+    commonConstructor(1);
+}
+
 void ExponentialDistribution::commonConstructor(double lambda) {
     this->lambda = lambda;
     reconstructGenerator();

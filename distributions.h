@@ -146,6 +146,8 @@ typedef variate_generator<mt19937&, exponential_distribution<double> > exponenti
 class ExponentialDistribution : public AbstractDistribution
 {
 public:
+    ExponentialDistribution(mt19937 *mt);
+    ExponentialDistribution(int seed);
     ExponentialDistribution(double lambda, mt19937* mt);
     ExponentialDistribution(double lambda, int seed);
     void setLamda(double value);
