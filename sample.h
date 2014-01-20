@@ -11,12 +11,14 @@ class Sample
 public:
     Sample();
     void addLayer(const Material &material, double thickness);
+    void setSurroundingEnvironment(const Material &material);
 
 private:
     int nLayers;
     vector<Material> layers;
     vector<double> zBoundaries;
     double totalThickness;
+    Material environment;
 };
 
 #endif // SAMPLE_H
