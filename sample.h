@@ -12,12 +12,13 @@ public:
     Sample();
     void addLayer(const Material &material, double thickness);
     void setSurroundingEnvironment(const Material &material);
+    double totalThickness();
 
 private:
     int nLayers;
     vector<Material> layers;
     vector<double> zBoundaries;
-    double totalThickness;
+    double totThickness;
     Material environment;
 };
 
