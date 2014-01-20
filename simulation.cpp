@@ -80,8 +80,15 @@ void Simulation::run() {
                 reflected++;
                 break;
             }
+
+            memcpy(walker->k0,walker->k1,3*sizeof(double));
+            memcpy(walker->k0,walker->k1,3*sizeof(double));
+
+            walker->walkDistance += step;
+            walker->walkTime += step; //FIXME speed of light
         }
 
         n++;
+        delete walker;
     }
 }
