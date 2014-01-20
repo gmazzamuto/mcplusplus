@@ -26,7 +26,3 @@ void Sample::addLayer(const Material &material, double thickness) {
 void Sample::setSurroundingEnvironment(const Material &material) {
     environment = material;
 }
-
-double Sample::totalThickness() {
-    return totThickness;
-}
