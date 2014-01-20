@@ -1,6 +1,6 @@
-#include "layer.h"
+#include "material.h"
 
-Layer::Layer()
+Material::Material()
 {
 }
 
@@ -9,9 +9,8 @@ Layer::Layer()
  */
 
 FreeSpace::FreeSpace() :
-    Layer()
+    Material()
 {
-    isPartOfTheSample = false;
     ls=g=0;
     refractiveIndex = 1.00027499; //we should try to implement http://emtoolbox.nist.gov/Wavelength/Edlen.asp and set this value automatically
 }

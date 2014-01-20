@@ -21,7 +21,7 @@ SOURCES += main.cpp \
     psigenerator.cpp \
     simulation.cpp \
     sample.cpp \
-    layer.cpp
+    material.cpp
 
 HEADERS += \
     costhetagenerator.h \
@@ -31,4 +31,4 @@ HEADERS += \
     psigenerator.h \
     simulation.h \
     sample.h \
-    layer.h
+    material.h
