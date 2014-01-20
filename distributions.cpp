@@ -187,8 +187,15 @@ ExponentialDistribution::~ExponentialDistribution() {
 }
 
 void ExponentialDistribution::reconstructGenerator() {
+    if(generator != NULL)
+        delete generator;
     exponential_distribution<double> exponentialRealDistribution(lambda);
     generator = new exponentialGenerator(*mt,exponentialRealDistribution);
+}
+
+void ExponentialDistribution::setLamda(double value) {
+    lambda = value;
+    reconstructGenerator();
 }
 
 

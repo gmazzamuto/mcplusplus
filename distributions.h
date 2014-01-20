@@ -148,6 +148,7 @@ class ExponentialDistribution : public AbstractDistribution
 public:
     ExponentialDistribution(double lambda, mt19937* mt);
     ExponentialDistribution(double lambda, int seed);
+    void setLamda(double value);
     ~ExponentialDistribution();
 
     inline double spin() {return (*generator)();}
