@@ -10,11 +10,13 @@ class Sample
 {
 public:
     Sample();
-    void addLayer(const Material &material);
+    void addLayer(const Material &material, double thickness);
 
-protected:
+private:
     int nLayers;
     vector<Material> layers;
+    vector<double> zBoundaries;
+    double totalThickness;
 };
 
 #endif // SAMPLE_H
