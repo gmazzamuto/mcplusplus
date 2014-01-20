@@ -16,8 +16,11 @@ public:
 
 protected:
     bool isRunning;
-    int totalWalkers;
-    int transmitted, reflected, ballistic, backreflected;
+    int totalWalkers;  /**< @brief total number of walkers to be simulated*/
+    int transmitted;  /**< @brief total number of walkers transmitted after at least one scattering event*/
+    int reflected;  /**< @brief total number of walkers reflected after at least one scattering event*/
+    int ballistic;  /**< @brief total number of walkers transmitted without undergoing any scattering event*/
+    int backreflected;  /**< @brief total number of walkers reflected without undergoing any scattering event*/
     Sample *sample;
     Source *source;
 };

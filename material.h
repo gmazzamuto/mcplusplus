@@ -5,10 +5,9 @@ class Material
 {
 public:
     Material();
-    double ls;
-    double g;
-    double lt;
-    double refractiveIndex;
+    double ls;  /**< @brief scattering mean free path*/
+    double g;  /**< @brief scattering anisotropy factor \f$ g = \left\langle \cos \theta \right \rangle \f$*/
+    double n;  /**< @brief refractive index (\f$ n \in \mathbb{R} \f$)*/
 };
 
 

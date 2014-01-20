@@ -12,5 +12,5 @@ FreeSpace::FreeSpace() :
     Material()
 {
     ls=g=0;
-    refractiveIndex = 1.00027499; //we should try to implement http://emtoolbox.nist.gov/Wavelength/Edlen.asp and set this value automatically
+    n = 1.00027499; //we should try to implement http://emtoolbox.nist.gov/Wavelength/Edlen.asp and set this value automatically
 }
