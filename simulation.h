@@ -12,6 +12,7 @@ public:
     void setSample(Sample *sample);
     void setSource(Source *source);
     void run();
+    void reset();
 
 protected:
     bool isRunning;
