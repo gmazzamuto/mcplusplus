@@ -63,7 +63,7 @@ class DeltaDistribution : public AbstractDistribution
 {
 public:
     DeltaDistribution(double center);
-    inline double spin() {return x0;}
+    double spin() {return x0;}
 
 private:
     double x0;
@@ -89,7 +89,7 @@ public:
     NormalDistribution(double mean, double sigma, int seed);
     ~NormalDistribution();
 
-    inline double spin() {return (*generator)();}
+    double spin() {return (*generator)();}
     void setMean(double value);
     void setSigma(double value);
     void setFWHM(double value);
@@ -121,7 +121,7 @@ public:
     UniformDistribution(double min, double max, int seed);
     ~UniformDistribution();
 
-    inline double spin() {return (*generator)();}
+    double spin() {return (*generator)();}
 
 private:    
     void commonConstructor(double min, double max);
@@ -150,10 +150,10 @@ public:
     ExponentialDistribution(int seed);
     ExponentialDistribution(double lambda, mt19937* mt);
     ExponentialDistribution(double lambda, int seed);
-    void setLamda(double value);
     ~ExponentialDistribution();
 
-    inline double spin() {return (*generator)();}
+    void setLamda(double value);
+    double spin() {return (*generator)();}
 
 private:
     void commonConstructor(double lambda);
