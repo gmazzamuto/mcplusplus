@@ -1,13 +1,7 @@
 #include "costhetagenerator.h"
 
-IsotropicCosThetaGenerator::IsotropicCosThetaGenerator(mt19937 *mt) :
-    UniformDistribution(-1,1,mt)
-{
-
-}
-
-IsotropicCosThetaGenerator::IsotropicCosThetaGenerator(int seed) :
-    UniformDistribution(-1,1,seed)
+IsotropicCosThetaGenerator::IsotropicCosThetaGenerator(BaseObject *parent) :
+    UniformDistribution(-1,1,parent)
 {
 
 }
@@ -15,21 +9,15 @@ IsotropicCosThetaGenerator::IsotropicCosThetaGenerator(int seed) :
 
 
 
-AnisotropicCosThetaGenerator::AnisotropicCosThetaGenerator(double g, mt19937 *mt) :
-    AbstractDistribution(mt)
+AnisotropicCosThetaGenerator::AnisotropicCosThetaGenerator(double g, BaseObject *parent) :
+    AbstractDistribution(parent)
 {
-    commonConstructor(g);
+    setg(g);
 }
 
-AnisotropicCosThetaGenerator::AnisotropicCosThetaGenerator(double g, int seed) :
-    AbstractDistribution(seed)
-{
-    commonConstructor(g);
-}
-
-void AnisotropicCosThetaGenerator::commonConstructor(double g) {
+void AnisotropicCosThetaGenerator::setg(double g) {
     this->g = g;
-    uRandom = new UniformDistribution(0,1,mt);
+    uRandom = new UniformDistribution(0,1,this);
 }
 
 AnisotropicCosThetaGenerator::~AnisotropicCosThetaGenerator() {

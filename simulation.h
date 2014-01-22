@@ -21,10 +21,10 @@
  * incidence angles.
  */
 
-class Simulation
+class Simulation : public BaseObject
 {
 public:
-    Simulation();
+    Simulation(BaseObject *parent=NULL);
     void setTotalWalkers(int N);
     void setSample(Sample *sample);
     void setSource(Source *source);

@@ -10,8 +10,7 @@
 class PsiGenerator : public UniformDistribution
 {
 public:
-    PsiGenerator(mt19937 *mt);
-    PsiGenerator(int seed);
+    PsiGenerator(BaseObject *parent=NULL);
 };
 
 #endif // PSIGENERATOR_H

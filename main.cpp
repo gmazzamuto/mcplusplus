@@ -39,6 +39,7 @@ int main(int argc, char *argv[])
     sim->setSource(source);
     sim->setTotalWalkers(1);
 
+    sim->setSeed(0);
     sim->run();
 
     return 0;

@@ -9,10 +9,10 @@
  * given source term modeling.
  */
 
-class Source
+class Source : public BaseObject
 {
 public:
-    Source();
+    Source(BaseObject *parent=NULL);
     virtual Walker *constructWalker();
     void setr0Distribution(AbstractDistribution **distrArray);
     void setk0Distribution(AbstractDistribution **distrArray);
@@ -38,7 +38,7 @@ private:
 class PencilBeamSource : public Source
 {
 public:
-    PencilBeamSource();
+    PencilBeamSource(BaseObject *parent=NULL);
     Walker *constructWalker();
 };
 
@@ -56,8 +56,8 @@ public:
 class GaussianBeamSource : public Source
 {
 public:
-    GaussianBeamSource(double FWHM, mt19937 *mt);
-    GaussianBeamSource(double xFWHM, double yFWHM, mt19937 *mt);
+    GaussianBeamSource(double FWHM, BaseObject *parent=NULL);
+    GaussianBeamSource(double xFWHM, double yFWHM, BaseObject *parent=NULL);
     Walker *constructWalker();
 };
 

@@ -22,8 +22,7 @@
 class IsotropicCosThetaGenerator : public UniformDistribution
 {
 public:
-    IsotropicCosThetaGenerator(mt19937 *mt);
-    IsotropicCosThetaGenerator(int seed);
+    IsotropicCosThetaGenerator(BaseObject *parent=NULL);
 };
 
 
@@ -38,14 +37,13 @@ public:
 class AnisotropicCosThetaGenerator : public AbstractDistribution
 {
 public:
-    AnisotropicCosThetaGenerator(double g, mt19937 *mt);
-    AnisotropicCosThetaGenerator(double g, int seed);
+    AnisotropicCosThetaGenerator(double g, BaseObject *parent=NULL);
     ~AnisotropicCosThetaGenerator();
 
     double spin();
 
 private:
-    void commonConstructor(double g);
+    void setg(double g);
 
     double g;  /**< @brief scattering anisotropy factor*/
     UniformDistribution *uRandom;

@@ -8,36 +8,9 @@ using namespace boost::math::constants;
 
 // Abstract distribution
 
-AbstractDistribution::AbstractDistribution(mt19937 *mt) {
-    this->mt = mt;
-    usingInternalMt = false;
-}
-
-AbstractDistribution::AbstractDistribution(int seed) {
-    mt = new mt19937(seed);
-    usingInternalMt = true;
-}
-
-AbstractDistribution::~AbstractDistribution() {
-    if(usingInternalMt)
-        delete mt;
-}
-
-/**
- * @brief Sets a new seed for the RNG
- * @param seed
- *
- *
- * This function has no effect if using an external RNG.
- */
-
-void AbstractDistribution::setSeed(int seed) {
-    if(!usingInternalMt)
-        return;
-    if(mt != NULL)
-        delete mt;
-    mt = new mt19937(seed);
-    reconstructGenerator();
+AbstractDistribution::AbstractDistribution(BaseObject *parent) :
+    BaseObject(parent)
+{
 }
 
 /**
@@ -60,13 +33,17 @@ void AbstractDistribution::reconstructGenerator() {
 
 }
 
+void AbstractDistribution::reset() {
+    reconstructGenerator();
+}
+
 
 
 
 // Dirac Delta distribution
 
-DeltaDistribution::DeltaDistribution(double center) :
-    AbstractDistribution()
+DeltaDistribution::DeltaDistribution(double center, BaseObject *parent) :
+    AbstractDistribution(parent)
 {
     x0 = center;
 }
@@ -76,19 +53,9 @@ DeltaDistribution::DeltaDistribution(double center) :
 
 // Normal (Gaussian) distribution
 
-NormalDistribution::NormalDistribution(double mean, double sigma, mt19937 *mt) :
-    AbstractDistribution(mt)
+NormalDistribution::NormalDistribution(double mean, double sigma, BaseObject *parent) :
+    AbstractDistribution(parent)
 {
-    commonConstructor(mean, sigma);
-}
-
-NormalDistribution::NormalDistribution(double mean, double sigma, int seed) :
-    AbstractDistribution(seed)
-{
-    commonConstructor(mean, sigma);
-}
-
-void NormalDistribution::commonConstructor(double mean, double sigma) {
     generator = NULL;
     this->mean = mean;
     this->sigma = sigma;
@@ -131,26 +98,16 @@ void NormalDistribution::setFWHM(double value) {
 
 // Uniform disribution
 
-UniformDistribution::UniformDistribution(double min, double max, mt19937 *mt) :
-    AbstractDistribution(mt)
+UniformDistribution::UniformDistribution(double min, double max, BaseObject *parent) :
+    AbstractDistribution(parent)
 {
-    commonConstructor(min,max);
-}
-
-UniformDistribution::UniformDistribution(double min, double max, int seed) :
-    AbstractDistribution(seed)
-{
-    commonConstructor(min,max);
+    this->min = min;
+    this->max = max;
+    reconstructGenerator();
 }
 
 UniformDistribution::~UniformDistribution() {
     delete generator;
-}
-
-void UniformDistribution::commonConstructor(double min, double max) {
-    this->min = min;
-    this->max = max;
-    reconstructGenerator();
 }
 
 void UniformDistribution::reconstructGenerator() {
@@ -165,31 +122,15 @@ void UniformDistribution::reconstructGenerator() {
 
 // Exponential distribution
 
-ExponentialDistribution::ExponentialDistribution(double lambda, mt19937 *mt) :
-    AbstractDistribution(mt)
+ExponentialDistribution::ExponentialDistribution(BaseObject *parent) :
+    AbstractDistribution(parent) {
+    setLamda(1);
+}
+
+ExponentialDistribution::ExponentialDistribution(double lambda, BaseObject *parent) :
+    AbstractDistribution(parent)
 {
-    commonConstructor(lambda);
-}
-
-ExponentialDistribution::ExponentialDistribution(double lambda, int seed) :
-    AbstractDistribution(seed)
-{
-    commonConstructor(lambda);
-}
-
-ExponentialDistribution::ExponentialDistribution(mt19937 *mt) :
-    AbstractDistribution(mt) {
-    commonConstructor(1);
-}
-
-ExponentialDistribution::ExponentialDistribution(int seed) :
-    AbstractDistribution(seed) {
-    commonConstructor(1);
-}
-
-void ExponentialDistribution::commonConstructor(double lambda) {
-    this->lambda = lambda;
-    reconstructGenerator();
+    setLamda(lambda);
 }
 
 ExponentialDistribution::~ExponentialDistribution() {
@@ -213,22 +154,12 @@ void ExponentialDistribution::setLamda(double value) {
 
 // Sech2 (Logistic) distribution
 
-Sech2Distribution::Sech2Distribution(double mean, double scale, mt19937 *mt) :
-    AbstractDistribution(mt)
+Sech2Distribution::Sech2Distribution(double mean, double scale, BaseObject *parent) :
+    AbstractDistribution(parent)
 {
-    commonConstructor(mean, scale);
-}
-
-Sech2Distribution::Sech2Distribution(double mean, double scale, int seed) :
-    AbstractDistribution(seed)
-{
-    commonConstructor(mean, scale);
-}
-
-void Sech2Distribution::commonConstructor(double mean, double scale) {
     this->mean = mean;
     this->scale = scale;
-    uRandom = new UniformDistribution(0,1,mt);
+    uRandom = new UniformDistribution(0,1,parent);
 }
 
 Sech2Distribution::~Sech2Distribution() {

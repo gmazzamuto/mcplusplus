@@ -4,14 +4,8 @@
 
 using namespace boost::math::constants;
 
-PsiGenerator::PsiGenerator(mt19937 *mt) :
-    UniformDistribution(0,2*pi<double>(),mt)
-{
-
-}
-
-PsiGenerator::PsiGenerator(int seed) :
-    UniformDistribution(0,2*pi<double>(),seed)
+PsiGenerator::PsiGenerator(BaseObject *parent) :
+    UniformDistribution(0,2*pi<double>(),parent)
 {
 
 }

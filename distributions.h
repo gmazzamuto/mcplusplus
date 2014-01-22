@@ -3,6 +3,7 @@
 
 #include <boost/random.hpp>
 #include <math.h>
+#include "baseobject.h"
 
 using namespace boost;
 using namespace boost::random;
@@ -29,24 +30,20 @@ using namespace boost::random;
  * \ingroup Distributions
  */
 
-class AbstractDistribution
+class AbstractDistribution : public BaseObject
 {
 public:
-    AbstractDistribution(mt19937* mt = NULL);
-    AbstractDistribution(int seed);
-    virtual ~AbstractDistribution();
+    AbstractDistribution(BaseObject *parent=NULL);
 
     /**
      * @brief Generates a new random number.
      * @return The newly generated random number.
      */
     virtual double spin() = 0;
-    virtual void reconstructGenerator();
-    void setSeed(int seed);
+    virtual void reset();
 
 protected:
-    mt19937* mt;
-    bool usingInternalMt; /**< \brief true if using its own internal RNG*/
+    virtual void reconstructGenerator();
 };
 
 
@@ -62,7 +59,7 @@ protected:
 class DeltaDistribution : public AbstractDistribution
 {
 public:
-    DeltaDistribution(double center);
+    DeltaDistribution(double center, BaseObject *parent=NULL);
     double spin() {return x0;}
 
 private:
@@ -85,8 +82,7 @@ typedef variate_generator<mt19937&, normal_distribution<double> > normalGenerato
 class NormalDistribution : public AbstractDistribution
 {
 public:
-    NormalDistribution(double mean, double sigma, mt19937* mt);
-    NormalDistribution(double mean, double sigma, int seed);
+    NormalDistribution(double mean, double sigma, BaseObject *parent = NULL);
     ~NormalDistribution();
 
     double spin() {return (*generator)();}
@@ -95,7 +91,6 @@ public:
     void setFWHM(double value);
 
 private:
-    void commonConstructor(double mean, double sigma);
     void reconstructGenerator();
 
     normalGenerator *generator;
@@ -117,14 +112,12 @@ typedef variate_generator<mt19937&, uniform_real_distribution<double> > uniformG
 class UniformDistribution : public AbstractDistribution
 {
 public:
-    UniformDistribution(double min, double max, mt19937* mt);
-    UniformDistribution(double min, double max, int seed);
+    UniformDistribution(double min, double max, BaseObject *parent=NULL);
     ~UniformDistribution();
 
     double spin() {return (*generator)();}
 
 private:    
-    void commonConstructor(double min, double max);
     void reconstructGenerator();
 
     uniformGenerator *generator;
@@ -146,10 +139,8 @@ typedef variate_generator<mt19937&, exponential_distribution<double> > exponenti
 class ExponentialDistribution : public AbstractDistribution
 {
 public:
-    ExponentialDistribution(mt19937 *mt);
-    ExponentialDistribution(int seed);
-    ExponentialDistribution(double lambda, mt19937* mt);
-    ExponentialDistribution(double lambda, int seed);
+    ExponentialDistribution(BaseObject *parent=NULL);
+    ExponentialDistribution(double lambda, BaseObject *parent);
     ~ExponentialDistribution();
 
     void setLamda(double value);
@@ -180,8 +171,7 @@ private:
 class Sech2Distribution : public AbstractDistribution
 {
 public:
-    Sech2Distribution(double mean, double scale, mt19937* mt);
-    Sech2Distribution(double mean, double scale, int seed);
+    Sech2Distribution(double mean, double scale, BaseObject* parent=NULL);
     ~Sech2Distribution();
 
     double spin();
@@ -190,8 +180,6 @@ public:
     void setFWHM(double value);
 
 private:
-    void commonConstructor(double mean, double scale);
-
     UniformDistribution *uRandom;
     double mean, scale;
 };

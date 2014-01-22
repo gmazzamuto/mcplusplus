@@ -8,7 +8,8 @@
 using namespace boost;
 using namespace boost::math;
 
-Simulation::Simulation()
+Simulation::Simulation(BaseObject *parent) :
+    BaseObject(parent)
 {
     sample = NULL;
     source = NULL;
@@ -35,14 +36,13 @@ void Simulation::setSource(Source *source) {
 }
 
 void Simulation::run() {
-    mt19937 *mt = new mt19937(0);
     double totalThickness = sample->totalThickness();
 
     int n = 0;
 
-    ExponentialDistribution *stepLength = new ExponentialDistribution(mt);
-    IsotropicCosThetaGenerator *isotrCosTheta = new IsotropicCosThetaGenerator(mt);
-    PsiGenerator *randomPsi = new PsiGenerator(mt);
+    ExponentialDistribution *stepLength = new ExponentialDistribution(this);
+    IsotropicCosThetaGenerator *isotrCosTheta = new IsotropicCosThetaGenerator(this);
+    PsiGenerator *randomPsi = new PsiGenerator(this);
 
     while(n < totalWalkers) {
         Walker *walker = source->constructWalker();

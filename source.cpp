@@ -1,6 +1,7 @@
 #include "source.h"
 
-Source::Source()
+Source::Source(BaseObject *parent) :
+    BaseObject(parent)
 {
     walkTimeDistribution = NULL;
     for (int i = 0; i < 3; ++i) {
@@ -46,8 +47,8 @@ double Source::wavelength() {
 
 
 
-PencilBeamSource::PencilBeamSource() :
-    Source()
+PencilBeamSource::PencilBeamSource(BaseObject *parent) :
+    Source(parent)
 {
 
 }
@@ -61,20 +62,20 @@ Walker* PencilBeamSource::constructWalker() {
 
 
 
-GaussianBeamSource::GaussianBeamSource(double FWHM, mt19937 *mt) :
-    Source()
+GaussianBeamSource::GaussianBeamSource(double FWHM, BaseObject *parent) :
+    Source(parent)
 {
-    NormalDistribution *distr = new NormalDistribution(0,FWHM, mt);
+    NormalDistribution *distr = new NormalDistribution(0,FWHM, this);
     for (int i = 0; i < 2; ++i) {
         r0Distribution[i] = distr;
     }
 }
 
-GaussianBeamSource::GaussianBeamSource(double xFWHM, double yFWHM, mt19937 *mt) :
+GaussianBeamSource::GaussianBeamSource(double xFWHM, double yFWHM, BaseObject *parent) :
     Source()
 {
-    r0Distribution[0] = new NormalDistribution(0,xFWHM, mt);
-    r0Distribution[1] = new NormalDistribution(0,yFWHM, mt);
+    r0Distribution[0] = new NormalDistribution(0,xFWHM, this);
+    r0Distribution[1] = new NormalDistribution(0,yFWHM, this);
 }
 
 Walker* GaussianBeamSource::constructWalker() {
