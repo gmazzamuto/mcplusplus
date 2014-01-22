@@ -20,23 +20,44 @@ public:
     void setWavelength(double nm);
     double wavelength();
 
-private:
-    double wl;
+protected:
     AbstractDistribution *r0Distribution[3];
     AbstractDistribution *k0Distribution[3];
     AbstractDistribution *walkTimeDistribution;
+
+private:
+    double wl;
 };
 
 
 /**
- * @brief Pencil beam source \f$ \delta(\bm{r}) \, \delta (t) \, \delta (\bm{k})
- * \f$, with \f$ \bm{k} = (0,0,1) \f$.
+ * @brief Pencil beam source \f$ \delta(\bm{r}) \, \delta (t) \, \delta
+ * (\bm{k}_z) \f$, with \f$ \bm{k}_z = (0,0,1) \f$.
  */
 
 class PencilBeamSource : public Source
 {
 public:
     PencilBeamSource();
+    Walker *constructWalker();
+};
+
+
+/**
+ * @brief 2-dimensional \f$ xy \f$ Gaussian intensity profile (\f$z = 0\f$).
+ *
+ * Time distribution is left unspecified, \f$ \bm{k} = (0,0,1) \f$.
+ * Time distribution must be set separately, and is advisable to override the
+ * default \f$ \delta(\bm{k}_z) \f$ distribution as well if the Rayleigh length
+ * of the beam \f$ \sim w_0^2 / \lambda \f$ is much shorter than the
+ * scattering/transport length of the entrance layer.
+ */
+
+class GaussianBeamSource : public Source
+{
+public:
+    GaussianBeamSource(double FWHM, mt19937 *mt);
+    GaussianBeamSource(double xFWHM, double yFWHM, mt19937 *mt);
     Walker *constructWalker();
 };
 
