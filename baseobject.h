@@ -2,9 +2,11 @@
 #define BASEOBJECT_H
 
 #include <boost/random.hpp>
+#include <list>
 
 using namespace boost;
 using namespace boost::random;
+using namespace std;
 
 class BaseObject
 {
@@ -12,9 +14,6 @@ public:
     BaseObject(BaseObject *parent=NULL);
     virtual ~BaseObject();
 
-    mt19937* internalRNG();
-    bool isUsingInternalRNG();
-    void setRNG(mt19937 *mt);
     void setSeed(int seed);
 
     BaseObject *parent();
@@ -26,6 +25,12 @@ protected:
 private:
     bool hasAParent;
     BaseObject *parentObject;
+    list<BaseObject *> childList;
+
+    void removeChild(BaseObject *child);
+    void deleteAllChildren();
+    void addChild(BaseObject *child);
+    void setRNG(mt19937 *mt);
 
     virtual void setRNG_impl();
 };

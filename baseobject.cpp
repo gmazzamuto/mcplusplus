@@ -6,21 +6,43 @@ BaseObject::BaseObject(BaseObject *parent)
 }
 
 BaseObject::~BaseObject() {
-    if(!hasAParent && mt!=NULL)
-        delete mt;
-}
-
-bool BaseObject::isUsingInternalRNG() {
-    return hasAParent;
-}
-
-mt19937 *BaseObject::internalRNG() {
-    return mt;
+    if(!hasAParent) {
+        deleteAllChildren();
+        if(mt!=NULL)
+            delete mt;
+    }
+    else
+        parentObject->removeChild(this);
 }
 
 void BaseObject::setRNG(mt19937 *mt) {
+    if(mt == NULL)
+        return;
     this->mt = mt;
     setRNG_impl();
+    std::list<BaseObject *>::const_iterator iterator;
+    for (iterator = childList.begin(); iterator != childList.end(); ++iterator) {
+        BaseObject *child = *iterator;
+        child->setRNG(mt);
+    }
+}
+
+void BaseObject::addChild(BaseObject *child) {
+    childList.push_back(child);
+    child->setRNG(mt);
+}
+
+void BaseObject::removeChild(BaseObject *child) {
+    childList.remove(child);
+}
+
+void BaseObject::deleteAllChildren() {
+    BaseObject *child;
+    while(!childList.empty()) {
+        child = childList.back();
+        childList.remove(child);
+        delete child;
+    }
 }
 
 /**
@@ -51,7 +73,7 @@ void BaseObject::setParent(BaseObject *parent) {
     }
     else {
         hasAParent = true;
-        setRNG(parent->internalRNG());
+        parent->addChild(this);
     }
 }
 
