@@ -72,7 +72,7 @@ GaussianBeamSource::GaussianBeamSource(double FWHM, BaseObject *parent) :
 }
 
 GaussianBeamSource::GaussianBeamSource(double xFWHM, double yFWHM, BaseObject *parent) :
-    Source()
+    Source(parent)
 {
     r0Distribution[0] = new NormalDistribution(0,xFWHM, this);
     r0Distribution[1] = new NormalDistribution(0,yFWHM, this);
