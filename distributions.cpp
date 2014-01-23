@@ -108,6 +108,7 @@ double NormalDistribution::spin() {
 UniformDistribution::UniformDistribution(double min, double max, BaseObject *parent) :
     AbstractDistribution(parent)
 {
+    generator = NULL;
     this->min = min;
     this->max = max;
     reconstructGenerator();
@@ -134,13 +135,16 @@ double UniformDistribution::spin() {
 // Exponential distribution
 
 ExponentialDistribution::ExponentialDistribution(BaseObject *parent) :
-    AbstractDistribution(parent) {
+    AbstractDistribution(parent)
+{
+    generator = NULL;
     setLamda(1);
 }
 
 ExponentialDistribution::ExponentialDistribution(double lambda, BaseObject *parent) :
     AbstractDistribution(parent)
 {
+    generator = NULL;
     setLamda(lambda);
 }
 
