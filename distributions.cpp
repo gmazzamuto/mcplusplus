@@ -13,6 +13,11 @@ AbstractDistribution::AbstractDistribution(BaseObject *parent) :
 {
 }
 
+void AbstractDistribution::reconstructGenerator() {
+    if(mt!=NULL)
+        reconstructGenerator_impl();
+}
+
 /**
  * @brief Reconstructs the underlying boost::variate_generator.
  *
@@ -25,16 +30,17 @@ AbstractDistribution::AbstractDistribution(BaseObject *parent) :
  * completely destroys and recreates the variate_generator, to be used in the
  * setter functions for the distribution parameters.
  *
+ * This function is called by reconstructGenerator() if the RNG is valid.
  *
  * The default implementation does nothing.
  */
 
-void AbstractDistribution::reconstructGenerator() {
+void AbstractDistribution::reconstructGenerator_impl() {
 
 }
 
 void AbstractDistribution::reset() {
-    reconstructGenerator();
+    reconstructGenerator_impl();
 }
 
 void AbstractDistribution::setRNG_impl() {
@@ -70,7 +76,7 @@ NormalDistribution::~NormalDistribution() {
     delete generator;
 }
 
-void NormalDistribution::reconstructGenerator() {
+void NormalDistribution::reconstructGenerator_impl() {
     if(generator != NULL)
         delete generator;
     normal_distribution<double> normalDistribution(mean,sigma);
@@ -103,6 +109,7 @@ double NormalDistribution::spin() {
 
 
 
+
 // Uniform disribution
 
 UniformDistribution::UniformDistribution(double min, double max, BaseObject *parent) :
@@ -118,7 +125,7 @@ UniformDistribution::~UniformDistribution() {
     delete generator;
 }
 
-void UniformDistribution::reconstructGenerator() {
+void UniformDistribution::reconstructGenerator_impl() {
     if(generator != NULL)
         delete generator;
     uniform_real_distribution<double> uniformRealDistribution(min,max);
@@ -152,7 +159,7 @@ ExponentialDistribution::~ExponentialDistribution() {
     delete generator;
 }
 
-void ExponentialDistribution::reconstructGenerator() {
+void ExponentialDistribution::reconstructGenerator_impl() {
     if(generator != NULL)
         delete generator;
     exponential_distribution<double> exponentialRealDistribution(lambda);

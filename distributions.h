@@ -43,10 +43,11 @@ public:
     virtual void reset();
 
 protected:
-    virtual void reconstructGenerator();
+    void reconstructGenerator();
 
 private:
     void setRNG_impl();
+    virtual void reconstructGenerator_impl();
 };
 
 
@@ -94,7 +95,7 @@ public:
     void setFWHM(double value);
 
 private:
-    void reconstructGenerator();
+    void reconstructGenerator_impl();
 
     normalGenerator *generator;
     double mean, sigma;
@@ -121,7 +122,7 @@ public:
     virtual double spin();
 
 private:    
-    void reconstructGenerator();
+    void reconstructGenerator_impl();
 
     uniformGenerator *generator;
     double min, max;
@@ -151,7 +152,7 @@ public:
 
 private:
     void commonConstructor(double lambda);
-    void reconstructGenerator();
+    void reconstructGenerator_impl();
 
     exponentialGenerator *generator;
     double lambda;
