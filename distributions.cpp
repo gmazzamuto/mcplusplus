@@ -37,7 +37,7 @@ void AbstractDistribution::reset() {
     reconstructGenerator();
 }
 
-void AbstractDistribution::setSeed_impl() {
+void AbstractDistribution::setRNG_impl() {
     reset();
 }
 

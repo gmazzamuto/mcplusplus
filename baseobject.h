@@ -27,7 +27,7 @@ private:
     bool hasAParent;
     BaseObject *parentObject;
 
-    virtual void setSeed_impl();
+    virtual void setRNG_impl();
 };
 
 #endif // BASEOBJECT_H

@@ -46,7 +46,7 @@ protected:
     virtual void reconstructGenerator();
 
 private:
-    void setSeed_impl();
+    void setRNG_impl();
 };
 
 

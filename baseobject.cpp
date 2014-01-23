@@ -20,6 +20,7 @@ mt19937 *BaseObject::internalRNG() {
 
 void BaseObject::setRNG(mt19937 *mt) {
     this->mt = mt;
+    setRNG_impl();
 }
 
 /**
@@ -35,8 +36,7 @@ void BaseObject::setSeed(int seed) {
         return;
     if(mt != NULL)
         delete mt;
-    mt = new mt19937(seed);
-    setSeed_impl();
+    setRNG(new mt19937(seed));
 }
 
 BaseObject* BaseObject::parent() {
@@ -56,16 +56,16 @@ void BaseObject::setParent(BaseObject *parent) {
 }
 
 /**
- * @brief Custom further implementation of setSeed(), specified in derived
+ * @brief Custom further implementation of setRNG(), specified in derived
  * classes.
  *
- * This function will be called by setSeed() after the RNG has been initialized
- * to allow derived classes to perform further operations related to the setting
- * of the new seed.
+ * This function will be called by setRNG() after a new RNG has been set to
+ * allow derived classes to perform further operations related to the setting
+ * of the new RNG.
  *
  * The default implementation does nothing.
  */
 
-void BaseObject::setSeed_impl() {
+void BaseObject::setRNG_impl() {
 
 }
