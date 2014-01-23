@@ -44,8 +44,24 @@ void BaseObject::setSeed(int seed) {
     if(mt != NULL)
         delete mt;
     mt = new mt19937(seed);
+    setSeed_impl();
 }
 
 BaseObject* BaseObject::parent() {
     return parentObject;
+}
+
+/**
+ * @brief Custom further implementation of setSeed(), specified in derived
+ * classes.
+ *
+ * This function will be called by setSeed() after the RNG has been initialized
+ * to allow derived classes to perform further operations related to the setting
+ * of the new seed.
+ *
+ * The default implementation does nothing.
+ */
+
+void BaseObject::setSeed_impl() {
+
 }

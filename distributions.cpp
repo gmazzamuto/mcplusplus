@@ -37,6 +37,10 @@ void AbstractDistribution::reset() {
     reconstructGenerator();
 }
 
+void AbstractDistribution::setSeed_impl() {
+    reset();
+}
+
 
 
 
@@ -155,21 +159,16 @@ void ExponentialDistribution::setLamda(double value) {
 // Sech2 (Logistic) distribution
 
 Sech2Distribution::Sech2Distribution(double mean, double scale, BaseObject *parent) :
-    AbstractDistribution(parent)
+    UniformDistribution(0,1,parent)
 {
     this->mean = mean;
     this->scale = scale;
-    uRandom = new UniformDistribution(0,1,parent);
-}
-
-Sech2Distribution::~Sech2Distribution() {
-    delete uRandom;
 }
 
 double Sech2Distribution::spin() {
     double temp;
     double tempRand;
-    tempRand = uRandom->spin();
+    tempRand = UniformDistribution::spin();
     temp = 1. - tempRand;
     temp = tempRand/temp;
     temp = log(temp);

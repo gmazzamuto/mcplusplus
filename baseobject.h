@@ -24,6 +24,8 @@ protected:
 private:
     bool usingInternalMt; /**< \brief true if using its own internal RNG*/
     BaseObject *parentObject;
+
+    virtual void setSeed_impl();
 };
 
 #endif // BASEOBJECT_H

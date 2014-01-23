@@ -34,19 +34,16 @@ public:
  * \ingroup CosTheta
  */
 
-class AnisotropicCosThetaGenerator : public AbstractDistribution
+class AnisotropicCosThetaGenerator : public UniformDistribution
 {
 public:
     AnisotropicCosThetaGenerator(double g, BaseObject *parent=NULL);
-    ~AnisotropicCosThetaGenerator();
 
+    void setg(double g);
     double spin();
 
 private:
-    void setg(double g);
-
     double g;  /**< @brief scattering anisotropy factor*/
-    UniformDistribution *uRandom;
 };
 
 #endif // COSTHETAGENERATOR_H

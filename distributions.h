@@ -44,6 +44,9 @@ public:
 
 protected:
     virtual void reconstructGenerator();
+
+private:
+    void setSeed_impl();
 };
 
 
@@ -115,7 +118,7 @@ public:
     UniformDistribution(double min, double max, BaseObject *parent=NULL);
     ~UniformDistribution();
 
-    double spin() {return (*generator)();}
+    virtual double spin() {return (*generator)();}
 
 private:    
     void reconstructGenerator();
@@ -168,11 +171,10 @@ private:
  * \ingroup Distributions
  */
 
-class Sech2Distribution : public AbstractDistribution
+class Sech2Distribution : public UniformDistribution
 {
 public:
     Sech2Distribution(double mean, double scale, BaseObject* parent=NULL);
-    ~Sech2Distribution();
 
     double spin();
     void setMean(double value);
@@ -180,7 +182,6 @@ public:
     void setFWHM(double value);
 
 private:
-    UniformDistribution *uRandom;
     double mean, scale;
 };
 
