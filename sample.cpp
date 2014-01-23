@@ -4,6 +4,7 @@ Sample::Sample()
 {
     nLayers=0;
     totThickness = 0;
+    zBoundaries.push_back(totThickness);
 }
 
 /**
@@ -13,7 +14,8 @@ Sample::Sample()
  *
  *
  * A layer is an infinitely extended slab with the given material and the given
- * finite thickness (measured along \f$ z \f$).
+ * finite thickness (measured along \f$ z \f$). Layer are stacked from left to
+ * right. The first interface of the first layer is placed in \f$ z=0 \f$.
  */
 
 void Sample::addLayer(const Material *material, double thickness) {
