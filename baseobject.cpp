@@ -2,23 +2,16 @@
 
 BaseObject::BaseObject(BaseObject *parent)
 {
-    if(parent==NULL) {
-        usingInternalMt=true;
-    }
-    else {
-        usingInternalMt = false;
-        mt = parent->internalRNG();
-    }
-    parentObject = parent;
+    setParent(parent);
 }
 
 BaseObject::~BaseObject() {
-    if(usingInternalMt && mt!=NULL)
+    if(!hasAParent && mt!=NULL)
         delete mt;
 }
 
 bool BaseObject::isUsingInternalRNG() {
-    return usingInternalMt;
+    return hasAParent;
 }
 
 mt19937 *BaseObject::internalRNG() {
@@ -27,7 +20,6 @@ mt19937 *BaseObject::internalRNG() {
 
 void BaseObject::setRNG(mt19937 *mt) {
     this->mt = mt;
-    usingInternalMt = false;
 }
 
 /**
@@ -39,7 +31,7 @@ void BaseObject::setRNG(mt19937 *mt) {
  */
 
 void BaseObject::setSeed(int seed) {
-    if(!usingInternalMt)
+    if(hasAParent)
         return;
     if(mt != NULL)
         delete mt;
@@ -49,6 +41,18 @@ void BaseObject::setSeed(int seed) {
 
 BaseObject* BaseObject::parent() {
     return parentObject;
+}
+
+void BaseObject::setParent(BaseObject *parent) {
+    parentObject = parent;
+    if(parent == NULL) {
+        hasAParent = false;
+        mt = NULL;
+    }
+    else {
+        hasAParent = true;
+        setRNG(parent->internalRNG());
+    }
 }
 
 /**

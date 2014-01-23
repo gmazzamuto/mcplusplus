@@ -16,13 +16,15 @@ public:
     bool isUsingInternalRNG();
     void setRNG(mt19937 *mt);
     void setSeed(int seed);
+
     BaseObject *parent();
+    void setParent(BaseObject *parent);
 
 protected:
     mt19937* mt;
 
 private:
-    bool usingInternalMt; /**< \brief true if using its own internal RNG*/
+    bool hasAParent;
     BaseObject *parentObject;
 
     virtual void setSeed_impl();
