@@ -97,6 +97,9 @@ void NormalDistribution::setFWHM(double value) {
     setSigma(value/(2*root_ln_four<double>()));
 }
 
+double NormalDistribution::spin() {
+    return (*generator)();
+}
 
 
 
@@ -119,6 +122,10 @@ void UniformDistribution::reconstructGenerator() {
         delete generator;
     uniform_real_distribution<double> uniformRealDistribution(min,max);
     generator = new uniformGenerator(*mt,uniformRealDistribution);
+}
+
+double UniformDistribution::spin() {
+    return (*generator)();
 }
 
 
@@ -151,6 +158,10 @@ void ExponentialDistribution::reconstructGenerator() {
 void ExponentialDistribution::setLamda(double value) {
     lambda = value;
     reconstructGenerator();
+}
+
+double ExponentialDistribution::spin() {
+    return (*generator)();
 }
 
 

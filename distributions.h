@@ -88,7 +88,7 @@ public:
     NormalDistribution(double mean, double sigma, BaseObject *parent = NULL);
     ~NormalDistribution();
 
-    double spin() {return (*generator)();}
+    double spin();
     void setMean(double value);
     void setSigma(double value);
     void setFWHM(double value);
@@ -118,7 +118,7 @@ public:
     UniformDistribution(double min, double max, BaseObject *parent=NULL);
     ~UniformDistribution();
 
-    virtual double spin() {return (*generator)();}
+    virtual double spin();
 
 private:    
     void reconstructGenerator();
@@ -147,7 +147,7 @@ public:
     ~ExponentialDistribution();
 
     void setLamda(double value);
-    double spin() {return (*generator)();}
+    double spin();
 
 private:
     void commonConstructor(double lambda);
