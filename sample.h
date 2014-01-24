@@ -1,12 +1,13 @@
 #ifndef SAMPLE_H
 #define SAMPLE_H
 
+#include <baseobject.h>
 #include "material.h"
 #include <vector>
 
 using namespace std;
 
-class Sample
+class Sample : public BaseObject
 {
 public:
     Sample();

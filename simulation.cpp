@@ -27,12 +27,26 @@ void Simulation::setTotalWalkers(int N) {
     totalWalkers = N;
 }
 
+/**
+ * @brief Sets the kind of sample to be simulated. The simulation is
+ * automatically set as the sample's parent.
+ * @param sample
+ */
+
 void Simulation::setSample(Sample *sample) {
     this->sample = sample;
+    sample->setParent(this);
 }
+
+/**
+ * @brief Sets the kind of source to be simulated. The simulation is
+ * automatically set as the source's parent.
+ * @param source
+ */
 
 void Simulation::setSource(Source *source) {
     this->source = source;
+    source->setParent(this);
 }
 
 /**
