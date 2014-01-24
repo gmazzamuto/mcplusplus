@@ -15,18 +15,20 @@ using namespace boost::random;
  * which is initialized with setSeed(). Therefore it is mandatory to call
  * setSeed() for stand-alone objects before any call to functions needing RNG.
  *
- * If a BaseRandom object has a parent, then the following holds:
- * - if the parent is of type BaseRandom, the parent's RNG is used and
- * \em shared with all child objects of type BaseRandom;
- * - if the object has child objects, calling setSeed() will construct a RNG
- * that will be \em shared among all child objects;
- * - if the object has a parent object of type BaseRandom,
- * calling setSeed() does nothing. In this case setSeed() has to be called in
- * the parent.
+ * If a parent / child relationship involving BaseRandom objects exists, then
+ * the following holds:
+ * - if the parent is of type BaseRandom, the object will \em share the parent's
+ * RNG. Also, all child objects of type BaseRandom will \em share
+ * that same RNG.
+ * - if the object has no parent or has a parent which is not a BaseRandom,
+ * calling setSeed() will construct a RNG that will be \em shared among all
+ * child objects of type BaseRandom;
+ * - if the object has a parent of type BaseRandom, calling setSeed()
+ * does nothing. In this case setSeed() has to be called in the parent.
  *
- * To sum up: parent / child relationship can be used to create objects which
- * will \em share the same instance of the RNG; this instance is created by
- * calling setSeed() on the parent object. Again, calling setSeed() is mandatory
+ * To sum up: parent / child relationships can be used to create objects which
+ * \em share the same instance of the RNG; this instance is created by calling
+ * setSeed() on the parent object. Again, calling setSeed() is mandatory
  * to initialize the RNG, but it needs to be called only once (in the topmost
  * BaseRandom parent).
  */
