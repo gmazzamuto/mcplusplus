@@ -68,7 +68,7 @@ void Simulation::run() {
         Walker *walker = source->constructWalker();
 
         while(1) {
-            double step = stepLength->spin();
+            double length = stepLength->spin();
             double cosTheta = isotrCosTheta->spin();
             double sinTheta = sqrt(1-pow(cosTheta,2));
             double psi = randomPsi->spin();
@@ -87,14 +87,14 @@ void Simulation::run() {
                 walker->k1[2] = -sinTheta*cosPsi*temp + cosTheta*walker->k0[2];
             }
 
-            walker->r1[0] = walker->r0[0] + step*walker->k1[0];
-            walker->r1[1] = walker->r0[1] + step*walker->k1[1];
-            walker->r1[2] = walker->r0[2] + step*walker->k1[2];
+            walker->r1[0] = walker->r0[0] + length*walker->k1[0];
+            walker->r1[1] = walker->r0[1] + length*walker->k1[1];
+            walker->r1[2] = walker->r0[2] + length*walker->k1[2];
 
             memcpy(walker->r0,walker->r1,3*sizeof(double));
             memcpy(walker->k0,walker->k1,3*sizeof(double));
 
-            walker->walkTime += step; //FIXME speed of light
+            walker->walkTime += length; //FIXME speed of light
 
             printf("%lf\t%lf\t%lf\n", walker->r0[0], walker->r0[1], walker->r0[2]);
 
