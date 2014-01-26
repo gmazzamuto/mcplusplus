@@ -1,6 +1,10 @@
 #ifndef WALKER_H
 #define WALKER_H
 
+#include <vector>
+
+using namespace std;
+
 class Walker
 {
 public:
@@ -10,7 +14,7 @@ public:
     double k0[3];  /**< @brief direction unit vector for the \f$ (n-1) \f$-th step*/
     double k1[3];  /**< @brief direction unit vector for the \f$ n \f$-th step*/
     double walkTime;  /**< @brief time elapsed up to the current position*/
-    double walkDistance;  /**< @brief distance covered to the current position*/
+    vector<double> nInteractions;  /**< @brief number of scattering events occured in each layer*/
 };
 
 #endif // WALKER_H

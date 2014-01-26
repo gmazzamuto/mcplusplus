@@ -94,7 +94,6 @@ void Simulation::run() {
             memcpy(walker->r0,walker->r1,3*sizeof(double));
             memcpy(walker->k0,walker->k1,3*sizeof(double));
 
-            walker->walkDistance += step;
             walker->walkTime += step; //FIXME speed of light
 
             printf("%lf\t%lf\t%lf\n", walker->r0[0], walker->r0[1], walker->r0[2]);
@@ -108,6 +107,7 @@ void Simulation::run() {
                 reflected++;
                 break;
             }
+            walker->nInteractions[0]++; //FIXME fix hardcoded layer index
         }
 
         n++;
