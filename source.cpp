@@ -90,6 +90,7 @@ GaussianBeamSource::GaussianBeamSource(double FWHM, BaseObject *parent) :
     for (int i = 0; i < 2; ++i) {
         r0Distribution[i] = distr;
     }
+    r0Distribution[2] = new DeltaDistribution(0, this);
 }
 
 GaussianBeamSource::GaussianBeamSource(double xFWHM, double yFWHM, BaseObject *parent) :
@@ -97,14 +98,23 @@ GaussianBeamSource::GaussianBeamSource(double xFWHM, double yFWHM, BaseObject *p
 {
     r0Distribution[0] = new NormalDistribution(0,xFWHM, this);
     r0Distribution[1] = new NormalDistribution(0,yFWHM, this);
+    r0Distribution[2] = new DeltaDistribution(0, this);
 }
 
-Walker* GaussianBeamSource::constructWalker() {
-    Walker *walker = new Walker();
-    if(cosThetaDistribution != NULL || psiDistribution != NULL) //check if one of the k0Distributions has been overridden
-        walker = Source::constructWalker(); //r0Distributions should already be setted by now
-    walker->k0[2] = 1;
-    walker->walkTime = walkTimeDistribution->spin();
+/**
+ * @brief Constructs a new walker.
+ * @return A pointer to the newly constructed walker.
+ * \pre walkTimeDistribution has to be valid
+ */
 
+Walker* GaussianBeamSource::constructWalker() {
+    Walker *walker;
+    if(cosThetaDistribution != NULL || psiDistribution != NULL) //check if one of the k0Distributions has been overridden
+        walker = Source::constructWalker(); //r0Distributions should already be set by now
+    else {
+        walker = new Walker();
+        walker->k0[2] = 1;
+        walker->walkTime = walkTimeDistribution->spin();
+    }
     return walker;
 }
