@@ -35,14 +35,20 @@ Walker* Source::constructWalker() {
 
 void Source::setr0Distribution(AbstractDistribution **distrArray) {
     for (int i = 0; i < 3; ++i) {
+        if(r0Distribution[i] != NULL)
+            delete r0Distribution[i];
         r0Distribution[i] = distrArray[i];
         r0Distribution[i]->setParent(this);
     }
 }
 
 void Source::setk0Distribution(AbstractDistribution *cosThetaDistr, AbstractDistribution *psiDistr) {
+    if(cosThetaDistribution != NULL)
+        delete cosThetaDistribution;
     cosThetaDistribution = cosThetaDistr;
     cosThetaDistribution->setParent(this);
+    if(psiDistribution != NULL)
+        delete psiDistribution;
     psiDistribution = psiDistr;
     psiDistribution->setParent(this);
 }
