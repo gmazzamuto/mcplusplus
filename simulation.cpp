@@ -61,15 +61,24 @@ void Simulation::run() {
                 walker->k1[1] = sinTheta*sinPsi;
                 walker->k1[2] = cosTheta*sign<double>(walker->k0[2]);
             }
-            else { //check and set some intermediate temporary variables --> like sqrt(1-pow(walker->k1[3],2))
-                walker->k1[0] = (sinTheta*(walker->k1[0]*walker->k1[2]*cosPsi - walker->k1[1]*sinPsi))/sqrt(1-pow(walker->k1[3],2)) + cosTheta*walker->k1[0];
-                walker->k1[1] = (sinTheta*(walker->k1[1]*walker->k1[2]*cosPsi + walker->k1[0]*sinPsi))/sqrt(1-pow(walker->k1[3],2)) + cosTheta*walker->k1[1];
-                walker->k1[2] = -sinTheta*cosPsi*sqrt(1-pow(walker->k1[3],2)) + cosTheta*walker->k1[2];
+            else {
+                double temp = sqrt(1-pow(walker->k0[2],2));
+                walker->k1[0] = (sinTheta*(walker->k0[0]*walker->k0[2]*cosPsi - walker->k0[1]*sinPsi))/temp + cosTheta*walker->k0[0];
+                walker->k1[1] = (sinTheta*(walker->k0[1]*walker->k0[2]*cosPsi + walker->k0[0]*sinPsi))/temp + cosTheta*walker->k0[1];
+                walker->k1[2] = -sinTheta*cosPsi*temp + cosTheta*walker->k0[2];
             }
 
             walker->r1[0] = walker->r0[0] + step*walker->k1[0];
             walker->r1[1] = walker->r0[1] + step*walker->k1[1];
             walker->r1[2] = walker->r0[2] + step*walker->k1[2];
+
+            memcpy(walker->r0,walker->r1,3*sizeof(double));
+            memcpy(walker->k0,walker->k1,3*sizeof(double));
+
+            walker->walkDistance += step;
+            walker->walkTime += step; //FIXME speed of light
+
+            printf("%lf\t%lf\t%lf\n", walker->r0[0], walker->r0[1], walker->r0[2]);
 
             if(walker->r1[2] > totalThickness) {
                 transmitted++;
@@ -80,12 +89,6 @@ void Simulation::run() {
                 reflected++;
                 break;
             }
-
-            memcpy(walker->k0,walker->k1,3*sizeof(double));
-            memcpy(walker->k0,walker->k1,3*sizeof(double));
-
-            walker->walkDistance += step;
-            walker->walkTime += step; //FIXME speed of light
         }
 
         n++;
