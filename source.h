@@ -15,14 +15,15 @@ public:
     Source(BaseObject *parent=NULL);
     virtual Walker *constructWalker();
     void setr0Distribution(AbstractDistribution **distrArray);
-    void setk0Distribution(AbstractDistribution **distrArray);
+    void setk0Distribution(AbstractDistribution *cosThetaDistr, AbstractDistribution *psiDistr);
     void setWalkTimeDistribution(AbstractDistribution *distr);
     void setWavelength(double nm);
     double wavelength();
 
 protected:
     AbstractDistribution *r0Distribution[3];
-    AbstractDistribution *k0Distribution[3];
+    AbstractDistribution *cosThetaDistribution;
+    AbstractDistribution *psiDistribution;
     AbstractDistribution *walkTimeDistribution;
 
 private:

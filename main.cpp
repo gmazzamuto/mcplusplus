@@ -1,18 +1,16 @@
 #include <stdio.h>
 #include "simulation.h"
+#include "psigenerator.h"
 
 int main(int argc, char *argv[])
 {
     Source *source = new Source();
     DeltaDistribution *deltaZ = new DeltaDistribution(50);
+    PsiGenerator *unif2pi = new PsiGenerator;
     DeltaDistribution *delta0 = new DeltaDistribution(0);
     DeltaDistribution *delta1 = new DeltaDistribution(1);
 
-    AbstractDistribution *kDistr[3];
-    kDistr[0] = delta0;
-    kDistr[1] = delta0;
-    kDistr[2] = delta1;
-    source->setk0Distribution(kDistr);
+    source->setk0Distribution(delta1,unif2pi);
 
     AbstractDistribution *rDistr[3];
     rDistr[0] = deltaZ;

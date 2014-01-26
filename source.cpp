@@ -1,21 +1,33 @@
 #include "source.h"
+#include "math.h"
 
 Source::Source(BaseObject *parent) :
     BaseRandom(parent)
 {
     walkTimeDistribution = NULL;
+    cosThetaDistribution = NULL;
+    psiDistribution = NULL;
     for (int i = 0; i < 3; ++i) {
         r0Distribution[i] = NULL;
-        k0Distribution[i] = NULL;
     }
 }
 
 Walker* Source::constructWalker() {
     Walker *walker = new Walker();
+
+    double cosTheta = cosThetaDistribution->spin();
+    double cosPsi = cos(psiDistribution->spin());
+    double sinTheta = sqrt(1 - pow(cosTheta,2));
+    double sinPsi = sin(psiDistribution->spin());
+
+    walker->k0[0] = sinTheta*cosPsi;
+    walker->k0[1] = sinTheta*sinPsi;
+    walker->k0[2] = cosTheta;
+
     for (int i = 0; i < 3; ++i) {
         walker->r0[i] = r0Distribution[i]->spin();
-        walker->k0[i] = k0Distribution[i]->spin();
     }
+
     walker->walkTime = walkTimeDistribution->spin();
 
     return walker;
@@ -24,17 +36,20 @@ Walker* Source::constructWalker() {
 void Source::setr0Distribution(AbstractDistribution **distrArray) {
     for (int i = 0; i < 3; ++i) {
         r0Distribution[i] = distrArray[i];
+        r0Distribution[i]->setParent(this);
     }
 }
 
-void Source::setk0Distribution(AbstractDistribution **distrArray) {
-    for (int i = 0; i < 3; ++i) {
-        k0Distribution[i] = distrArray[i];
-    }
+void Source::setk0Distribution(AbstractDistribution *cosThetaDistr, AbstractDistribution *psiDistr) {
+    cosThetaDistribution = cosThetaDistr;
+    cosThetaDistribution->setParent(this);
+    psiDistribution = psiDistr;
+    psiDistribution->setParent(this);
 }
 
 void Source::setWalkTimeDistribution(AbstractDistribution *distr) {
     walkTimeDistribution = distr;
+    walkTimeDistribution->setParent(this);
 }
 
 void Source::setWavelength(double nm) {
@@ -80,16 +95,9 @@ GaussianBeamSource::GaussianBeamSource(double xFWHM, double yFWHM, BaseObject *p
 
 Walker* GaussianBeamSource::constructWalker() {
     Walker *walker = new Walker();
-    for (int i = 0; i < 2; ++i) {
-        walker->r0[i] = r0Distribution[i]->spin();
-    }
-    if(k0Distribution[2] != NULL) //check if one of the 3 k0Distributions has been overridden
-        for (int i = 0; i < 3; ++i) {
-            walker->k0[i] = k0Distribution[i]->spin();
-        }
-    else
-        walker->k0[2] = 1;
-
+    if(cosThetaDistribution != NULL || psiDistribution != NULL) //check if one of the k0Distributions has been overridden
+        walker = Source::constructWalker(); //r0Distributions should already be setted by now
+    walker->k0[2] = 1;
     walker->walkTime = walkTimeDistribution->spin();
 
     return walker;
