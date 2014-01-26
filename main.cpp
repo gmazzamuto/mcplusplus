@@ -6,7 +6,7 @@ int main(int argc, char *argv[])
 {
     Source *source = new Source();
     DeltaDistribution *deltaZ = new DeltaDistribution(50);
-    PsiGenerator *unif2pi = new PsiGenerator;
+    IsotropicPsiGenerator *unif2pi = new IsotropicPsiGenerator;
     DeltaDistribution *delta0 = new DeltaDistribution(0);
     DeltaDistribution *delta1 = new DeltaDistribution(1);
 

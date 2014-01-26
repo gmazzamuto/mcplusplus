@@ -63,7 +63,7 @@ void Simulation::run() {
 
     ExponentialDistribution *stepLength = new ExponentialDistribution(this);
     IsotropicCosThetaGenerator *isotrCosTheta = new IsotropicCosThetaGenerator(this);
-    PsiGenerator *randomPsi = new PsiGenerator(this);
+    IsotropicPsiGenerator *randomPsi = new IsotropicPsiGenerator(this);
 
     while(n < totalWalkers) {
         Walker *walker = source->constructWalker();

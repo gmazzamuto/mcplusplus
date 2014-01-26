@@ -3,14 +3,14 @@
 #include "distributions.h"
 
 /**
- * @brief The PsiGenerator class generates the azimuthal scattering angle
+ * @brief The IsotropicPsiGenerator class generates the azimuthal scattering angle
  * uniformly in the interval \f$ \psi \in [0, 2\pi) \f$.
  */
 
-class PsiGenerator : public UniformDistribution
+class IsotropicPsiGenerator : public UniformDistribution
 {
 public:
-    PsiGenerator(BaseObject *parent=NULL);
+    IsotropicPsiGenerator(BaseObject *parent=NULL);
 };
 
 #endif // PSIGENERATOR_H
