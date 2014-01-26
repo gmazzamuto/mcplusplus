@@ -32,3 +32,14 @@ GlassSlide::GlassSlide() :
     n = 1.5203;
 }
 
+/**
+ * \todo implement http://www.thorlabs.de/newgrouppage9.cfm?objectgroup_id=196&pn=NOA65#196
+ * dispersion formula (see under Optical Properties tab)
+ */
+
+NorlandOpticalAdhesive65::NorlandOpticalAdhesive65() :
+    Material()
+{
+    isScattering = false;
+    n = 1.514;
+}

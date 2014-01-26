@@ -25,4 +25,11 @@ public:
     GlassSlide();
 };
 
+
+class NorlandOpticalAdhesive65 : public Material
+{
+public:
+    NorlandOpticalAdhesive65();
+};
+
 #endif // MATERIAL_H
