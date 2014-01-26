@@ -56,6 +56,7 @@ void Simulation::setSource(Source *source) {
  */
 
 void Simulation::run() {
+    int nLayers = sample->nLayers();
     double totalThickness = sample->totalThickness();
 
     int n = 0;
@@ -66,6 +67,7 @@ void Simulation::run() {
 
     while(n < totalWalkers) {
         Walker *walker = source->constructWalker();
+        walker->nInteractions.insert(walker->nInteractions.begin(),nLayers,0);
 
         while(1) {
             double length = stepLength->spin();

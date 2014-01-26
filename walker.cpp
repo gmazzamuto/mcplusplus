@@ -7,5 +7,4 @@ Walker::Walker()
     r1[0]=r1[1]=r1[2]=0;
     k1[0]=k1[1]=k1[2]=0;
     walkTime = 0;
-    nInteractions.push_back(0);
 }
