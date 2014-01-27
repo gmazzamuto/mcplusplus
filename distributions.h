@@ -1,12 +1,8 @@
 #ifndef DISTRIBUTIONS_H
 #define DISTRIBUTIONS_H
 
-#include <boost/random.hpp>
 #include <math.h>
 #include "baserandom.h"
-
-using namespace boost;
-using namespace boost::random;
 
 /**
   * \defgroup Distributions
@@ -42,14 +38,13 @@ public:
      * \pre The RNG has to be valid (see BaseRandom)
      */
     virtual double spin() = 0;
-    virtual void reset();
+    void reset();
 
 protected:
-    void reconstructGenerator();
+    virtual void reconstructDistribution();
 
 private:
     void setRNG_impl();
-    virtual void reconstructGenerator_impl();
 };
 
 
@@ -77,8 +72,6 @@ private:
 
 // Normal (Gaussian) distribution
 
-typedef variate_generator<mt19937&, normal_distribution<double> > normalGenerator;
-
 /**
  * @brief Normal (Gaussian) distribution \f$ f(x) = (2\pi \sigma)^{-\frac{1}{2}}
  * \exp \left( -\frac{(x-\mu)^2}{2 \sigma^2} \right) \f$
@@ -89,7 +82,6 @@ class NormalDistribution : public AbstractDistribution
 {
 public:
     NormalDistribution(double mean, double sigma, BaseObject *parent = NULL);
-    ~NormalDistribution();
 
     double spin();
     void setMean(double value);
@@ -97,9 +89,9 @@ public:
     void setFWHM(double value);
 
 private:
-    void reconstructGenerator_impl();
+    void reconstructDistribution();
 
-    normalGenerator *generator;
+    normal_distribution<double> distribution;
     double mean, sigma;
 };
 
@@ -107,8 +99,6 @@ private:
 
 
 // Uniform disribution
-
-typedef variate_generator<mt19937&, uniform_real_distribution<double> > uniformGenerator;
 
 /**
  * @brief Uniform real distribution
@@ -119,14 +109,13 @@ class UniformDistribution : public AbstractDistribution
 {
 public:
     UniformDistribution(double min, double max, BaseObject *parent=NULL);
-    ~UniformDistribution();
 
     virtual double spin();
 
 private:    
-    void reconstructGenerator_impl();
+    void reconstructDistribution();
 
-    uniformGenerator *generator;
+    uniform_real_distribution<double> distribution;
     double min, max;
 };
 
@@ -134,8 +123,6 @@ private:
 
 
 // Exponential distribution
-
-typedef variate_generator<mt19937&, exponential_distribution<double> > exponentialGenerator;
 
 /**
  * @brief Exponential distribution \f$ f(x) = \lambda \exp ( -\lambda x) \f$
@@ -147,16 +134,14 @@ class ExponentialDistribution : public AbstractDistribution
 public:
     ExponentialDistribution(BaseObject *parent=NULL);
     ExponentialDistribution(double lambda, BaseObject *parent);
-    ~ExponentialDistribution();
 
     void setLamda(double value);
     double spin();
 
 private:
-    void commonConstructor(double lambda);
-    void reconstructGenerator_impl();
+    void reconstructDistribution();
 
-    exponentialGenerator *generator;
+    exponential_distribution<double> distribution;
     double lambda;
 };
 
@@ -187,6 +172,5 @@ public:
 private:
     double mean, scale;
 };
-
 
 #endif // DISTRIBUTIONS_H

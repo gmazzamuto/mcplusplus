@@ -13,11 +13,6 @@ AbstractDistribution::AbstractDistribution(BaseObject *parent) :
 {
 }
 
-void AbstractDistribution::reconstructGenerator() {
-    if(mt!=NULL)
-        reconstructGenerator_impl();
-}
-
 /**
  * @brief Reconstructs the underlying boost::variate_generator.
  *
@@ -35,12 +30,12 @@ void AbstractDistribution::reconstructGenerator() {
  * The default implementation does nothing.
  */
 
-void AbstractDistribution::reconstructGenerator_impl() {
+void AbstractDistribution::reconstructDistribution() {
 
 }
 
 void AbstractDistribution::reset() {
-    reconstructGenerator_impl();
+    reconstructDistribution();
 }
 
 void AbstractDistribution::setRNG_impl() {
@@ -63,36 +58,30 @@ double DeltaDistribution::spin() {
 }
 
 
+
+
 // Normal (Gaussian) distribution
 
 NormalDistribution::NormalDistribution(double mean, double sigma, BaseObject *parent) :
     AbstractDistribution(parent)
 {
-    generator = NULL;
     this->mean = mean;
     this->sigma = sigma;
-    reconstructGenerator();
+    reconstructDistribution();
 }
 
-NormalDistribution::~NormalDistribution() {
-    delete generator;
-}
-
-void NormalDistribution::reconstructGenerator_impl() {
-    if(generator != NULL)
-        delete generator;
-    normal_distribution<double> normalDistribution(mean,sigma);
-    generator = new normalGenerator(*mt,normalDistribution);
+void NormalDistribution::reconstructDistribution() {
+    distribution = normal_distribution<double>(mean,sigma);
 }
 
 void NormalDistribution::setSigma(double value) {
     sigma = value;
-    reconstructGenerator();
+    reconstructDistribution();
 }
 
 void NormalDistribution::setMean(double value) {
     mean = value;
-    reconstructGenerator();
+    reconstructDistribution();
 }
 
 /**
@@ -106,7 +95,7 @@ void NormalDistribution::setFWHM(double value) {
 }
 
 double NormalDistribution::spin() {
-    return (*generator)();
+    return distribution(*mt);
 }
 
 
@@ -117,25 +106,17 @@ double NormalDistribution::spin() {
 UniformDistribution::UniformDistribution(double min, double max, BaseObject *parent) :
     AbstractDistribution(parent)
 {
-    generator = NULL;
     this->min = min;
     this->max = max;
-    reconstructGenerator();
+    reconstructDistribution();
 }
 
-UniformDistribution::~UniformDistribution() {
-    delete generator;
-}
-
-void UniformDistribution::reconstructGenerator_impl() {
-    if(generator != NULL)
-        delete generator;
-    uniform_real_distribution<double> uniformRealDistribution(min,max);
-    generator = new uniformGenerator(*mt,uniformRealDistribution);
+void UniformDistribution::reconstructDistribution() {
+    distribution = uniform_real_distribution<double>(min,max);
 }
 
 double UniformDistribution::spin() {
-    return (*generator)();
+    return distribution(*mt);
 }
 
 
@@ -146,35 +127,26 @@ double UniformDistribution::spin() {
 ExponentialDistribution::ExponentialDistribution(BaseObject *parent) :
     AbstractDistribution(parent)
 {
-    generator = NULL;
     setLamda(1);
 }
 
 ExponentialDistribution::ExponentialDistribution(double lambda, BaseObject *parent) :
     AbstractDistribution(parent)
 {
-    generator = NULL;
     setLamda(lambda);
 }
 
-ExponentialDistribution::~ExponentialDistribution() {
-    delete generator;
-}
-
-void ExponentialDistribution::reconstructGenerator_impl() {
-    if(generator != NULL)
-        delete generator;
-    exponential_distribution<double> exponentialRealDistribution(lambda);
-    generator = new exponentialGenerator(*mt,exponentialRealDistribution);
+void ExponentialDistribution::reconstructDistribution() {
+    distribution = exponential_distribution<double>(lambda);
 }
 
 void ExponentialDistribution::setLamda(double value) {
     lambda = value;
-    reconstructGenerator();
+    reconstructDistribution();
 }
 
 double ExponentialDistribution::spin() {
-    return (*generator)();
+    return distribution(*mt);
 }
 
 
