@@ -15,10 +15,9 @@
  * @brief Base distribution class. Provides a common interface to handle various
  * distributions.
  *
- * This class is a wrapper around boost::variate_generator using a boost::mt19937
- * random number generator. By using the appropriate constructor this class can
- * use an external instance of the RNG or, alternatively, instantiate its own
- * internal RNG with the given seed.
+ * This class joins a random number generator together with a random number
+ * distribution, much like boost::variate_generator. As with every BaseRandom
+ * object, the RNG used can be internal or the parent's.
  *
  * A new random number can be drawn by calling the spin() method which must be
  * reimplemented by derived classes.

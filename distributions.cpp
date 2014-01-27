@@ -1,9 +1,10 @@
 #include "distributions.h"
 
-
 #include <boost/math/constants/constants.hpp>
 
 using namespace boost::math::constants;
+
+
 
 
 // Abstract distribution
@@ -14,18 +15,16 @@ AbstractDistribution::AbstractDistribution(BaseObject *parent) :
 }
 
 /**
- * @brief Reconstructs the underlying boost::variate_generator.
+ * @brief Reconstructs the underlying distribution.
  *
- * Derived classes using a distribution which caches random numbers (such as
- * boost::random::normal_distribution) must reimplement this function. This
- * function is called by setSeed() so that numbers generated with the previous
- * seed but not yet used are deleted. In principle this could be simply
- * achieved by calling the reset() method that every boost distribution
+ * This function is called by setRNG() and reset(). This is useful for
+ * distributions that cache random numbers (such as
+ * boost::random::normal_distribution) so that numbers generated with the
+ * previous seed but not yet used are deleted. In principle this could be simply
+ * achieved by calling the %reset() method that every boost distribution
  * implements. Anyhow it is useful to have a function like this one, that
- * completely destroys and recreates the variate_generator, to be used in the
- * setter functions for the distribution parameters.
- *
- * This function is called by reconstructGenerator() if the RNG is valid.
+ * recreates the distribution, to be used in the setter functions for the
+ * distribution parameters.
  *
  * The default implementation does nothing.
  */
@@ -33,6 +32,15 @@ AbstractDistribution::AbstractDistribution(BaseObject *parent) :
 void AbstractDistribution::reconstructDistribution() {
 
 }
+
+/**
+ * @brief Resets the distribution.
+ *
+ * Subsequent calls to spin() do not depend on values produced by the RNG engine
+ * prior to invoking reset.
+ *
+ * Calls reconstructDistribution().
+ */
 
 void AbstractDistribution::reset() {
     reconstructDistribution();
