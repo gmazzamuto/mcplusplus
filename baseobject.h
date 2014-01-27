@@ -24,11 +24,11 @@ public:
     BaseObject(BaseObject *parent=NULL);
     virtual ~BaseObject();
 
-    list<BaseObject *> childList();
-    bool hasAParent();
-    BaseObject *parent();
+    list<BaseObject *> childList() const;
+    bool hasAParent() const;
+    BaseObject *parent() const;
     void setParent(BaseObject *parent);
-    bool inheritsRandom();
+    bool inheritsRandom() const;
 
 protected:
     bool _inheritsRandom;

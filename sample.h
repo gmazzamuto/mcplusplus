@@ -11,10 +11,10 @@ class Sample : public BaseObject
 {
 public:
     Sample();
-    void addLayer(const Material *material, double thickness);
-    void setSurroundingEnvironment(const Material *material);
-    double totalThickness();
-    int nLayers();
+    void addLayer(const Material &material, double thickness);
+    void setSurroundingEnvironment(const Material &material);
+    double totalThickness() const;
+    int nLayers() const;
 
 private:
     int _nLayers;

@@ -22,11 +22,11 @@ int main(int argc, char *argv[])
 
     Sample *sample = new Sample();
 
-    Material *freeSpace = new FreeSpace();
-    Material *material = new Material();
+    Material freeSpace;
+    Material material;
 
-    material->ls = 1;
-    material->g = 0;
+    material.ls = 1;
+    material.g = 0;
 
     sample->addLayer(material,100);
     sample->setSurroundingEnvironment(freeSpace);

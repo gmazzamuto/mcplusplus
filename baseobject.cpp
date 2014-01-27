@@ -52,11 +52,11 @@ void BaseObject::deleteAllChildren() {
     }
 }
 
-list<BaseObject *> BaseObject::childList() {
+list<BaseObject *> BaseObject::childList() const {
     return _childList;
 }
 
-bool BaseObject::hasAParent() {
+bool BaseObject::hasAParent() const {
     return _hasAParent;
 }
 
@@ -64,7 +64,7 @@ bool BaseObject::hasAParent() {
  * @brief Returns a pointer to the parent object
  */
 
-BaseObject *BaseObject::parent() {
+BaseObject *BaseObject::parent() const {
     return _parent;
 }
 
@@ -91,6 +91,6 @@ void BaseObject::setParent_impl(BaseObject *parent) {
 
 }
 
-bool BaseObject::inheritsRandom() {
+bool BaseObject::inheritsRandom() const {
     return _inheritsRandom;
 }

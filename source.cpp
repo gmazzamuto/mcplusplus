@@ -12,7 +12,7 @@ Source::Source(BaseObject *parent) :
     }
 }
 
-Walker* Source::constructWalker() {
+Walker* Source::constructWalker() const {
     Walker *walker = new Walker();
 
     double cosTheta = cosThetaDistribution->spin();
@@ -62,7 +62,7 @@ void Source::setWavelength(double nm) {
     wl = nm;
 }
 
-double Source::wavelength() {
+double Source::wavelength() const {
     return wl;
 }
 
@@ -74,7 +74,7 @@ PencilBeamSource::PencilBeamSource(BaseObject *parent) :
 
 }
 
-Walker* PencilBeamSource::constructWalker() {
+Walker* PencilBeamSource::constructWalker() const {
     Walker *walker = new Walker();
     walker->k0[2] = 1;
 
@@ -107,7 +107,7 @@ GaussianBeamSource::GaussianBeamSource(double xFWHM, double yFWHM, BaseObject *p
  * \pre walkTimeDistribution has to be valid
  */
 
-Walker* GaussianBeamSource::constructWalker() {
+Walker* GaussianBeamSource::constructWalker() const {
     Walker *walker;
     if(cosThetaDistribution != NULL || psiDistribution != NULL) //check if one of the k0Distributions has been overridden
         walker = Source::constructWalker(); //r0Distributions should already be set by now

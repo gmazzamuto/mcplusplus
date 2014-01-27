@@ -66,7 +66,7 @@ class DeltaDistribution : public AbstractDistribution
 {
 public:
     DeltaDistribution(double center, BaseObject *parent=NULL);
-    double spin() {return x0;}
+    double spin();
 
 private:
     double x0;

@@ -18,23 +18,21 @@ Sample::Sample()
  * right. The first interface of the first layer is placed in \f$ z=0 \f$.
  */
 
-void Sample::addLayer(const Material *material, double thickness) {
-    Material mat;
-    mat = *material;
-    layers.push_back(mat);
+void Sample::addLayer(const Material &material, double thickness) {
+    layers.push_back(material);
     totThickness += thickness;
     zBoundaries.push_back(totThickness);
     _nLayers++;
 }
 
-void Sample::setSurroundingEnvironment(const Material *material) {
-    environment = *material;
+void Sample::setSurroundingEnvironment(const Material &material) {
+    environment = material;
 }
 
-double Sample::totalThickness() {
+double Sample::totalThickness() const {
     return totThickness;
 }
 
-int Sample::nLayers() {
+int Sample::nLayers() const {
     return _nLayers;
 }

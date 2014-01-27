@@ -13,12 +13,12 @@ class Source : public BaseRandom
 {
 public:
     Source(BaseObject *parent=NULL);
-    virtual Walker *constructWalker();
+    virtual Walker *constructWalker() const;
     void setr0Distribution(AbstractDistribution **distrArray);
     void setk0Distribution(AbstractDistribution *cosThetaDistr, AbstractDistribution *psiDistr);
     void setWalkTimeDistribution(AbstractDistribution *distr);
     void setWavelength(double nm);
-    double wavelength();
+    double wavelength() const;
 
 protected:
     AbstractDistribution *r0Distribution[3];
@@ -40,7 +40,7 @@ class PencilBeamSource : public Source
 {
 public:
     PencilBeamSource(BaseObject *parent=NULL);
-    Walker *constructWalker();
+    Walker *constructWalker() const;
 };
 
 
@@ -59,7 +59,7 @@ class GaussianBeamSource : public Source
 public:
     GaussianBeamSource(double FWHM, BaseObject *parent=NULL);
     GaussianBeamSource(double xFWHM, double yFWHM, BaseObject *parent=NULL);
-    Walker *constructWalker();
+    Walker *constructWalker() const;
 };
 
 #endif // SOURCE_H

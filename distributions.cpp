@@ -58,7 +58,9 @@ DeltaDistribution::DeltaDistribution(double center, BaseObject *parent) :
     x0 = center;
 }
 
-
+double DeltaDistribution::spin() {
+    return x0;
+}
 
 
 // Normal (Gaussian) distribution
