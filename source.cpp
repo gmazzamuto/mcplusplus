@@ -1,4 +1,6 @@
 #include "source.h"
+#include "costhetagenerator.h"
+#include "psigenerator.h"
 #include "math.h"
 
 Source::Source(BaseObject *parent) :
@@ -127,5 +129,23 @@ Walker* GaussianBeamSource::constructWalker() const {
 
         spinTime(walker);
     }
+    return walker;
+}
+
+
+
+IsotropicPointSource::IsotropicPointSource(double z0, BaseObject *parent) :
+    Source(parent)
+{
+    depth = z0;
+    cosThetaDistribution = new IsotropicCosThetaGenerator;
+    psiDistribution = new IsotropicPsiGenerator;
+}
+
+Walker* IsotropicPointSource::constructWalker() const {
+    Walker *walker = new Walker();
+    spinDirection(walker);
+    walker->r0[2] = depth;
+
     return walker;
 }

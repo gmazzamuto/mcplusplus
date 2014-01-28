@@ -65,4 +65,19 @@ public:
     Walker *constructWalker() const;
 };
 
+
+/**
+ * @brief Isotropic point source \f$ \delta (0,0,z_0) \delta (t) \f$.
+ */
+
+class IsotropicPointSource : public Source
+{
+public:
+    IsotropicPointSource(double z0, BaseObject *parent=NULL);
+    Walker *constructWalker() const;
+
+private:
+    double depth;
+};
+
 #endif // SOURCE_H
