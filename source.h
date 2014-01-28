@@ -25,6 +25,9 @@ protected:
     AbstractDistribution *cosThetaDistribution;
     AbstractDistribution *psiDistribution;
     AbstractDistribution *walkTimeDistribution;
+    virtual void spinDirection(Walker *walker) const;
+    virtual void spinPosition(Walker *walker) const;
+    virtual void spinTime(Walker *walker) const;
 
 private:
     double wl;

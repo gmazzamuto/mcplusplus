@@ -12,9 +12,7 @@ Source::Source(BaseObject *parent) :
     }
 }
 
-Walker* Source::constructWalker() const {
-    Walker *walker = new Walker();
-
+void Source::spinDirection(Walker *walker) const {
     double cosTheta = cosThetaDistribution->spin();
     double cosPsi = cos(psiDistribution->spin());
     double sinTheta = sqrt(1 - pow(cosTheta,2));
@@ -23,12 +21,24 @@ Walker* Source::constructWalker() const {
     walker->k0[0] = sinTheta*cosPsi;
     walker->k0[1] = sinTheta*sinPsi;
     walker->k0[2] = cosTheta;
+}
 
+void Source::spinPosition(Walker *walker) const {
     for (int i = 0; i < 3; ++i) {
         walker->r0[i] = r0Distribution[i]->spin();
     }
+}
 
-    walker->walkTime = walkTimeDistribution->spin();
+void Source::spinTime(Walker *walker) const {
+    walker->walkTime = walkTimeDistribution->spin();    // overwrapping?
+}
+
+Walker* Source::constructWalker() const {
+    Walker *walker = new Walker();
+
+    spinDirection(walker);
+    spinPosition(walker);
+    spinTime(walker);
 
     return walker;
 }
@@ -114,7 +124,8 @@ Walker* GaussianBeamSource::constructWalker() const {
     else {
         walker = new Walker();
         walker->k0[2] = 1;
-        walker->walkTime = walkTimeDistribution->spin();
+
+        spinTime(walker);
     }
     return walker;
 }
