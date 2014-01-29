@@ -1,11 +1,9 @@
 #ifndef BASEOBJECT_H
 #define BASEOBJECT_H
 
-#include <boost/random.hpp>
+#include <cstddef>
 #include <list>
 
-using namespace boost;
-using namespace boost::random;
 using namespace std;
 
 class BaseObject
@@ -14,25 +12,27 @@ public:
     BaseObject(BaseObject *parent=NULL);
     virtual ~BaseObject();
 
-    void setSeed(int seed);
-
+    list<BaseObject *> childList();
+    bool hasAParent();
     BaseObject *parent();
     void setParent(BaseObject *parent);
+    bool inheritsRandom();
 
 protected:
-    mt19937* mt;
+    bool _inheritsRandom;
 
 private:
-    bool hasAParent;
-    BaseObject *parentObject;
-    list<BaseObject *> childList;
+    bool _hasAParent;
+    BaseObject *_parent;
+    list<BaseObject *> _childList;
 
     void removeChild(BaseObject *child);
     void deleteAllChildren();
     void addChild(BaseObject *child);
-    void setRNG(mt19937 *mt);
 
-    virtual void setRNG_impl();
+    virtual void setParent_impl(BaseObject *parent);
+    virtual void addChild_impl(BaseObject *child);
+    virtual void removeChild_impl(BaseObject *child);
 };
 
 #endif // BASEOBJECT_H

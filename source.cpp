@@ -1,7 +1,7 @@
 #include "source.h"
 
 Source::Source(BaseObject *parent) :
-    BaseObject(parent)
+    BaseRandom(parent)
 {
     walkTimeDistribution = NULL;
     for (int i = 0; i < 3; ++i) {

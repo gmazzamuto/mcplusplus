@@ -9,7 +9,7 @@ using namespace boost::math::constants;
 // Abstract distribution
 
 AbstractDistribution::AbstractDistribution(BaseObject *parent) :
-    BaseObject(parent)
+    BaseRandom(parent)
 {
 }
 

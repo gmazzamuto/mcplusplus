@@ -9,7 +9,7 @@ using namespace boost;
 using namespace boost::math;
 
 Simulation::Simulation(BaseObject *parent) :
-    BaseObject(parent)
+    BaseRandom(parent)
 {
     sample = NULL;
     source = NULL;

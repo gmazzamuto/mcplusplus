@@ -21,7 +21,7 @@
  * incidence angles.
  */
 
-class Simulation : public BaseObject
+class Simulation : public BaseRandom
 {
 public:
     Simulation(BaseObject *parent=NULL);

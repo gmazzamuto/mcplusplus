@@ -3,7 +3,7 @@
 
 #include <boost/random.hpp>
 #include <math.h>
-#include "baseobject.h"
+#include "baserandom.h"
 
 using namespace boost;
 using namespace boost::random;
@@ -30,7 +30,7 @@ using namespace boost::random;
  * \ingroup Distributions
  */
 
-class AbstractDistribution : public BaseObject
+class AbstractDistribution : public BaseRandom
 {
 public:
     AbstractDistribution(BaseObject *parent=NULL);

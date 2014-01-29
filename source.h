@@ -9,7 +9,7 @@
  * given source term modeling.
  */
 
-class Source : public BaseObject
+class Source : public BaseRandom
 {
 public:
     Source(BaseObject *parent=NULL);

@@ -22,7 +22,8 @@ SOURCES += main.cpp \
     simulation.cpp \
     sample.cpp \
     material.cpp \
-    baseobject.cpp
+    baseobject.cpp \
+    baserandom.cpp
 
 HEADERS += \
     costhetagenerator.h \
@@ -33,4 +34,5 @@ HEADERS += \
     simulation.h \
     sample.h \
     material.h \
-    baseobject.h
+    baseobject.h \
+    baserandom.h
