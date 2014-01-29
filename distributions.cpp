@@ -58,7 +58,11 @@ void AbstractDistribution::setRNG_impl() {
 DeltaDistribution::DeltaDistribution(double center, BaseObject *parent) :
     AbstractDistribution(parent)
 {
-    x0 = center;
+    setCenter(center);
+}
+
+void DeltaDistribution::setCenter(double val) {
+    x0 = val;
 }
 
 double DeltaDistribution::spin() const {
@@ -136,11 +140,22 @@ double UniformDistribution::spin() const {
 
 // Exponential distribution
 
+/**
+ * @brief Constructs an exponential distribution with \f$ \lambda=1 \f$
+ * @param parent
+ */
+
 ExponentialDistribution::ExponentialDistribution(BaseObject *parent) :
     AbstractDistribution(parent)
 {
     setLamda(1);
 }
+
+/**
+ * @brief Constructs an exponential distribution with the given \f$ \lambda \f$
+ * @param lambda
+ * @param parent
+ */
 
 ExponentialDistribution::ExponentialDistribution(double lambda, BaseObject *parent) :
     AbstractDistribution(parent)
@@ -151,6 +166,20 @@ ExponentialDistribution::ExponentialDistribution(double lambda, BaseObject *pare
 void ExponentialDistribution::reconstructDistribution() {
     distribution = exponential_distribution<double>(lambda);
 }
+
+/**
+ * @brief Convenience function to set \f$ \beta = \frac{1}{\lambda} \f$
+ * @param value
+ */
+
+void ExponentialDistribution::setBeta(double value) {
+    setLamda(1./value);
+}
+
+/**
+ * @brief Sets the rate \f$ \lambda \f$
+ * @param value
+ */
 
 void ExponentialDistribution::setLamda(double value) {
     lambda = value;
@@ -195,6 +224,10 @@ void Sech2Distribution::setMean(double value) {
 /**
  * @brief Sets the FWHM of the sech2 distribution.
  * @param value
+ *
+ *
+ * Convenience function to set the scale
+ * \f$ s = \dfrac{\mathrm{FWHM}}{4\ln(1+\sqrt{2})}  \f$
  * \todo Check that this function is working properly.
  */
 

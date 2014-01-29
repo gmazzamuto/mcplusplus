@@ -30,14 +30,14 @@ class AbstractDistribution : public BaseRandom
 public:
     AbstractDistribution(BaseObject *parent=NULL);
 
+    void reset();
     /**
-     * @brief Generates a new random number.
-     * @return The newly generated random number.
+     * @brief Generates a new random variate.
+     * @return The newly generated random variate.
      *
      * \pre The RNG has to be valid (see BaseRandom)
      */
     virtual double spin() const = 0;
-    void reset();
 
 protected:
     virtual void reconstructDistribution();
@@ -60,6 +60,8 @@ class DeltaDistribution : public AbstractDistribution
 {
 public:
     DeltaDistribution(double center, BaseObject *parent=NULL);
+
+    void setCenter(double val);
     double spin() const;
 
 private:
@@ -135,6 +137,7 @@ public:
     ExponentialDistribution(BaseObject *parent=NULL);
     ExponentialDistribution(double lambda, BaseObject *parent);
 
+    void setBeta(double value);
     void setLamda(double value);
     double spin() const;
 
