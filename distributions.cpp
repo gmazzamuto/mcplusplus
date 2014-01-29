@@ -61,7 +61,7 @@ DeltaDistribution::DeltaDistribution(double center, BaseObject *parent) :
     x0 = center;
 }
 
-double DeltaDistribution::spin() {
+double DeltaDistribution::spin() const {
     return x0;
 }
 
@@ -78,8 +78,12 @@ NormalDistribution::NormalDistribution(double mean, double sigma, BaseObject *pa
     reconstructDistribution();
 }
 
+NormalDistribution::~NormalDistribution() {
+    delete distribution;
+}
+
 void NormalDistribution::reconstructDistribution() {
-    distribution = normal_distribution<double>(mean,sigma);
+    distribution = new normal_distribution<double>(mean,sigma);
 }
 
 void NormalDistribution::setSigma(double value) {
@@ -102,8 +106,8 @@ void NormalDistribution::setFWHM(double value) {
     setSigma(value/(2*root_ln_four<double>()));
 }
 
-double NormalDistribution::spin() {
-    return distribution(*mt);
+double NormalDistribution::spin() const {
+    return (*distribution)(*mt);
 }
 
 
@@ -123,7 +127,7 @@ void UniformDistribution::reconstructDistribution() {
     distribution = uniform_real_distribution<double>(min,max);
 }
 
-double UniformDistribution::spin() {
+double UniformDistribution::spin() const {
     return distribution(*mt);
 }
 
@@ -153,7 +157,7 @@ void ExponentialDistribution::setLamda(double value) {
     reconstructDistribution();
 }
 
-double ExponentialDistribution::spin() {
+double ExponentialDistribution::spin() const {
     return distribution(*mt);
 }
 
@@ -169,7 +173,7 @@ Sech2Distribution::Sech2Distribution(double mean, double scale, BaseObject *pare
     this->scale = scale;
 }
 
-double Sech2Distribution::spin() {
+double Sech2Distribution::spin() const {
     double temp;
     double tempRand;
     tempRand = UniformDistribution::spin();

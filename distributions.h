@@ -36,7 +36,7 @@ public:
      *
      * \pre The RNG has to be valid (see BaseRandom)
      */
-    virtual double spin() = 0;
+    virtual double spin() const = 0;
     void reset();
 
 protected:
@@ -60,7 +60,7 @@ class DeltaDistribution : public AbstractDistribution
 {
 public:
     DeltaDistribution(double center, BaseObject *parent=NULL);
-    double spin();
+    double spin() const;
 
 private:
     double x0;
@@ -81,16 +81,17 @@ class NormalDistribution : public AbstractDistribution
 {
 public:
     NormalDistribution(double mean, double sigma, BaseObject *parent = NULL);
+    virtual ~NormalDistribution();
 
-    double spin();
     void setMean(double value);
     void setSigma(double value);
     void setFWHM(double value);
+    virtual double spin() const;
 
 private:
     void reconstructDistribution();
 
-    normal_distribution<double> distribution;
+    normal_distribution<double> *distribution;
     double mean, sigma;
 };
 
@@ -109,7 +110,7 @@ class UniformDistribution : public AbstractDistribution
 public:
     UniformDistribution(double min, double max, BaseObject *parent=NULL);
 
-    virtual double spin();
+    virtual double spin() const;
 
 private:    
     void reconstructDistribution();
@@ -135,7 +136,7 @@ public:
     ExponentialDistribution(double lambda, BaseObject *parent);
 
     void setLamda(double value);
-    double spin();
+    double spin() const;
 
 private:
     void reconstructDistribution();
@@ -163,10 +164,10 @@ class Sech2Distribution : public UniformDistribution
 public:
     Sech2Distribution(double mean, double scale, BaseObject* parent=NULL);
 
-    double spin();
     void setMean(double value);
     void setScale(double value);
     void setFWHM(double value);
+    double spin() const;
 
 private:
     double mean, scale;
