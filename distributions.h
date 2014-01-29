@@ -38,6 +38,8 @@ public:
     /**
      * @brief Generates a new random number.
      * @return The newly generated random number.
+     *
+     * \pre The RNG has to be valid (see BaseRandom)
      */
     virtual double spin() = 0;
     virtual void reset();

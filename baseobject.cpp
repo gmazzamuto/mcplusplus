@@ -29,6 +29,11 @@ void BaseObject::addChild_impl(BaseObject *child) {
 
 }
 
+/**
+ * @brief Removes the given child from the child list
+ * @param child
+ */
+
 void BaseObject::removeChild(BaseObject *child) {
     _childList.remove(child);
     removeChild_impl(child);
@@ -62,6 +67,11 @@ bool BaseObject::hasAParent() {
 BaseObject *BaseObject::parent() {
     return _parent;
 }
+
+/**
+ * @brief Makes the object a child of parent
+ * @param parent
+ */
 
 void BaseObject::setParent(BaseObject *parent) {
     if(_hasAParent)

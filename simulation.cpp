@@ -35,6 +35,12 @@ void Simulation::setSource(Source *source) {
     this->source = source;
 }
 
+/**
+ * @brief Runs the simulation
+ *
+ * \pre The RNG has to be valid (see BaseRandom)
+ */
+
 void Simulation::run() {
     double totalThickness = sample->totalThickness();
 
