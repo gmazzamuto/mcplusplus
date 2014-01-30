@@ -139,7 +139,7 @@ public:
     ExponentialDistribution(double lambda, BaseObject *parent);
 
     void setBeta(double value);
-    void setLamda(double value);
+    void setLambda(double value);
     double spin() const;
 
 private:

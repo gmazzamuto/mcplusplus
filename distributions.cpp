@@ -148,7 +148,7 @@ double UniformDistribution::spin() const {
 ExponentialDistribution::ExponentialDistribution(BaseObject *parent) :
     AbstractDistribution(parent)
 {
-    setLamda(1);
+    setLambda(1);
 }
 
 /**
@@ -160,7 +160,7 @@ ExponentialDistribution::ExponentialDistribution(BaseObject *parent) :
 ExponentialDistribution::ExponentialDistribution(double lambda, BaseObject *parent) :
     AbstractDistribution(parent)
 {
-    setLamda(lambda);
+    setLambda(lambda);
 }
 
 void ExponentialDistribution::reconstructDistribution() {
@@ -173,7 +173,7 @@ void ExponentialDistribution::reconstructDistribution() {
  */
 
 void ExponentialDistribution::setBeta(double value) {
-    setLamda(1./value);
+    setLambda(1./value);
 }
 
 /**
@@ -181,7 +181,7 @@ void ExponentialDistribution::setBeta(double value) {
  * @param value
  */
 
-void ExponentialDistribution::setLamda(double value) {
+void ExponentialDistribution::setLambda(double value) {
     lambda = value;
     reconstructDistribution();
 }
