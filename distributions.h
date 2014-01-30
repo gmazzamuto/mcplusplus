@@ -103,8 +103,9 @@ private:
 // Uniform disribution
 
 /**
- * @brief Uniform real distribution
+ * @brief Uniform real distribution in the interval \f$ [\textup{min,max}) \f$
  * \ingroup Distributions
+ * \todo check for potentially dangerous extraction of the random value zero
  */
 
 class UniformDistribution : public AbstractDistribution
@@ -157,7 +158,7 @@ private:
  * @brief Hyperbolic secant square distribution \f$ f(x) = (4s)^{-1} \,
  * \textup{sech}^2 \left( \frac{x - \mu}{2s} \right) \f$
  *
- * See <a href="http://en.wikipedia.org/wiki/Logistic_distribution">Wikpiedia</a>
+ * See <a href="http://en.wikipedia.org/wiki/Logistic_distribution">Wikipedia</a>
  * for further reference on quantile function.
  * \ingroup Distributions
  */

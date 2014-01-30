@@ -222,12 +222,12 @@ void Sech2Distribution::setMean(double value) {
 }
 
 /**
- * @brief Sets the FWHM of the sech2 distribution.
+ * @brief Sets the FWHM of the \f$ \textup{sech}^2 \f$ distribution.
  * @param value
  *
  *
  * Convenience function to set the scale
- * \f$ s = \dfrac{\mathrm{FWHM}}{4\ln(1+\sqrt{2})}  \f$
+ * \f$ s = \dfrac{\textup{FWHM}}{4\ln(1+\sqrt{2})} \f$
  * \todo Check that this function is working properly.
  */
 
