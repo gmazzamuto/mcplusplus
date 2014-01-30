@@ -4,9 +4,9 @@
 #
 #-------------------------------------------------
 
-QT       -= core
+QT       += core
 
-QT       -= gui
+QT       += gui
 
 TARGET = MCPlusPlus
 
@@ -23,7 +23,8 @@ SOURCES += main.cpp \
     sample.cpp \
     material.cpp \
     baseobject.cpp \
-    baserandom.cpp
+    baserandom.cpp \
+    mainwindow.cpp
 
 HEADERS += \
     costhetagenerator.h \
@@ -35,4 +36,5 @@ HEADERS += \
     sample.h \
     material.h \
     baseobject.h \
-    baserandom.h
+    baserandom.h \
+    mainwindow.h
