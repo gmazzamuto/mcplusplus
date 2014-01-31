@@ -15,13 +15,16 @@ public:
 
 private slots:
     void onLensDistanceChanged(double val);
+    void onFocusedWaistChanged(double val);
 
 private:
     void replot();
     QGraphicsScene* scene;
     QGraphicsView *graphicsView;
-    QDoubleSpinBox *spinBox;
+    QDoubleSpinBox *lensDistSpinBox;
+    QDoubleSpinBox *focusedWaistSpinBox;
     double lensDistance;
+    double focusedWaist;
 };
 
 #endif // MAINWINDOW_H

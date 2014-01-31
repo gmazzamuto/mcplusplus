@@ -6,17 +6,24 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
 {
     lensDistance = 50;
+    focusedWaist = 10;
 
     scene = new QGraphicsScene(-1,-5,10,10);
     graphicsView = new QGraphicsView();
-    spinBox = new QDoubleSpinBox();
-    spinBox->setMaximum(1000);
-    spinBox->setValue(lensDistance);
+    lensDistSpinBox = new QDoubleSpinBox();
+    lensDistSpinBox->setMaximum(1000);
+    lensDistSpinBox->setValue(lensDistance);
+
+    focusedWaistSpinBox = new QDoubleSpinBox();
+    focusedWaistSpinBox->setMinimum(1);
+    focusedWaistSpinBox->setMaximum(50);
+    focusedWaistSpinBox->setValue(focusedWaist);
 
     QWidget *widget = new QWidget();
     QVBoxLayout *vertLayout = new QVBoxLayout();
     vertLayout->addWidget(graphicsView);
-    vertLayout->addWidget(spinBox);
+    vertLayout->addWidget(focusedWaistSpinBox);
+    vertLayout->addWidget(lensDistSpinBox);
     widget->setLayout(vertLayout);
 
     graphicsView->setScene(scene);
@@ -25,13 +32,14 @@ MainWindow::MainWindow(QWidget *parent) :
     setCentralWidget(widget);
 
 
-    connect(spinBox,SIGNAL(valueChanged(double)),this,SLOT(onLensDistanceChanged(double)));
+    connect(lensDistSpinBox,SIGNAL(valueChanged(double)),this,SLOT(onLensDistanceChanged(double)));
+    connect(focusedWaistSpinBox,SIGNAL(valueChanged(double)),this,SLOT(onFocusedWaistChanged(double)));
     replot();
 }
 
 void MainWindow::replot() {
     scene->clear();
-    GaussianRayBundleSource *src = new GaussianRayBundleSource(100,10,lensDistance);
+    GaussianRayBundleSource *src = new GaussianRayBundleSource(100,focusedWaist,lensDistance);
     DeltaDistribution *delta1 = new DeltaDistribution(1);
     src->setWalkTimeDistribution(delta1);
     src->setSeed(0);
@@ -57,5 +65,10 @@ void MainWindow::replot() {
 
 void MainWindow::onLensDistanceChanged(double val) {
     lensDistance = val;
+    replot();
+}
+
+void MainWindow::onFocusedWaistChanged(double val) {
+    focusedWaist = val;
     replot();
 }
