@@ -45,7 +45,11 @@ class PencilBeamSource : public Source
 {
 public:
     PencilBeamSource(BaseObject *parent=NULL);
-    Walker *constructWalker() const;
+
+private:
+    virtual void spinDirection(Walker *walker) const;
+    virtual void spinPosition(Walker *walker) const;
+    virtual void spinTime(Walker *walker) const;
 };
 
 
@@ -66,7 +70,9 @@ class GaussianBeamSource : public Source
 public:
     GaussianBeamSource(double FWHM, BaseObject *parent=NULL);
     GaussianBeamSource(double xFWHM, double yFWHM, BaseObject *parent=NULL);
-    Walker *constructWalker() const;
+
+private:
+    virtual void spinDirection(Walker *walker) const;
 };
 
 
@@ -94,9 +100,11 @@ class GaussianRayBundleSource : public Source
 public:
     GaussianRayBundleSource(double collimatedWaist, double focusedWaist, double lensDistance, BaseObject *parent=NULL);
     GaussianRayBundleSource(double collimatedXWaist, double collimatedYWaist, double focusedXWaist, double focusedYWaist, double lensDistance, BaseObject *parent=NULL);
-    Walker *constructWalker() const;
 
 private:
+    virtual void spinDirection(Walker *walker) const;
+    virtual void spinPosition(Walker *walker) const;
+
     double xFoc, yFoc, xColl, yColl;
     double d;
     UniformDistribution *uRand;
@@ -113,9 +121,11 @@ class IsotropicPointSource : public Source
 {
 public:
     IsotropicPointSource(double z0, BaseObject *parent=NULL);
-    Walker *constructWalker() const;
 
 private:
+    virtual void spinPosition(Walker *walker) const;
+    virtual void spinTime(Walker *walker) const;
+
     double depth;
 };
 

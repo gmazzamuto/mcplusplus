@@ -47,8 +47,8 @@ void Source::spinTime(Walker *walker) const {
 Walker* Source::constructWalker() const {
     Walker *walker = new Walker();
 
+    spinPosition(walker); //the calling order is critical! GaussianRayBundleSource must spin the walker's position BEFORE calculating the direction vector
     spinDirection(walker);
-    spinPosition(walker);
     spinTime(walker);
 
     return walker;
@@ -96,11 +96,16 @@ PencilBeamSource::PencilBeamSource(BaseObject *parent) :
 
 }
 
-Walker* PencilBeamSource::constructWalker() const {
-    Walker *walker = new Walker();
+void PencilBeamSource::spinDirection(Walker *walker) const {
     walker->k0[2] = 1;
+}
 
-    return walker;
+void PencilBeamSource::spinPosition(Walker *walker) const {
+
+}
+
+void PencilBeamSource::spinTime(Walker *walker) const {
+
 }
 
 
@@ -144,17 +149,10 @@ GaussianBeamSource::GaussianBeamSource(double xFWHM, double yFWHM, BaseObject *p
  * \pre walkTimeDistribution has to be valid
  */
 
-Walker* GaussianBeamSource::constructWalker() const {
-    Walker *walker;
+void GaussianBeamSource::spinDirection(Walker *walker) const {
     if(cosThetaDistribution != NULL || psiDistribution != NULL) //check if one of the k0Distributions has been overridden
-        walker = Source::constructWalker(); //r0Distributions should already be set by now
-    else {
-        walker = new Walker();
-        walker->k0[2] = 1;
-
-        spinTime(walker);
-    }
-    return walker;
+        Source::spinDirection(walker);
+    walker->k0[2] = 1;
 }
 
 
@@ -219,16 +217,19 @@ GaussianRayBundleSource::GaussianRayBundleSource(double collimatedXWaist, double
  * \pre walkTimeDistribution has to be valid
  */
 
-Walker* GaussianRayBundleSource::constructWalker() const {
-    Walker *walker = new Walker();
-    double rand[4];
-    for (int i = 0; i < 4; ++i) {
-        rand[i] = uRand->spinOpen();
-    }
-    walker->r0[0] = xColl * one_div_root_two<double>() * erf_inv<double>(2*rand[0] -1);
-    walker->r0[1] = yColl * one_div_root_two<double>() * erf_inv<double>(2*rand[1] -1);
-    double xL = xFoc * one_div_root_two<double>() * erf_inv<double>(2*rand[2] -1);
-    double yL = yFoc * one_div_root_two<double>() * erf_inv<double>(2*rand[3] -1);
+void GaussianRayBundleSource::spinPosition(Walker *walker) const {
+    walker->r0[0] = xColl * one_div_root_two<double>() * erf_inv<double>(2*uRand->spinOpen() -1);
+    walker->r0[1] = yColl * one_div_root_two<double>() * erf_inv<double>(2*uRand->spinOpen() -1);
+}
+
+/**
+ * \copydoc Source::spinDirection()
+ * \pre
+ */
+
+void GaussianRayBundleSource::spinDirection(Walker *walker) const {
+    double xL = xFoc * one_div_root_two<double>() * erf_inv<double>(2*uRand->spinOpen() -1);
+    double yL = yFoc * one_div_root_two<double>() * erf_inv<double>(2*uRand->spinOpen() -1);
     double connectingVector[3];
     connectingVector[0] = walker->r0[0] - xL;
     connectingVector[1] = walker->r0[1] - yL;
@@ -237,10 +238,6 @@ Walker* GaussianRayBundleSource::constructWalker() const {
     for (int i = 0; i < 3; ++i) {
         walker->k0[i] = connectingVector[i]/connectingVectorNorm;
     }
-
-    spinTime(walker);
-
-    return walker;
 }
 
 
@@ -254,10 +251,10 @@ IsotropicPointSource::IsotropicPointSource(double z0, BaseObject *parent) :
     psiDistribution = new IsotropicPsiGenerator;
 }
 
-Walker* IsotropicPointSource::constructWalker() const {
-    Walker *walker = new Walker();
-    spinDirection(walker);
+void IsotropicPointSource::spinPosition(Walker *walker) const {
     walker->r0[2] = depth;
+}
 
-    return walker;
+void IsotropicPointSource::spinTime(Walker *walker) const {
+
 }
