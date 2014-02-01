@@ -1,6 +1,7 @@
-*.pro.user
+*.user
 #.gitignore
 .directory
 *.autosave
 html/*
 *.dat
+*~
