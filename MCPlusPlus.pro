@@ -4,9 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core
-
-QT       += gui
+QT       += core gui opengl
 
 TARGET = MCPlusPlus
 
@@ -24,7 +22,8 @@ SOURCES += main.cpp \
     material.cpp \
     baseobject.cpp \
     baserandom.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    glwidget.cpp
 
 HEADERS += \
     costhetagenerator.h \
@@ -37,4 +36,5 @@ HEADERS += \
     material.h \
     baseobject.h \
     baserandom.h \
-    mainwindow.h
+    mainwindow.h \
+    glwidget.h

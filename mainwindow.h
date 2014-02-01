@@ -5,6 +5,7 @@
 #include <QGraphicsView>
 #include <QGraphicsScene>
 #include <QSpinBox>
+#include "glwidget.h"
 
 class MainWindow : public QMainWindow
 {
@@ -19,12 +20,11 @@ private slots:
 
 private:
     void replot();
-    QGraphicsScene* scene;
-    QGraphicsView *graphicsView;
     QDoubleSpinBox *lensDistSpinBox;
     QDoubleSpinBox *focusedWaistSpinBox;
     double lensDistance;
     double focusedWaist;
+    GLWidget *glWidget;
 };
 
 #endif // MAINWINDOW_H
