@@ -34,6 +34,8 @@ private:
 };
 
 
+
+
 /**
  * @brief Pencil beam source \f$ \delta(\bm{r}) \, \delta (t) \, \delta
  * (\bm{k}_z) \f$, with \f$ \bm{k}_z = (0,0,1) \f$.
@@ -47,14 +49,16 @@ public:
 };
 
 
+
+
 /**
- * @brief 2-dimensional \f$ xy \f$ Gaussian intensity profile (\f$z = 0\f$).
+ * @brief 2-dimensional \f$ xy \f$ Gaussian intensity profile
  *
- * Time distribution is left unspecified, \f$ \bm{k} = (0,0,1) \f$.
- * Time distribution must be set separately, and is advisable to override the
- * default \f$ \delta(\bm{k}_z) \f$ distribution as well if the Rayleigh length
- * of the beam \f$ \sim w_0^2 / \lambda \f$ is much shorter than the
- * scattering/transport length of the entrance layer.
+ * Basic modeling of a Gaussian beam. Injection points are generated on the
+ * \f$ z=0 \f$ plane accordingly to given FWHM values specified. Injection
+ * directions are set to \f$ \bm{k} = \delta (\bm{k}_z) \f$ regardless of the
+ * injection point (see GaussianRayBundleSource for a more elaborate modeling).
+ * Time distribution is left unspecified, and must be set serparately.
  */
 
 class GaussianBeamSource : public Source
@@ -64,6 +68,41 @@ public:
     GaussianBeamSource(double xFWHM, double yFWHM, BaseObject *parent=NULL);
     Walker *constructWalker() const;
 };
+
+
+
+
+/**
+ * @brief Ray-optic description of a Gaussian beam waist
+ *
+ * Modeled after Milsom, P.K. "A ray-optic, Monte Carlo, description of a
+ * Gaussian beam waist - applied to reverse saturable absorption"
+ * <em>Appl. Phys. B</em>, 70(4), 593-599 (April 2000).
+ *
+ * The intensity distribution in a Gaussian beam is represented by a bundle of
+ * rays in which each ray has a random pointing error. The construction of the
+ * bundle requires the knowledge of \f$ 1/\mathrm{e}^2 \f$ spot size at the
+ * beam waist and at a distance \f$ z = -d, d \gg z_\text{R}\f$. The beauty of
+ * this approach is that it not only gets the intensity distribution correct at
+ * these two extremes, it also gets it right at all other values of \f$ z \f$
+ * (provided that \f$ d \gg z_\text{R}\f$).
+ * Time distribution is left unspecified, and must be set serparately.
+ */
+
+class GaussianRayBundleSource : public Source
+{
+public:
+    GaussianRayBundleSource(double collimatedWaist, double focusedWaist, double lensDistance, BaseObject *parent=NULL);
+    GaussianRayBundleSource(double collimatedXWaist, double collimatedYWaist, double focusedXWaist, double focusedYWaist, double lensDistance, BaseObject *parent=NULL);
+    Walker *constructWalker() const;
+
+private:
+    double xFoc, yFoc, xColl, yColl;
+    double d;
+    UniformDistribution *uRand;
+};
+
+
 
 
 /**
