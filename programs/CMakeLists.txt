@@ -15,7 +15,7 @@ include_directories(. ../lib)
 QT4_WRAP_CPP(sourceViewer_HEADERS_MOC mainwindow.h glwidget.h)
 
 add_executable(sourceViewer sourceviewer.cpp mainwindow.cpp glwidget.cpp ${sourceViewer_HEADERS_MOC})
-target_link_libraries(sourceViewer MCPlusPlus ${QT_LIBRARIES})
+target_link_libraries(sourceViewer MCPlusPlus GL ${QT_LIBRARIES})
 install (TARGETS sourceViewer DESTINATION bin)
 
 add_executable(MCPPSimulation mcppsimulation.cpp)

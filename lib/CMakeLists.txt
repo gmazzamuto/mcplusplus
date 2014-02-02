@@ -21,6 +21,7 @@ if(BUILD_DOCUMENTATION)
       "Doxygen is needed to build the documentation. Please install it correctly")
   endif()
   #-- Configure the Template Doxyfile for our specific project
+  set(DOXYGEN_OUTDIR ${CMAKE_INSTALL_PREFIX}/share/doc/libMCPlusPlus)
   configure_file(Doxyfile.in
                  ${PROJECT_BINARY_DIR}/Doxyfile  @ONLY)
   #-- Add a custom target to run Doxygen when ever the project is built
