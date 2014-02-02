@@ -196,21 +196,19 @@ double ExponentialDistribution::spin() const {
 // Sech2 (Logistic) distribution
 
 Sech2Distribution::Sech2Distribution(double mean, double scale, BaseObject *parent) :
-    UniformDistribution(0,1,parent)
+    AbstractDistribution(parent)
 {
     this->mean = mean;
     this->scale = scale;
 }
 
 double Sech2Distribution::spin() const {
-    double temp;
-    double tempRand;
-    tempRand = UniformDistribution::spin();
-    temp = 1. - tempRand;
-    temp = tempRand/temp;
-    temp = log(temp);
-    temp = mean + scale*temp;
-    return temp;
+    double p;
+    do {
+        p = uniform_01<double>()(*mt);
+    }
+    while(p == 0);
+    return  mean + scale*log(p/(1.-p));
 }
 
 void Sech2Distribution::setScale(double value) {

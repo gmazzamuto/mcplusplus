@@ -19,10 +19,12 @@
  * \ingroup CosTheta
  */
 
-class IsotropicCosThetaGenerator : public UniformDistribution
+class IsotropicCosThetaGenerator : public AbstractDistribution
 {
 public:
     IsotropicCosThetaGenerator(BaseObject *parent=NULL);
+
+    virtual double spin() const;
 };
 
 
@@ -34,13 +36,13 @@ public:
  * \ingroup CosTheta
  */
 
-class AnisotropicCosThetaGenerator : public UniformDistribution
+class AnisotropicCosThetaGenerator : public AbstractDistribution
 {
 public:
     AnisotropicCosThetaGenerator(double g, BaseObject *parent=NULL);
 
     void setg(double g);
-    double spin();
+    double spin() const;
 
 private:
     double g;  /**< @brief scattering anisotropy factor*/

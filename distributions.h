@@ -163,7 +163,7 @@ private:
  * \ingroup Distributions
  */
 
-class Sech2Distribution : public UniformDistribution
+class Sech2Distribution : public AbstractDistribution
 {
 public:
     Sech2Distribution(double mean, double scale, BaseObject* parent=NULL);
