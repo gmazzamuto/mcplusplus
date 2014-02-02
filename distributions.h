@@ -105,7 +105,6 @@ private:
 /**
  * @brief Uniform real distribution in the interval \f$ [\textup{min,max}) \f$
  * \ingroup Distributions
- * \todo check for potentially dangerous extraction of the random value zero
  */
 
 class UniformDistribution : public AbstractDistribution
@@ -114,6 +113,7 @@ public:
     UniformDistribution(double min, double max, BaseObject *parent=NULL);
 
     virtual double spin() const;
+    double spinOpen() const;
 
 private:    
     void reconstructDistribution();

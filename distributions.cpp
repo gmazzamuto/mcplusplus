@@ -135,6 +135,21 @@ double UniformDistribution::spin() const {
     return distribution(*mt);
 }
 
+/**
+ * @brief Spins a number uniformly distributed in the open interval
+ *        \f$ [\textup{min,max}) \f$
+ * @return
+ */
+
+double UniformDistribution::spinOpen() const {
+    double p;
+    do {
+        p = spin();
+    }
+    while (p == min);
+    return p;
+}
+
 
 
 
