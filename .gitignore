@@ -2,6 +2,5 @@
 #.gitignore
 .directory
 *.autosave
-html/*
 *.dat
 *~
