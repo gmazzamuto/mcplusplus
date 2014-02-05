@@ -58,6 +58,7 @@ public:
     void clear();
 
 public slots:
+    void setScale(double value);
     void setXRotation(int angle);
     void setYRotation(int angle);
     void setZRotation(int angle);
@@ -78,6 +79,7 @@ private:
     int xRot;
     int yRot;
     int zRot;
+    double scale;
     QPoint lastPos;
     QColor qtGreen;
     QColor qtPurple;

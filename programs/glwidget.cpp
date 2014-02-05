@@ -54,6 +54,7 @@ GLWidget::GLWidget(QWidget *parent)
     xRot = 0;
     yRot = 0;
     zRot = 0;
+    scale = 5e-3;
 
     qtGreen = QColor::fromCmykF(0.40, 0.0, 1.0, 0.0);
     qtPurple = QColor::fromCmykF(0.39, 0.39, 0.0, 0.0);
@@ -112,6 +113,13 @@ void GLWidget::setZRotation(int angle)
     }
 }
 
+void GLWidget::setScale(double value) {
+    if(value<1e-4)
+        return;
+    scale = value;
+    updateGL();
+}
+
 void GLWidget::initializeGL()
 {
     qglClearColor(qtPurple.dark());
@@ -159,7 +167,7 @@ void GLWidget::paintGL()
 
     glLoadIdentity();
     glTranslatef(0.0, 0.0, -10.0);
-    glScalef(0.5e-2,0.5e-2,0.5e-2);
+    glScalef(scale,scale,scale);
     glRotatef(xRot / 16.0, 1.0, 0.0, 0.0);
     glRotatef(yRot / 16.0, 0.0, 1.0, 0.0);
     glRotatef(zRot / 16.0, 0.0, 0.0, 1.0);
@@ -196,6 +204,8 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
     } else if (event->buttons() & Qt::RightButton) {
         setXRotation(xRot + 8 * dy);
         setZRotation(zRot + 8 * dx);
+    } else if(event->buttons() & Qt::MiddleButton) {
+        setScale(scale + scale/30*dy);
     }
     lastPos = event->pos();
 }
