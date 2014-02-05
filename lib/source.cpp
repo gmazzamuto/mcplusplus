@@ -247,7 +247,7 @@ IsotropicPointSource::IsotropicPointSource(double z0, BaseObject *parent) :
     Source(parent)
 {
     depth = z0;
-    cosThetaDistribution = new IsotropicCosThetaGenerator;
+    cosThetaDistribution = new CosThetaGenerator(0);
     psiDistribution = new IsotropicPsiGenerator;
 }
 

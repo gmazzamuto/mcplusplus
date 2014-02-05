@@ -65,7 +65,7 @@ void Simulation::run() {
     int n = 0;
 
     ExponentialDistribution *stepLength = new ExponentialDistribution(this);
-    IsotropicCosThetaGenerator *isotrCosTheta = new IsotropicCosThetaGenerator(this);
+    CosThetaGenerator *deflCosine = new CosThetaGenerator(0,this); // I set g=0 without any particular reason
     IsotropicPsiGenerator *randomPsi = new IsotropicPsiGenerator(this);
 
     while(n < totalWalkers) {
@@ -79,10 +79,11 @@ void Simulation::run() {
             printf("%d\t",currentLayer);
             printf("%lf\t%lf\t%lf\n", walker->r0[0], walker->r0[1], walker->r0[2]);
 
-            stepLength->setBeta(sample->material(currentLayer)->ls);
+            stepLength->setBeta(sample->material(currentLayer)->ls); //should we check if currentLayer has changed?
+            deflCosine->setg(sample->material(currentLayer)->g);
 
             double length = stepLength->spin();
-            double cosTheta = isotrCosTheta->spin();
+            double cosTheta = deflCosine->spin();
             double sinTheta = sqrt(1-pow(cosTheta,2));
             double psi = randomPsi->spin();
             double cosPsi = cos(psi);
