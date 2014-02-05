@@ -17,7 +17,7 @@ public:
     void setr0Distribution(AbstractDistribution **distrArray);
     void setk0Distribution(AbstractDistribution *cosThetaDistr, AbstractDistribution *psiDistr);
     void setWalkTimeDistribution(AbstractDistribution *distr);
-    void setWavelength(double nm);
+    void setWavelength(double um);
     double wavelength() const;
 
 protected:

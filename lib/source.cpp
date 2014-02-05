@@ -79,8 +79,8 @@ void Source::setWalkTimeDistribution(AbstractDistribution *distr) {
     walkTimeDistribution->setParent(this);
 }
 
-void Source::setWavelength(double nm) {
-    wl = nm;
+void Source::setWavelength(double um) {
+    wl = um;
 }
 
 double Source::wavelength() const {
