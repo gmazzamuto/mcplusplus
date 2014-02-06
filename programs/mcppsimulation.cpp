@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
 
     Sample *sample = new Sample();
 
-    Material freeSpace;
+    FreeSpace freeSpace;
     Material material;
 
     material.ls = 1;
