@@ -41,10 +41,13 @@ private:
 
     vector<double> *upperZBoundaries;
     int nLayers;
-    int currentLayer;
+    int layer0;
+    int layer1;
 
-    void updateCurrentLayer(double *r0);
     int layerAt(double *r0) const;
+    void move(Walker *walker, double length);
+    void reflect(Walker *walker);
+    void refract(Walker *walker);
 };
 
 #endif // SIMULATION_H

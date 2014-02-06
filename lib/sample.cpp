@@ -40,7 +40,7 @@ int Sample::nLayers() const {
     return _nLayers;
 }
 
-vector<double>* Sample::zBoundaries() {
+vector<double> *Sample::zBoundaries() {
     return &_zBoundaries;
 }
 

@@ -16,8 +16,8 @@ public:
     void setSurroundingEnvironment(const Material &material);
     double totalThickness() const;
     int nLayers() const;
-    vector<double> *zBoundaries();
-    Material *material(int layerIndex);
+    vector<double> *zBoundaries(); //might this be const?
+    Material *material(int layerIndex); //might this be const?
 
 private:
     int _nLayers;
