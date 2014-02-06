@@ -31,14 +31,20 @@ public:
     void run();
     void reset();
 
-protected:
-    bool isRunning;
+private:
     int totalWalkers;  /**< @brief total number of walkers to be simulated*/
     int transmitted;  /**< @brief total number of walkers transmitted after at least one scattering event*/
     int reflected;  /**< @brief total number of walkers reflected after at least one scattering event*/
     int ballistic;  /**< @brief total number of walkers transmitted without undergoing any scattering event*/
     Sample *sample;
     Source *source;
+
+    vector<double> *upperZBoundaries;
+    int nLayers;
+    int currentLayer;
+
+    void updateCurrentLayer(double *r0);
+    int layerAt(double *r0) const;
 };
 
 #endif // SIMULATION_H

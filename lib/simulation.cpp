@@ -13,6 +13,8 @@ Simulation::Simulation(BaseObject *parent) :
 {
     sample = NULL;
     source = NULL;
+    upperZBoundaries = NULL;
+    currentLayer = 0;
     reset();
 }
 
@@ -56,8 +58,9 @@ void Simulation::setSource(Source *source) {
  */
 
 void Simulation::run() {
-    int nLayers = sample->nLayers();
+    nLayers = sample->nLayers();
     double totalThickness = sample->totalThickness();
+    upperZBoundaries = sample->zBoundaries();
 
     int n = 0;
 
@@ -66,10 +69,18 @@ void Simulation::run() {
     IsotropicPsiGenerator *randomPsi = new IsotropicPsiGenerator(this);
 
     while(n < totalWalkers) {
+        currentLayer = 0;
+
         Walker *walker = source->constructWalker();
         walker->nInteractions.insert(walker->nInteractions.begin(),nLayers,0);
 
         while(1) {
+            updateCurrentLayer(walker->r0);
+            printf("%d\t",currentLayer);
+            printf("%lf\t%lf\t%lf\n", walker->r0[0], walker->r0[1], walker->r0[2]);
+
+            stepLength->setBeta(sample->material(currentLayer)->ls);
+
             double length = stepLength->spin();
             double cosTheta = isotrCosTheta->spin();
             double sinTheta = sqrt(1-pow(cosTheta,2));
@@ -98,8 +109,6 @@ void Simulation::run() {
 
             walker->walkTime += length; //FIXME speed of light
 
-            printf("%lf\t%lf\t%lf\n", walker->r0[0], walker->r0[1], walker->r0[2]);
-
             if(walker->r1[2] > totalThickness) {
                 transmitted++;
                 break;
@@ -112,7 +121,42 @@ void Simulation::run() {
             walker->nInteractions[0]++; //FIXME fix hardcoded layer index
         }
 
+        updateCurrentLayer(walker->r0);
+        printf("walker reached layer %d:\n",currentLayer);
+        printf("%lf\t%lf\t%lf\n", walker->r0[0], walker->r0[1], walker->r0[2]);
         n++;
         delete walker;
+    }
+}
+
+void Simulation::updateCurrentLayer(double *r0) {
+    currentLayer = layerAt(r0);
+}
+
+/**
+ * @brief Determines the layer index for the given position
+ * @param r0
+ * @return The index of the layer containing the point r0
+ *
+ * Interfaces are considered to belong to the preceding layer
+ */
+
+int Simulation::layerAt(double *r0) const {
+    double z = r0[2];
+
+    if(z < upperZBoundaries->at(currentLayer)) { //search left
+        for (int i = currentLayer; i >= 0; i--) {
+            if(r0[2] > upperZBoundaries->at(i))
+                return i+1;
+        }
+        return 0;
+    }
+    else //search right
+    {
+        for (int i = currentLayer; i < nLayers+1; ++i) {
+            if(z <= upperZBoundaries->at(i))
+                return i;
+        }
+        return nLayers+1;
     }
 }

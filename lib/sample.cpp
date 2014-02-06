@@ -4,7 +4,7 @@ Sample::Sample()
 {
     _nLayers=0;
     totThickness = 0;
-    zBoundaries.push_back(totThickness);
+    _zBoundaries.push_back(totThickness);
 }
 
 /**
@@ -19,14 +19,17 @@ Sample::Sample()
  */
 
 void Sample::addLayer(const Material &material, double thickness) {
+    _nLayers++;
     layers.push_back(material);
     totThickness += thickness;
-    zBoundaries.push_back(totThickness);
-    _nLayers++;
+    _zBoundaries.push_back(totThickness);
+    materials.push_back(material);
 }
 
 void Sample::setSurroundingEnvironment(const Material &material) {
     environment = material;
+    materials.push_front(material);
+    materials.push_back(material);
 }
 
 double Sample::totalThickness() const {
@@ -35,4 +38,12 @@ double Sample::totalThickness() const {
 
 int Sample::nLayers() const {
     return _nLayers;
+}
+
+vector<double>* Sample::zBoundaries() {
+    return &_zBoundaries;
+}
+
+Material *Sample::material(int layerIndex) {
+    return &materials.at(layerIndex);
 }

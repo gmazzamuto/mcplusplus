@@ -4,6 +4,7 @@
 #include <baseobject.h>
 #include "material.h"
 #include <vector>
+#include <deque>
 
 using namespace std;
 
@@ -15,11 +16,14 @@ public:
     void setSurroundingEnvironment(const Material &material);
     double totalThickness() const;
     int nLayers() const;
+    vector<double> *zBoundaries();
+    Material *material(int layerIndex);
 
 private:
     int _nLayers;
     vector<Material> layers;
-    vector<double> zBoundaries;
+    vector<double> _zBoundaries;
+    deque<Material> materials;
     double totThickness;
     Material environment;
 };
