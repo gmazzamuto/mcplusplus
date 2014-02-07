@@ -27,6 +27,7 @@ int main(int argc, char *argv[])
 
     material.ls = 1;
     material.g = 0;
+    material.n = freeSpace.n;
 
     sample->addLayer(material,100);
     sample->setSurroundingEnvironment(freeSpace);
