@@ -70,7 +70,7 @@ void Simulation::run() {
 
     while(n < totalWalkers) {
         Walker *walker = source->constructWalker();
-        walker->nInteractions.insert(walker->nInteractions.begin(),nLayers,0);
+        walker->nInteractions.insert(walker->nInteractions.begin(),nLayers+2,0);
 
         layer0 = layerAt(walker->r0);
         printf("%d\t",layer0);
