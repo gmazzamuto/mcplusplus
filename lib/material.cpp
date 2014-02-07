@@ -7,12 +7,27 @@ Material::Material()
 }
 
 /**
- * @brief Material::setWavelegth
- * @param um
+ * @brief Sets the refractive index and the speed of light in this medium
+ * according to the given wavelength
+ *
+ * @param um wavelength in micrometers
  */
 
 void Material::setWavelegth(double um) {
+    n = dispersionRelation(um);
+    v = LIGHT_SPEED/n;
+}
 
+/**
+ * @brief Implements the dispersion relation
+ * @param lambda_um wavelength in micrometers
+ * @return the refractive index at the given wavelength
+ *
+ * The default material is dispersionless.
+ */
+
+double Material::dispersionRelation(double lambda_um) {
+    return n;
 }
 
 /**
@@ -36,8 +51,17 @@ FreeSpace::FreeSpace() :
 // f water vapour pressure in Pa
 // P in Pa
 
-void FreeSpace::setWavelegth(double um) {
+/**
+ * @brief FreeSpace::dispersionRelation
+ * @param lambda_um
+ * @return
+ *
+ * \todo implement dispersion relation
+ */
 
+double FreeSpace::dispersionRelation(double lambda_um) {
+// TODO
+    return n;
 }
 
 
@@ -48,8 +72,9 @@ GlassSlide::GlassSlide() :
     n = 1.5203;
 }
 
-void GlassSlide::setWavelegth(double um) {
-    n = sqrt(1 + 1.282086558597*pow(um,2)/(pow(um,2) - 0.01023694363174) + 0.05984826992046*pow(um,2)/(pow(um,2) - 12.09530215672));
+double GlassSlide::dispersionRelation(double lambda_um) {
+    return sqrt(1 + 1.282086558597*pow(lambda_um,2)/(pow(lambda_um,2) - 0.01023694363174)
+                    + 0.05984826992046*pow(lambda_um,2)/(pow(lambda_um,2) - 12.09530215672));
 }
 
 
@@ -69,7 +94,7 @@ NorlandOpticalAdhesive65::NorlandOpticalAdhesive65() :
  * (see under Optical Properties tab)
  */
 
-void NorlandOpticalAdhesive65::setWavelegth(double um) {
-    n = 1.50631 + 5.43562E-3/pow(um,2) + 27.7798E-6/pow(um,4);
+double NorlandOpticalAdhesive65::dispersionRelation(double lambda_um) {
+    return 1.50631 + 5.43562E-3/pow(lambda_um,2) + 27.7798E-6/pow(lambda_um,4);
 }
 
