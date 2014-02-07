@@ -170,7 +170,7 @@ void Simulation::move(Walker *walker, double length) {
     //handle interface
 
     double zBoundary=0;
-    layer1 = layer0 + sign(walker->k0[2]);
+    layer1 = layer0 + sign(walker->k1[2]);
     zBoundary = upperZBoundaries->at(min(layer0,layer1));
 
     double t = (zBoundary - walker->r0[2]) / walker->k1[2];
@@ -188,14 +188,14 @@ void Simulation::move(Walker *walker, double length) {
     double n1 = sample->material(layer1)->n;
 
     if (n0 == n1) {
-        layer0 = layer1; //leave k0 as it is, update layer
+        layer0 = layer1;
         return;
     }
 
 
     //handle reflection and refraction
 
-    double sinTheta1 = sqrt(1 - pow(walker->k0[2],2));
+    double sinTheta1 = sqrt(1 - pow(walker->k1[2],2));
     double sinTheta2 = n0*sinTheta1/n1;
 
     if(sinTheta2 > 1)
@@ -205,7 +205,7 @@ void Simulation::move(Walker *walker, double length) {
         double cThetaSum, cThetaDiff; //cos(Theta1 + Theta2) and cos(Theta1 - Theta2)
         double sThetaSum, sThetaDiff; //sin(Theta1 + Theta2) and sin(Theta1 - Theta2)
 
-        double cosTheta1 = walker->k0[2];
+        double cosTheta1 = walker->k1[2];
         double cosTheta2 = sqrt(1 - pow(sinTheta2,2));
 
         cThetaSum = cosTheta1*cosTheta2 - sinTheta1*sinTheta2;
@@ -224,15 +224,15 @@ void Simulation::move(Walker *walker, double length) {
 
 void Simulation::reflect(Walker *walker) {
     layer1 = layer0;
-    walker->k0[2] = -walker->k0[2];
+    walker->k0[2] = -1*walker->k1[2];
 }
 
 void Simulation::refract(Walker *walker) {
     double n0 = sample->material(layer0)->n; //I have already defined those quantities. should we pass them as arguments?
     double n1 = sample->material(layer1)->n; //
-    double sinTheta1 = sqrt(1 - pow(walker->k0[2],2)); //
+    double sinTheta1 = sqrt(1 - pow(walker->k1[2],2)); //
 
-    walker->k0[0] = n0*walker->k0[0]/n1;
-    walker->k0[1] = n0*walker->k0[1]/n1;
+    walker->k0[0] = n0*walker->k1[0]/n1;
+    walker->k0[1] = n0*walker->k1[1]/n1;
     walker->k0[2] = sqrt(1 - pow(n0*sinTheta1/n1,2));
 }
