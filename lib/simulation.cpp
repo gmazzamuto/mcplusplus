@@ -166,56 +166,59 @@ void Simulation::move(Walker *walker, double length) {
         walker->nInteractions[layer0]++; //not sure this is the right place to increment the interactions counter as well...
         return;
     }
+
+    //handle interface
+
+    double zBoundary=0;
+    layer1 = layer0 + sign(walker->k0[2]);
+    zBoundary = upperZBoundaries->at(min(layer0,layer1));
+
+    double t = (zBoundary - walker->r0[2]) / walker->k1[2];
+    double intersection[3];
+    for (int i = 0; i < 3; ++i) {
+        intersection[i] = walker->r0[i] + walker->k1[i]*t;
+    }
+
+    memcpy(walker->r0,intersection,3*sizeof(double)); //move to interface, r1 is now meaningless (should we set it to NULL?)
+    walker->walkTime += t/sample->material(layer0)->v;
+
+    //so we updated r0, now it's time to update k0
+
+    double n0 = sample->material(layer0)->n;
+    double n1 = sample->material(layer1)->n;
+
+    if (n0 == n1) {
+        layer0 = layer1; //leave k0 as it is, update layer
+        return;
+    }
+
+
+    //handle reflection and refraction
+
+    double sinTheta1 = sqrt(1 - pow(walker->k0[2],2));
+    double sinTheta2 = n0*sinTheta1/n1;
+
+    if(sinTheta2 > 1)
+        reflect(walker);
     else {
-        double zBoundary=0;
-        layer1 = layer0 + sign(walker->k0[2]);
-        zBoundary = upperZBoundaries->at(min(layer0,layer1));
+        //calculate the probability r(Theta1,n0,n1) of being reflected
+        double cThetaSum, cThetaDiff; //cos(Theta1 + Theta2) and cos(Theta1 - Theta2)
+        double sThetaSum, sThetaDiff; //sin(Theta1 + Theta2) and sin(Theta1 - Theta2)
 
-        double t = (zBoundary - walker->r0[2]) / walker->k1[2];
-        double intersection[3];
-        for (int i = 0; i < 3; ++i) {
-            intersection[i] = walker->r0[i] + walker->k1[i]*t;
-        }
+        double cosTheta1 = walker->k0[2];
+        double cosTheta2 = sqrt(1 - pow(sinTheta2,2));
 
-        memcpy(walker->r0,intersection,3*sizeof(double)); //move to interface, r1 is now meaningless (should we set it to NULL?)
-        walker->walkTime += t/sample->material(layer0)->v;
+        cThetaSum = cosTheta1*cosTheta2 - sinTheta1*sinTheta2;
+        cThetaDiff = cosTheta1*cosTheta2 + sinTheta1*sinTheta2;
+        sThetaSum = sinTheta1*cosTheta2 + cosTheta1*sinTheta2;
+        sThetaDiff = sinTheta1*cosTheta2 - cosTheta1*sinTheta2;
+        double r = 0.5*sThetaDiff*sThetaDiff*(cThetaDiff*cThetaDiff+cThetaSum*cThetaSum)/(sThetaSum*sThetaSum*cThetaDiff*cThetaDiff);
 
-        //so we updated r0, now it's time to update k0
+        double xi = uniform_01<double>()(*mt);
 
-        double n0 = sample->material(layer0)->n;
-        double n1 = sample->material(layer1)->n;
-
-        if (n0 == n1) {
-            layer0 = layer1; //leave k0 as it is, update layer
-            return;
-        }
-        else {
-            double sinTheta1 = sqrt(1 - pow(walker->k0[2],2));
-            double sinTheta2 = n0*sinTheta1/n1;
-
-            if(sinTheta2 > 1)
-                reflect(walker);
-            else {
-                //calculate the probability r(Theta1,n0,n1) of being reflected
-                double cThetaSum, cThetaDiff; //cos(Theta1 + Theta2) and cos(Theta1 - Theta2)
-                double sThetaSum, sThetaDiff; //sin(Theta1 + Theta2) and sin(Theta1 - Theta2)
-
-                double cosTheta1 = walker->k0[2];
-                double cosTheta2 = sqrt(1 - pow(sinTheta2,2));
-
-                cThetaSum = cosTheta1*cosTheta2 - sinTheta1*sinTheta2;
-                cThetaDiff = cosTheta1*cosTheta2 + sinTheta1*sinTheta2;
-                sThetaSum = sinTheta1*cosTheta2 + cosTheta1*sinTheta2;
-                sThetaDiff = sinTheta1*cosTheta2 - cosTheta1*sinTheta2;
-                double r = 0.5*sThetaDiff*sThetaDiff*(cThetaDiff*cThetaDiff+cThetaSum*cThetaSum)/(sThetaSum*sThetaSum*cThetaDiff*cThetaDiff);
-
-                double xi = uniform_01<double>()(*mt);
-
-                if(xi <= r)
-                    reflect(walker); //we come back to run() without keeping track of the extra unused step length
-                refract(walker);
-            }
-        }
+        if(xi <= r)
+            reflect(walker); //we come back to run() without keeping track of the extra unused step length
+        refract(walker);
     }
 }
 
