@@ -237,4 +237,5 @@ void Simulation::refract(Walker *walker) {
     walker->k0[0] = n0*walker->k1[0]/n1;
     walker->k0[1] = n0*walker->k1[1]/n1;
     walker->k0[2] = sqrt(1 - pow(n0*sinTheta1/n1,2));
+    layer0=layer1;
 }
