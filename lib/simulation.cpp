@@ -216,8 +216,10 @@ void Simulation::move(Walker *walker, double length) {
 
         double xi = uniform_01<double>()(*mt);
 
-        if(xi <= r)
+        if(xi <= r) {
             reflect(walker); //we come back to run() without keeping track of the extra unused step length
+            return;
+        }
         refract(walker);
     }
 }
