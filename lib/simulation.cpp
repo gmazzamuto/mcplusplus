@@ -15,7 +15,13 @@ Simulation::Simulation(BaseObject *parent) :
     source = NULL;
     upperZBoundaries = NULL;
     layer0 = 0;
+    trajectoryPoints = new std::vector<double>();
+    saveTrajectory = false;
     reset();
+}
+
+Simulation::~Simulation() {
+    delete trajectoryPoints;
 }
 
 void Simulation::reset() {
@@ -69,6 +75,10 @@ void Simulation::run() {
     IsotropicPsiGenerator *randomPsi = new IsotropicPsiGenerator(this);
 
     while(n < totalWalkers) {
+        layer0 = 0;
+        onInterface = false;
+        trajectoryPoints->clear();
+
         Walker *walker = source->constructWalker();
         walker->nInteractions.insert(walker->nInteractions.begin(),nLayers+2,0);
 
@@ -81,7 +91,7 @@ void Simulation::run() {
                 layer0++; //consider the walker as belonging to the next layer, this is to avoid immediate reflection
         }
 
-        addTrajectoryPoint(walker->r0);
+        saveTrajectoryPoint(walker->r0);
 
 #ifdef DEBUG_TRAJECTORY
         printf("%d\t",layer0);
@@ -123,7 +133,6 @@ void Simulation::run() {
 #ifdef DEBUG_TRAJECTORY
             printf("\t%lf\n",walker->k1[2]);
 #endif
-
             move(walker,length); //since I think that move() is conceptually the right place to increment walkTime it is convenient to pass the length as well
                                  //or we might let length to be a private Simulation member, and update its value accordingly with its remaining portion when a reflection takes place
 
@@ -131,7 +140,7 @@ void Simulation::run() {
             printf("%d\t",layer0);
             printf("%lf\t%lf\t%lf\t\t%lf", walker->r0[0], walker->r0[1], walker->r0[2],walker->k0[2]);
 #endif
-            addTrajectoryPoint(walker->r0);
+            saveTrajectoryPoint(walker->r0);
 
             if(layer0 == nLayers + 1) {// +1, right?
                 transmitted++;
@@ -226,7 +235,6 @@ void Simulation::move(Walker *walker, double length) {
         return;
     }
 
-
     //handle reflection and refraction
 
     double sinTheta1 = sqrt(1 - pow(walker->k1[2],2));
@@ -282,4 +290,16 @@ void Simulation::refract(Walker *walker) {
     walker->k1[1] = n0*walker->k1[1]/n1;
     walker->k1[2] = sqrt(1 - pow(n0*sinTheta1/n1,2));
     layer0=layer1;
+}
+
+void Simulation::saveTrajectoryPoint(double *point) {
+    if(!saveTrajectory)
+        return;
+    for (int i = 0; i < 3; ++i) {
+        trajectoryPoints->push_back(point[i]);
+    }
+}
+
+void Simulation::setSaveTrajectoryEnabled(bool enabled) {
+    saveTrajectory = enabled;
 }

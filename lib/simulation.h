@@ -25,11 +25,16 @@ class Simulation : public BaseRandom
 {
 public:
     Simulation(BaseObject *parent=NULL);
+    ~Simulation();
+
+    void setSaveTrajectoryEnabled(bool enabled = true);
     void setTotalWalkers(int N);
     void setSample(Sample *sample);
     void setSource(Source *source);
     void run();
     void reset();
+
+    vector<double> *trajectoryPoints;
 
 private:
     int totalWalkers;  /**< @brief total number of walkers to be simulated*/
@@ -44,11 +49,13 @@ private:
     int layer0;
     int layer1;
     double onInterface;
+    bool saveTrajectory;
 
     int layerAt(double *r0);
     void move(Walker *walker, double length);
     void reflect(Walker *walker);
     void refract(Walker *walker);
+    void saveTrajectoryPoint(double *point);
 };
 
 #endif // SIMULATION_H
