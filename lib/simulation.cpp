@@ -83,8 +83,10 @@ void Simulation::run() {
 
         addTrajectoryPoint(walker->r0);
 
+#ifdef DEBUG_TRAJECTORY
         printf("%d\t",layer0);
-        printf("%lf\t%lf\t%lf\n", walker->r0[0], walker->r0[1], walker->r0[2]);
+        printf("%lf\t%lf\t%lf\t\t%lf", walker->r0[0], walker->r0[1], walker->r0[2],walker->k0[2]);
+#endif
 
         while(1) {
             stepLength->setBeta(sample->material(layer0)->ls);
@@ -118,12 +120,18 @@ void Simulation::run() {
             walker->r1[1] = walker->r0[1] + length*walker->k1[1];
             walker->r1[2] = walker->r0[2] + length*walker->k1[2];
 
+#ifdef DEBUG_TRAJECTORY
+            printf("\t%lf\n",walker->k1[2]);
+#endif
+
             move(walker,length); //since I think that move() is conceptually the right place to increment walkTime it is convenient to pass the length as well
                                  //or we might let length to be a private Simulation member, and update its value accordingly with its remaining portion when a reflection takes place
 
+#ifdef DEBUG_TRAJECTORY
             printf("%d\t",layer0);
-            printf("%lf\t%lf\t%lf\n", walker->r0[0], walker->r0[1], walker->r0[2]);
-
+            printf("%lf\t%lf\t%lf\t\t%lf", walker->r0[0], walker->r0[1], walker->r0[2],walker->k0[2]);
+#endif
+            addTrajectoryPoint(walker->r0);
 
             if(layer0 == nLayers + 1) {// +1, right?
                 transmitted++;
@@ -136,7 +144,9 @@ void Simulation::run() {
             }
         }
 
-        printf("walker reached layer %d\n",layer0);
+#ifdef DEBUG_TRAJECTORY
+        printf("\nwalker reached layer %d\n",layer0);
+#endif
         n++;
         delete walker;
     }
@@ -207,6 +217,9 @@ void Simulation::move(Walker *walker, double length) {
     double n1 = sample->material(layer1)->n;
 
     if (n0 == n1) {
+#ifdef DEBUG_TRAJECTORY
+        printf("interface with same n...\n");
+#endif
         layer0 = layer1;
         return;
     }
@@ -217,8 +230,12 @@ void Simulation::move(Walker *walker, double length) {
     double sinTheta1 = sqrt(1 - pow(walker->k1[2],2));
     double sinTheta2 = n0*sinTheta1/n1;
 
-    if(sinTheta2 > 1)
+    if(sinTheta2 > 1) {
+#ifdef DEBUG_TRAJECTORY
+        printf("TIR ");
+#endif
         reflect(walker);
+    }
     else {
         //calculate the probability r(Theta1,n0,n1) of being reflected
         double cThetaSum, cThetaDiff; //cos(Theta1 + Theta2) and cos(Theta1 - Theta2)
@@ -244,11 +261,17 @@ void Simulation::move(Walker *walker, double length) {
 }
 
 void Simulation::reflect(Walker *walker) {
+#ifdef DEBUG_TRAJECTORY
+    printf("reflect ...\n");
+#endif
     layer1 = layer0;
     walker->k1[2] *= -1; //flip k1 along z
 }
 
 void Simulation::refract(Walker *walker) {
+#ifdef DEBUG_TRAJECTORY
+    printf("refract ...\n");
+#endif
     double n0 = sample->material(layer0)->n; //I have already defined those quantities. should we pass them as arguments?
     double n1 = sample->material(layer1)->n; //
     double sinTheta1 = sqrt(1 - pow(walker->k1[2],2)); //
