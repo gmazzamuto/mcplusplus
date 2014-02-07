@@ -43,8 +43,9 @@ private:
     int nLayers;
     int layer0;
     int layer1;
+    double onInterface;
 
-    int layerAt(double *r0) const;
+    int layerAt(double *r0);
     void move(Walker *walker, double length);
     void reflect(Walker *walker);
     void refract(Walker *walker);
