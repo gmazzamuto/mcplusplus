@@ -20,9 +20,10 @@ Source::Source(BaseObject *parent) :
 
 void Source::spinDirection(Walker *walker) const {
     double cosTheta = cosThetaDistribution->spin();
-    double cosPsi = cos(psiDistribution->spin());
     double sinTheta = sqrt(1 - pow(cosTheta,2));
-    double sinPsi = sin(psiDistribution->spin());
+    double psi = psiDistribution->spin();
+    double cosPsi = cos(psi);
+    double sinPsi = sin(psi);
 
     walker->k0[0] = sinTheta*cosPsi;
     walker->k0[1] = sinTheta*sinPsi;
