@@ -11,7 +11,7 @@ using namespace boost::math;
 Simulation::Simulation(BaseObject *parent) :
     BaseRandom(parent)
 {
-    sample = NULL;
+    _sample = NULL;
     source = NULL;
     upperZBoundaries = NULL;
     layer0 = 0;
@@ -42,8 +42,12 @@ void Simulation::setTotalWalkers(int N) {
  */
 
 void Simulation::setSample(Sample *sample) {
-    this->sample = sample;
-    sample->setParent(this);
+    _sample = sample;
+    _sample->setParent(this);
+}
+
+Sample* Simulation::sample() {
+    return _sample;
 }
 
 /**
@@ -64,9 +68,9 @@ void Simulation::setSource(Source *source) {
  */
 
 void Simulation::run() {
-    nLayers = sample->nLayers();
-    double totalThickness = sample->totalThickness(); //we shouldn't need this (totalTickness is the last zBoundary)
-    upperZBoundaries = sample->zBoundaries();
+    nLayers = _sample->nLayers();
+    double totalThickness = _sample->totalThickness(); //we shouldn't need this (totalTickness is the last zBoundary)
+    upperZBoundaries = _sample->zBoundaries();
 
     int n = 0;
 
@@ -99,11 +103,11 @@ void Simulation::run() {
 #endif
 
         while(1) {
-            stepLength->setBeta(sample->material(layer0)->ls);
+            stepLength->setBeta(_sample->material(layer0)->ls);
             double length = stepLength->spin();
 
             if(!onInterface) { //spin k1 only if we're not on an interface, use the old k1 otherwise
-                deflCosine->setg(sample->material(layer0)->g);
+                deflCosine->setg(_sample->material(layer0)->g);
                 double cosTheta = deflCosine->spin();
                 double sinTheta = sqrt(1-pow(cosTheta,2));
                 double psi = randomPsi->spin();
@@ -201,7 +205,7 @@ void Simulation::move(Walker *walker, double length) {
         memcpy(walker->r0,walker->r1,3*sizeof(double));
         memcpy(walker->k0,walker->k1,3*sizeof(double));
 
-        walker->walkTime += length/sample->material(layer0)->v;
+        walker->walkTime += length/_sample->material(layer0)->v;
         walker->nInteractions[layer0]++; //not sure this is the right place to increment the interactions counter as well...
         return;
     }
@@ -220,12 +224,12 @@ void Simulation::move(Walker *walker, double length) {
 
     memcpy(walker->r0,intersection,3*sizeof(double)); //move to interface, r1 is now meaningless (should we set it to NULL?)
     onInterface = true;
-    walker->walkTime += t/sample->material(layer0)->v;
+    walker->walkTime += t/_sample->material(layer0)->v;
 
     //so we updated r0, now it's time to update k0
 
-    double n0 = sample->material(layer0)->n;
-    double n1 = sample->material(layer1)->n;
+    double n0 = _sample->material(layer0)->n;
+    double n1 = _sample->material(layer1)->n;
 
     if (n0 == n1) {
 #ifdef DEBUG_TRAJECTORY
@@ -282,8 +286,8 @@ void Simulation::refract(Walker *walker) {
 #ifdef DEBUG_TRAJECTORY
     printf("refract ...\n");
 #endif
-    double n0 = sample->material(layer0)->n; //I have already defined those quantities. should we pass them as arguments?
-    double n1 = sample->material(layer1)->n; //
+    double n0 = _sample->material(layer0)->n; //I have already defined those quantities. should we pass them as arguments?
+    double n1 = _sample->material(layer1)->n; //
     double sinTheta1 = sqrt(1 - pow(walker->k1[2],2)); //
 
     walker->k1[0] = n0*walker->k1[0]/n1;
@@ -302,4 +306,13 @@ void Simulation::saveTrajectoryPoint(double *point) {
 
 void Simulation::setSaveTrajectoryEnabled(bool enabled) {
     saveTrajectory = enabled;
+}
+
+/**
+ * @brief Returns the trajectory of the last simulated walker
+ * @return
+ */
+
+vector<double> *Simulation::trajectory() const {
+    return trajectoryPoints;
 }

@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include "simulation.h"
 #include "psigenerator.h"
+#include <QApplication>
+#include <QMainWindow>
+#include "simulationviewer.h"
 
 int main(int argc, char *argv[])
 {
@@ -27,10 +30,21 @@ int main(int argc, char *argv[])
 
     material.ls = 1;
     material.g = 0;
-    material.n = freeSpace.n;
+    material.n = 1;
 
-    sample->addLayer(material,100);
+    material.n = 1;
+    sample->addLayer(material,50);
+    material.n = 10;
+    sample->addLayer(material,50);
+
+    material.n = 1;
+    sample->addLayer(material,50);
+    material.n = 10;
+    sample->addLayer(material,50);
+
     sample->setSurroundingEnvironment(freeSpace);
+
+    QApplication a(argc, argv);
 
     Simulation *sim = new Simulation();
 
@@ -39,7 +53,19 @@ int main(int argc, char *argv[])
     sim->setTotalWalkers(1);
 
     sim->setSeed(0);
+    sim->setSaveTrajectoryEnabled(true);
     sim->run();
+
+    QMainWindow w;
+    SimulationViewer simViewer(sim);
+
+    simViewer.setDisplayedOriginPos(0,0,-600);
+    simViewer.setDisplayedAxisLength(500);
+
+    w.setCentralWidget(&simViewer);
+    w.show();
+
+    a.exec();
 
     return 0;
 }

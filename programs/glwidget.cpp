@@ -58,11 +58,15 @@ GLWidget::GLWidget(QWidget *parent)
 
     qtGreen = QColor::fromCmykF(0.40, 0.0, 1.0, 0.0);
     qtPurple = QColor::fromCmykF(0.39, 0.39, 0.0, 0.0);
+    lines = new std::vector<double>();
+    usingInternalVector = true;
     displayedAxisLength = 0;
 }
 
 GLWidget::~GLWidget()
 {
+    if(usingInternalVector)
+        delete lines;
 }
 
 QSize GLWidget::minimumSizeHint() const
@@ -129,20 +133,19 @@ void GLWidget::initializeGL()
     glColor3f( 0.0f, 1.0f, 0.0f );
 
     glEnable(GL_DEPTH_TEST);
-    glEnable(GL_CULL_FACE);
-    glShadeModel(GL_SMOOTH);
-//    glEnable(GL_LIGHTING);
-//    glEnable(GL_LIGHT0);
+    glShadeModel(GL_FLAT);
+    //    glEnable(GL_LIGHTING);
+    //    glEnable(GL_LIGHT0);
     glEnable(GL_MULTISAMPLE);
-//    static GLfloat lightPosition[4] = { 10, 5.0, 7.0, 1.0 };
-//    glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
+    //    static GLfloat lightPosition[4] = { 10, 5.0, 7.0, 1.0 };
+    //    glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
 
-//    GLfloat mat_specular[] = {0.3, 0.3, 0.3, 1.0};
-//    GLfloat mat_shininess[] = { 10.0 };
-//    glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
-//    glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
-//    glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
-//    glEnable(GL_COLOR_MATERIAL);
+    //    GLfloat mat_specular[] = {0.3, 0.3, 0.3, 1.0};
+    //    GLfloat mat_shininess[] = { 10.0 };
+    //    glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+    //    glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+    //    glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+    //    glEnable(GL_COLOR_MATERIAL);
 }
 
 void GLWidget::paintGL()
@@ -154,12 +157,12 @@ void GLWidget::paintGL()
     QColor color;
     int i = 0;
     int l = 0;
-    while(i < coords.size()) {
+    while(i < lines->size()) {
         color = QColor((enum Qt::GlobalColor)(Qt::darkGray+l%15));
         glColor3f( color.redF(), color.greenF(), color.blueF() );
-        glVertex3f(coords.at(i),coords.at(i+1),coords.at(i+2));
+        glVertex3f(lines->at(i),lines->at(i+1),lines->at(i+2));
         i+=3;
-        glVertex3f(coords.at(i),coords.at(i+1),coords.at(i+2));
+        glVertex3f(lines->at(i),lines->at(i+1),lines->at(i+2));
         i+=3;
         l++;
     }
@@ -180,6 +183,9 @@ void GLWidget::paintGL()
     glVertex3f(displayedOriginPos[0],displayedOriginPos[1],displayedOriginPos[2]);
     glVertex3f(displayedOriginPos[0],displayedOriginPos[1],displayedOriginPos[2]+displayedAxisLength);
     glEnd();
+
+    paint_GL_impl();
+
     glLoadIdentity();
     glTranslatef(0.0, 0.0, -10.0);
     glScalef(scale,scale,scale);
@@ -226,16 +232,34 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
 }
 
 void GLWidget::addLine(float *r0, float *r1) {
+    addPoint(r0);
+    addPoint(r1);
+}
+
+void GLWidget::addPoint(float *r0) {
     for (int i = 0; i < 3; ++i) {
-        coords.append(r0[i]);
-    }
-    for (int i = 0; i < 3; ++i) {
-        coords.append(r1[i]);
+        lines->push_back(r0[i]);
     }
 }
 
+void GLWidget::addPoint(double *r0) {
+    float f[3];
+    for (int i = 0; i < 3; ++i) {
+        f[i] = (float)r0[i];
+    }
+    addPoint(f);
+}
+
 void GLWidget::clear() {
-    coords.clear();
+    lines->clear();
+}
+
+void GLWidget::setLinesVector(vector<double> *v) {
+    if(usingInternalVector)
+        delete lines;
+    lines = v;
+    usingInternalVector = false;
+}
 
 void GLWidget::setDisplayedOriginPos(float *pos) {
     memcpy(displayedOriginPos,pos,3*sizeof(double));
@@ -250,4 +274,8 @@ void GLWidget::setDisplayedOriginPos(float x, float y, float z)
 
 void GLWidget::setDisplayedAxisLength(float length) {
     displayedAxisLength = length;
+}
+
+void GLWidget::paint_GL_impl() {
+
 }

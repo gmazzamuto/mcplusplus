@@ -41,7 +41,10 @@
 #ifndef GLWIDGET_H
 #define GLWIDGET_H
 
+#include <vector>
 #include <QGLWidget>
+
+using namespace std;
 
 class GLWidget : public QGLWidget
 {
@@ -55,7 +58,10 @@ public:
     QSize sizeHint() const;
 
     void addLine(float *r0, float *r1);
+    void addPoint(float *r0);
+    void addPoint(double *r0);
     void clear();
+    void setLinesVector(vector<double> *v);
     void setDisplayedOriginPos(float *pos);
     void setDisplayedOriginPos(float x, float y, float z);
     void setDisplayedAxisLength(float length);
@@ -79,6 +85,8 @@ protected:
     void mouseMoveEvent(QMouseEvent *event);
 
 private:
+    virtual void paint_GL_impl();
+
     int xRot;
     int yRot;
     int zRot;
@@ -86,7 +94,8 @@ private:
     QPoint lastPos;
     QColor qtGreen;
     QColor qtPurple;
-    QVector<float> coords;
+    vector<double> *lines;
+    bool usingInternalVector;
     float displayedOriginPos[3];
     float displayedAxisLength;
 };
