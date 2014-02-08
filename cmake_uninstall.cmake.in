@@ -1,8 +1,8 @@
 cmake_policy(SET CMP0007 NEW)
-if (EXISTS "@DOXYGEN_OUTDIR@")
+if (EXISTS "@DOCUMENTATION_DIR@")
 	message(STATUS "Uninstalling documentation")
 	execute_process(
-            COMMAND rm -fr "@DOXYGEN_OUTDIR@"
+            COMMAND rm -fr "@DOCUMENTATION_DIR@"
         )
 endif()
 if (NOT EXISTS "@CMAKE_CURRENT_BINARY_DIR@/install_manifest.txt")

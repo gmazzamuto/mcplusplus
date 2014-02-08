@@ -7,7 +7,7 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Release")
 endif()
 
-set(DOXYGEN_OUTDIR ${CMAKE_INSTALL_PREFIX}/share/doc/libMCPlusPlus)
+set(DOCUMENTATION_DIR ${CMAKE_INSTALL_PREFIX}/share/doc/MCPlusPlus)
 
 add_subdirectory(lib)
 add_subdirectory(programs)
