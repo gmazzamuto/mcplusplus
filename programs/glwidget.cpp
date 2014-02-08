@@ -58,6 +58,7 @@ GLWidget::GLWidget(QWidget *parent)
 
     qtGreen = QColor::fromCmykF(0.40, 0.0, 1.0, 0.0);
     qtPurple = QColor::fromCmykF(0.39, 0.39, 0.0, 0.0);
+    displayedAxisLength = 0;
 }
 
 GLWidget::~GLWidget()
@@ -165,6 +166,20 @@ void GLWidget::paintGL()
 
     glEnd();
 
+    //draw XYZ reference axes
+    glBegin(GL_LINES);
+    glColor3f(1,0,0);
+    glVertex3f(displayedOriginPos[0],displayedOriginPos[1],displayedOriginPos[2]);
+    glVertex3f(displayedOriginPos[0]+displayedAxisLength,displayedOriginPos[1],displayedOriginPos[2]);
+
+    glColor3f(0,1,0);
+    glVertex3f(displayedOriginPos[0],displayedOriginPos[1],displayedOriginPos[2]);
+    glVertex3f(displayedOriginPos[0],displayedOriginPos[1]+displayedAxisLength,displayedOriginPos[2]);
+
+    glColor3f(0,0,1);
+    glVertex3f(displayedOriginPos[0],displayedOriginPos[1],displayedOriginPos[2]);
+    glVertex3f(displayedOriginPos[0],displayedOriginPos[1],displayedOriginPos[2]+displayedAxisLength);
+    glEnd();
     glLoadIdentity();
     glTranslatef(0.0, 0.0, -10.0);
     glScalef(scale,scale,scale);
@@ -221,4 +236,18 @@ void GLWidget::addLine(float *r0, float *r1) {
 
 void GLWidget::clear() {
     coords.clear();
+
+void GLWidget::setDisplayedOriginPos(float *pos) {
+    memcpy(displayedOriginPos,pos,3*sizeof(double));
+}
+
+void GLWidget::setDisplayedOriginPos(float x, float y, float z)
+{
+    displayedOriginPos[0] = x;
+    displayedOriginPos[1] = y;
+    displayedOriginPos[2] = z;
+}
+
+void GLWidget::setDisplayedAxisLength(float length) {
+    displayedAxisLength = length;
 }

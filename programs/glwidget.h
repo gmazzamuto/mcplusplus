@@ -56,6 +56,9 @@ public:
 
     void addLine(float *r0, float *r1);
     void clear();
+    void setDisplayedOriginPos(float *pos);
+    void setDisplayedOriginPos(float x, float y, float z);
+    void setDisplayedAxisLength(float length);
 
 public slots:
     void setScale(double value);
@@ -84,6 +87,8 @@ private:
     QColor qtGreen;
     QColor qtPurple;
     QVector<float> coords;
+    float displayedOriginPos[3];
+    float displayedAxisLength;
 };
 
 #endif
