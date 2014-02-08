@@ -150,6 +150,8 @@ void Simulation::run() {
         n++;
         delete walker;
     }
+    printf("transmitted: %d\n",transmitted);
+    printf("reflected: %d\n",reflected);
 }
 
 /**
