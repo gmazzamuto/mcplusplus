@@ -255,7 +255,7 @@ void Simulation::move(Walker *walker, double length) {
         double cThetaSum, cThetaDiff; //cos(Theta1 + Theta2) and cos(Theta1 - Theta2)
         double sThetaSum, sThetaDiff; //sin(Theta1 + Theta2) and sin(Theta1 - Theta2)
 
-        double cosTheta1 = walker->k1[2];
+        double cosTheta1 = fabs(walker->k1[2]);
         double cosTheta2 = sqrt(1 - pow(sinTheta2,2));
 
         cThetaSum = cosTheta1*cosTheta2 - sinTheta1*sinTheta2;
