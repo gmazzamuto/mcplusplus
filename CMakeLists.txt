@@ -7,10 +7,24 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Release")
 endif()
 
+#-- Add an Option to toggle the generation of the documentation
+option(BUILD_DOCUMENTATION "Use Doxygen to create the HTML based documentation" OFF)
+if(BUILD_DOCUMENTATION)
+  FIND_PACKAGE(Doxygen)
+  if(NOT DOXYGEN_FOUND)
+    message(FATAL_ERROR
+      "Doxygen is needed to build the documentation. Please install it correctly")
+  endif()
+endif()
+
 set(DOCUMENTATION_DIR ${CMAKE_INSTALL_PREFIX}/share/doc/MCPlusPlus)
 
+add_subdirectory(doc)
 add_subdirectory(lib)
 add_subdirectory(programs)
+
+add_custom_target(documentation)
+add_dependencies(documentation main-documentation libMCPlusPlus-documentation)
 
 # uninstall target
 configure_file(

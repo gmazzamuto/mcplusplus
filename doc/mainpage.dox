@@ -1,0 +1,8 @@
+/**
+  \mainpage
+
+  \section Introduction
+  \section HowToInstall How to install
+  MCPlusPlus uses CMake for building.
+
+  */

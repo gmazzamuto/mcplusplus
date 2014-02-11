@@ -1,0 +1,6 @@
+<doxygenlayout version="1.0">
+  <navindex>
+    <tab type="mainpage" />
+    <tab type="user"  url="libMCPlusPlus/index.html" visible="yes" title="Library API"/>
+  </navindex>
+</doxygenlayout>
