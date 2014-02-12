@@ -41,6 +41,7 @@ private:
     int transmitted;  /**< @brief total number of walkers transmitted after at least one scattering event*/
     int reflected;  /**< @brief total number of walkers reflected after at least one scattering event*/
     int ballistic;  /**< @brief total number of walkers transmitted without undergoing any scattering event*/
+    int backreflected;  /**< @brief total number of walkers reflected without undergoing any scattering event*/
 
     const Sample *_sample;
     const Source *source;

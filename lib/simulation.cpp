@@ -29,6 +29,7 @@ void Simulation::reset() {
     transmitted = 0;
     reflected = 0;
     ballistic = 0;
+    backreflected = 0;
 }
 
 void Simulation::setTotalWalkers(int N) {
@@ -69,7 +70,6 @@ void Simulation::setSource(Source *source) {
 
 void Simulation::run() {
     nLayers = _sample->nLayers();
-    double totalThickness = _sample->totalThickness(); //we shouldn't need this (totalTickness is the last zBoundary)
     upperZBoundaries = _sample->zBoundaries();
 
     int n = 0;
@@ -146,13 +146,31 @@ void Simulation::run() {
 #endif
             saveTrajectoryPoint(walker->r0);
 
-            if(layer0 == nLayers + 1) {// +1, right?
-                transmitted++;
+            if(layer0 == nLayers + 1) {
+                bool diffuselyTransmitted = false;
+                for (int i = 1; i <= nLayers; ++i) {
+                    if(walker->nInteractions[i]) {
+                        transmitted++;
+                        diffuselyTransmitted = true;
+                        break;
+                    }
+                }
+                if(!diffuselyTransmitted)
+                    ballistic++;
                 break;
             }
 
             if(layer0 == 0) {
-                reflected++;
+                bool diffuselyReflected = false;
+                for (int i = 1; i <= nLayers; ++i) {
+                    if(walker->nInteractions[i]) {
+                        reflected++;
+                        diffuselyReflected = true;
+                        break;
+                    }
+                }
+                if(!diffuselyReflected)
+                    backreflected++;
                 break;
             }
         }
@@ -165,6 +183,8 @@ void Simulation::run() {
     }
     printf("transmitted: %d\n",transmitted);
     printf("reflected: %d\n",reflected);
+    printf("ballistic: %d\n",ballistic);
+    printf("back-reflected: %d\n",backreflected);
 }
 
 /**
