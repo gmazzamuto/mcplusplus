@@ -205,10 +205,10 @@ GaussianRayBundleSource::GaussianRayBundleSource(double collimatedWaist, double 
 GaussianRayBundleSource::GaussianRayBundleSource(double collimatedXWaist, double collimatedYWaist, double focusedXWaist, double focusedYWaist, double lensDistance, BaseObject *parent) :
     Source(parent)
 {
-    xFoc=collimatedXWaist;
-    yFoc=collimatedYWaist;
-    xColl=focusedXWaist;
-    yColl=focusedYWaist;
+    xColl=collimatedXWaist;
+    yColl=collimatedYWaist;
+    xFoc=focusedXWaist;
+    yFoc=focusedYWaist;
     d=lensDistance;
     uRand = new UniformDistribution(0,1,this);
 }
@@ -229,11 +229,11 @@ void GaussianRayBundleSource::spinPosition(Walker *walker) const {
  */
 
 void GaussianRayBundleSource::spinDirection(Walker *walker) const {
-    double xL = xFoc * one_div_root_two<double>() * erf_inv<double>(2*uRand->spinOpen() -1);
-    double yL = yFoc * one_div_root_two<double>() * erf_inv<double>(2*uRand->spinOpen() -1);
+    double xW = xFoc * one_div_root_two<double>() * erf_inv<double>(2*uRand->spinOpen() -1);
+    double yW = yFoc * one_div_root_two<double>() * erf_inv<double>(2*uRand->spinOpen() -1);
     double connectingVector[3];
-    connectingVector[0] = walker->r0[0] - xL;
-    connectingVector[1] = walker->r0[1] - yL;
+    connectingVector[0] = xW - walker->r0[0];
+    connectingVector[1] = yW - walker->r0[1];
     connectingVector[2] = d;
     double connectingVectorNorm = sqrt(pow(connectingVector[0],2) + pow(connectingVector[1],2) + pow(connectingVector[2],2));
     for (int i = 0; i < 3; ++i) {
