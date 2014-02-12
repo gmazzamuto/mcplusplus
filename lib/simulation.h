@@ -27,24 +27,24 @@ public:
     Simulation(BaseObject *parent=NULL);
     ~Simulation();
 
-    Sample *sample();
+    const Sample *sample() const;
     void setSaveTrajectoryEnabled(bool enabled = true);
     void setTotalWalkers(int N);
     void setSample(Sample *sample);
     void setSource(Source *source);
     void run();
     void reset();
-    vector<double> *trajectory() const;
+    const vector<double> *trajectory() const;
 
 private:
     int totalWalkers;  /**< @brief total number of walkers to be simulated*/
     int transmitted;  /**< @brief total number of walkers transmitted after at least one scattering event*/
     int reflected;  /**< @brief total number of walkers reflected after at least one scattering event*/
     int ballistic;  /**< @brief total number of walkers transmitted without undergoing any scattering event*/
-    Sample *_sample;
-    Source *source;
 
-    vector<double> *upperZBoundaries;
+    const Sample *_sample;
+    const Source *source;
+    const vector<double> *upperZBoundaries;
     int nLayers;
     int layer0;
     int layer1;

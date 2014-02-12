@@ -13,7 +13,7 @@ void SimulationViewer::paint_GL_impl() {
 
 void SimulationViewer::drawTrajectory() {
     QColor color;
-    vector<double> *trajectory = simulation->trajectory();
+    const vector<double> *trajectory = simulation->trajectory();
     glBegin(GL_LINE_STRIP);
     int i = 0, l=0;
     while(i < trajectory->size()) {
@@ -26,7 +26,7 @@ void SimulationViewer::drawTrajectory() {
 }
 
 void SimulationViewer::drawSample() {
-    vector<double> * sampleUpperZBoundaries = simulation->sample()->zBoundaries();
+    const vector<double> * sampleUpperZBoundaries = simulation->sample()->zBoundaries();
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     int i = 0;
     float prev = 0;

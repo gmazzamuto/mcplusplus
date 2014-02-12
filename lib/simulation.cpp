@@ -42,11 +42,11 @@ void Simulation::setTotalWalkers(int N) {
  */
 
 void Simulation::setSample(Sample *sample) {
+    sample->setParent(this);
     _sample = sample;
-    _sample->setParent(this);
 }
 
-Sample* Simulation::sample() {
+const Sample* Simulation::sample() const {
     return _sample;
 }
 
@@ -313,6 +313,6 @@ void Simulation::setSaveTrajectoryEnabled(bool enabled) {
  * @return
  */
 
-vector<double> *Simulation::trajectory() const {
+const vector<double> *Simulation::trajectory() const {
     return trajectoryPoints;
 }

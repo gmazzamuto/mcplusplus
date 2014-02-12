@@ -1,6 +1,7 @@
 #include "sample.h"
 
-Sample::Sample()
+Sample::Sample(BaseObject *parent) :
+    BaseObject(parent)
 {
     _nLayers=0;
     totThickness = 0;
@@ -27,9 +28,13 @@ void Sample::addLayer(const Material &material, double thickness) {
 }
 
 void Sample::setSurroundingEnvironment(const Material &material) {
-    environment = material;
     materials.push_front(material);
     materials.push_back(material);
+}
+
+void Sample::setSurroundingEnvironment(const Material &frontMaterial, const Material &backMaterial) {
+    materials.push_front(frontMaterial);
+    materials.push_back(backMaterial);
 }
 
 double Sample::totalThickness() const {
@@ -40,10 +45,10 @@ int Sample::nLayers() const {
     return _nLayers;
 }
 
-vector<double> *Sample::zBoundaries() {
+const vector<double> *Sample::zBoundaries() const {
     return &_zBoundaries;
 }
 
-Material *Sample::material(int layerIndex) {
+const Material *Sample::material(int layerIndex) const {
     return &materials.at(layerIndex);
 }
