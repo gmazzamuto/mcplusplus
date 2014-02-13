@@ -45,7 +45,7 @@ private:
 
     const Sample *_sample;
     const Source *source;
-    const vector<double> *upperZBoundaries;
+    const deque<double> *upperZBoundaries;
     int nLayers;
     int layer0;
     int layer1;

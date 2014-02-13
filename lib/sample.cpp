@@ -4,8 +4,7 @@ Sample::Sample(BaseObject *parent) :
     BaseObject(parent)
 {
     _nLayers=0;
-    totThickness = 0;
-    _zBoundaries.push_back(totThickness);
+    _zBoundaries.push_back(0);
 }
 
 /**
@@ -15,16 +14,41 @@ Sample::Sample(BaseObject *parent) :
  *
  *
  * A layer is an infinitely extended slab with the given material and the given
- * finite thickness (measured along \f$ z \f$). Layer are stacked from left to
- * right. The first interface of the first layer is placed in \f$ z=0 \f$.
+ * finite thickness (measured along \f$ z \f$). Layers are stacked from left to
+ * right. The first interface of the first \em scattering layer is placed in
+ * \f$ z=0 \f$.
  */
 
 void Sample::addLayer(const Material &material, double thickness) {
     _nLayers++;
     layers.push_back(material);
-    totThickness += thickness;
-    _zBoundaries.push_back(totThickness);
+    _zBoundaries.push_back(_zBoundaries.back() + thickness);
+    if(materials.size() > _nLayers) // then it means that someone already set the environment!
+        materials.insert(materials.end()-1,material);
     materials.push_back(material);
+}
+
+/**
+ * @brief Adds a \em non-scattering pre-layer to the sample
+ * @param material
+ * @param thickness
+ *
+ * A pre-layer, if present, is an infinitely extended slab with the given
+ * material and the given finite thickness (measured along \f$ z \f$). In
+ * contrast with ordinary layers, a pre-layer (usually representing a sample
+ * holder/container wall) must be a \em non-scattering material and will be
+ * stacked in the negative \f$ z \f$ direction (i.e. pre-layers are stacked
+ * from left to right).
+ */
+
+void Sample::addPreLayer(const Material &material, double thickness)
+{
+    _nLayers++;
+    layers.push_front(material);
+    _zBoundaries.push_front(_zBoundaries.front() - thickness);
+    if(materials.size() > _nLayers) // then it means that someone already set the environment!
+        materials.insert(materials.begin()+1,material);
+    materials.push_front(material);
 }
 
 void Sample::setSurroundingEnvironment(const Material &material) {
@@ -37,15 +61,11 @@ void Sample::setSurroundingEnvironment(const Material &frontMaterial, const Mate
     materials.push_back(backMaterial);
 }
 
-double Sample::totalThickness() const {
-    return totThickness;
-}
-
 int Sample::nLayers() const {
     return _nLayers;
 }
 
-const vector<double> *Sample::zBoundaries() const {
+const deque<double> *Sample::zBoundaries() const {
     return &_zBoundaries;
 }
 

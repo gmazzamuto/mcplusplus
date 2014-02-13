@@ -26,7 +26,7 @@ void SimulationViewer::drawTrajectory() {
 }
 
 void SimulationViewer::drawSample() {
-    const vector<double> * sampleUpperZBoundaries = simulation->sample()->zBoundaries();
+    const deque<double> * sampleUpperZBoundaries = simulation->sample()->zBoundaries();
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     int i = 0;
     float prev = 0;
