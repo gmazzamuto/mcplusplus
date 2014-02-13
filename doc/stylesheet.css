@@ -76,3 +76,7 @@ address.footer {
         margin-right: auto;
         width: 972px;
 }
+
+div#navrow1.tabs {
+        position: relative;
+}
