@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include <QtGui>
-#include "source.h"
+#include "gaussianraybundlesource.h"
 #include "glwidget.h"
 
 MainWindow::MainWindow(QWidget *parent) :

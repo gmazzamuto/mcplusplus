@@ -19,6 +19,7 @@ public:
     int nLayers() const;
     const deque<double> *zBoundaries() const;
     const Material *material(int layerIndex) const;
+    int layerAt(double z);
 
 private:
     int _nLayers;

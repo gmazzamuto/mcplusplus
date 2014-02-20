@@ -72,3 +72,14 @@ const deque<double> *Sample::zBoundaries() const {
 const Material *Sample::material(int layerIndex) const {
     return &materials.at(layerIndex);
 }
+
+int Sample::layerAt(double z)
+{
+    int n = _zBoundaries.size();
+    int i;
+    for(i = 0; i < n; i++) {
+        if(z <= _zBoundaries[i])
+            break;
+    }
+    return i;
+}
