@@ -2,6 +2,81 @@
   \mainpage
 
   \section Introduction
+
+Numerous areas of science employ Monte Carlo (MC) methods to simulate complex
+processes. Light propagation in random media, often referred to as photon
+migration, is an area of physics in which such methods are of great importance.
+Prime examples include radiative transfer in highly scattering materials such
+as biological tissues, clouds, and pharmaceuticals. There, MC simulation is
+generally considered the gold standard of modeling and is used to investigate
+complex systems and processes, to validate simpler models, as well as to
+evaluate data.
+
+  \section Motivation
+
+Being originally introduced in biomedical optics for the counting of fluence
+rate distribution in biological tissues for the purpose of estimation laser
+radiation dose, in the last decades the MC approach has become a primary tool
+for a number of needs in biomedical optics.
+
+It should be pointed out, however, that due to the diversity of optical
+modalities utilizing different properties of light and mechanisms of
+light-tissue interactions, including scattering, absorption, anisotropy,
+reflection, refraction, transmittance, interference, polarization,
+depolarization, coherent scattering, phase shift, time-delaying, etc., a new MC
+code is typically required to be developed for the particular application.
+Due to a number of practical applications the MC model undergoes continuous
+modifications and changes dedicated to inclusion of diverse properties of
+incident optical/laser radiation, configuration of the sources and detectors,
+structure of the medium and the conditions of light detection. Past attempts to
+unify these MC codes are mainly based on the use of structured programming.
+While structured programming is known for years, it limits the ability to
+handle a large code without decreasing its functionality and manageability. In
+practice, the increasing diversity of the MC applications results to a
+substantial growth of the model’s source code and leads to the development of a
+set of separate MC codes dedicated each for a particular purpose.
+
+To generalize and unify the code for a multi-purpose use in various biomedical
+optics applications we apply the Object Oriented Programming (OOP) concept. The
+OOP is widely used in mainstream application development and has been found
+extremely effective in design of complex multi-parametric systems, providing
+highly intuitive approach of programming. The key features of OOP allow the MC
+to be separated into logical components, described by objects. Thus, each
+photon packets has been defined as the object. The photon objects interact with
+the object - medium or medium components also defined as objects. Splitting the
+medium into the objects allows developing the tissues model more iteratively
+and uniformly. The distribution of scattering centers, macro-inhomogeneities,
+such as blood vessels, tumors, aneurisms, etc. can be formed by combination of
+3D elementary volumes (objects) presenting spatial variations in the tissues.
+Moreover, actual structure of a biological tissue can be imported into the
+model as an object (image) provided by OCT, Photo-Acoustic Tomography (PAT),
+ultrasound, MRI, etc. Utilizing the inheritance feature of OOP the smart
+hierarchy structure of the code has been created to prevent creation of
+multiple classes for similar tasks. The hierarchy allows "allied" objects to
+share variables and members, significantly reducing the amount of source code
+and paving the way to extend and generalize the MC for various applications. In
+addition, the variations of scattering phase functions, such as Mie, Rayleigh
+and Henyey-Greenstein could be defined using the polymorphism feature of OOP
+that allows to handle the modeling with no changes of the source code. Thus,
+the OOP approach significantly increases the efficiency of the model
+manageability and provides superior opportunities to generalize MC to combine
+previously developed MC models in a way to imitate a particular experiment
+taking into account various features of optical radiation and light-tissue
+interaction. By the selection of a certain application the parameters of the
+Source, Detector and Scattering medium are entered. Depending on the
+application, the objects are tuned to the appropriate feature of light-tissue
+interaction and the simulation is performed.
+
+  \section References
+
+rearranged from:
+
+Alerstam, E., Svensson, T. and Andersson-Engels, S. "Parallel computing with graphics processing units for high-speed Monte Carlo simulation of photon migration".
+<em>Journal of biomedical optics</em>, 6(13), 060504–060504 (2008)
+
+Doronin, A. and Meglinski, I. "Online object oriented Monte Carlo computational tool for the needs of biomedical optics".
+<em>Biomedical optics express</em>, 9(2), 2461 (2011)
+
   \section HowToInstall How to install
   MCPlusPlus uses CMake for building.
 
