@@ -25,7 +25,8 @@ void Sample::addLayer(const Material &material, double thickness) {
     _zBoundaries.push_back(_zBoundaries.back() + thickness);
     if(materials.size() > _nLayers) // then it means that someone already set the environment!
         materials.insert(materials.end()-1,material);
-    materials.push_back(material);
+    else
+        materials.push_back(material);
 }
 
 /**
@@ -48,7 +49,8 @@ void Sample::addPreLayer(const Material &material, double thickness)
     _zBoundaries.push_front(_zBoundaries.front() - thickness);
     if(materials.size() > _nLayers) // then it means that someone already set the environment!
         materials.insert(materials.begin()+1,material);
-    materials.push_front(material);
+    else
+        materials.push_front(material);
 }
 
 void Sample::setSurroundingEnvironment(const Material &material) {
