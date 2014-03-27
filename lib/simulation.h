@@ -49,7 +49,7 @@ private:
     int nLayers;
     int layer0;
     int layer1;
-    double onInterface;
+    bool onInterface;
     bool saveTrajectory;
 
     int layerAt(double *r0);
