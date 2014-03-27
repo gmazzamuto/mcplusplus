@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
 
     Sample *sample = new Sample();
 
-    FreeSpace freeSpace;
+    Air freeSpace;
     Material material;
 
     material.ls = 1;

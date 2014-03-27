@@ -5,6 +5,9 @@ Sample::Sample(BaseObject *parent) :
 {
     _nLayers=0;
     _zBoundaries.push_back(0);
+
+    materials.push_front(Vacuum());
+    materials.push_back(Vacuum());
 }
 
 /**
@@ -23,10 +26,7 @@ void Sample::addLayer(const Material &material, double thickness) {
     _nLayers++;
     layers.push_back(material);
     _zBoundaries.push_back(_zBoundaries.back() + thickness);
-    if(materials.size() > _nLayers) // then it means that someone already set the environment!
-        materials.insert(materials.end()-1,material);
-    else
-        materials.push_back(material);
+    materials.insert(materials.end()-1,material);
 }
 
 /**
@@ -47,18 +47,16 @@ void Sample::addPreLayer(const Material &material, double thickness)
     _nLayers++;
     layers.push_front(material);
     _zBoundaries.push_front(_zBoundaries.front() - thickness);
-    if(materials.size() > _nLayers) // then it means that someone already set the environment!
-        materials.insert(materials.begin()+1,material);
-    else
-        materials.push_front(material);
+    materials.insert(materials.begin()+1,material);
 }
 
 void Sample::setSurroundingEnvironment(const Material &material) {
-    materials.push_front(material);
-    materials.push_back(material);
+    setSurroundingEnvironment(material, material);
 }
 
 void Sample::setSurroundingEnvironment(const Material &frontMaterial, const Material &backMaterial) {
+    materials.pop_back();
+    materials.pop_front();
     materials.push_front(frontMaterial);
     materials.push_back(backMaterial);
 }

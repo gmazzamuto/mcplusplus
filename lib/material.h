@@ -27,13 +27,22 @@ private:
 };
 
 
-class FreeSpace : public Material
+class Air : public Material
 {
 public:
-    FreeSpace();
+    Air();
 
 private:
     double dispersionRelation(double lambda_um);
+};
+
+
+
+
+class Vacuum : public Material {
+
+public:
+    Vacuum();
 };
 
 

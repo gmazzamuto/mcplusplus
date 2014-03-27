@@ -35,7 +35,7 @@ double Material::dispersionRelation(double lambda_um) {
  * predefined values and relative set methods
  */
 
-FreeSpace::FreeSpace() :
+Air::Air() :
     Material()
 {
     isScattering = false;
@@ -59,7 +59,7 @@ FreeSpace::FreeSpace() :
  * \todo implement dispersion relation
  */
 
-double FreeSpace::dispersionRelation(double lambda_um) {
+double Air::dispersionRelation(double lambda_um) {
 // TODO
     return n;
 }
@@ -98,3 +98,11 @@ double NorlandOpticalAdhesive65::dispersionRelation(double lambda_um) {
     return 1.50631 + 5.43562E-3/pow(lambda_um,2) + 27.7798E-6/pow(lambda_um,4);
 }
 
+
+
+
+Vacuum::Vacuum()
+{
+    isScattering = false;
+    n = 1;
+}
