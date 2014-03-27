@@ -34,6 +34,7 @@ void Sample::addLayer(const Material &material, double thickness) {
  * @param material
  * @param thickness
  *
+ *
  * A pre-layer, if present, is an infinitely extended slab with the given
  * material and the given finite thickness (measured along \f$ z \f$). In
  * contrast with ordinary layers, a pre-layer (usually representing a sample
@@ -64,6 +65,18 @@ void Sample::setSurroundingEnvironment(const Material &frontMaterial, const Mate
 int Sample::nLayers() const {
     return _nLayers;
 }
+
+/**
+ * @brief Returns a pointer to a deque containing the layer boundaries along
+ *        \f$ z \f$
+ * @return
+ *
+ *
+ * The n-th element of this deque is the upper boundary of the n-th layer. The
+ * 0-th element is the upper boundary of the surrounding environment
+ * semi-infinte space towards negative infinity.
+ *
+ */
 
 const deque<double> *Sample::zBoundaries() const {
     return &_zBoundaries;

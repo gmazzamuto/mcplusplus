@@ -12,6 +12,9 @@ using namespace boost::math;
  * @param lensDistance distance \f$ d \f$ between the beam waist and the
  *        focusing lens
  * @param parent
+ *
+ *
+ * The lensDistance parameter fully characterizes the lens convergence power. The two spot sizes refer
  */
 
 GaussianRayBundleSource::GaussianRayBundleSource(double lensWaist, double waist, double lensDistance, BaseObject *parent) :
@@ -63,13 +66,12 @@ void GaussianRayBundleSource::init()
  *
  * This method allows to specify a different position on the \f$ z \f$-axis for
  * the waist of the beam. By default this position is set to coincide with \f$
- * z = 0 \f$, i.e. with the first interface of the first scattering layer of a
- * sample.
+ * z = 0 \f$.
  *
- * This particular implementation assumes for simplicity that the spot size of
- * the simulated beam is known at \f$ z=0 \f$ (i.e. in its focused waist) and
- * at \f$ z=-d, d \gg z_\text{R} \f$ (i.e. on the plane of a focusing lens, on
- * which the beam is supposed to impinge almost collimated)
+ * This function will place the waist at the specified position assuming there
+ * are no interfaces between the lens and the waist. If you want the waist to
+ * really be at the specified position, accounting for the presence of possible
+ * layers of different materials in between, use focus() instead.
  */
 
 void GaussianRayBundleSource::setZWaist(double value)
@@ -77,6 +79,16 @@ void GaussianRayBundleSource::setZWaist(double value)
     zWaistReal = value;
     zWaistInEnvironment = value;
 }
+
+/**
+ * @brief The actual waist \f$ z \f$ coordinate.
+ * @return
+ *
+ *
+ * In order to set the waist position you must use focus(). The value returned
+ * makes sense only if the waist has been set explicitly via the focus()
+ * function.
+ */
 
 double GaussianRayBundleSource::zWaist()
 {
@@ -98,6 +110,16 @@ double GaussianRayBundleSource::zLens() const
 {
     return zWaistInEnvironment - d;
 }
+
+/**
+ * @brief Moves the lens in order to have the waist at the specified position
+ * @param zWaist \f$ z \f$ coordinate of the waist
+ * @param sample Pointer to the sample
+ *
+ * This function places the lens at the proper position in order for the beam
+ * waist to physically occurr at the specified position, accounting for the
+ * presence of the layers and pre-layers specified by sample.
+*/
 
 void GaussianRayBundleSource::focus(double zWaist, Sample *sample)
 {
@@ -131,6 +153,8 @@ void GaussianRayBundleSource::focus(double zWaist, Sample *sample)
 /**
  * \copydoc Source::constructWalker()
  * \pre walkTimeDistribution has to be valid
+ *
+ * The walker is created with \f$ r_0 \f$ on the lens.
  */
 
 void GaussianRayBundleSource::spinPosition(Walker *walker) const {
