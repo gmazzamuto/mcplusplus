@@ -54,9 +54,9 @@ void MainWindow::replot() {
         r0[2] = walker->r0[2];
 
         float r1[3];
-        r1[0] = walker->r0[0] + t*walker->k0[0];
-        r1[1] = walker->r0[1] + t*walker->k0[1];
-        r1[2] = walker->r0[2] + t*walker->k0[2];
+        r1[0] = walker->r0[0] + t*walker->k0[0] / walker->k0[2];
+        r1[1] = walker->r0[1] + t*walker->k0[1] / walker->k0[2];
+        r1[2] = walker->r0[2] + t;
         glWidget->addLine(r0,r1);
         delete walker;
     }
