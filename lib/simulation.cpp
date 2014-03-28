@@ -86,7 +86,6 @@ void Simulation::run() {
 
     while(n < totalWalkers) {
         layer0 = 0;
-        onInterface = false;
         trajectoryPoints->clear();
 
         Walker *walker = source->constructWalker();
@@ -94,12 +93,8 @@ void Simulation::run() {
 
         layer0 = layerAt(walker->r0); //updates also onInterface flag
 
-        //handle the particular case when the walker is created on an interface
-        if(onInterface) {
-            memcpy(walker->k1,walker->k0,3*sizeof(double));
-            if(walker->k1[2]>0)
-                layer0++; //consider the walker as belonging to the next layer, this is to avoid immediate reflection
-        }
+        memcpy(walker->k1,walker->k0,3*sizeof(double));
+        onInterface = true; //treat newly generated walker as it were on an interface, i.e. do not scatter
 
         saveTrajectoryPoint(walker->r0);
 
@@ -108,32 +103,36 @@ void Simulation::run() {
         printf("%lf\t%lf\t%lf\t\t%lf", walker->r0[0], walker->r0[1], walker->r0[2],walker->k0[2]);
 #endif
 
+        double length;
         while(1) {
-            stepLength->setBeta(_sample->material(layer0)->ls);
-            double length = stepLength->spin();
+            //spin k1 (i.e. scatter) only if the material is scattering
+            //and we're not on an interface, use the old k1 otherwise
+            if(_sample->material(layer0)->ls > 0) {
+                stepLength->setBeta(_sample->material(layer0)->ls);
+                length = stepLength->spin();
+                if(!onInterface) {
+                    deflCosine->setg(_sample->material(layer0)->g);
+                    double cosTheta = deflCosine->spin();
+                    double sinTheta = sqrt(1-pow(cosTheta,2));
+                    double psi = randomPsi->spin();
+                    double cosPsi = cos(psi);
+                    double sinPsi = sin(psi);
 
-            if(!onInterface) { //spin k1 only if we're not on an interface, use the old k1 otherwise
-                deflCosine->setg(_sample->material(layer0)->g);
-                double cosTheta = deflCosine->spin();
-                double sinTheta = sqrt(1-pow(cosTheta,2));
-                double psi = randomPsi->spin();
-                double cosPsi = cos(psi);
-                double sinPsi = sin(psi);
-
-                if(fabs(walker->k0[2]) > 0.999999) {
-                    walker->k1[0] = sinTheta*cosPsi;
-                    walker->k1[1] = sinTheta*sinPsi;
-                    walker->k1[2] = cosTheta*sign<double>(walker->k0[2]);
-                }
-                else {
-                    double temp = sqrt(1-pow(walker->k0[2],2));
-                    walker->k1[0] = (sinTheta*(walker->k0[0]*walker->k0[2]*cosPsi - walker->k0[1]*sinPsi))/temp + cosTheta*walker->k0[0];
-                    walker->k1[1] = (sinTheta*(walker->k0[1]*walker->k0[2]*cosPsi + walker->k0[0]*sinPsi))/temp + cosTheta*walker->k0[1];
-                    walker->k1[2] = -sinTheta*cosPsi*temp + cosTheta*walker->k0[2];
+                    if(fabs(walker->k0[2]) > 0.999999) {
+                        walker->k1[0] = sinTheta*cosPsi;
+                        walker->k1[1] = sinTheta*sinPsi;
+                        walker->k1[2] = cosTheta*sign<double>(walker->k0[2]);
+                    }
+                    else {
+                        double temp = sqrt(1-pow(walker->k0[2],2));
+                        walker->k1[0] = (sinTheta*(walker->k0[0]*walker->k0[2]*cosPsi - walker->k0[1]*sinPsi))/temp + cosTheta*walker->k0[0];
+                        walker->k1[1] = (sinTheta*(walker->k0[1]*walker->k0[2]*cosPsi + walker->k0[0]*sinPsi))/temp + cosTheta*walker->k0[1];
+                        walker->k1[2] = -sinTheta*cosPsi*temp + cosTheta*walker->k0[2];
+                    }
                 }
             }
-            else { //we are on an interface but we are moving away from it
-                onInterface = false;
+            else { //no scattering
+                length = std::numeric_limits<double>::infinity();
             }
 
             walker->r1[0] = walker->r0[0] + length*walker->k1[0];
@@ -202,8 +201,8 @@ void Simulation::run() {
  */
 
 int Simulation::layerAt(double *r0) {
+    onInterface = false;
     double z = r0[2];
-
     if(z < upperZBoundaries->at(layer0)) { //search left
         for (int i = layer0; i >= 0; i--) {
             if(r0[2] > upperZBoundaries->at(i))

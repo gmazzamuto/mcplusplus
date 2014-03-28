@@ -3,7 +3,7 @@
 
 Material::Material()
 {
-    isScattering = true;
+    ls = 0;
 }
 
 /**
@@ -38,7 +38,7 @@ double Material::dispersionRelation(double lambda_um) {
 Air::Air() :
     Material()
 {
-    isScattering = false;
+    ls = 0;
     n = 1.00027499;
 }
 
@@ -68,7 +68,7 @@ double Air::dispersionRelation(double lambda_um) {
 GlassSlide::GlassSlide() :
     Material()
 {
-    isScattering = false;
+    ls = 0;
     n = 1.5203;
 }
 
@@ -83,7 +83,7 @@ double GlassSlide::dispersionRelation(double lambda_um) {
 NorlandOpticalAdhesive65::NorlandOpticalAdhesive65() :
     Material()
 {
-    isScattering = false;
+    ls = 0;
     n = 1.514;
 }
 
@@ -103,6 +103,6 @@ double NorlandOpticalAdhesive65::dispersionRelation(double lambda_um) {
 
 Vacuum::Vacuum()
 {
-    isScattering = false;
+    ls = 0;
     n = 1;
 }
