@@ -32,6 +32,7 @@ public:
     void setTotalWalkers(int N);
     void setSample(Sample *sample);
     void setSource(Source *source);
+    void setSnellReflectionsEnabled(bool enable);
     void run();
     void reset();
     const vector<double> *trajectory() const;
@@ -51,6 +52,7 @@ private:
     int layer1;
     bool onInterface;
     bool saveTrajectory;
+    bool snellReflectionsEnabled;
 
     int layerAt(double *r0);
     void move(Walker *walker, double length);

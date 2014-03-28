@@ -17,6 +17,7 @@ Simulation::Simulation(BaseObject *parent) :
     layer0 = 0;
     trajectoryPoints = new std::vector<double>();
     saveTrajectory = false;
+    snellReflectionsEnabled = true;
     reset();
 }
 
@@ -60,6 +61,11 @@ const Sample* Simulation::sample() const {
 void Simulation::setSource(Source *source) {
     this->source = source;
     source->setParent(this);
+}
+
+void Simulation::setSnellReflectionsEnabled(bool enable)
+{
+    snellReflectionsEnabled = enable;
 }
 
 /**
@@ -271,18 +277,24 @@ void Simulation::move(Walker *walker, double length) {
         reflect(walker);
     }
     else {
-        //calculate the probability r(Theta1,n0,n1) of being reflected
-        double cThetaSum, cThetaDiff; //cos(Theta1 + Theta2) and cos(Theta1 - Theta2)
-        double sThetaSum, sThetaDiff; //sin(Theta1 + Theta2) and sin(Theta1 - Theta2)
+        double r;
+        if(snellReflectionsEnabled)
+        {
+            //calculate the probability r(Theta1,n0,n1) of being reflected
+            double cThetaSum, cThetaDiff; //cos(Theta1 + Theta2) and cos(Theta1 - Theta2)
+            double sThetaSum, sThetaDiff; //sin(Theta1 + Theta2) and sin(Theta1 - Theta2)
 
-        double cosTheta1 = fabs(walker->k1[2]);
-        double cosTheta2 = sqrt(1 - pow(sinTheta2,2));
+            double cosTheta1 = fabs(walker->k1[2]);
+            double cosTheta2 = sqrt(1 - pow(sinTheta2,2));
 
-        cThetaSum = cosTheta1*cosTheta2 - sinTheta1*sinTheta2;
-        cThetaDiff = cosTheta1*cosTheta2 + sinTheta1*sinTheta2;
-        sThetaSum = sinTheta1*cosTheta2 + cosTheta1*sinTheta2;
-        sThetaDiff = sinTheta1*cosTheta2 - cosTheta1*sinTheta2;
-        double r = 0.5*sThetaDiff*sThetaDiff*(cThetaDiff*cThetaDiff+cThetaSum*cThetaSum)/(sThetaSum*sThetaSum*cThetaDiff*cThetaDiff);
+            cThetaSum = cosTheta1*cosTheta2 - sinTheta1*sinTheta2;
+            cThetaDiff = cosTheta1*cosTheta2 + sinTheta1*sinTheta2;
+            sThetaSum = sinTheta1*cosTheta2 + cosTheta1*sinTheta2;
+            sThetaDiff = sinTheta1*cosTheta2 - cosTheta1*sinTheta2;
+            r = 0.5*sThetaDiff*sThetaDiff*(cThetaDiff*cThetaDiff+cThetaSum*cThetaSum)/(sThetaSum*sThetaSum*cThetaDiff*cThetaDiff);
+        }
+        else
+            r = 0;
 
         double xi = uniform_01<double>()(*mt);
 
