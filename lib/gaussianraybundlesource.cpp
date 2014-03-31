@@ -115,13 +115,20 @@ double GaussianRayBundleSource::zLens() const
  * @brief Moves the lens in order to have the waist at the specified position
  * @param zWaist \f$ z \f$ coordinate of the waist
  * @param sample Pointer to the sample
+ * @return true on success, false if there's no solution with the lens
+ *         positioned in the 0-th layer
  *
  * This function places the lens at the proper position in order for the beam
  * waist to physically occurr at the specified position, accounting for the
- * presence of the layers and pre-layers specified by sample.
+ * presence of the layers and pre-layers specified by sample. The lens is
+ * supposed to be located in the 0-th layer (i.e. the surrounding environment).
+ * The resulting lens position is computed with the following formula: \f$
+ * z_\text{lens} = z_0 + \sum_i \frac{n_0}{n_i}L_i - d \f$ where \f$ z_0 \f$ is
+ * the upper boundary of the 0-th layer, \f$ L_i \f$ is the thickness of the
+ * \f$i\f$-th layer occurring between the lens and the waist position.
 */
 
-void GaussianRayBundleSource::focus(double zWaist, Sample *sample)
+bool GaussianRayBundleSource::focus(double zWaist, Sample *sample)
 {
     int lensLayer, waistLayer;
     setZWaist(zWaist);
@@ -130,7 +137,7 @@ void GaussianRayBundleSource::focus(double zWaist, Sample *sample)
     lensLayer = sample->layerAt(zLens());
 
     if(lensLayer == 0 && waistLayer == 0) {
-        return;
+        return true;
     }
 
     zWaistInEnvironment = 0;
@@ -148,6 +155,13 @@ void GaussianRayBundleSource::focus(double zWaist, Sample *sample)
     double nLast = sample->material(waistLayer)->n;
     zWaistInEnvironment += depthInLastLayer * n0/nLast;
     zWaistInEnvironment += zBoundaries->at(0);
+
+    if(zLens() < zBoundaries->at(0))
+        return true;
+    else {
+        setZWaist(0);
+        return false;
+    }
 }
 
 /**

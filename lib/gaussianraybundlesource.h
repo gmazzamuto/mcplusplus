@@ -32,7 +32,7 @@ class GaussianRayBundleSource : public Source
 public:
     GaussianRayBundleSource(double lensWaist, double waist, double lensDistance, BaseObject *parent=NULL);
     GaussianRayBundleSource(double collimatedXWaist, double collimatedYWaist, double focusedXWaist, double focusedYWaist, double lensDistance, BaseObject *parent=NULL);
-    void focus(double zWaistReal, Sample *sample);
+    bool focus(double zWaistReal, Sample *sample);
     void setZLens(double value);
 
 private:
