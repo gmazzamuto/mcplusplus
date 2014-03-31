@@ -6,6 +6,8 @@
 
 class SimulationViewer : public GLWidget
 {
+    Q_OBJECT
+
 public:
     SimulationViewer(Simulation *simulation, QWidget *parent = 0);
 
