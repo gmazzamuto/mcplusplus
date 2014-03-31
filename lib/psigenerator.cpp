@@ -10,6 +10,6 @@ IsotropicPsiGenerator::IsotropicPsiGenerator(BaseObject *parent) :
 
 }
 
-double IsotropicPsiGenerator::spin() const {
-    return uniform_01<double>()(*mt)*two_pi<double>(); //uniform in [0,2pi)
+MCfloat IsotropicPsiGenerator::spin() const {
+    return uniform_01<MCfloat>()(*mt)*two_pi<MCfloat>(); //uniform in [0,2pi)
 }

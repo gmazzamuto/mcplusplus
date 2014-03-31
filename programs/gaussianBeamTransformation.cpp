@@ -49,21 +49,21 @@ int main(int argc, char *argv[])
     sim->setSaveTrajectoryEnabled(true);
     sim->run();
 
-//    const vector<vector<double>*>* trajectories = sim->trajectories();
+//    const vector<vector<MCfloat>*>* trajectories = sim->trajectories();
 
 //    int c = 0;
 
-//    double dz = 20;
+//    MCfloat dz = 20;
 //    int nPlanes = 600/dz;
-//    double dr = 0.2;
-//    double rMax = 200;
+//    MCfloat dr = 0.2;
+//    MCfloat rMax = 200;
 //    int nBins = rMax / dr;
 //    int histogram[nPlanes][nBins];
-//    double surfaces[nBins];
+//    MCfloat surfaces[nBins];
 
 //    for (int i = 0; i < nBins; ++i) {
-//        double R = dr + i*dr;
-//        double r = i*dr;
+//        MCfloat R = dr + i*dr;
+//        MCfloat r = i*dr;
 //        surfaces[i] = R*R - r*r;
 //    }
 
@@ -82,13 +82,13 @@ int main(int argc, char *argv[])
 //    printf("\n");
 
 //    for (int i = 0; i < n; ++i) {
-//        const vector <double> * traj = trajectories->at(i);
+//        const vector <MCfloat> * traj = trajectories->at(i);
 //        if(traj->size()!=15)
 //            continue;
 
 //        c++;
-//        double x1,y1,z1;
-//        double x2,y2,z2;
+//        MCfloat x1,y1,z1;
+//        MCfloat x2,y2,z2;
 //        int j = 3;
 //        x1 = traj->at(j++);
 //        y1 = traj->at(j++);
@@ -99,17 +99,17 @@ int main(int argc, char *argv[])
 
 //        printf("z1 = %lf\n",traj->at(2));
 
-//        double norm = sqrt(pow(x2-x1,2) + pow(y2-y1,2) + pow(z2-z1,2));
-//        double k[3];
+//        MCfloat norm = sqrt(pow(x2-x1,2) + pow(y2-y1,2) + pow(z2-z1,2));
+//        MCfloat k[3];
 //        k[0] = (x2-x1)/norm;
 //        k[1] = (y2-y1)/norm;
 //        k[2] = (z2-z1)/norm;
 
 //        for (int p = 0; p < nPlanes; ++p) {
-//            double z = 0 + p*dz;
-//            double x = x1 + z * k[0]/k[2];
-//            double y = y1 + z * k[1]/k[2];
-//            double r = sqrt(x*x+y*y);
+//            MCfloat z = 0 + p*dz;
+//            MCfloat x = x1 + z * k[0]/k[2];
+//            MCfloat y = y1 + z * k[1]/k[2];
+//            MCfloat r = sqrt(x*x+y*y);
 //            int binIndex = floor(r /dr);
 //            if(binIndex<nBins)
 //                histogram[p][binIndex]++;

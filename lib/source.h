@@ -17,8 +17,8 @@ public:
     void setr0Distribution(AbstractDistribution **distrArray);
     void setk0Distribution(AbstractDistribution *cosThetaDistr, AbstractDistribution *psiDistr);
     void setWalkTimeDistribution(AbstractDistribution *distr);
-    void setWavelength(double um);
-    double wavelength() const;
+    void setWavelength(MCfloat um);
+    MCfloat wavelength() const;
 
 protected:
     AbstractDistribution *r0Distribution[3];
@@ -30,7 +30,7 @@ protected:
     virtual void spinTime(Walker *walker) const;
 
 private:
-    double wl;
+    MCfloat wl;
 };
 
 
@@ -68,8 +68,8 @@ private:
 class GaussianBeamSource : public Source
 {
 public:
-    GaussianBeamSource(double FWHM, BaseObject *parent=NULL);
-    GaussianBeamSource(double xFWHM, double yFWHM, BaseObject *parent=NULL);
+    GaussianBeamSource(MCfloat FWHM, BaseObject *parent=NULL);
+    GaussianBeamSource(MCfloat xFWHM, MCfloat yFWHM, BaseObject *parent=NULL);
 
 private:
     virtual void spinDirection(Walker *walker) const;
@@ -86,13 +86,13 @@ private:
 class IsotropicPointSource : public Source
 {
 public:
-    IsotropicPointSource(double z0, BaseObject *parent=NULL);
+    IsotropicPointSource(MCfloat z0, BaseObject *parent=NULL);
 
 private:
     virtual void spinPosition(Walker *walker) const;
     virtual void spinTime(Walker *walker) const;
 
-    double depth;
+    MCfloat depth;
 };
 
 #endif // SOURCE_H

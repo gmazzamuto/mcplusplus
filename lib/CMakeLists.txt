@@ -8,7 +8,7 @@ include_directories(.)
 file(GLOB SRC . *.cpp)
 file(GLOB HEADERS . *.h)
 
-add_library(MCPlusPlus SHARED ${SRC})
+add_library(MCPlusPlus SHARED ${SRC} ${HEADERS})
 install (TARGETS MCPlusPlus DESTINATION lib)
 install (FILES ${HEADERS} DESTINATION include/MCPlusPlus)
 

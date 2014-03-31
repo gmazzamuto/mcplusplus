@@ -30,23 +30,23 @@
 class GaussianRayBundleSource : public Source
 {
 public:
-    GaussianRayBundleSource(double lensWaist, double waist, double lensDistance, BaseObject *parent=NULL);
-    GaussianRayBundleSource(double collimatedXWaist, double collimatedYWaist, double focusedXWaist, double focusedYWaist, double lensDistance, BaseObject *parent=NULL);
-    bool focus(double zWaistReal, Sample *sample);
-    void setZLens(double value);
+    GaussianRayBundleSource(MCfloat lensWaist, MCfloat waist, MCfloat lensDistance, BaseObject *parent=NULL);
+    GaussianRayBundleSource(MCfloat collimatedXWaist, MCfloat collimatedYWaist, MCfloat focusedXWaist, MCfloat focusedYWaist, MCfloat lensDistance, BaseObject *parent=NULL);
+    bool focus(MCfloat zWaistReal, Sample *sample);
+    void setZLens(MCfloat value);
 
 private:
     void init();
     virtual void spinDirection(Walker *walker) const;
     virtual void spinPosition(Walker *walker) const;
-    void setZWaist(double value);
-    double zWaist();
-    double zLens() const;
+    void setZWaist(MCfloat value);
+    MCfloat zWaist();
+    MCfloat zLens() const;
 
-    double xWaist, yWaist, xLensWaist, yLensWaist;
-    double zWaistReal;
-    double d;
-    double zWaistInEnvironment;
+    MCfloat xWaist, yWaist, xLensWaist, yLensWaist;
+    MCfloat zWaistReal;
+    MCfloat d;
+    MCfloat zWaistInEnvironment;
     UniformDistribution *uRand;
 };
 

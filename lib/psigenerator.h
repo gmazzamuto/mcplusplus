@@ -12,7 +12,7 @@ class IsotropicPsiGenerator : public AbstractDistribution
 public:
     IsotropicPsiGenerator(BaseObject *parent=NULL);
 
-    virtual double spin() const;
+    virtual MCfloat spin() const;
 };
 
 #endif // PSIGENERATOR_H

@@ -1,8 +1,10 @@
 #ifndef MATERIAL_H
 #define MATERIAL_H
 
-const double LIGHT_SPEED = 299.792458E2; // um/ps
-//const double INV_LIGHT_SPEED = 1.0/LIGHT_SPEED;
+#include "MCtypes.h"
+
+const MCfloat LIGHT_SPEED = 299.792458E2; // um/ps
+//const MCfloat INV_LIGHT_SPEED = 1.0/LIGHT_SPEED;
 
 /**
  * @brief The Material class describes a material
@@ -14,15 +16,15 @@ class Material
 {
 public:
     Material();
-    double ls;  /**< @brief scattering mean free path*/
-    double g;  /**< @brief scattering anisotropy factor \f$ g = \left\langle \cos \theta \right \rangle \f$*/
-    double n;  /**< @brief refractive index (\f$ n \in \mathbb{R} \f$)*/
-    double v;  /**< @brief phase velocity \note please beware of the difference between phase, group and energy velocity */
+    MCfloat ls;  /**< @brief scattering mean free path*/
+    MCfloat g;  /**< @brief scattering anisotropy factor \f$ g = \left\langle \cos \theta \right \rangle \f$*/
+    MCfloat n;  /**< @brief refractive index (\f$ n \in \mathbb{R} \f$)*/
+    MCfloat v;  /**< @brief phase velocity \note please beware of the difference between phase, group and energy velocity */
 
-    void setWavelegth(double um);
+    void setWavelegth(MCfloat um);
 
 private:
-    virtual double dispersionRelation(double lambda_um);
+    virtual MCfloat dispersionRelation(MCfloat lambda_um);
 };
 
 
@@ -32,7 +34,7 @@ public:
     Air();
 
 private:
-    double dispersionRelation(double lambda_um);
+    MCfloat dispersionRelation(MCfloat lambda_um);
 };
 
 
@@ -74,7 +76,7 @@ public:
     GlassSlide();
 
 private:
-    double dispersionRelation(double lambda_um);
+    MCfloat dispersionRelation(MCfloat lambda_um);
 };
 
 
@@ -84,7 +86,7 @@ public:
     NorlandOpticalAdhesive65();
 
 private:
-    double dispersionRelation(double lambda_um);
+    MCfloat dispersionRelation(MCfloat lambda_um);
 };
 
 #endif // MATERIAL_H

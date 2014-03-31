@@ -22,7 +22,7 @@ Sample::Sample(BaseObject *parent) :
  * \f$ z=0 \f$.
  */
 
-void Sample::addLayer(const Material &material, double thickness) {
+void Sample::addLayer(const Material &material, MCfloat thickness) {
     _nLayers++;
     layers.push_back(material);
     _zBoundaries.push_back(_zBoundaries.back() + thickness);
@@ -43,7 +43,7 @@ void Sample::addLayer(const Material &material, double thickness) {
  * from left to right).
  */
 
-void Sample::addPreLayer(const Material &material, double thickness)
+void Sample::addPreLayer(const Material &material, MCfloat thickness)
 {
     _nLayers++;
     layers.push_front(material);
@@ -78,7 +78,7 @@ int Sample::nLayers() const {
  *
  */
 
-const deque<double> *Sample::zBoundaries() const {
+const deque<MCfloat> *Sample::zBoundaries() const {
     return &_zBoundaries;
 }
 
@@ -86,7 +86,7 @@ const Material *Sample::material(int layerIndex) const {
     return &materials.at(layerIndex);
 }
 
-int Sample::layerAt(double z)
+int Sample::layerAt(MCfloat z)
 {
     int n = _zBoundaries.size();
     int i;

@@ -15,11 +15,11 @@ Source::Source(BaseObject *parent) :
 }
 
 void Source::spinDirection(Walker *walker) const {
-    double cosTheta = cosThetaDistribution->spin();
-    double sinTheta = sqrt(1 - pow(cosTheta,2));
-    double psi = psiDistribution->spin();
-    double cosPsi = cos(psi);
-    double sinPsi = sin(psi);
+    MCfloat cosTheta = cosThetaDistribution->spin();
+    MCfloat sinTheta = sqrt(1 - pow(cosTheta,2));
+    MCfloat psi = psiDistribution->spin();
+    MCfloat cosPsi = cos(psi);
+    MCfloat sinPsi = sin(psi);
 
     walker->k0[0] = sinTheta*cosPsi;
     walker->k0[1] = sinTheta*sinPsi;
@@ -76,11 +76,11 @@ void Source::setWalkTimeDistribution(AbstractDistribution *distr) {
     walkTimeDistribution->setParent(this);
 }
 
-void Source::setWavelength(double um) {
+void Source::setWavelength(MCfloat um) {
     wl = um;
 }
 
-double Source::wavelength() const {
+MCfloat Source::wavelength() const {
     return wl;
 }
 
@@ -115,7 +115,7 @@ void PencilBeamSource::spinTime(Walker *walker) const {
  * @param parent
  */
 
-GaussianBeamSource::GaussianBeamSource(double FWHM, BaseObject *parent) :
+GaussianBeamSource::GaussianBeamSource(MCfloat FWHM, BaseObject *parent) :
     Source(parent)
 {
     NormalDistribution *distr = new NormalDistribution(0,FWHM, this);
@@ -133,7 +133,7 @@ GaussianBeamSource::GaussianBeamSource(double FWHM, BaseObject *parent) :
  * @param parent
  */
 
-GaussianBeamSource::GaussianBeamSource(double xFWHM, double yFWHM, BaseObject *parent) :
+GaussianBeamSource::GaussianBeamSource(MCfloat xFWHM, MCfloat yFWHM, BaseObject *parent) :
     Source(parent)
 {
     r0Distribution[0] = new NormalDistribution(0,xFWHM, this);
@@ -155,7 +155,7 @@ void GaussianBeamSource::spinDirection(Walker *walker) const {
 
 
 
-IsotropicPointSource::IsotropicPointSource(double z0, BaseObject *parent) :
+IsotropicPointSource::IsotropicPointSource(MCfloat z0, BaseObject *parent) :
     Source(parent)
 {
     depth = z0;

@@ -10,13 +10,13 @@
 class CosThetaGenerator : public AbstractDistribution
 {
 public:
-    CosThetaGenerator(double g, BaseObject *parent=NULL);
+    CosThetaGenerator(MCfloat g, BaseObject *parent=NULL);
 
-    void setg(double g);
-    double spin() const;
+    void setg(MCfloat g);
+    MCfloat spin() const;
 
 private:
-    double g;  /**< @brief scattering anisotropy factor*/
+    MCfloat g;  /**< @brief scattering anisotropy factor*/
 };
 
 #endif // COSTHETAGENERATOR_H

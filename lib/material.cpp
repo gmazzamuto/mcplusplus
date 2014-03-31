@@ -13,7 +13,7 @@ Material::Material()
  * @param um wavelength in micrometers
  */
 
-void Material::setWavelegth(double um) {
+void Material::setWavelegth(MCfloat um) {
     n = dispersionRelation(um);
     v = LIGHT_SPEED/n;
 }
@@ -26,7 +26,7 @@ void Material::setWavelegth(double um) {
  * The default material is dispersionless.
  */
 
-double Material::dispersionRelation(double lambda_um) {
+MCfloat Material::dispersionRelation(MCfloat lambda_um) {
     return n;
 }
 
@@ -59,7 +59,7 @@ Air::Air() :
  * \todo implement dispersion relation
  */
 
-double Air::dispersionRelation(double lambda_um) {
+MCfloat Air::dispersionRelation(MCfloat lambda_um) {
 // TODO
     return n;
 }
@@ -72,7 +72,7 @@ GlassSlide::GlassSlide() :
     n = 1.5203;
 }
 
-double GlassSlide::dispersionRelation(double lambda_um) {
+MCfloat GlassSlide::dispersionRelation(MCfloat lambda_um) {
     return sqrt(1 + 1.282086558597*pow(lambda_um,2)/(pow(lambda_um,2) - 0.01023694363174)
                     + 0.05984826992046*pow(lambda_um,2)/(pow(lambda_um,2) - 12.09530215672));
 }
@@ -94,7 +94,7 @@ NorlandOpticalAdhesive65::NorlandOpticalAdhesive65() :
  * (see under Optical Properties tab)
  */
 
-double NorlandOpticalAdhesive65::dispersionRelation(double lambda_um) {
+MCfloat NorlandOpticalAdhesive65::dispersionRelation(MCfloat lambda_um) {
     return 1.50631 + 5.43562E-3/pow(lambda_um,2) + 27.7798E-6/pow(lambda_um,4);
 }
 

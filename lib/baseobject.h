@@ -4,6 +4,7 @@
 #include <cstddef>
 #include <list>
 #include <boost/utility.hpp>
+#include "MCtypes.h"
 
 using namespace std;
 

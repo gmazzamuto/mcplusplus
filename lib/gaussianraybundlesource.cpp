@@ -17,7 +17,7 @@ using namespace boost::math;
  * The lensDistance parameter fully characterizes the lens convergence power. The two spot sizes refer
  */
 
-GaussianRayBundleSource::GaussianRayBundleSource(double lensWaist, double waist, double lensDistance, BaseObject *parent) :
+GaussianRayBundleSource::GaussianRayBundleSource(MCfloat lensWaist, MCfloat waist, MCfloat lensDistance, BaseObject *parent) :
     Source(parent)
 {
     xWaist=yWaist=waist;
@@ -42,7 +42,7 @@ GaussianRayBundleSource::GaussianRayBundleSource(double lensWaist, double waist,
  * Non-cylindrically symmetric implementation
  */
 
-GaussianRayBundleSource::GaussianRayBundleSource(double lensXWaist, double lensYWaist, double xWaist, double yWaist, double lensDistance, BaseObject *parent) :
+GaussianRayBundleSource::GaussianRayBundleSource(MCfloat lensXWaist, MCfloat lensYWaist, MCfloat xWaist, MCfloat yWaist, MCfloat lensDistance, BaseObject *parent) :
     Source(parent)
 {
     xLensWaist=lensXWaist;
@@ -74,7 +74,7 @@ void GaussianRayBundleSource::init()
  * layers of different materials in between, use focus() instead.
  */
 
-void GaussianRayBundleSource::setZWaist(double value)
+void GaussianRayBundleSource::setZWaist(MCfloat value)
 {
     zWaistReal = value;
     zWaistInEnvironment = value;
@@ -90,7 +90,7 @@ void GaussianRayBundleSource::setZWaist(double value)
  * function.
  */
 
-double GaussianRayBundleSource::zWaist()
+MCfloat GaussianRayBundleSource::zWaist()
 {
     return zWaistReal;
 }
@@ -100,13 +100,13 @@ double GaussianRayBundleSource::zWaist()
  * @param value
  */
 
-void GaussianRayBundleSource::setZLens(double value)
+void GaussianRayBundleSource::setZLens(MCfloat value)
 {
     zWaistInEnvironment = value + d;
     zWaistReal = zWaistInEnvironment;
 }
 
-double GaussianRayBundleSource::zLens() const
+MCfloat GaussianRayBundleSource::zLens() const
 {
     return zWaistInEnvironment - d;
 }
@@ -128,7 +128,7 @@ double GaussianRayBundleSource::zLens() const
  * \f$i\f$-th layer occurring between the lens and the waist position.
 */
 
-bool GaussianRayBundleSource::focus(double zWaist, Sample *sample)
+bool GaussianRayBundleSource::focus(MCfloat zWaist, Sample *sample)
 {
     int lensLayer, waistLayer;
     setZWaist(zWaist);
@@ -141,18 +141,18 @@ bool GaussianRayBundleSource::focus(double zWaist, Sample *sample)
     }
 
     zWaistInEnvironment = 0;
-    const deque<double> *zBoundaries = sample->zBoundaries();
+    const deque<MCfloat> *zBoundaries = sample->zBoundaries();
 
-    double n0 = sample->material(0)->n;
+    MCfloat n0 = sample->material(0)->n;
 
     int i;
     for(i = 1; i <= waistLayer-1; i++) {
-        double thickness = zBoundaries->at(i) - zBoundaries->at(i-1);
-        double ni = sample->material(i)->n;
+        MCfloat thickness = zBoundaries->at(i) - zBoundaries->at(i-1);
+        MCfloat ni = sample->material(i)->n;
         zWaistInEnvironment += thickness * n0/ni;
     }
-    double depthInLastLayer = zWaist - zBoundaries->at(waistLayer-1);
-    double nLast = sample->material(waistLayer)->n;
+    MCfloat depthInLastLayer = zWaist - zBoundaries->at(waistLayer-1);
+    MCfloat nLast = sample->material(waistLayer)->n;
     zWaistInEnvironment += depthInLastLayer * n0/nLast;
     zWaistInEnvironment += zBoundaries->at(0);
 
@@ -172,8 +172,8 @@ bool GaussianRayBundleSource::focus(double zWaist, Sample *sample)
  */
 
 void GaussianRayBundleSource::spinPosition(Walker *walker) const {
-    walker->r0[0] = xLensWaist * one_div_root_two<double>() * erf_inv<double>(2*uRand->spinOpen() -1);
-    walker->r0[1] = yLensWaist * one_div_root_two<double>() * erf_inv<double>(2*uRand->spinOpen() -1);
+    walker->r0[0] = xLensWaist * one_div_root_two<MCfloat>() * erf_inv<MCfloat>(2*uRand->spinOpen() -1);
+    walker->r0[1] = yLensWaist * one_div_root_two<MCfloat>() * erf_inv<MCfloat>(2*uRand->spinOpen() -1);
     walker->r0[2] = zLens();
 }
 
@@ -183,13 +183,13 @@ void GaussianRayBundleSource::spinPosition(Walker *walker) const {
  */
 
 void GaussianRayBundleSource::spinDirection(Walker *walker) const {
-    double xW = xWaist * one_div_root_two<double>() * erf_inv<double>(2*uRand->spinOpen() -1);
-    double yW = yWaist * one_div_root_two<double>() * erf_inv<double>(2*uRand->spinOpen() -1);
-    double connectingVector[3];
+    MCfloat xW = xWaist * one_div_root_two<MCfloat>() * erf_inv<MCfloat>(2*uRand->spinOpen() -1);
+    MCfloat yW = yWaist * one_div_root_two<MCfloat>() * erf_inv<MCfloat>(2*uRand->spinOpen() -1);
+    MCfloat connectingVector[3];
     connectingVector[0] = xW - walker->r0[0];
     connectingVector[1] = yW - walker->r0[1];
     connectingVector[2] = d;
-    double connectingVectorNorm = sqrt(pow(connectingVector[0],2) + pow(connectingVector[1],2) + pow(connectingVector[2],2));
+    MCfloat connectingVectorNorm = sqrt(pow(connectingVector[0],2) + pow(connectingVector[1],2) + pow(connectingVector[2],2));
     for (int i = 0; i < 3; ++i) {
         walker->k0[i] = connectingVector[i]/connectingVectorNorm;
     }

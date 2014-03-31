@@ -13,12 +13,12 @@ void SimulationViewer::paint_GL_impl() {
 
 void SimulationViewer::drawTrajectory() {
     QColor color;
-    const vector< vector<double>*> *trajectories = simulation->trajectories();
+    const vector< vector<MCfloat>*> *trajectories = simulation->trajectories();
     int n = trajectories->size(); //number of walkers
     for (int k = 0; k < n; ++k) {
         glBegin(GL_LINE_STRIP);
         int i = 0, l=0;
-        const vector<double>* traj = trajectories->at(k);
+        const vector<MCfloat>* traj = trajectories->at(k);
         while(i < traj->size()) {
             color = QColor((enum Qt::GlobalColor)(Qt::darkGray+l%15));
             glColor3f( color.redF(), color.greenF(), color.blueF() );
@@ -30,7 +30,7 @@ void SimulationViewer::drawTrajectory() {
 }
 
 void SimulationViewer::drawSample() {
-    const deque<double> * sampleUpperZBoundaries = simulation->sample()->zBoundaries();
+    const deque<MCfloat> * sampleUpperZBoundaries = simulation->sample()->zBoundaries();
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     int i = 0;
     float prev = 0;

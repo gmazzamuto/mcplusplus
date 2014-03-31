@@ -58,7 +58,7 @@ GLWidget::GLWidget(QWidget *parent)
 
     qtGreen = QColor::fromCmykF(0.40, 0.0, 1.0, 0.0);
     qtPurple = QColor::fromCmykF(0.39, 0.39, 0.0, 0.0);
-    lines = new std::vector<double>();
+    lines = new std::vector<MCfloat>();
     usingInternalVector = true;
     displayedAxisLength = 0;
 }
@@ -118,7 +118,7 @@ void GLWidget::setZRotation(int angle)
     }
 }
 
-void GLWidget::setScale(double value) {
+void GLWidget::setScale(MCfloat value) {
     if(value<1e-4)
         return;
     scale = value;
@@ -254,7 +254,7 @@ void GLWidget::clear() {
     lines->clear();
 }
 
-void GLWidget::setLinesVector(vector<double> *v) {
+void GLWidget::setLinesVector(vector<MCfloat> *v) {
     if(usingInternalVector)
         delete lines;
     lines = v;
@@ -262,7 +262,7 @@ void GLWidget::setLinesVector(vector<double> *v) {
 }
 
 void GLWidget::setDisplayedOriginPos(float *pos) {
-    memcpy(displayedOriginPos,pos,3*sizeof(double));
+    memcpy(displayedOriginPos,pos,3*sizeof(MCfloat));
 }
 
 void GLWidget::setDisplayedOriginPos(float x, float y, float z)

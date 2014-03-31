@@ -55,17 +55,17 @@ void AbstractDistribution::setRNG_impl() {
 
 // Dirac Delta distribution
 
-DeltaDistribution::DeltaDistribution(double center, BaseObject *parent) :
+DeltaDistribution::DeltaDistribution(MCfloat center, BaseObject *parent) :
     AbstractDistribution(parent)
 {
     setCenter(center);
 }
 
-void DeltaDistribution::setCenter(double val) {
+void DeltaDistribution::setCenter(MCfloat val) {
     x0 = val;
 }
 
-double DeltaDistribution::spin() const {
+MCfloat DeltaDistribution::spin() const {
     return x0;
 }
 
@@ -74,7 +74,7 @@ double DeltaDistribution::spin() const {
 
 // Normal (Gaussian) distribution
 
-NormalDistribution::NormalDistribution(double mean, double sigma, BaseObject *parent) :
+NormalDistribution::NormalDistribution(MCfloat mean, MCfloat sigma, BaseObject *parent) :
     AbstractDistribution(parent)
 {
     this->mean = mean;
@@ -87,15 +87,15 @@ NormalDistribution::~NormalDistribution() {
 }
 
 void NormalDistribution::reconstructDistribution() {
-    distribution = new normal_distribution<double>(mean,sigma);
+    distribution = new normal_distribution<MCfloat>(mean,sigma);
 }
 
-void NormalDistribution::setSigma(double value) {
+void NormalDistribution::setSigma(MCfloat value) {
     sigma = value;
     reconstructDistribution();
 }
 
-void NormalDistribution::setMean(double value) {
+void NormalDistribution::setMean(MCfloat value) {
     mean = value;
     reconstructDistribution();
 }
@@ -106,11 +106,11 @@ void NormalDistribution::setMean(double value) {
  * \todo Check that this function is working properly.
  */
 
-void NormalDistribution::setFWHM(double value) {
-    setSigma(value/(2*root_ln_four<double>()));
+void NormalDistribution::setFWHM(MCfloat value) {
+    setSigma(value/(2*root_ln_four<MCfloat>()));
 }
 
-double NormalDistribution::spin() const {
+MCfloat NormalDistribution::spin() const {
     return (*distribution)(*mt);
 }
 
@@ -119,7 +119,7 @@ double NormalDistribution::spin() const {
 
 // Uniform disribution
 
-UniformDistribution::UniformDistribution(double min, double max, BaseObject *parent) :
+UniformDistribution::UniformDistribution(MCfloat min, MCfloat max, BaseObject *parent) :
     AbstractDistribution(parent)
 {
     this->min = min;
@@ -128,10 +128,10 @@ UniformDistribution::UniformDistribution(double min, double max, BaseObject *par
 }
 
 void UniformDistribution::reconstructDistribution() {
-    distribution = uniform_real_distribution<double>(min,max);
+    distribution = uniform_real_distribution<MCfloat>(min,max);
 }
 
-double UniformDistribution::spin() const {
+MCfloat UniformDistribution::spin() const {
     return distribution(*mt);
 }
 
@@ -141,8 +141,8 @@ double UniformDistribution::spin() const {
  * @return
  */
 
-double UniformDistribution::spinOpen() const {
-    double p;
+MCfloat UniformDistribution::spinOpen() const {
+    MCfloat p;
     do {
         p = spin();
     }
@@ -172,14 +172,14 @@ ExponentialDistribution::ExponentialDistribution(BaseObject *parent) :
  * @param parent
  */
 
-ExponentialDistribution::ExponentialDistribution(double lambda, BaseObject *parent) :
+ExponentialDistribution::ExponentialDistribution(MCfloat lambda, BaseObject *parent) :
     AbstractDistribution(parent)
 {
     setLambda(lambda);
 }
 
 void ExponentialDistribution::reconstructDistribution() {
-    distribution = exponential_distribution<double>(lambda);
+    distribution = exponential_distribution<MCfloat>(lambda);
 }
 
 /**
@@ -187,7 +187,7 @@ void ExponentialDistribution::reconstructDistribution() {
  * @param value
  */
 
-void ExponentialDistribution::setBeta(double value) {
+void ExponentialDistribution::setBeta(MCfloat value) {
     setLambda(1./value);
 }
 
@@ -196,12 +196,12 @@ void ExponentialDistribution::setBeta(double value) {
  * @param value
  */
 
-void ExponentialDistribution::setLambda(double value) {
+void ExponentialDistribution::setLambda(MCfloat value) {
     lambda = value;
     reconstructDistribution();
 }
 
-double ExponentialDistribution::spin() const {
+MCfloat ExponentialDistribution::spin() const {
     return distribution(*mt);
 }
 
@@ -210,27 +210,27 @@ double ExponentialDistribution::spin() const {
 
 // Sech2 (Logistic) distribution
 
-Sech2Distribution::Sech2Distribution(double mean, double scale, BaseObject *parent) :
+Sech2Distribution::Sech2Distribution(MCfloat mean, MCfloat scale, BaseObject *parent) :
     AbstractDistribution(parent)
 {
     this->mean = mean;
     this->scale = scale;
 }
 
-double Sech2Distribution::spin() const {
-    double p;
+MCfloat Sech2Distribution::spin() const {
+    MCfloat p;
     do {
-        p = uniform_01<double>()(*mt);
+        p = uniform_01<MCfloat>()(*mt);
     }
     while(p == 0);
     return  mean + scale*log(p/(1.-p));
 }
 
-void Sech2Distribution::setScale(double value) {
+void Sech2Distribution::setScale(MCfloat value) {
     scale = value;
 }
 
-void Sech2Distribution::setMean(double value) {
+void Sech2Distribution::setMean(MCfloat value) {
     mean = value;
 }
 
@@ -244,6 +244,6 @@ void Sech2Distribution::setMean(double value) {
  * \todo Check that this function is working properly.
  */
 
-void Sech2Distribution::setFWHM(double value) {
-    setScale(value/(4*log(1 + root_two<double>())));
+void Sech2Distribution::setFWHM(MCfloat value) {
+    setScale(value/(4*log(1 + root_two<MCfloat>())));
 }

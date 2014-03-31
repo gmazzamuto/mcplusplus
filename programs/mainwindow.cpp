@@ -43,7 +43,7 @@ void MainWindow::replot() {
     src->setWalkTimeDistribution(delta1);
     src->setSeed(0);
 
-    double t = lensDistance;
+    MCfloat t = lensDistance;
 
     for (int i = 0; i < 1000; ++i) {
         Walker *walker = src->constructWalker();

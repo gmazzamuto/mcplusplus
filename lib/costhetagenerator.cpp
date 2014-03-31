@@ -1,22 +1,22 @@
 #include "costhetagenerator.h"
 
-CosThetaGenerator::CosThetaGenerator(double g, BaseObject *parent) :
+CosThetaGenerator::CosThetaGenerator(MCfloat g, BaseObject *parent) :
     AbstractDistribution(parent)
 {
     setg(g);
 }
 
-void CosThetaGenerator::setg(double g) {
+void CosThetaGenerator::setg(MCfloat g) {
     this->g = g;
 }
 
-double CosThetaGenerator::spin() const {
+MCfloat CosThetaGenerator::spin() const {
     if(g==0.) {
-        return uniform_01<double>()(*mt)*2.-1.; //uniform in [-1,1)
+        return uniform_01<MCfloat>()(*mt)*2.-1.; //uniform in [-1,1)
     }
     else {
-        double temp;
-        temp = 1 - g + 2*g*uniform_01<double>()(*mt);
+        MCfloat temp;
+        temp = 1 - g + 2*g*uniform_01<MCfloat>()(*mt);
         temp = (1-g*g)/temp;
         temp = 1 + g*g - temp*temp;
         temp = temp/(2*g);

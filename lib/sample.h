@@ -12,19 +12,19 @@ class Sample : public BaseObject
 {
 public:
     Sample(BaseObject *parent=NULL);
-    void addLayer(const Material &material, double thickness);
-    void addPreLayer(const Material &material, double thickness);
+    void addLayer(const Material &material, MCfloat thickness);
+    void addPreLayer(const Material &material, MCfloat thickness);
     void setSurroundingEnvironment(const Material &material);
     void setSurroundingEnvironment(const Material &frontMaterial, const Material &backMaterial);
     int nLayers() const;
-    const deque<double> *zBoundaries() const;
+    const deque<MCfloat> *zBoundaries() const;
     const Material *material(int layerIndex) const;
-    int layerAt(double z);
+    int layerAt(MCfloat z);
 
 private:
     int _nLayers;
     deque<Material> layers;
-    deque<double> _zBoundaries;
+    deque<MCfloat> _zBoundaries;
     deque<Material> materials;
 };
 

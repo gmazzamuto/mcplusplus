@@ -37,7 +37,7 @@ public:
      *
      * \pre The RNG has to be valid (see BaseRandom)
      */
-    virtual double spin() const = 0;
+    virtual MCfloat spin() const = 0;
 
 protected:
     virtual void reconstructDistribution();
@@ -59,13 +59,13 @@ private:
 class DeltaDistribution : public AbstractDistribution
 {
 public:
-    DeltaDistribution(double center, BaseObject *parent=NULL);
+    DeltaDistribution(MCfloat center, BaseObject *parent=NULL);
 
-    void setCenter(double val);
-    double spin() const;
+    void setCenter(MCfloat val);
+    MCfloat spin() const;
 
 private:
-    double x0;
+    MCfloat x0;
 };
 
 
@@ -82,19 +82,19 @@ private:
 class NormalDistribution : public AbstractDistribution
 {
 public:
-    NormalDistribution(double mean, double sigma, BaseObject *parent = NULL);
+    NormalDistribution(MCfloat mean, MCfloat sigma, BaseObject *parent = NULL);
     virtual ~NormalDistribution();
 
-    void setMean(double value);
-    void setSigma(double value);
-    void setFWHM(double value);
-    virtual double spin() const;
+    void setMean(MCfloat value);
+    void setSigma(MCfloat value);
+    void setFWHM(MCfloat value);
+    virtual MCfloat spin() const;
 
 private:
     void reconstructDistribution();
 
-    normal_distribution<double> *distribution;
-    double mean, sigma;
+    normal_distribution<MCfloat> *distribution;
+    MCfloat mean, sigma;
 };
 
 
@@ -110,16 +110,16 @@ private:
 class UniformDistribution : public AbstractDistribution
 {
 public:
-    UniformDistribution(double min, double max, BaseObject *parent=NULL);
+    UniformDistribution(MCfloat min, MCfloat max, BaseObject *parent=NULL);
 
-    virtual double spin() const;
-    double spinOpen() const;
+    virtual MCfloat spin() const;
+    MCfloat spinOpen() const;
 
 private:    
     void reconstructDistribution();
 
-    uniform_real_distribution<double> distribution;
-    double min, max;
+    uniform_real_distribution<MCfloat> distribution;
+    MCfloat min, max;
 };
 
 
@@ -136,17 +136,17 @@ class ExponentialDistribution : public AbstractDistribution
 {
 public:
     ExponentialDistribution(BaseObject *parent=NULL);
-    ExponentialDistribution(double lambda, BaseObject *parent);
+    ExponentialDistribution(MCfloat lambda, BaseObject *parent);
 
-    void setBeta(double value);
-    void setLambda(double value);
-    double spin() const;
+    void setBeta(MCfloat value);
+    void setLambda(MCfloat value);
+    MCfloat spin() const;
 
 private:
     void reconstructDistribution();
 
-    exponential_distribution<double> distribution;
-    double lambda;
+    exponential_distribution<MCfloat> distribution;
+    MCfloat lambda;
 };
 
 
@@ -166,15 +166,15 @@ private:
 class Sech2Distribution : public AbstractDistribution
 {
 public:
-    Sech2Distribution(double mean, double scale, BaseObject* parent=NULL);
+    Sech2Distribution(MCfloat mean, MCfloat scale, BaseObject* parent=NULL);
 
-    void setMean(double value);
-    void setScale(double value);
-    void setFWHM(double value);
-    double spin() const;
+    void setMean(MCfloat value);
+    void setScale(MCfloat value);
+    void setFWHM(MCfloat value);
+    MCfloat spin() const;
 
 private:
-    double mean, scale;
+    MCfloat mean, scale;
 };
 
 #endif // DISTRIBUTIONS_H

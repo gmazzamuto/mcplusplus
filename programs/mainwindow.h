@@ -22,8 +22,8 @@ private:
     void replot();
     QDoubleSpinBox *lensDistSpinBox;
     QDoubleSpinBox *focusedWaistSpinBox;
-    double lensDistance;
-    double focusedWaist;
+    MCfloat lensDistance;
+    MCfloat focusedWaist;
     GLWidget *glWidget;
 };
 

@@ -35,7 +35,7 @@ public:
     void setSnellReflectionsEnabled(bool enable);
     void run();
     void reset();
-    const vector<vector<double> *> *trajectories() const;
+    const vector<vector<MCfloat> *> *trajectories() const;
 
 private:
     int totalWalkers;  /**< @brief total number of walkers to be simulated*/
@@ -46,7 +46,7 @@ private:
 
     const Sample *_sample;
     const Source *source;
-    const deque<double> *upperZBoundaries;
+    const deque<MCfloat> *upperZBoundaries;
     int nLayers;
     int layer0;
     int layer1;
@@ -54,13 +54,13 @@ private:
     bool saveTrajectory;
     bool snellReflectionsEnabled;
 
-    int layerAt(double *r0);
-    void move(Walker *walker, double length);
+    int layerAt(MCfloat *r0);
+    void move(Walker *walker, MCfloat length);
     void reflect(Walker *walker);
     void refract(Walker *walker);
-    void saveTrajectoryPoint(double *point);
-    vector<vector <double>*> *trajectoryPoints;
-    vector<double> *currentTrajectory;
+    void saveTrajectoryPoint(MCfloat *point);
+    vector<vector <MCfloat>*> *trajectoryPoints;
+    vector<MCfloat> *currentTrajectory;
 };
 
 #endif // SIMULATION_H

@@ -15,7 +15,7 @@ Simulation::Simulation(BaseObject *parent) :
     source = NULL;
     upperZBoundaries = NULL;
     layer0 = 0;
-    trajectoryPoints = new std::vector<vector<double>*>();
+    trajectoryPoints = new std::vector<vector<MCfloat>*>();
     saveTrajectory = false;
     snellReflectionsEnabled = true;
     reset();
@@ -85,7 +85,7 @@ void Simulation::run() {
     IsotropicPsiGenerator *randomPsi = new IsotropicPsiGenerator(this);
 
     while(n < totalWalkers) {
-        currentTrajectory = new std::vector<double>();
+        currentTrajectory = new std::vector<MCfloat>();
         layer0 = 0;
 
         Walker *walker = source->constructWalker();
@@ -93,7 +93,7 @@ void Simulation::run() {
 
         layer0 = layerAt(walker->r0); //updates also onInterface flag
 
-        memcpy(walker->k1,walker->k0,3*sizeof(double));
+        memcpy(walker->k1,walker->k0,3*sizeof(MCfloat));
         onInterface = true; //treat newly generated walker as it were on an interface, i.e. do not scatter
 
         saveTrajectoryPoint(walker->r0);
@@ -103,7 +103,7 @@ void Simulation::run() {
         printf("%lf\t%lf\t%lf\t\t%lf", walker->r0[0], walker->r0[1], walker->r0[2],walker->k0[2]);
 #endif
 
-        double length;
+        MCfloat length;
         while(1) {
             //spin k1 (i.e. scatter) only if the material is scattering
             //and we're not on an interface, use the old k1 otherwise
@@ -112,19 +112,19 @@ void Simulation::run() {
                 length = stepLength->spin();
                 if(!onInterface) {
                     deflCosine->setg(_sample->material(layer0)->g);
-                    double cosTheta = deflCosine->spin();
-                    double sinTheta = sqrt(1-pow(cosTheta,2));
-                    double psi = randomPsi->spin();
-                    double cosPsi = cos(psi);
-                    double sinPsi = sin(psi);
+                    MCfloat cosTheta = deflCosine->spin();
+                    MCfloat sinTheta = sqrt(1-pow(cosTheta,2));
+                    MCfloat psi = randomPsi->spin();
+                    MCfloat cosPsi = cos(psi);
+                    MCfloat sinPsi = sin(psi);
 
                     if(fabs(walker->k0[2]) > 0.999999) {
                         walker->k1[0] = sinTheta*cosPsi;
                         walker->k1[1] = sinTheta*sinPsi;
-                        walker->k1[2] = cosTheta*sign<double>(walker->k0[2]);
+                        walker->k1[2] = cosTheta*sign<MCfloat>(walker->k0[2]);
                     }
                     else {
-                        double temp = sqrt(1-pow(walker->k0[2],2));
+                        MCfloat temp = sqrt(1-pow(walker->k0[2],2));
                         walker->k1[0] = (sinTheta*(walker->k0[0]*walker->k0[2]*cosPsi - walker->k0[1]*sinPsi))/temp + cosTheta*walker->k0[0];
                         walker->k1[1] = (sinTheta*(walker->k0[1]*walker->k0[2]*cosPsi + walker->k0[0]*sinPsi))/temp + cosTheta*walker->k0[1];
                         walker->k1[2] = -sinTheta*cosPsi*temp + cosTheta*walker->k0[2];
@@ -132,7 +132,7 @@ void Simulation::run() {
                 }
             }
             else { //no scattering
-                length = std::numeric_limits<double>::infinity();
+                length = std::numeric_limits<MCfloat>::infinity();
             }
 
             walker->r1[0] = walker->r0[0] + length*walker->k1[0];
@@ -204,9 +204,9 @@ void Simulation::run() {
  * Interfaces are considered to belong to the preceding layer
  */
 
-int Simulation::layerAt(double *r0) {
+int Simulation::layerAt(MCfloat *r0) {
     onInterface = false;
-    double z = r0[2];
+    MCfloat z = r0[2];
     if(z < upperZBoundaries->at(layer0)) { //search left
         for (int i = layer0; i >= 0; i--) {
             if(r0[2] > upperZBoundaries->at(i))
@@ -228,11 +228,11 @@ int Simulation::layerAt(double *r0) {
     }
 }
 
-void Simulation::move(Walker *walker, double length) {
+void Simulation::move(Walker *walker, MCfloat length) {
     layer1 = layerAt(walker->r1);
     if(layer1 == layer0) {
-        memcpy(walker->r0,walker->r1,3*sizeof(double));
-        memcpy(walker->k0,walker->k1,3*sizeof(double));
+        memcpy(walker->r0,walker->r1,3*sizeof(MCfloat));
+        memcpy(walker->k0,walker->k1,3*sizeof(MCfloat));
 
         walker->walkTime += length/_sample->material(layer0)->v;
         walker->nInteractions[layer0]++; //not sure this is the right place to increment the interactions counter as well...
@@ -241,24 +241,24 @@ void Simulation::move(Walker *walker, double length) {
 
     //handle interface
 
-    double zBoundary=0;
+    MCfloat zBoundary=0;
     layer1 = layer0 + sign(walker->k1[2]);
     zBoundary = upperZBoundaries->at(min(layer0,layer1));
 
-    double t = (zBoundary - walker->r0[2]) / walker->k1[2];
-    double intersection[3];
+    MCfloat t = (zBoundary - walker->r0[2]) / walker->k1[2];
+    MCfloat intersection[3];
     for (int i = 0; i < 3; ++i) {
         intersection[i] = walker->r0[i] + walker->k1[i]*t;
     }
 
-    memcpy(walker->r0,intersection,3*sizeof(double)); //move to interface, r1 is now meaningless (should we set it to NULL?)
+    memcpy(walker->r0,intersection,3*sizeof(MCfloat)); //move to interface, r1 is now meaningless (should we set it to NULL?)
     onInterface = true;
     walker->walkTime += t/_sample->material(layer0)->v;
 
     //so we updated r0, now it's time to update k0
 
-    double n0 = _sample->material(layer0)->n;
-    double n1 = _sample->material(layer1)->n;
+    MCfloat n0 = _sample->material(layer0)->n;
+    MCfloat n1 = _sample->material(layer1)->n;
 
     if (n0 == n1) {
 #ifdef DEBUG_TRAJECTORY
@@ -270,8 +270,8 @@ void Simulation::move(Walker *walker, double length) {
 
     //handle reflection and refraction
 
-    double sinTheta1 = sqrt(1 - pow(walker->k1[2],2));
-    double sinTheta2 = n0*sinTheta1/n1;
+    MCfloat sinTheta1 = sqrt(1 - pow(walker->k1[2],2));
+    MCfloat sinTheta2 = n0*sinTheta1/n1;
 
     if(sinTheta2 > 1) {
 #ifdef DEBUG_TRAJECTORY
@@ -280,15 +280,15 @@ void Simulation::move(Walker *walker, double length) {
         reflect(walker);
     }
     else {
-        double r;
+        MCfloat r;
         if(snellReflectionsEnabled)
         {
             //calculate the probability r(Theta1,n0,n1) of being reflected
-            double cThetaSum, cThetaDiff; //cos(Theta1 + Theta2) and cos(Theta1 - Theta2)
-            double sThetaSum, sThetaDiff; //sin(Theta1 + Theta2) and sin(Theta1 - Theta2)
+            MCfloat cThetaSum, cThetaDiff; //cos(Theta1 + Theta2) and cos(Theta1 - Theta2)
+            MCfloat sThetaSum, sThetaDiff; //sin(Theta1 + Theta2) and sin(Theta1 - Theta2)
 
-            double cosTheta1 = fabs(walker->k1[2]);
-            double cosTheta2 = sqrt(1 - pow(sinTheta2,2));
+            MCfloat cosTheta1 = fabs(walker->k1[2]);
+            MCfloat cosTheta2 = sqrt(1 - pow(sinTheta2,2));
 
             cThetaSum = cosTheta1*cosTheta2 - sinTheta1*sinTheta2;
             cThetaDiff = cosTheta1*cosTheta2 + sinTheta1*sinTheta2;
@@ -299,7 +299,7 @@ void Simulation::move(Walker *walker, double length) {
         else
             r = 0;
 
-        double xi = uniform_01<double>()(*mt);
+        MCfloat xi = uniform_01<MCfloat>()(*mt);
 
         if(xi <= r) {
             reflect(walker); //we come back to run() without keeping track of the extra unused step length
@@ -321,9 +321,9 @@ void Simulation::refract(Walker *walker) {
 #ifdef DEBUG_TRAJECTORY
     printf("refract ...\n");
 #endif
-    double n0 = _sample->material(layer0)->n; //I have already defined those quantities. should we pass them as arguments?
-    double n1 = _sample->material(layer1)->n; //
-    double sinTheta1 = sqrt(1 - pow(walker->k1[2],2)); //
+    MCfloat n0 = _sample->material(layer0)->n; //I have already defined those quantities. should we pass them as arguments?
+    MCfloat n1 = _sample->material(layer1)->n; //
+    MCfloat sinTheta1 = sqrt(1 - pow(walker->k1[2],2)); //
 
     walker->k1[0] = n0*walker->k1[0]/n1;
     walker->k1[1] = n0*walker->k1[1]/n1;
@@ -331,7 +331,7 @@ void Simulation::refract(Walker *walker) {
     layer0=layer1;
 }
 
-void Simulation::saveTrajectoryPoint(double *point) {
+void Simulation::saveTrajectoryPoint(MCfloat *point) {
     if(!saveTrajectory)
         return;
     for (int i = 0; i < 3; ++i) {
@@ -348,6 +348,6 @@ void Simulation::setSaveTrajectoryEnabled(bool enabled) {
  * @return
  */
 
-const vector< vector <double>*> *Simulation::trajectories() const {
+const vector< vector <MCfloat>*> *Simulation::trajectories() const {
     return trajectoryPoints;
 }

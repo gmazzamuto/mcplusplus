@@ -41,6 +41,7 @@
 #ifndef GLWIDGET_H
 #define GLWIDGET_H
 
+#include "MCtypes.h"
 #include <vector>
 #include <QGLWidget>
 
@@ -61,13 +62,13 @@ public:
     void addPoint(float *r0);
     void addPoint(double *r0);
     void clear();
-    void setLinesVector(vector<double> *v);
+    void setLinesVector(vector<MCfloat> *v);
     void setDisplayedOriginPos(float *pos);
     void setDisplayedOriginPos(float x, float y, float z);
     void setDisplayedAxisLength(float length);
 
 public slots:
-    void setScale(double value);
+    void setScale(MCfloat value);
     void setXRotation(int angle);
     void setYRotation(int angle);
     void setZRotation(int angle);
@@ -90,11 +91,11 @@ private:
     int xRot;
     int yRot;
     int zRot;
-    double scale;
+    MCfloat scale;
     QPoint lastPos;
     QColor qtGreen;
     QColor qtPurple;
-    vector<double> *lines;
+    vector<MCfloat> *lines;
     bool usingInternalVector;
     float displayedOriginPos[3];
     float displayedAxisLength;
