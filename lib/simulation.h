@@ -35,7 +35,7 @@ public:
     void setSnellReflectionsEnabled(bool enable);
     void run();
     void reset();
-    const vector<double> *trajectory() const;
+    const vector<vector<double> *> *trajectories() const;
 
 private:
     int totalWalkers;  /**< @brief total number of walkers to be simulated*/
@@ -59,7 +59,8 @@ private:
     void reflect(Walker *walker);
     void refract(Walker *walker);
     void saveTrajectoryPoint(double *point);
-    vector<double> *trajectoryPoints;
+    vector<vector <double>*> *trajectoryPoints;
+    vector<double> *currentTrajectory;
 };
 
 #endif // SIMULATION_H

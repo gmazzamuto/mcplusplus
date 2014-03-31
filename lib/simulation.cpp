@@ -15,7 +15,7 @@ Simulation::Simulation(BaseObject *parent) :
     source = NULL;
     upperZBoundaries = NULL;
     layer0 = 0;
-    trajectoryPoints = new std::vector<double>();
+    trajectoryPoints = new std::vector<vector<double>*>();
     saveTrajectory = false;
     snellReflectionsEnabled = true;
     reset();
@@ -85,8 +85,8 @@ void Simulation::run() {
     IsotropicPsiGenerator *randomPsi = new IsotropicPsiGenerator(this);
 
     while(n < totalWalkers) {
+        currentTrajectory = new std::vector<double>();
         layer0 = 0;
-        trajectoryPoints->clear();
 
         Walker *walker = source->constructWalker();
         walker->nInteractions.insert(walker->nInteractions.begin(),nLayers+2,0);
@@ -180,12 +180,16 @@ void Simulation::run() {
             }
         }
 
+        if(saveTrajectory)
+            trajectoryPoints->push_back(currentTrajectory);
+
 #ifdef DEBUG_TRAJECTORY
         printf("\nwalker reached layer %d\n",layer0);
 #endif
         n++;
         delete walker;
     }
+
     printf("transmitted: %d\n",transmitted);
     printf("reflected: %d\n",reflected);
     printf("ballistic: %d\n",ballistic);
@@ -331,7 +335,7 @@ void Simulation::saveTrajectoryPoint(double *point) {
     if(!saveTrajectory)
         return;
     for (int i = 0; i < 3; ++i) {
-        trajectoryPoints->push_back(point[i]);
+        currentTrajectory->push_back(point[i]);
     }
 }
 
@@ -344,6 +348,6 @@ void Simulation::setSaveTrajectoryEnabled(bool enabled) {
  * @return
  */
 
-const vector<double> *Simulation::trajectory() const {
+const vector< vector <double>*> *Simulation::trajectories() const {
     return trajectoryPoints;
 }

@@ -13,16 +13,20 @@ void SimulationViewer::paint_GL_impl() {
 
 void SimulationViewer::drawTrajectory() {
     QColor color;
-    const vector<double> *trajectory = simulation->trajectory();
-    glBegin(GL_LINE_STRIP);
-    int i = 0, l=0;
-    while(i < trajectory->size()) {
-        color = QColor((enum Qt::GlobalColor)(Qt::darkGray+l%15));
-        glColor3f( color.redF(), color.greenF(), color.blueF() );
-        glVertex3f(trajectory->at(i),trajectory->at(i+1),trajectory->at(i+2));
-        i+=3; l++;
+    const vector< vector<double>*> *trajectories = simulation->trajectories();
+    int n = trajectories->size(); //number of walkers
+    for (int k = 0; k < n; ++k) {
+        glBegin(GL_LINE_STRIP);
+        int i = 0, l=0;
+        const vector<double>* traj = trajectories->at(k);
+        while(i < traj->size()) {
+            color = QColor((enum Qt::GlobalColor)(Qt::darkGray+l%15));
+            glColor3f( color.redF(), color.greenF(), color.blueF() );
+            glVertex3f(traj->at(i),traj->at(i+1),traj->at(i+2));
+            i+=3; l++;
+        }
+        glEnd();
     }
-    glEnd();
 }
 
 void SimulationViewer::drawSample() {
