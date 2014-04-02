@@ -136,7 +136,7 @@ class ExponentialDistribution : public AbstractDistribution
 {
 public:
     ExponentialDistribution(BaseObject *parent=NULL);
-    ExponentialDistribution(MCfloat lambda, BaseObject *parent);
+    ExponentialDistribution(MCfloat lambda, BaseObject *parent=NULL);
 
     void setBeta(MCfloat value);
     void setLambda(MCfloat value);
