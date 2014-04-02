@@ -1,6 +1,7 @@
 #include "baseobject.h"
 
 #include <iostream>
+#include <ctime>
 #ifdef __GNUC__
 #include <typeinfo>
 #include <cxxabi.h>
@@ -112,6 +113,16 @@ bool BaseObject::inheritsRandom() const {
 
 void BaseObject::logMessage(string &msg) const
 {
+    time_t rawtime;
+    struct tm * timeinfo;
+    char buffer [80];
+
+    time (&rawtime);
+    timeinfo = localtime (&rawtime);
+
+    strftime (buffer,80,"%F %T",timeinfo);
+    cerr << "[" << buffer << "]";
+
 #ifdef __GNUC__
     cerr << "[" << abi::__cxa_demangle(typeid(*this).name(), 0, 0, 0) << "] ";
 #endif
