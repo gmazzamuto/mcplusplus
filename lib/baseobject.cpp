@@ -6,6 +6,8 @@
 #include <typeinfo>
 #include <cxxabi.h>
 #endif
+#include <stdarg.h>
+#include <stdio.h>
 
 BaseObject::BaseObject(BaseObject *parent)
 {
@@ -102,16 +104,7 @@ bool BaseObject::inheritsRandom() const {
     return _inheritsRandom;
 }
 
-/**
- * @brief Logs a message to stderr
- * @param msg
- *
- *
- * If the compiler used is GCC, the message will be prepended with the class
- * name
- */
-
-void BaseObject::logMessage(string &msg) const
+void BaseObject::printMessagePrefix() const
 {
     time_t rawtime;
     struct tm * timeinfo;
@@ -126,5 +119,28 @@ void BaseObject::logMessage(string &msg) const
 #ifdef __GNUC__
     cerr << "[" << abi::__cxa_demangle(typeid(*this).name(), 0, 0, 0) << "] ";
 #endif
+}
+
+/**
+ * @brief Logs a message to stderr
+ * @param msg
+ *
+ *
+ * If the compiler used is GCC, the message will be prepended with the class
+ * name
+ */
+
+void BaseObject::logMessage(string &msg) const
+{
+    printMessagePrefix();
     cerr << msg << endl;
+}
+
+void BaseObject::logMessage(const char *fmt, ...) const
+{
+    va_list arguments;
+    va_start ( arguments, fmt );
+    printMessagePrefix();
+    vfprintf(stderr,fmt,arguments);
+    cerr << endl;
 }
