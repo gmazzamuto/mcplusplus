@@ -28,7 +28,7 @@ BaseRandom::~BaseRandom() {
  * calling object's RNG.
  */
 
-void BaseRandom::setSeed(int seed) {
+void BaseRandom::setSeed(unsigned int seed) {
     if(hasAParent() && parent()->inheritsRandom())
         return;
     if(mt != NULL)

@@ -39,7 +39,7 @@ public:
     BaseRandom(BaseObject *parent=NULL);
     virtual ~BaseRandom();
 
-    void setSeed(int seed);
+    void setSeed(unsigned int seed);
 
 protected:
     mt19937* mt;
