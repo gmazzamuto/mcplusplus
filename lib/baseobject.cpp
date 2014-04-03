@@ -6,8 +6,8 @@
 #include <typeinfo>
 #include <cxxabi.h>
 #endif
-#include <stdarg.h>
 #include <stdio.h>
+#include <vector>
 
 BaseObject::BaseObject(BaseObject *parent)
 {
@@ -114,7 +114,7 @@ BaseObject *BaseObject::clone() const
     return clone_impl();
 }
 
-void BaseObject::printMessagePrefix() const
+string BaseObject::messagePrefix() const
 {
     time_t rawtime;
     struct tm * timeinfo;
@@ -123,12 +123,22 @@ void BaseObject::printMessagePrefix() const
     time (&rawtime);
     timeinfo = localtime (&rawtime);
 
-    strftime (buffer,80,"%F %T",timeinfo);
-    cerr << "[" << buffer << "]";
+    strftime (buffer,80,"[%F %T]",timeinfo);
+
+    string str = buffer;
 
 #ifdef __GNUC__
-    cerr << "[" << abi::__cxa_demangle(typeid(*this).name(), 0, 0, 0) << "] ";
+    str += "[";
+    str += abi::__cxa_demangle(typeid(*this).name(), 0, 0, 0);
+    str += "]";
 #endif
+    str += " ";
+    return str;
+}
+
+void BaseObject::printLogMessage(const char *fmt, va_list arguments) const
+{
+    vfprintf(stderr,fmt,arguments);
 }
 
 /**
@@ -140,17 +150,20 @@ void BaseObject::printMessagePrefix() const
  * name
  */
 
-void BaseObject::logMessage(string &msg) const
+void BaseObject::logMessage(const string &msg) const
 {
-    printMessagePrefix();
-    cerr << msg << endl;
+    string str = messagePrefix();
+    str += msg;
+    str += "\n";
+    printLogMessage(str.c_str());
 }
 
 void BaseObject::logMessage(const char *fmt, ...) const
 {
     va_list arguments;
     va_start ( arguments, fmt );
-    printMessagePrefix();
-    vfprintf(stderr,fmt,arguments);
-    cerr << endl;
+    string str = messagePrefix();
+    str += fmt;
+    str += "\n";
+    printLogMessage(str.c_str(),arguments);
 }

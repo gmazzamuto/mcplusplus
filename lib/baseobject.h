@@ -5,6 +5,7 @@
 #include <list>
 #include <boost/utility.hpp>
 #include "MCtypes.h"
+#include <cstdarg>
 
 using namespace std;
 
@@ -44,7 +45,7 @@ public:
     BaseObject *clone() const;
 
 protected:
-    void logMessage(string &msg) const;
+    void logMessage(const string &msg) const;
     void logMessage(const char* fmt, ...) const;
     bool _inheritsRandom;
 
@@ -62,7 +63,8 @@ private:
     virtual void removeChild_impl(BaseObject *child);
     virtual BaseObject *clone_impl() const;
 
-    void printMessagePrefix() const;
+    string messagePrefix() const;
+    void printLogMessage(const char *fmt, va_list arguments=0) const;
 };
 
 #endif // BASEOBJECT_H
