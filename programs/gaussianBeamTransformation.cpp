@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
     sim->setSample(sample);
     sim->setSource(source);
     sim->setTotalWalkers(n);
-    sim->setSnellReflectionsEnabled(false);
+    sim->setFresnelReflectionsEnabled(false);
 
     sim->setSeed(0);
     sim->setSaveTrajectoryEnabled(true);

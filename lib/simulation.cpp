@@ -29,7 +29,7 @@ Simulation::Simulation(BaseObject *parent) :
     layer0 = 0;
     trajectoryPoints = new std::vector<vector<MCfloat>*>();
     saveTrajectory = false;
-    snellReflectionsEnabled = true;
+    fresnelReflectionsEnabled = true;
     reset();
     mostRecentInstance = this;
     signal(SIGUSR1,sigUsr1Handler);
@@ -79,9 +79,9 @@ void Simulation::setSource(Source *source) {
     source->setParent(this);
 }
 
-void Simulation::setSnellReflectionsEnabled(bool enable)
+void Simulation::setFresnelReflectionsEnabled(bool enable)
 {
-    snellReflectionsEnabled = enable;
+    fresnelReflectionsEnabled = enable;
 }
 
 unsigned int Simulation::totalWalkers() const
@@ -314,7 +314,7 @@ void Simulation::move(Walker *walker, MCfloat length) {
     }
     else {
         MCfloat r;
-        if(snellReflectionsEnabled)
+        if(fresnelReflectionsEnabled)
         {
             //calculate the probability r(Theta1,n0,n1) of being reflected
             MCfloat cThetaSum, cThetaDiff; //cos(Theta1 + Theta2) and cos(Theta1 - Theta2)
@@ -383,7 +383,7 @@ BaseObject* Simulation::clone_impl() const
 {
     Simulation *sim = new Simulation();
     sim->saveTrajectory = saveTrajectory;
-    sim->snellReflectionsEnabled = snellReflectionsEnabled;
+    sim->fresnelReflectionsEnabled = fresnelReflectionsEnabled;
     sim->setSource((Source*)source->clone());
     sim->_sample = _sample;
     return sim;

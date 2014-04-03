@@ -32,7 +32,7 @@ public:
     void setTotalWalkers(int N);
     void setSample(Sample *sample);
     void setSource(Source *source);
-    void setSnellReflectionsEnabled(bool enable);
+    void setFresnelReflectionsEnabled(bool enable);
     unsigned int totalWalkers() const;
     unsigned int currentWalker() const;
     void run();
@@ -46,7 +46,7 @@ private:
 
     //flags
     bool saveTrajectory;
-    bool snellReflectionsEnabled;
+    bool fresnelReflectionsEnabled;
 
     //walker counters
     unsigned int _totalWalkers;  /**< @brief total number of walkers to be simulated*/
