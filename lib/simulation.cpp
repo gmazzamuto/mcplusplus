@@ -246,7 +246,7 @@ void Simulation::runSingleThread() {
 
             if(layer0 == nLayers + 1) {
                 bool diffuselyTransmitted = false;
-                for (int i = 1; i <= nLayers; ++i) {
+                for (unsigned int i = 1; i <= nLayers; ++i) {
                     if(walker->nInteractions[i]) {
                         transmitted++;
                         diffuselyTransmitted = true;
@@ -260,7 +260,7 @@ void Simulation::runSingleThread() {
 
             if(layer0 == 0) {
                 bool diffuselyReflected = false;
-                for (int i = 1; i <= nLayers; ++i) {
+                for (unsigned int i = 1; i <= nLayers; ++i) {
                     if(walker->nInteractions[i]) {
                         reflected++;
                         diffuselyReflected = true;
@@ -292,19 +292,22 @@ void Simulation::runSingleThread() {
  * Interfaces are considered to belong to the preceding layer
  */
 
-int Simulation::layerAt(MCfloat *r0) {
+unsigned int Simulation::layerAt(MCfloat *r0) {
     onInterface = false;
     MCfloat z = r0[2];
     if(z < upperZBoundaries->at(layer0)) { //search left
-        for (int i = layer0; i >= 0; i--) {
+        unsigned int i = layer0 + 1;
+        do {
+            i--;
             if(r0[2] > upperZBoundaries->at(i))
                 return i+1;
         }
+        while(i!=0);
         return 0;
     }
     else //search right
     {
-        for (int i = layer0; i < nLayers+1; ++i) {
+        for (unsigned int i = layer0; i < nLayers+1; ++i) {
             if(z < upperZBoundaries->at(i))
                 return i;
             if(z == upperZBoundaries->at(i)) {

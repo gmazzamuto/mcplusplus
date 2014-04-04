@@ -62,7 +62,7 @@ void Sample::setSurroundingEnvironment(const Material &frontMaterial, const Mate
     materials.push_back(backMaterial);
 }
 
-int Sample::nLayers() const {
+unsigned int Sample::nLayers() const {
     return _nLayers;
 }
 
@@ -82,11 +82,11 @@ const deque<MCfloat> *Sample::zBoundaries() const {
     return &_zBoundaries;
 }
 
-const Material *Sample::material(int layerIndex) const {
+const Material *Sample::material(unsigned int layerIndex) const {
     return &materials.at(layerIndex);
 }
 
-int Sample::layerAt(MCfloat z)
+unsigned int Sample::layerAt(MCfloat z)
 {
     int n = _zBoundaries.size();
     int i;

@@ -65,13 +65,13 @@ private:
 
     //internal temporary variables
     const deque<MCfloat> *upperZBoundaries;
-    int nLayers;
-    int layer0;
-    int layer1;
+    unsigned int nLayers;
+    unsigned int layer0;
+    unsigned int layer1;
     bool onInterface;
     time_t startTime;
 
-    int layerAt(MCfloat *r0);
+    unsigned int layerAt(MCfloat *r0);
     void move(Walker *walker, MCfloat length);
     void reflect(Walker *walker);
     void refract(Walker *walker);
