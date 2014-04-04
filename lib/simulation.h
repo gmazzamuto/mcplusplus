@@ -34,8 +34,8 @@ public:
     void setSource(Source *source);
     void setFresnelReflectionsEnabled(bool enable);
     void setNThreads(unsigned int value);
-    unsigned int totalWalkers() const;
-    unsigned int currentWalker() const;
+    unsigned long int totalWalkers() const;
+    unsigned long int currentWalker() const;
     void run();
     void reset();
     const vector<vector<MCfloat> *> *trajectories() const;
@@ -50,12 +50,12 @@ private:
     bool fresnelReflectionsEnabled;
 
     //walker counters
-    unsigned int _totalWalkers;  /**< @brief total number of walkers to be simulated*/
-    unsigned int transmitted;  /**< @brief total number of walkers transmitted after at least one scattering event*/
-    unsigned int reflected;  /**< @brief total number of walkers reflected after at least one scattering event*/
-    unsigned int ballistic;  /**< @brief total number of walkers transmitted without undergoing any scattering event*/
-    unsigned int backreflected;  /**< @brief total number of walkers reflected without undergoing any scattering event*/
-    unsigned int n;
+    unsigned long int _totalWalkers;  /**< @brief total number of walkers to be simulated*/
+    unsigned long int transmitted;  /**< @brief total number of walkers transmitted after at least one scattering event*/
+    unsigned long int reflected;  /**< @brief total number of walkers reflected after at least one scattering event*/
+    unsigned long int ballistic;  /**< @brief total number of walkers transmitted without undergoing any scattering event*/
+    unsigned long int backreflected;  /**< @brief total number of walkers reflected without undergoing any scattering event*/
+    unsigned long int n;
 
     unsigned int nThreads;
 

@@ -95,12 +95,12 @@ void Simulation::setNThreads(unsigned int value)
     nThreads = value;
 }
 
-unsigned int Simulation::totalWalkers() const
+unsigned long Simulation::totalWalkers() const
 {
     return _totalWalkers;
 }
 
-unsigned int Simulation::currentWalker() const
+unsigned long int Simulation::currentWalker() const
 {
     return n;
 }
@@ -119,12 +119,14 @@ void Simulation::run() {
     else
         runMultipleThreads();
 
-    printf("================\n");
+    stringstream stream;
+    stream << "================\n";
+    stream << "transmitted: " << transmitted << endl;
+    stream << "reflected: " << reflected << endl;
+    stream << "ballistic: " << ballistic << endl;
+    stream << "back-reflected: " << backreflected << endl;
 
-    printf("transmitted: %u\n",transmitted);
-    printf("reflected: %u\n",reflected);
-    printf("ballistic: %u\n",ballistic);
-    printf("back-reflected: %u\n",backreflected);
+    cout << stream.str();
 
     time_t now;
     time(&now);
