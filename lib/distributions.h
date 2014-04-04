@@ -1,7 +1,7 @@
 #ifndef DISTRIBUTIONS_H
 #define DISTRIBUTIONS_H
 
-#include <math.h>
+#include <cmath>
 #include "baserandom.h"
 
 /**

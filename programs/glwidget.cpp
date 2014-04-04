@@ -40,7 +40,7 @@
 
 #include <QtGui>
 #include <QtOpenGL>
-#include <math.h>
+#include <cmath>
 
 #include "glwidget.h"
 

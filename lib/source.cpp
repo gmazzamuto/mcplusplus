@@ -1,7 +1,6 @@
 #include "source.h"
 #include "costhetagenerator.h"
 #include "psigenerator.h"
-#include "math.h"
 
 Source::Source(BaseObject *parent) :
     BaseRandom(parent)

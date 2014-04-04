@@ -1,5 +1,5 @@
 #include "material.h"
-#include <math.h>
+#include <cmath>
 
 Material::Material()
 {
