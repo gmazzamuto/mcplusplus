@@ -8,6 +8,8 @@ include_directories(.)
 file(GLOB SRC . *.cpp)
 file(GLOB HEADERS . *.h)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
+
 add_library(MCPlusPlus SHARED ${SRC} ${HEADERS})
 install (TARGETS MCPlusPlus DESTINATION lib)
 install (FILES ${HEADERS} DESTINATION include/MCPlusPlus)
