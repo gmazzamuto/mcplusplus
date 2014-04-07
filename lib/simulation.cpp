@@ -84,12 +84,12 @@ void Simulation::setSnellReflectionsEnabled(bool enable)
     snellReflectionsEnabled = enable;
 }
 
-int Simulation::totalWalkers() const
+unsigned int Simulation::totalWalkers() const
 {
     return _totalWalkers;
 }
 
-int Simulation::currentWalker() const
+unsigned int Simulation::currentWalker() const
 {
     return n;
 }
@@ -101,7 +101,7 @@ int Simulation::currentWalker() const
  */
 
 void Simulation::run() {
-    logMessage("starting... Number of walkers = %d",totalWalkers());
+    logMessage("starting... Number of walkers = %u",totalWalkers());
     time(&startTime);
     nLayers = _sample->nLayers();
     upperZBoundaries = _sample->zBoundaries();
@@ -223,10 +223,10 @@ void Simulation::run() {
 
     logMessage("Completed in %.f seconds",difftime(now,startTime));
 
-    printf("transmitted: %d\n",transmitted);
-    printf("reflected: %d\n",reflected);
-    printf("ballistic: %d\n",ballistic);
-    printf("back-reflected: %d\n",backreflected);
+    printf("transmitted: %u\n",transmitted);
+    printf("reflected: %u\n",reflected);
+    printf("ballistic: %u\n",ballistic);
+    printf("back-reflected: %u\n",backreflected);
 }
 
 /**
@@ -375,7 +375,7 @@ void Simulation::saveTrajectoryPoint(MCfloat *point) {
 void Simulation::reportProgress() const
 {
     string msg;
-    string s = str( format("Progress = %.1lf%% (%d / %d)") % (100.*currentWalker()/totalWalkers()) % currentWalker() % totalWalkers());
+    string s = str( format("Progress = %.1lf%% (%u / %u)") % (100.*currentWalker()/totalWalkers()) % currentWalker() % totalWalkers());
     logMessage(s);
 }
 

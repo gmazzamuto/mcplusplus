@@ -33,8 +33,8 @@ public:
     void setSample(Sample *sample);
     void setSource(Source *source);
     void setSnellReflectionsEnabled(bool enable);
-    int totalWalkers() const;
-    int currentWalker() const;
+    unsigned int totalWalkers() const;
+    unsigned int currentWalker() const;
     void run();
     void reset();
     const vector<vector<MCfloat> *> *trajectories() const;
@@ -49,12 +49,12 @@ private:
     bool snellReflectionsEnabled;
 
     //walker counters
-    int _totalWalkers;  /**< @brief total number of walkers to be simulated*/
-    int transmitted;  /**< @brief total number of walkers transmitted after at least one scattering event*/
-    int reflected;  /**< @brief total number of walkers reflected after at least one scattering event*/
-    int ballistic;  /**< @brief total number of walkers transmitted without undergoing any scattering event*/
-    int backreflected;  /**< @brief total number of walkers reflected without undergoing any scattering event*/
-    int n;
+    unsigned int _totalWalkers;  /**< @brief total number of walkers to be simulated*/
+    unsigned int transmitted;  /**< @brief total number of walkers transmitted after at least one scattering event*/
+    unsigned int reflected;  /**< @brief total number of walkers reflected after at least one scattering event*/
+    unsigned int ballistic;  /**< @brief total number of walkers transmitted without undergoing any scattering event*/
+    unsigned int backreflected;  /**< @brief total number of walkers reflected without undergoing any scattering event*/
+    unsigned int n;
 
     //trajectories
     vector<vector <MCfloat>*> *trajectoryPoints;
