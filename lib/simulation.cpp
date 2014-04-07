@@ -101,6 +101,8 @@ int Simulation::currentWalker() const
  */
 
 void Simulation::run() {
+    logMessage("starting... Number of walkers = %d",totalWalkers());
+    time(&startTime);
     nLayers = _sample->nLayers();
     upperZBoundaries = _sample->zBoundaries();
 
@@ -215,6 +217,11 @@ void Simulation::run() {
         n++;
         delete walker;
     }
+
+    time_t now;
+    time(&now);
+
+    logMessage("Completed in %.f seconds",difftime(now,startTime));
 
     printf("transmitted: %d\n",transmitted);
     printf("reflected: %d\n",reflected);

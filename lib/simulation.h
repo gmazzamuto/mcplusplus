@@ -66,6 +66,7 @@ private:
     int layer0;
     int layer1;
     bool onInterface;
+    time_t startTime;
 
     int layerAt(MCfloat *r0);
     void move(Walker *walker, MCfloat length);
