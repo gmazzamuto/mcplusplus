@@ -41,10 +41,10 @@ public:
     BaseObject *parent() const;
     void setParent(BaseObject *parent);
     bool inheritsRandom() const;
-    void logMessage(string &msg) const;
-    void logMessage(const char* fmt, ...) const;
 
 protected:
+    void logMessage(string &msg) const;
+    void logMessage(const char* fmt, ...) const;
     bool _inheritsRandom;
 
 private:

@@ -11,15 +11,13 @@ using namespace boost::math;
 
 Simulation *mostRecentInstance=NULL;
 
-void reportProgress(int signo) {
+void sigUsr1Handler(int signo) {
     Simulation *sim = mostRecentInstance;
 
     if(mostRecentInstance == NULL)
         return;
 
-    string msg;
-    string s = str( format("Progress = %.1lf%% (%d / %d)") % (100.*sim->currentWalker()/sim->totalWalkers()) % sim->currentWalker() % sim->totalWalkers());
-    sim->logMessage(s);
+    sim->reportProgress();
 }
 
 Simulation::Simulation(BaseObject *parent) :
@@ -34,7 +32,7 @@ Simulation::Simulation(BaseObject *parent) :
     snellReflectionsEnabled = true;
     reset();
     mostRecentInstance = this;
-    signal(SIGUSR1,reportProgress);
+    signal(SIGUSR1,sigUsr1Handler);
 }
 
 Simulation::~Simulation() {
@@ -86,12 +84,12 @@ void Simulation::setSnellReflectionsEnabled(bool enable)
     snellReflectionsEnabled = enable;
 }
 
-int Simulation::totalWalkers()
+int Simulation::totalWalkers() const
 {
     return _totalWalkers;
 }
 
-int Simulation::currentWalker()
+int Simulation::currentWalker() const
 {
     return n;
 }
@@ -365,6 +363,13 @@ void Simulation::saveTrajectoryPoint(MCfloat *point) {
     for (int i = 0; i < 3; ++i) {
         currentTrajectory->push_back(point[i]);
     }
+}
+
+void Simulation::reportProgress() const
+{
+    string msg;
+    string s = str( format("Progress = %.1lf%% (%d / %d)") % (100.*currentWalker()/totalWalkers()) % currentWalker() % totalWalkers());
+    logMessage(s);
 }
 
 void Simulation::setSaveTrajectoryEnabled(bool enabled) {

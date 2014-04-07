@@ -33,11 +33,12 @@ public:
     void setSample(Sample *sample);
     void setSource(Source *source);
     void setSnellReflectionsEnabled(bool enable);
-    int totalWalkers();
-    int currentWalker();
+    int totalWalkers() const;
+    int currentWalker() const;
     void run();
     void reset();
     const vector<vector<MCfloat> *> *trajectories() const;
+    void reportProgress() const;
 
 private:
     int _totalWalkers;  /**< @brief total number of walkers to be simulated*/
@@ -62,6 +63,7 @@ private:
     void reflect(Walker *walker);
     void refract(Walker *walker);
     void saveTrajectoryPoint(MCfloat *point);
+
     vector<vector <MCfloat>*> *trajectoryPoints;
     vector<MCfloat> *currentTrajectory;
 };
