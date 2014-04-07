@@ -8,7 +8,7 @@
 int main(int argc, char *argv[])
 {
     Source *source = new Source();
-    DeltaDistribution *deltaZ = new DeltaDistribution(50);
+    DeltaDistribution *deltaZ = new DeltaDistribution(20);
     IsotropicPsiGenerator *unif2pi = new IsotropicPsiGenerator;
     DeltaDistribution *delta0 = new DeltaDistribution(0);
     DeltaDistribution *delta1 = new DeltaDistribution(1);
@@ -30,42 +30,37 @@ int main(int argc, char *argv[])
 
     material.ls = 1;
     material.g = 0;
-    material.n = 1;
+    material.n = 1.5;
 
-    material.n = 1;
-    sample->addLayer(material,50);
-    material.n = 10;
-    sample->addLayer(material,50);
-
-    material.n = 1;
-    sample->addLayer(material,50);
-    material.n = 10;
-    sample->addLayer(material,50);
+    sample->addLayer(material,40);
+    sample->addLayer(freeSpace,40);
+    sample->addLayer(material,40);
 
     sample->setSurroundingEnvironment(freeSpace);
-
-    QApplication a(argc, argv);
 
     Simulation *sim = new Simulation();
 
     sim->setSample(sample);
     sim->setSource(source);
-    sim->setTotalWalkers(1);
+    sim->setTotalWalkers(atoi(argv[1]));
+    sim->setNThreads(atoi(argv[2]));
 
     sim->setSeed(0);
-    sim->setSaveTrajectoryEnabled(true);
+//    sim->setSaveTrajectoryEnabled(true);
     sim->run();
 
-    QMainWindow w;
-    SimulationViewer simViewer(sim);
+//    QApplication a(argc, argv);
+//    QMainWindow w;
+//    SimulationViewer simViewer(sim);
 
-    simViewer.setDisplayedOriginPos(0,0,-600);
-    simViewer.setDisplayedAxisLength(500);
+//    simViewer.setDisplayedOriginPos(0,0,-600);
+//    simViewer.setDisplayedAxisLength(500);
 
-    w.setCentralWidget(&simViewer);
-    w.show();
+//    w.setCentralWidget(&simViewer);
+//    w.show();
 
-    a.exec();
+//    a.exec();
+
 
     return 0;
 }
