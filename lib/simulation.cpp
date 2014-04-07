@@ -293,7 +293,6 @@ void Simulation::runSingleThread() {
  */
 
 unsigned int Simulation::layerAt(MCfloat *r0) {
-    onInterface = false;
     MCfloat z = r0[2];
     if(z < upperZBoundaries->at(layer0)) { //search left
         unsigned int i = layer0 + 1;
@@ -310,16 +309,13 @@ unsigned int Simulation::layerAt(MCfloat *r0) {
         for (unsigned int i = layer0; i < nLayers+1; ++i) {
             if(z < upperZBoundaries->at(i))
                 return i;
-            if(z == upperZBoundaries->at(i)) {
-                onInterface = true;
-                return i;
-            }
         }
         return nLayers+1;
     }
 }
 
 void Simulation::move(Walker *walker, MCfloat length) {
+    onInterface = false;
     layer1 = layerAt(walker->r1);
     if(layer1 == layer0) {
         memcpy(walker->r0,walker->r1,3*sizeof(MCfloat));
@@ -348,8 +344,8 @@ void Simulation::move(Walker *walker, MCfloat length) {
 
     //so we updated r0, now it's time to update k0
 
-    MCfloat n0 = _sample->material(layer0)->n;
-    MCfloat n1 = _sample->material(layer1)->n;
+    n0 = _sample->material(layer0)->n;
+    n1 = _sample->material(layer1)->n;
 
     if (n0 == n1) {
 #ifdef DEBUG_TRAJECTORY
@@ -361,10 +357,10 @@ void Simulation::move(Walker *walker, MCfloat length) {
 
     //handle reflection and refraction
 
-    MCfloat sinTheta1 = sqrt(1 - pow(walker->k1[2],2));
-    MCfloat sinTheta2 = n0*sinTheta1/n1;
+    MCfloat sinTheta0 = sqrt(1 - pow(walker->k1[2],2));
+    MCfloat sinTheta1 = n0*sinTheta0/n1;
 
-    if(sinTheta2 > 1) {
+    if(sinTheta1 > 1) {
 #ifdef DEBUG_TRAJECTORY
         printf("TIR ");
 #endif
@@ -373,35 +369,33 @@ void Simulation::move(Walker *walker, MCfloat length) {
     else {
 #define COSZERO (1.0-1.0E-12)
         MCfloat r;
+        cosTheta1 = sqrt(1 - pow(sinTheta1,2)); //will also be used by refract()
         if(fresnelReflectionsEnabled)
         {
-            //calculate the probability r(Theta1,n0,n1) of being reflected
-            MCfloat cThetaSum, cThetaDiff; //cos(Theta1 + Theta2) and cos(Theta1 - Theta2)
-            MCfloat sThetaSum, sThetaDiff; //sin(Theta1 + Theta2) and sin(Theta1 - Theta2)
+            //calculate the probability r(Theta0,n0,n1) of being reflected
+            MCfloat cThetaSum, cThetaDiff; //cos(Theta0 + Theta1) and cos(Theta0 - Theta1)
+            MCfloat sThetaSum, sThetaDiff; //sin(Theta0 + Theta1) and sin(Theta0 - Theta1)
 
-            MCfloat cosTheta1 = fabs(walker->k1[2]);
-            MCfloat cosTheta2 = sqrt(1 - pow(sinTheta2,2));
+            MCfloat cosTheta0 = fabs(walker->k1[2]);
 
             if(cosTheta0 > COSZERO) { //normal incidence
                 r = (n1-n0)/(n1+n0);
                 r *= r;
             }
             else { //general case
-                cThetaSum = cosTheta1*cosTheta2 - sinTheta1*sinTheta2;
-                cThetaDiff = cosTheta1*cosTheta2 + sinTheta1*sinTheta2;
-                sThetaSum = sinTheta1*cosTheta2 + cosTheta1*sinTheta2;
-                sThetaDiff = sinTheta1*cosTheta2 - cosTheta1*sinTheta2;
+                cThetaSum = cosTheta0*cosTheta1 - sinTheta0*sinTheta1;
+                cThetaDiff = cosTheta0*cosTheta1 + sinTheta0*sinTheta1;
+                sThetaSum = sinTheta0*cosTheta1 + cosTheta0*sinTheta1;
+                sThetaDiff = sinTheta0*cosTheta1 - cosTheta0*sinTheta1;
                 r = 0.5*sThetaDiff*sThetaDiff*(cThetaDiff*cThetaDiff+cThetaSum*cThetaSum)/(sThetaSum*sThetaSum*cThetaDiff*cThetaDiff);
             }
-        }
-        else
-            r = 0;
 
-        MCfloat xi = uniform_01<MCfloat>()(*mt);
+            MCfloat xi = uniform_01<MCfloat>()(*mt);
 
-        if(xi <= r) {
-            reflect(walker); //we come back to run() without keeping track of the extra unused step length
-            return;
+            if(xi <= r) {
+                reflect(walker); //we come back to run() without keeping track of the extra unused step length
+                return;
+            }
         }
         refract(walker);
     }
@@ -411,7 +405,6 @@ void Simulation::reflect(Walker *walker) {
 #ifdef DEBUG_TRAJECTORY
     printf("reflect ...\n");
 #endif
-    layer1 = layer0;
     walker->k1[2] *= -1; //flip k1 along z
 }
 
@@ -419,13 +412,10 @@ void Simulation::refract(Walker *walker) {
 #ifdef DEBUG_TRAJECTORY
     printf("refract ...\n");
 #endif
-    MCfloat n0 = _sample->material(layer0)->n; //I have already defined those quantities. should we pass them as arguments?
-    MCfloat n1 = _sample->material(layer1)->n; //
-    MCfloat sinTheta1 = sqrt(1 - pow(walker->k1[2],2)); //
 
-    walker->k1[0] = n0*walker->k1[0]/n1;
-    walker->k1[1] = n0*walker->k1[1]/n1;
-    walker->k1[2] = sqrt(1 - pow(n0*sinTheta1/n1,2));
+    walker->k1[0] *= n0/n1;
+    walker->k1[1] *= n0/n1;
+    walker->k1[2] = sign<MCfloat>(walker->k1[2])*cosTheta1; //cosTheta1 is positive
     layer0=layer1;
 }
 

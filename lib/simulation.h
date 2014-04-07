@@ -71,6 +71,8 @@ private:
     bool onInterface;
     time_t startTime;
 
+    MCfloat n0, n1, cosTheta1;
+
     unsigned int layerAt(MCfloat *r0);
     void move(Walker *walker, MCfloat length);
     void reflect(Walker *walker);
