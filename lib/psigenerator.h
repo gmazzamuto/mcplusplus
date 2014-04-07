@@ -13,6 +13,9 @@ public:
     IsotropicPsiGenerator(BaseObject *parent=NULL);
 
     virtual MCfloat spin() const;
+
+private:
+    virtual BaseObject* clone_impl() const;
 };
 
 #endif // PSIGENERATOR_H

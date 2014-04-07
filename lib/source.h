@@ -28,6 +28,7 @@ protected:
     virtual void spinDirection(Walker *walker) const;
     virtual void spinPosition(Walker *walker) const;
     virtual void spinTime(Walker *walker) const;
+    virtual BaseObject *clone_impl() const;
 
 private:
     MCfloat wl;
@@ -50,6 +51,7 @@ private:
     virtual void spinDirection(Walker *walker) const;
     virtual void spinPosition(Walker *walker) const;
     virtual void spinTime(Walker *walker) const;
+    virtual BaseObject *clone_impl() const;
 };
 
 
@@ -72,7 +74,10 @@ public:
     GaussianBeamSource(MCfloat xFWHM, MCfloat yFWHM, BaseObject *parent=NULL);
 
 private:
-    virtual void spinDirection(Walker *walker) const;
+    virtual BaseObject *clone_impl() const;
+
+    void init(MCfloat xFWHM, MCfloat yFWHM);
+    MCfloat xFWHM, yFWHM;
 };
 
 
@@ -91,6 +96,7 @@ public:
 private:
     virtual void spinPosition(Walker *walker) const;
     virtual void spinTime(Walker *walker) const;
+    virtual BaseObject *clone_impl() const;
 
     MCfloat depth;
 };

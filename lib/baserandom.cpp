@@ -79,6 +79,11 @@ void BaseRandom::removeChild_impl(BaseObject *child) {
     randomChildList.remove(rnd);
 }
 
+BaseObject *BaseRandom::clone_impl() const
+{
+    return new BaseRandom();
+}
+
 void BaseRandom::setParent_impl(BaseObject *parent) {
     if(parent == NULL || !parent->inheritsRandom())
         return;

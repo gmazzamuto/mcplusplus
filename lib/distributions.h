@@ -38,6 +38,7 @@ public:
      * \pre The RNG has to be valid (see BaseRandom)
      */
     virtual MCfloat spin() const = 0;
+    virtual BaseObject *clone_impl() const = 0;
 
 protected:
     virtual void reconstructDistribution();
@@ -66,6 +67,7 @@ public:
 
 private:
     MCfloat x0;
+    virtual BaseObject* clone_impl() const;
 };
 
 
@@ -92,6 +94,7 @@ public:
 
 private:
     void reconstructDistribution();
+    virtual BaseObject* clone_impl() const;
 
     normal_distribution<MCfloat> *distribution;
     MCfloat mean, sigma;
@@ -117,6 +120,7 @@ public:
 
 private:    
     void reconstructDistribution();
+    virtual BaseObject* clone_impl() const;
 
     uniform_real_distribution<MCfloat> distribution;
     MCfloat min, max;
@@ -144,6 +148,7 @@ public:
 
 private:
     void reconstructDistribution();
+    virtual BaseObject* clone_impl() const;
 
     exponential_distribution<MCfloat> distribution;
     MCfloat lambda;

@@ -23,3 +23,8 @@ MCfloat CosThetaGenerator::spin() const {
         return temp;
     }
 }
+
+BaseObject *CosThetaGenerator::clone_impl() const
+{
+    return new CosThetaGenerator(g);
+}

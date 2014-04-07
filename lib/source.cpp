@@ -35,6 +35,20 @@ void Source::spinTime(Walker *walker) const {
     walker->walkTime = walkTimeDistribution->spin();    // overwrapping?
 }
 
+BaseObject *Source::clone_impl() const
+{
+    Source *src = new Source();
+    AbstractDistribution *r0Distr[3];
+    for (int i = 0; i < 3; ++i) {
+        r0Distr[i] = (AbstractDistribution*)r0Distribution[i]->clone();
+    }
+    src->setr0Distribution(r0Distr);
+    src->setk0Distribution((AbstractDistribution*)cosThetaDistribution->clone(),(AbstractDistribution*)psiDistribution->clone());
+    src->setWalkTimeDistribution((AbstractDistribution*)walkTimeDistribution->clone());
+    src->setWavelength(wl);
+    return src;
+}
+
 /**
  * @brief Constructs a new walker.
  * @return A pointer to the newly constructed walker.
@@ -104,6 +118,11 @@ void PencilBeamSource::spinTime(Walker *walker) const {
 
 }
 
+BaseObject *PencilBeamSource::clone_impl() const
+{
+    return new PencilBeamSource();
+}
+
 
 
 
@@ -117,11 +136,7 @@ void PencilBeamSource::spinTime(Walker *walker) const {
 GaussianBeamSource::GaussianBeamSource(MCfloat FWHM, BaseObject *parent) :
     Source(parent)
 {
-    NormalDistribution *distr = new NormalDistribution(0,FWHM, this);
-    for (int i = 0; i < 2; ++i) {
-        r0Distribution[i] = distr;
-    }
-    r0Distribution[2] = new DeltaDistribution(0, this);
+    init(FWHM,FWHM);
 }
 
 /**
@@ -135,20 +150,27 @@ GaussianBeamSource::GaussianBeamSource(MCfloat FWHM, BaseObject *parent) :
 GaussianBeamSource::GaussianBeamSource(MCfloat xFWHM, MCfloat yFWHM, BaseObject *parent) :
     Source(parent)
 {
+    init(xFWHM,yFWHM);
+}
+
+BaseObject *GaussianBeamSource::clone_impl() const
+{
+    GaussianBeamSource *src = new GaussianBeamSource(xFWHM,yFWHM);
+    if(cosThetaDistribution != NULL && psiDistribution != NULL)
+        src->setk0Distribution((AbstractDistribution*)cosThetaDistribution->clone(),(AbstractDistribution*)psiDistribution->clone());
+    src->setWalkTimeDistribution((AbstractDistribution*)walkTimeDistribution->clone());
+    return src;
+}
+
+void GaussianBeamSource::init(MCfloat xFWHM, MCfloat yFWHM)
+{
+    this->xFWHM = xFWHM;
+    this->yFWHM = yFWHM;
     r0Distribution[0] = new NormalDistribution(0,xFWHM, this);
     r0Distribution[1] = new NormalDistribution(0,yFWHM, this);
     r0Distribution[2] = new DeltaDistribution(0, this);
-}
-
-/**
- * \copydoc Source::constructWalker()
- * \pre walkTimeDistribution has to be valid
- */
-
-void GaussianBeamSource::spinDirection(Walker *walker) const {
-    if(cosThetaDistribution != NULL || psiDistribution != NULL) //check if one of the k0Distributions has been overridden
-        Source::spinDirection(walker);
-    walker->k0[2] = 1;
+    cosThetaDistribution = new DeltaDistribution(1,this);
+    psiDistribution = new DeltaDistribution(1,this); //to avoid generating a useless random number (sinTheta is 0)
 }
 
 
@@ -168,4 +190,9 @@ void IsotropicPointSource::spinPosition(Walker *walker) const {
 
 void IsotropicPointSource::spinTime(Walker *walker) const {
 
+}
+
+BaseObject *IsotropicPointSource::clone_impl() const
+{
+    return new IsotropicPointSource(depth);
 }

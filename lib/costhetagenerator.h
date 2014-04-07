@@ -16,6 +16,7 @@ public:
     MCfloat spin() const;
 
 private:
+    virtual BaseObject *clone_impl() const;
     MCfloat g;  /**< @brief scattering anisotropy factor*/
 };
 

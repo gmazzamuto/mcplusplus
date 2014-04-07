@@ -41,6 +41,14 @@ public:
     void reportProgress() const;
 
 private:
+    const Sample *_sample;
+    const Source *source;
+
+    //flags
+    bool saveTrajectory;
+    bool snellReflectionsEnabled;
+
+    //walker counters
     int _totalWalkers;  /**< @brief total number of walkers to be simulated*/
     int transmitted;  /**< @brief total number of walkers transmitted after at least one scattering event*/
     int reflected;  /**< @brief total number of walkers reflected after at least one scattering event*/
@@ -48,15 +56,16 @@ private:
     int backreflected;  /**< @brief total number of walkers reflected without undergoing any scattering event*/
     int n;
 
-    const Sample *_sample;
-    const Source *source;
+    //trajectories
+    vector<vector <MCfloat>*> *trajectoryPoints;
+    vector<MCfloat> *currentTrajectory;
+
+    //internal temporary variables
     const deque<MCfloat> *upperZBoundaries;
     int nLayers;
     int layer0;
     int layer1;
     bool onInterface;
-    bool saveTrajectory;
-    bool snellReflectionsEnabled;
 
     int layerAt(MCfloat *r0);
     void move(Walker *walker, MCfloat length);
@@ -64,8 +73,7 @@ private:
     void refract(Walker *walker);
     void saveTrajectoryPoint(MCfloat *point);
 
-    vector<vector <MCfloat>*> *trajectoryPoints;
-    vector<MCfloat> *currentTrajectory;
+    virtual BaseObject* clone_impl() const;
 };
 
 #endif // SIMULATION_H

@@ -69,6 +69,11 @@ MCfloat DeltaDistribution::spin() const {
     return x0;
 }
 
+BaseObject * DeltaDistribution::clone_impl() const
+{
+    return new DeltaDistribution(x0);
+}
+
 
 
 
@@ -88,6 +93,11 @@ NormalDistribution::~NormalDistribution() {
 
 void NormalDistribution::reconstructDistribution() {
     distribution = new normal_distribution<MCfloat>(mean,sigma);
+}
+
+BaseObject *NormalDistribution::clone_impl() const
+{
+    return new NormalDistribution(mean,sigma);
 }
 
 void NormalDistribution::setSigma(MCfloat value) {
@@ -129,6 +139,11 @@ UniformDistribution::UniformDistribution(MCfloat min, MCfloat max, BaseObject *p
 
 void UniformDistribution::reconstructDistribution() {
     distribution = uniform_real_distribution<MCfloat>(min,max);
+}
+
+BaseObject *UniformDistribution::clone_impl() const
+{
+    return new UniformDistribution(min,max);
 }
 
 MCfloat UniformDistribution::spin() const {
@@ -180,6 +195,11 @@ ExponentialDistribution::ExponentialDistribution(MCfloat lambda, BaseObject *par
 
 void ExponentialDistribution::reconstructDistribution() {
     distribution = exponential_distribution<MCfloat>(lambda);
+}
+
+BaseObject *ExponentialDistribution::clone_impl() const
+{
+    return new ExponentialDistribution(lambda);
 }
 
 /**

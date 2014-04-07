@@ -52,6 +52,7 @@ private:
     virtual void setParent_impl(BaseObject *parent);
     virtual void addChild_impl(BaseObject *child);
     virtual void removeChild_impl(BaseObject *child);
+    virtual BaseObject *clone_impl() const;
 };
 
 #endif // BASERANDOM_H

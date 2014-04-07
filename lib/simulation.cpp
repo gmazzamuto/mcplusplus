@@ -372,6 +372,16 @@ void Simulation::reportProgress() const
     logMessage(s);
 }
 
+BaseObject* Simulation::clone_impl() const
+{
+    Simulation *sim = new Simulation();
+    sim->saveTrajectory = saveTrajectory;
+    sim->snellReflectionsEnabled = snellReflectionsEnabled;
+    sim->setSource((Source*)source->clone());
+    sim->_sample = _sample;
+    return sim;
+}
+
 void Simulation::setSaveTrajectoryEnabled(bool enabled) {
     saveTrajectory = enabled;
 }

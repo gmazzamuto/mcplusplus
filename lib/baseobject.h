@@ -41,6 +41,7 @@ public:
     BaseObject *parent() const;
     void setParent(BaseObject *parent);
     bool inheritsRandom() const;
+    BaseObject *clone() const;
 
 protected:
     void logMessage(string &msg) const;
@@ -59,6 +60,7 @@ private:
     virtual void setParent_impl(BaseObject *parent);
     virtual void addChild_impl(BaseObject *child);
     virtual void removeChild_impl(BaseObject *child);
+    virtual BaseObject *clone_impl() const;
 
     void printMessagePrefix() const;
 };

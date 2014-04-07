@@ -52,6 +52,11 @@ void BaseObject::removeChild_impl(BaseObject *child) {
 
 }
 
+BaseObject *BaseObject::clone_impl() const
+{
+    return new BaseObject();
+}
+
 void BaseObject::deleteAllChildren() {
     BaseObject *child;
     while(!_childList.empty()) {
@@ -102,6 +107,11 @@ void BaseObject::setParent_impl(BaseObject *parent) {
 
 bool BaseObject::inheritsRandom() const {
     return _inheritsRandom;
+}
+
+BaseObject *BaseObject::clone() const
+{
+    return clone_impl();
 }
 
 void BaseObject::printMessagePrefix() const
