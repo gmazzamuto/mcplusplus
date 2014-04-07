@@ -2,11 +2,21 @@
 #include "distributions.h"
 #include "costhetagenerator.h"
 #include "psigenerator.h"
+#include <signal.h>
 
 #include <boost/math/special_functions/sign.hpp>
 
 using namespace boost;
 using namespace boost::math;
+
+Simulation *mostRecentInstance=NULL;
+
+void reportProgress(int signo) {
+    Simulation *sim = mostRecentInstance;
+    if(mostRecentInstance == NULL)
+        return;
+    fprintf(stderr,"Progress = %.1lf%% (%d / %d)\n", 100.*sim->currentWalker()/sim->totalWalkers(), sim->currentWalker(), sim->totalWalkers());
+}
 
 Simulation::Simulation(BaseObject *parent) :
     BaseRandom(parent)
@@ -19,14 +29,18 @@ Simulation::Simulation(BaseObject *parent) :
     saveTrajectory = false;
     snellReflectionsEnabled = true;
     reset();
+    mostRecentInstance = this;
+    signal(SIGUSR1,reportProgress);
 }
 
 Simulation::~Simulation() {
     delete trajectoryPoints;
+    if(mostRecentInstance == this)
+        mostRecentInstance = NULL;
 }
 
 void Simulation::reset() {
-    totalWalkers = 0;
+    _totalWalkers = 0;
     transmitted = 0;
     reflected = 0;
     ballistic = 0;
@@ -34,7 +48,7 @@ void Simulation::reset() {
 }
 
 void Simulation::setTotalWalkers(int N) {
-    totalWalkers = N;
+    _totalWalkers = N;
 }
 
 /**
@@ -68,6 +82,16 @@ void Simulation::setSnellReflectionsEnabled(bool enable)
     snellReflectionsEnabled = enable;
 }
 
+int Simulation::totalWalkers()
+{
+    return _totalWalkers;
+}
+
+int Simulation::currentWalker()
+{
+    return n;
+}
+
 /**
  * @brief Runs the simulation
  *
@@ -78,13 +102,13 @@ void Simulation::run() {
     nLayers = _sample->nLayers();
     upperZBoundaries = _sample->zBoundaries();
 
-    int n = 0;
+    n = 0;
 
     ExponentialDistribution *stepLength = new ExponentialDistribution(this);
     CosThetaGenerator *deflCosine = new CosThetaGenerator(0,this); // I set g=0 without any particular reason
     IsotropicPsiGenerator *randomPsi = new IsotropicPsiGenerator(this);
 
-    while(n < totalWalkers) {
+    while(n < _totalWalkers) {
         currentTrajectory = new std::vector<MCfloat>();
         layer0 = 0;
 
