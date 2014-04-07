@@ -313,6 +313,7 @@ void Simulation::move(Walker *walker, MCfloat length) {
         reflect(walker);
     }
     else {
+#define COSZERO (1.0-1.0E-12)
         MCfloat r;
         if(fresnelReflectionsEnabled)
         {
@@ -323,11 +324,17 @@ void Simulation::move(Walker *walker, MCfloat length) {
             MCfloat cosTheta1 = fabs(walker->k1[2]);
             MCfloat cosTheta2 = sqrt(1 - pow(sinTheta2,2));
 
-            cThetaSum = cosTheta1*cosTheta2 - sinTheta1*sinTheta2;
-            cThetaDiff = cosTheta1*cosTheta2 + sinTheta1*sinTheta2;
-            sThetaSum = sinTheta1*cosTheta2 + cosTheta1*sinTheta2;
-            sThetaDiff = sinTheta1*cosTheta2 - cosTheta1*sinTheta2;
-            r = 0.5*sThetaDiff*sThetaDiff*(cThetaDiff*cThetaDiff+cThetaSum*cThetaSum)/(sThetaSum*sThetaSum*cThetaDiff*cThetaDiff);
+            if(cosTheta0 > COSZERO) { //normal incidence
+                r = (n1-n0)/(n1+n0);
+                r *= r;
+            }
+            else { //general case
+                cThetaSum = cosTheta1*cosTheta2 - sinTheta1*sinTheta2;
+                cThetaDiff = cosTheta1*cosTheta2 + sinTheta1*sinTheta2;
+                sThetaSum = sinTheta1*cosTheta2 + cosTheta1*sinTheta2;
+                sThetaDiff = sinTheta1*cosTheta2 - cosTheta1*sinTheta2;
+                r = 0.5*sThetaDiff*sThetaDiff*(cThetaDiff*cThetaDiff+cThetaSum*cThetaSum)/(sThetaSum*sThetaSum*cThetaDiff*cThetaDiff);
+            }
         }
         else
             r = 0;
