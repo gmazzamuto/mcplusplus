@@ -1,5 +1,8 @@
 #include "baserandom.h"
 
+#include <iostream>
+#include <fstream>
+
 BaseRandom::BaseRandom(BaseObject *parent) :
     BaseObject(NULL), mt(NULL)
 {
@@ -34,6 +37,24 @@ void BaseRandom::setSeed(unsigned int seed) {
     if(mt != NULL)
         delete mt;
     setRNG(new mt19937(seed));
+}
+
+void BaseRandom::dumpGenerator(const char *fileName) const
+{
+    ofstream file;
+    file.open(fileName);
+    file << *mt;
+    file.close();
+}
+
+void BaseRandom::loadGenerator(const char *fileName)
+{
+    ifstream file;
+    file.open(fileName);
+    mt = new mt19937(0);
+    file >> *mt;
+    setRNG(mt);
+    file.close();
 }
 
 void BaseRandom::setRNG(mt19937 *mt) {

@@ -41,6 +41,9 @@ public:
 
     void setSeed(unsigned int seed);
 
+    void dumpGenerator(const char *fileName) const;
+    void loadGenerator(const char *fileName);
+
 protected:
     mt19937* mt;
 
