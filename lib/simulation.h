@@ -70,13 +70,14 @@ private:
     unsigned int layer1;
     bool onInterface;
     time_t startTime;
+    Walker *walker;
 
     MCfloat n0, n1, cosTheta1;
 
     unsigned int layerAt(MCfloat *r0);
-    void move(Walker *walker, MCfloat length);
-    void reflect(Walker *walker);
-    void refract(Walker *walker);
+    void move(const MCfloat length);
+    void reflect();
+    void refract();
     void saveTrajectoryPoint(MCfloat *point);
 
     void runMultipleThreads();

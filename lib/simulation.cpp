@@ -183,7 +183,7 @@ void Simulation::runSingleThread() {
         currentTrajectory = new std::vector<MCfloat>();
         layer0 = 0;
 
-        Walker *walker = source->constructWalker();
+        walker = source->constructWalker();
         walker->nInteractions.insert(walker->nInteractions.begin(),nLayers+2,0);
 
         layer0 = layerAt(walker->r0); //updates also onInterface flag
@@ -237,7 +237,7 @@ void Simulation::runSingleThread() {
 #ifdef DEBUG_TRAJECTORY
             printf("\t%lf\n",walker->k1[2]);
 #endif
-            move(walker,length); //since I think that move() is conceptually the right place to increment walkTime it is convenient to pass the length as well
+            move(length); //since I think that move() is conceptually the right place to increment walkTime it is convenient to pass the length as well
                                  //or we might let length to be a private Simulation member, and update its value accordingly with its remaining portion when a reflection takes place
 
 #ifdef DEBUG_TRAJECTORY
@@ -316,7 +316,7 @@ unsigned int Simulation::layerAt(MCfloat *r0) {
     }
 }
 
-void Simulation::move(Walker *walker, MCfloat length) {
+void Simulation::move(const MCfloat length) {
     onInterface = false;
     layer1 = layerAt(walker->r1);
     if(layer1 == layer0) {
@@ -366,7 +366,7 @@ void Simulation::move(Walker *walker, MCfloat length) {
 #ifdef DEBUG_TRAJECTORY
         printf("TIR ");
 #endif
-        reflect(walker);
+        reflect();
     }
     else {
 #define COSZERO (1.0-1.0E-12)
@@ -395,22 +395,22 @@ void Simulation::move(Walker *walker, MCfloat length) {
             MCfloat xi = uniform_01<MCfloat>()(*mt);
 
             if(xi <= r) {
-                reflect(walker); //we come back to run() without keeping track of the extra unused step length
+                reflect(); //we come back to run() without keeping track of the extra unused step length
                 return;
             }
         }
-        refract(walker);
+        refract();
     }
 }
 
-void Simulation::reflect(Walker *walker) {
+void Simulation::reflect() {
 #ifdef DEBUG_TRAJECTORY
     printf("reflect ...\n");
 #endif
     walker->k1[2] *= -1; //flip k1 along z
 }
 
-void Simulation::refract(Walker *walker) {
+void Simulation::refract() {
 #ifdef DEBUG_TRAJECTORY
     printf("refract ...\n");
 #endif
