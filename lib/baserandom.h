@@ -40,12 +40,14 @@ public:
     virtual ~BaseRandom();
 
     void setSeed(unsigned int seed);
+    unsigned int currentSeed() const;
 
     void dumpGenerator(const char *fileName) const;
     void loadGenerator(const char *fileName);
 
 protected:
     mt19937* mt;
+    unsigned int _currentSeed;
 
 private:
     list<BaseRandom *> randomChildList;

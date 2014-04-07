@@ -36,6 +36,7 @@ void BaseRandom::setSeed(unsigned int seed) {
         return;
     if(mt != NULL)
         delete mt;
+    _currentSeed = seed;
     setRNG(new mt19937(seed));
 }
 
@@ -57,6 +58,11 @@ void BaseRandom::loadGenerator(const char *fileName)
     file.close();
 }
 
+unsigned int BaseRandom::currentSeed() const
+{
+    return _currentSeed;
+}
+
 void BaseRandom::setRNG(mt19937 *mt) {
     if(mt == NULL)
         return;
@@ -65,6 +71,7 @@ void BaseRandom::setRNG(mt19937 *mt) {
     std::list<BaseRandom *>::const_iterator iterator;
     for (iterator = randomChildList.begin(); iterator != randomChildList.end(); ++iterator) {
         BaseRandom *rnd = *iterator;
+        rnd->_currentSeed = _currentSeed;
         rnd->setRNG(mt);
     }
 }

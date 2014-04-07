@@ -1,7 +1,8 @@
 cmake_minimum_required (VERSION 2.8)
 
 project(libMCPlusPlus)
-find_package( Boost REQUIRED )
+FIND_PACKAGE(Boost REQUIRED thread)
+SET(Boost_USE_MULTITHREAD ON)
 include_directories( ${Boost_INCLUDE_DIRS} )
 
 include_directories(.)
@@ -11,6 +12,7 @@ file(GLOB HEADERS . *.h)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 
 add_library(MCPlusPlus SHARED ${SRC} ${HEADERS})
+target_link_libraries(MCPlusPlus ${Boost_THREAD_LIBRARY})
 install (TARGETS MCPlusPlus DESTINATION lib)
 install (FILES ${HEADERS} DESTINATION include/MCPlusPlus)
 

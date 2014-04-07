@@ -5,6 +5,7 @@
 #include <signal.h>
 
 #include <boost/math/special_functions/sign.hpp>
+#include <boost/thread.hpp>
 
 using namespace boost;
 using namespace boost::math;
@@ -20,6 +21,10 @@ void sigUsr1Handler(int signo) {
     sim->reportProgress();
 }
 
+void workerFunc(Simulation *sim) {
+    sim->run();
+}
+
 Simulation::Simulation(BaseObject *parent) :
     BaseRandom(parent)
 {
@@ -30,6 +35,7 @@ Simulation::Simulation(BaseObject *parent) :
     trajectoryPoints = new std::vector<vector<MCfloat>*>();
     saveTrajectory = false;
     fresnelReflectionsEnabled = true;
+    nThreads = 1;
     reset();
     mostRecentInstance = this;
     signal(SIGUSR1,sigUsr1Handler);
@@ -84,6 +90,11 @@ void Simulation::setFresnelReflectionsEnabled(bool enable)
     fresnelReflectionsEnabled = enable;
 }
 
+void Simulation::setNThreads(unsigned int value)
+{
+    nThreads = value;
+}
+
 unsigned int Simulation::totalWalkers() const
 {
     return _totalWalkers;
@@ -101,8 +112,62 @@ unsigned int Simulation::currentWalker() const
  */
 
 void Simulation::run() {
-    logMessage("starting... Number of walkers = %u",totalWalkers());
     time(&startTime);
+
+    if(nThreads == 1)
+        runSingleThread();
+    else
+        runMultipleThreads();
+
+    printf("================\n");
+
+    printf("transmitted: %u\n",transmitted);
+    printf("reflected: %u\n",reflected);
+    printf("ballistic: %u\n",ballistic);
+    printf("back-reflected: %u\n",backreflected);
+
+    time_t now;
+    time(&now);
+
+    logMessage("Completed in %.f seconds",difftime(now,startTime));
+}
+
+void Simulation::runMultipleThreads()
+{
+    vector<boost::thread*> threads;
+    vector<Simulation *> sims;
+
+    unsigned int walkersPerThread = totalWalkers()/nThreads;
+    unsigned int remainder = totalWalkers() % nThreads;
+
+    for (unsigned int n = 0; n < nThreads; ++n) {
+        Simulation *sim = (Simulation *)clone();
+        unsigned int nWalkers = walkersPerThread;
+        if(n<remainder)
+            nWalkers++;
+        sim->setTotalWalkers(nWalkers);
+        sim->setSeed(currentSeed()+n);
+        sims.push_back(sim);
+        threads.push_back(new boost::thread(workerFunc,sim));
+    }
+
+    for (unsigned int n = 0; n < nThreads; ++n) {
+        boost::thread * thread = threads.at(n);
+        thread->join();
+    }
+
+    for(unsigned int n = 0; n < nThreads; ++n) {
+        Simulation *sim = sims.at(n);
+        transmitted+=sim->transmitted;
+        reflected+=sim->reflected;
+        ballistic+=sim->ballistic;
+        backreflected+=sim->backreflected;
+        delete sim;
+    }
+}
+
+void Simulation::runSingleThread() {
+    logMessage("starting... Number of walkers = %u, seed = %u",totalWalkers(), currentSeed());
     nLayers = _sample->nLayers();
     upperZBoundaries = _sample->zBoundaries();
 
@@ -217,16 +282,6 @@ void Simulation::run() {
         n++;
         delete walker;
     }
-
-    time_t now;
-    time(&now);
-
-    logMessage("Completed in %.f seconds",difftime(now,startTime));
-
-    printf("transmitted: %u\n",transmitted);
-    printf("reflected: %u\n",reflected);
-    printf("ballistic: %u\n",ballistic);
-    printf("back-reflected: %u\n",backreflected);
 }
 
 /**

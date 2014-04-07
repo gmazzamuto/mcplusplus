@@ -33,6 +33,7 @@ public:
     void setSample(Sample *sample);
     void setSource(Source *source);
     void setFresnelReflectionsEnabled(bool enable);
+    void setNThreads(unsigned int value);
     unsigned int totalWalkers() const;
     unsigned int currentWalker() const;
     void run();
@@ -56,6 +57,8 @@ private:
     unsigned int backreflected;  /**< @brief total number of walkers reflected without undergoing any scattering event*/
     unsigned int n;
 
+    unsigned int nThreads;
+
     //trajectories
     vector<vector <MCfloat>*> *trajectoryPoints;
     vector<MCfloat> *currentTrajectory;
@@ -73,6 +76,9 @@ private:
     void reflect(Walker *walker);
     void refract(Walker *walker);
     void saveTrajectoryPoint(MCfloat *point);
+
+    void runMultipleThreads();
+    void runSingleThread();
 
     virtual BaseObject* clone_impl() const;
 };
