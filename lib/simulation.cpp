@@ -13,9 +13,13 @@ Simulation *mostRecentInstance=NULL;
 
 void reportProgress(int signo) {
     Simulation *sim = mostRecentInstance;
+
     if(mostRecentInstance == NULL)
         return;
-    fprintf(stderr,"Progress = %.1lf%% (%d / %d)\n", 100.*sim->currentWalker()/sim->totalWalkers(), sim->currentWalker(), sim->totalWalkers());
+
+    string msg;
+    string s = str( format("Progress = %.1lf%% (%d / %d)") % (100.*sim->currentWalker()/sim->totalWalkers()) % sim->currentWalker() % sim->totalWalkers());
+    sim->logMessage(s);
 }
 
 Simulation::Simulation(BaseObject *parent) :

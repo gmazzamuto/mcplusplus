@@ -41,6 +41,7 @@ public:
     BaseObject *parent() const;
     void setParent(BaseObject *parent);
     bool inheritsRandom() const;
+    void logMessage(string &msg) const;
 
 protected:
     bool _inheritsRandom;

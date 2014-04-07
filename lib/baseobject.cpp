@@ -1,5 +1,11 @@
 #include "baseobject.h"
 
+#include <iostream>
+#ifdef __GNUC__
+#include <typeinfo>
+#include <cxxabi.h>
+#endif
+
 BaseObject::BaseObject(BaseObject *parent)
 {
     _hasAParent = false;
@@ -93,4 +99,21 @@ void BaseObject::setParent_impl(BaseObject *parent) {
 
 bool BaseObject::inheritsRandom() const {
     return _inheritsRandom;
+}
+
+/**
+ * @brief Logs a message to stderr
+ * @param msg
+ *
+ *
+ * If the compiler used is GCC, the message will be prepended with the class
+ * name
+ */
+
+void BaseObject::logMessage(string &msg) const
+{
+#ifdef __GNUC__
+    cerr << "[" << abi::__cxa_demangle(typeid(*this).name(), 0, 0, 0) << "] ";
+#endif
+    cerr << msg << endl;
 }
