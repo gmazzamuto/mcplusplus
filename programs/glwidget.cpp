@@ -42,6 +42,8 @@
 #include <QtOpenGL>
 #include <cmath>
 
+#include <iostream>
+
 #include "glwidget.h"
 
 #ifndef GL_MULTISAMPLE
@@ -61,6 +63,10 @@ GLWidget::GLWidget(QWidget *parent)
     lines = new std::vector<MCfloat>();
     usingInternalVector = true;
     displayedAxisLength = 0;
+    xTrans = 0;
+    yTrans = 0;
+    zTrans = 0;
+    setFocusPolicy(Qt::StrongFocus);
 }
 
 GLWidget::~GLWidget()
@@ -187,7 +193,7 @@ void GLWidget::paintGL()
     paint_GL_impl();
 
     glLoadIdentity();
-    glTranslatef(0.0, 0.0, -10.0);
+    glTranslatef(xTrans / 16.0, yTrans / 16.0, -10);
     glScalef(scale,scale,scale);
     glRotatef(xRot / 16.0, 1.0, 0.0, 0.0);
     glRotatef(yRot / 16.0, 0.0, 1.0, 0.0);
@@ -229,6 +235,30 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
         setScale(scale + scale/30*dy);
     }
     lastPos = event->pos();
+}
+
+void GLWidget::keyPressEvent(QKeyEvent * event)
+{
+    switch(event->key()) {
+    case Qt::Key_Up:
+        yTrans-=0.5;
+        break;
+    case Qt::Key_Down:
+        yTrans+=0.5;
+        break;
+    case Qt::Key_Right:
+        xTrans+=0.5;
+        break;
+    case Qt::Key_Left:
+        xTrans-=0.5;
+        break;
+
+    default:
+        return;
+    }
+
+    event->accept();
+    updateGL();
 }
 
 void GLWidget::addLine(float *r0, float *r1) {

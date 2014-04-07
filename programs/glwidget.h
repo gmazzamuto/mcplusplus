@@ -84,6 +84,7 @@ protected:
     void resizeGL(int width, int height);
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
+    void keyPressEvent(QKeyEvent *event);
 
 private:
     virtual void paint_GL_impl();
@@ -91,6 +92,9 @@ private:
     int xRot;
     int yRot;
     int zRot;
+
+    float xTrans, yTrans, zTrans;
+
     MCfloat scale;
     QPoint lastPos;
     QColor qtGreen;
