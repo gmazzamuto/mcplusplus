@@ -9,8 +9,17 @@
 
 using namespace boost;
 using namespace boost::math;
+using namespace boost::math::constants;
 
 Simulation *mostRecentInstance=NULL;
+
+MCfloat module(const MCfloat *x) {
+    return sqrt(x[0]*x[0] + x[1]*x[1] + x[2]*x[2]);
+}
+
+MCfloat module2D(const MCfloat x, const MCfloat y) {
+    return sqrt(x*x + y*y);
+}
 
 void sigUsr1Handler(int signo) {
     Simulation *sim = mostRecentInstance;
@@ -19,6 +28,12 @@ void sigUsr1Handler(int signo) {
         return;
 
     sim->reportProgress();
+}
+
+void installSigHandler() {
+    struct sigaction sa;
+    sa.sa_handler = sigUsr1Handler;
+    sigaction(SIGUSR1,&sa,NULL);
 }
 
 void workerFunc(Simulation *sim) {
@@ -38,7 +53,7 @@ Simulation::Simulation(BaseObject *parent) :
     nThreads = 1;
     reset();
     mostRecentInstance = this;
-    signal(SIGUSR1,sigUsr1Handler);
+    installSigHandler();
 }
 
 Simulation::~Simulation() {

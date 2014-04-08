@@ -64,7 +64,7 @@ private:
     virtual BaseObject *clone_impl() const;
 
     string messagePrefix() const;
-    void printLogMessage(const char *fmt, va_list arguments=0) const;
+    void printLogMessage(const char *fmt, va_list arguments=NULL) const;
 };
 
 #endif // BASEOBJECT_H

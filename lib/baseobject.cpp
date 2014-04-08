@@ -139,7 +139,10 @@ string BaseObject::messagePrefix() const
 
 void BaseObject::printLogMessage(const char *fmt, va_list arguments) const
 {
-    vfprintf(stderr,fmt,arguments);
+    if(arguments == NULL)
+        fprintf(stderr,fmt,NULL);
+    else
+        vfprintf(stderr,fmt,arguments);
 }
 
 /**
