@@ -13,20 +13,21 @@ int main(int argc, char *argv[])
     sim->setNThreads(atoi(argv[3]));
 
     sim->setSeed(0);
-//    sim->setSaveTrajectoryEnabled(true);
     sim->run();
 
-//    QApplication a(argc, argv);
-//    QMainWindow w;
-//    SimulationViewer simViewer(sim);
+    if(parser.showTrajectoryEnabled()) {
+        QApplication a(argc, argv);
+        QMainWindow w;
+        SimulationViewer simViewer(sim);
 
-//    simViewer.setDisplayedOriginPos(0,0,-600);
-//    simViewer.setDisplayedAxisLength(500);
+        simViewer.setDisplayedOriginPos(0,0,-600);
+        simViewer.setDisplayedAxisLength(500);
 
-//    w.setCentralWidget(&simViewer);
-//    w.show();
+        w.setCentralWidget(&simViewer);
+        w.show();
 
-//    a.exec();
+        a.exec();
+    }
 
     return 0;
 }

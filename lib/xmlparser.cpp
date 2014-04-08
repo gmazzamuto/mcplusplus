@@ -1,19 +1,23 @@
 #include "xmlparser.h"
 
 #include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/exceptions.hpp>
 #include <boost/property_tree/xml_parser.hpp>
 #include <boost/foreach.hpp>
 #include <stdlib.h>
 
+using namespace boost::property_tree;
 using namespace boost::math::constants;
 
 XMLParser::XMLParser()
 {
+    showTrajectory = false;
 }
 
 Simulation* XMLParser::load(const std::string &filename)
 {
     using boost::property_tree::ptree;
+
     ptree pt;
 
     read_xml(filename, pt, xml_parser::no_comments);
@@ -73,10 +77,26 @@ Simulation* XMLParser::load(const std::string &filename)
         src->setWalkTimeDistribution(walkTime);
     }
 
+
+    //simulation
     Simulation *sim = new Simulation();
     sim->setSample(sample);
     sim->setSource(src);
+
+    try {
+        ptree v = pt.get_child("MCPlusPlus.simulation");
+        string str = v.get<string>("<xmlattr>.showTrajectory", "__default__");
+        showTrajectory = boolean(str);
+        sim->setSaveTrajectoryEnabled(boolean(str));
+    } catch (ptree_bad_path) {
+    }
+
     return sim;
+}
+
+bool XMLParser::showTrajectoryEnabled() const
+{
+    return showTrajectory;
 }
 
 Material XMLParser::material(const string name) const
@@ -100,4 +120,17 @@ AbstractDistribution *XMLParser::distribution(const string name) const
     }
     else
         return new DeltaDistribution(atof(name.c_str()));
+}
+
+bool XMLParser::boolean(const string str) const
+{
+    if(str == "true")
+        return true;
+    else if(str == "false")
+        return false;
+    else {
+        struct InvalidBool e;
+        e.str = str;
+        throw e;
+    };
 }
