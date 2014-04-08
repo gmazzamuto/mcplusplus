@@ -13,6 +13,7 @@ BaseObject::BaseObject(BaseObject *parent)
 {
     _hasAParent = false;
     _parent = NULL;
+    _inheritsRandom = false;
     setParent(parent);
 }
 
