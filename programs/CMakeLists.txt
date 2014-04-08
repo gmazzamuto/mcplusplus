@@ -27,3 +27,7 @@ install (TARGETS MCPPSimulation DESTINATION bin)
 add_executable(gaussianBeamTransformation gaussianBeamTransformation.cpp glwidget.cpp simulationviewer.cpp ${GLWidget_HEADERS_MOC} ${SimulationViewer_HEADERS_MOC})
 target_link_libraries(gaussianBeamTransformation MCPlusPlus GL ${QT_LIBRARIES})
 install (TARGETS gaussianBeamTransformation DESTINATION bin)
+
+add_executable(mcpp mcpp.cpp glwidget.cpp simulationviewer.cpp ${GLWidget_HEADERS_MOC} ${SimulationViewer_HEADERS_MOC})
+target_link_libraries(mcpp MCPlusPlus GL ${QT_LIBRARIES})
+install (TARGETS mcpp DESTINATION bin)
