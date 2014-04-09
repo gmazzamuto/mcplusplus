@@ -26,6 +26,8 @@ Simulation* XMLParser::load(const std::string &filename)
     //materials
     map<string,Material>::iterator it = materialMap.begin();
     BOOST_FOREACH(ptree::value_type &v, pt.get_child("MCPlusPlus.materials")) {
+        if(v.first != "material")
+            continue;
         string name = v.second.get_child("<xmlattr>.name").data();
         Material mat;
         mat.ls = v.second.get<MCfloat>("<xmlattr>.ls");
@@ -41,18 +43,22 @@ Simulation* XMLParser::load(const std::string &filename)
     string right = pt.get<string>("MCPlusPlus.MLSample.<xmlattr>.right");
     sample->setSurroundingEnvironment(material(left),material(right));
 
+    vector<Material> preLayerMaterial;
+    vector<MCfloat> preLayerThickness;
     BOOST_FOREACH(ptree::value_type &v, pt.get_child("MCPlusPlus.MLSample")) {
-        if(v.first != "layer")
-            continue;
-        string str = v.second.get_child("<xmlattr>.material").data();
-        sample->addLayer(material(str),v.second.get<MCfloat>("<xmlattr>.thickness"));
+        if(v.first == "layer" || v.first == "prelayer") {
+            Material mat = material(v.second.get_child("<xmlattr>.material").data());
+            if(v.first == "layer")
+                sample->addLayer(mat,v.second.get<MCfloat>("<xmlattr>.thickness"));
+            else if(v.first == "prelayer") {
+                preLayerMaterial.push_back(mat);
+                preLayerThickness.push_back(v.second.get<MCfloat>("<xmlattr>.thickness"));
+            }
+        }
     }
 
-    BOOST_FOREACH(ptree::value_type &v, pt.get_child("MCPlusPlus")) {
-        if(v.first != "layer")
-            continue;
-        string str = v.second.get_child("<xmlattr>.material").data();
-        sample->addLayer(material(str),v.second.get<MCfloat>("<xmlattr>.thickness"));
+    for (int i = preLayerMaterial.size() - 1; i >= 0; --i) {
+        sample->addPreLayer(preLayerMaterial[i],preLayerThickness[i]);
     }
 
 
