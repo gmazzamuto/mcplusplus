@@ -190,9 +190,7 @@ void Simulation::runSingleThread() {
 
     n = 0;
 
-    ExponentialDistribution *stepLength = new ExponentialDistribution(this);
-    CosThetaGenerator *deflCosine = new CosThetaGenerator(0,this); // I set g=0 without any particular reason
-    IsotropicPsiGenerator *randomPsi = new IsotropicPsiGenerator(this);
+    CosThetaGenerator deflCosine(0,this); // I set g=0 without any particular reason
 
     while(n < _totalWalkers) {
         vector<unsigned long int> nInteractions;
@@ -219,16 +217,15 @@ void Simulation::runSingleThread() {
             //spin k1 (i.e. scatter) only if the material is scattering
             //and we're not on an interface, use the old k1 otherwise
             if(_sample->material(layer0)->ls > 0) {
-                stepLength->setBeta(_sample->material(layer0)->ls);
-                length = stepLength->spin();
+                length = exponential_distribution<MCfloat>(_sample->material(layer0)->ls)(*mt);
                 if(!onInterface) {
 
                     nInteractions[layer0]++;
 
-                    deflCosine->setg(_sample->material(layer0)->g);
-                    MCfloat cosTheta = deflCosine->spin();
+                    deflCosine.setg(_sample->material(layer0)->g);
+                    MCfloat cosTheta = deflCosine.spin();
                     MCfloat sinTheta = sqrt(1-pow(cosTheta,2));
-                    MCfloat psi = randomPsi->spin();
+                    MCfloat psi = uniform_01<MCfloat>()(*mt)*two_pi<MCfloat>(); //uniform in [0,2pi)
                     MCfloat cosPsi = cos(psi);
                     MCfloat sinPsi = sin(psi);
 
