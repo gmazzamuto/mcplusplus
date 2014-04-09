@@ -242,8 +242,8 @@ void Simulation::runSingleThread() {
                     MCfloat cosTheta = deflCosine.spin();
                     MCfloat sinTheta = sqrt(1-pow(cosTheta,2));
                     MCfloat psi = uniform_01<MCfloat>()(*mt)*two_pi<MCfloat>(); //uniform in [0,2pi)
-                    MCfloat cosPsi = cos(psi);
-                    MCfloat sinPsi = sin(psi);
+                    MCfloat cosPsi, sinPsi;
+                    sincos(psi,&sinPsi,&cosPsi);
 
                     if(fabs(walker->k0[2]) > 0.999999) {
                         walker->k1[0] = sinTheta*cosPsi;
