@@ -195,11 +195,12 @@ void Simulation::runSingleThread() {
     IsotropicPsiGenerator *randomPsi = new IsotropicPsiGenerator(this);
 
     while(n < _totalWalkers) {
+        vector<unsigned long int> nInteractions;
         currentTrajectory = new std::vector<MCfloat>();
         layer0 = 0;
 
         walker = source->constructWalker();
-        walker->nInteractions.insert(walker->nInteractions.begin(),nLayers+2,0);
+        nInteractions.insert(nInteractions.begin(),nLayers+2,0);
 
         layer0 = layerAt(walker->r0); //updates also onInterface flag
 
@@ -221,6 +222,9 @@ void Simulation::runSingleThread() {
                 stepLength->setBeta(_sample->material(layer0)->ls);
                 length = stepLength->spin();
                 if(!onInterface) {
+
+                    nInteractions[layer0]++;
+
                     deflCosine->setg(_sample->material(layer0)->g);
                     MCfloat cosTheta = deflCosine->spin();
                     MCfloat sinTheta = sqrt(1-pow(cosTheta,2));
@@ -264,7 +268,7 @@ void Simulation::runSingleThread() {
             if(layer0 == nLayers + 1) {
                 bool diffuselyTransmitted = false;
                 for (unsigned int i = 1; i <= nLayers; ++i) {
-                    if(walker->nInteractions[i]) {
+                    if(nInteractions[i]) {
                         transmitted++;
                         diffuselyTransmitted = true;
                         break;
@@ -278,7 +282,7 @@ void Simulation::runSingleThread() {
             if(layer0 == 0) {
                 bool diffuselyReflected = false;
                 for (unsigned int i = 1; i <= nLayers; ++i) {
-                    if(walker->nInteractions[i]) {
+                    if(nInteractions[i]) {
                         reflected++;
                         diffuselyReflected = true;
                         break;
@@ -339,7 +343,6 @@ void Simulation::move(const MCfloat length) {
         memcpy(walker->k0,walker->k1,3*sizeof(MCfloat));
 
         walker->walkTime += length/_sample->material(layer0)->v;
-        walker->nInteractions[layer0]++; //not sure this is the right place to increment the interactions counter as well...
         return;
     }
 
