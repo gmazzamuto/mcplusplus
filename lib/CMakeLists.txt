@@ -5,6 +5,9 @@ FIND_PACKAGE(Boost REQUIRED thread)
 SET(Boost_USE_MULTITHREAD ON)
 include_directories( ${Boost_INCLUDE_DIRS} )
 
+find_library(LIBHDF5 hdf5)
+find_library(LIBHDF5CPP hdf5_cpp)
+
 include_directories(.)
 file(GLOB SRC . *.cpp)
 file(GLOB HEADERS . *.h)
@@ -12,7 +15,7 @@ file(GLOB HEADERS . *.h)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 
 add_library(MCPlusPlus SHARED ${SRC} ${HEADERS})
-target_link_libraries(MCPlusPlus ${Boost_THREAD_LIBRARY})
+target_link_libraries(MCPlusPlus ${Boost_THREAD_LIBRARY} ${Boost_SYSTEM_LIBRARY} ${LIBHDF5} ${LIBHDF5CPP})
 install (TARGETS MCPlusPlus DESTINATION lib)
 install (FILES ${HEADERS} DESTINATION include/MCPlusPlus)
 
