@@ -179,6 +179,8 @@ void Simulation::runMultipleThreads()
         reflected+=sim->reflected;
         ballistic+=sim->ballistic;
         backreflected+=sim->backreflected;
+
+        sim->saveOutput();
         delete sim;
     }
 }
@@ -186,7 +188,21 @@ void Simulation::runMultipleThreads()
 void Simulation::runSingleThread() {
     logMessage("starting... Number of walkers = %u, seed = %u",totalWalkers(), currentSeed());
     nLayers = _sample->nLayers();
-    upperZBoundaries = _sample->zBoundaries();
+
+
+    MCfloat *uzb = (MCfloat*)malloc((nLayers+2)*sizeof(MCfloat));
+    Material *mat = (Material*)malloc((nLayers+2)*sizeof(Material));
+
+    for (unsigned int i = 0; i < nLayers+1; ++i) {
+        uzb[i]=_sample->zBoundaries()->at(i);
+    }
+
+    for (unsigned int i = 0; i < nLayers+2; ++i) {
+        mat[i]=*(_sample->material(i));
+    }
+
+    upperZBoundaries = uzb;
+    materials = mat;
 
     n = 0;
 
@@ -216,13 +232,13 @@ void Simulation::runSingleThread() {
         while(1) {
             //spin k1 (i.e. scatter) only if the material is scattering
             //and we're not on an interface, use the old k1 otherwise
-            if(_sample->material(layer0)->ls > 0) {
-                length = exponential_distribution<MCfloat>(_sample->material(layer0)->ls)(*mt);
+            if(materials[layer0].ls > 0) {
+                length = exponential_distribution<MCfloat>(materials[layer0].ls)(*mt);
                 if(!onInterface) {
 
                     nInteractions[layer0]++;
 
-                    deflCosine.setg(_sample->material(layer0)->g);
+                    deflCosine.setg(materials[layer0].g);
                     MCfloat cosTheta = deflCosine.spin();
                     MCfloat sinTheta = sqrt(1-pow(cosTheta,2));
                     MCfloat psi = uniform_01<MCfloat>()(*mt)*two_pi<MCfloat>(); //uniform in [0,2pi)
@@ -300,6 +316,8 @@ void Simulation::runSingleThread() {
         n++;
         delete walker;
     }
+    free(uzb);
+    free(mat);
 }
 
 /**
@@ -310,13 +328,13 @@ void Simulation::runSingleThread() {
  * Interfaces are considered to belong to the preceding layer
  */
 
-unsigned int Simulation::layerAt(MCfloat *r0) {
+unsigned int Simulation::layerAt(const MCfloat *r0) const {
     MCfloat z = r0[2];
-    if(z < upperZBoundaries->at(layer0)) { //search left
+    if(z < upperZBoundaries[layer0]) { //search left
         unsigned int i = layer0 + 1;
         do {
             i--;
-            if(r0[2] > upperZBoundaries->at(i))
+            if(r0[2] > upperZBoundaries[i])
                 return i+1;
         }
         while(i!=0);
@@ -325,7 +343,7 @@ unsigned int Simulation::layerAt(MCfloat *r0) {
     else //search right
     {
         for (unsigned int i = layer0; i < nLayers+1; ++i) {
-            if(z < upperZBoundaries->at(i))
+            if(z < upperZBoundaries[i])
                 return i;
         }
         return nLayers+1;
@@ -339,7 +357,7 @@ void Simulation::move(const MCfloat length) {
         memcpy(walker->r0,walker->r1,3*sizeof(MCfloat));
         memcpy(walker->k0,walker->k1,3*sizeof(MCfloat));
 
-        walker->walkTime += length/_sample->material(layer0)->v;
+        walker->walkTime += length/materials[layer0].v;
         return;
     }
 
@@ -347,7 +365,7 @@ void Simulation::move(const MCfloat length) {
 
     MCfloat zBoundary=0;
     layer1 = layer0 + sign(walker->k1[2]);
-    zBoundary = upperZBoundaries->at(min(layer0,layer1));
+    zBoundary = upperZBoundaries[min(layer0,layer1)];
 
     MCfloat t = (zBoundary - walker->r0[2]) / walker->k1[2];
     MCfloat intersection[3];
@@ -357,12 +375,12 @@ void Simulation::move(const MCfloat length) {
 
     memcpy(walker->r0,intersection,3*sizeof(MCfloat)); //move to interface, r1 is now meaningless (should we set it to NULL?)
     onInterface = true;
-    walker->walkTime += t/_sample->material(layer0)->v;
+    walker->walkTime += t/materials[layer0].v;
 
     //so we updated r0, now it's time to update k0
 
-    n0 = _sample->material(layer0)->n;
-    n1 = _sample->material(layer1)->n;
+    n0 = materials[layer0].n;
+    n1 = materials[layer1].n;
 
     if (n0 == n1) {
 #ifdef DEBUG_TRAJECTORY

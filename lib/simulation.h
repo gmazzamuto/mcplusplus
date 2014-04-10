@@ -64,7 +64,8 @@ private:
     vector<MCfloat> *currentTrajectory;
 
     //internal temporary variables
-    const deque<MCfloat> *upperZBoundaries;
+    const MCfloat *upperZBoundaries;
+    const Material *materials;
     unsigned int nLayers;
     unsigned int layer0;
     unsigned int layer1;
@@ -74,7 +75,7 @@ private:
 
     MCfloat n0, n1, cosTheta1;
 
-    unsigned int layerAt(MCfloat *r0);
+    unsigned int layerAt(const MCfloat *r0) const;
     void move(const MCfloat length);
     void reflect();
     void refract();
