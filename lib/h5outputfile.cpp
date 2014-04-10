@@ -20,6 +20,8 @@ bool H5OutputFile::newFile(const char *fileName)
 
 void H5OutputFile::appendTransmittedExitPoints(const MCfloat *buffer, const hsize_t size)
 {
+    if(!size)
+        return;
     openDataSet("exit-points/transmitted");
 
     hsize_t dims[1];

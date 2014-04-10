@@ -14,6 +14,7 @@ BaseObject::BaseObject(BaseObject *parent)
     _hasAParent = false;
     _parent = NULL;
     _inheritsRandom = false;
+    _wasCloned = false;
     setParent(parent);
 }
 
@@ -112,7 +113,14 @@ bool BaseObject::inheritsRandom() const {
 
 BaseObject *BaseObject::clone() const
 {
-    return clone_impl();
+    BaseObject *clonedObject = clone_impl();
+    clonedObject->_wasCloned = true;
+    return clonedObject;
+}
+
+bool BaseObject::wasCloned() const
+{
+    return _wasCloned;
 }
 
 string BaseObject::messagePrefix() const

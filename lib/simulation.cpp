@@ -7,6 +7,8 @@
 #include <boost/math/special_functions/sign.hpp>
 #include <boost/thread.hpp>
 
+#include "h5outputfile.h"
+
 using namespace boost;
 using namespace boost::math;
 using namespace boost::math::constants;
@@ -51,7 +53,9 @@ Simulation::Simulation(BaseObject *parent) :
     saveTrajectory = false;
     fresnelReflectionsEnabled = true;
     nThreads = 1;
-    reset();
+    _totalWalkers = 0;
+    outputFile = NULL;
+    clear();
     mostRecentInstance = this;
     installSigHandler();
 }
@@ -62,12 +66,12 @@ Simulation::~Simulation() {
         mostRecentInstance = NULL;
 }
 
-void Simulation::reset() {
-    _totalWalkers = 0;
+void Simulation::clear() {
     transmitted = 0;
     reflected = 0;
     ballistic = 0;
     backreflected = 0;
+    transmittedExitPoints.clear();
 }
 
 void Simulation::setTotalWalkers(int N) {
@@ -120,6 +124,11 @@ unsigned long int Simulation::currentWalker() const
     return n;
 }
 
+void Simulation::setOutputFileName(const char *name)
+{
+    outputFile = name;
+}
+
 /**
  * @brief Runs the simulation
  *
@@ -129,8 +138,11 @@ unsigned long int Simulation::currentWalker() const
 void Simulation::run() {
     time(&startTime);
 
-    if(nThreads == 1)
+    if(nThreads == 1) {
         runSingleThread();
+        if(!wasCloned())
+            saveOutput();
+    }
     else
         runMultipleThreads();
 
@@ -186,6 +198,7 @@ void Simulation::runMultipleThreads()
 }
 
 void Simulation::runSingleThread() {
+    clear();
     logMessage("starting... Number of walkers = %u, seed = %u",totalWalkers(), currentSeed());
     nLayers = _sample->nLayers();
 
@@ -283,6 +296,8 @@ void Simulation::runSingleThread() {
                 for (unsigned int i = 1; i <= nLayers; ++i) {
                     if(nInteractions[i]) {
                         transmitted++;
+                        transmittedExitPoints.push_back(walker->r0[0]);
+                        transmittedExitPoints.push_back(walker->r0[1]);
                         diffuselyTransmitted = true;
                         break;
                     }
@@ -476,7 +491,23 @@ BaseObject* Simulation::clone_impl() const
     sim->fresnelReflectionsEnabled = fresnelReflectionsEnabled;
     sim->setSource((Source*)source->clone());
     sim->_sample = _sample;
+    sim->outputFile = outputFile;
     return sim;
+}
+
+void Simulation::saveOutput()
+{
+    H5OutputFile file;
+    if(outputFile == NULL) {
+        outputFile = "output.h5";
+        logMessage("No output file name provided, writing to %s", outputFile);
+        file.newFile(outputFile);
+    }
+    else if(!file.openFile(outputFile))
+        return;
+    file.appendTransmittedExitPoints(transmittedExitPoints.data(),2*transmitted);
+    file.close();
+    logMessage("Data written to %s", outputFile);
 }
 
 void Simulation::setSaveTrajectoryEnabled(bool enabled) {

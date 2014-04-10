@@ -36,8 +36,9 @@ public:
     void setNThreads(unsigned int value);
     unsigned long int totalWalkers() const;
     unsigned long int currentWalker() const;
+    void setOutputFileName(const char *name);
     void run();
-    void reset();
+    void clear();
     const vector<vector<MCfloat> *> *trajectories() const;
     void reportProgress() const;
 
@@ -63,6 +64,8 @@ private:
     vector<vector <MCfloat>*> *trajectoryPoints;
     vector<MCfloat> *currentTrajectory;
 
+    vector<MCfloat> transmittedExitPoints;
+
     //internal temporary variables
     const MCfloat *upperZBoundaries;
     const Material *materials;
@@ -75,6 +78,8 @@ private:
 
     MCfloat n0, n1, cosTheta1;
 
+    const char *outputFile;
+
     unsigned int layerAt(const MCfloat *r0) const;
     void move(const MCfloat length);
     void reflect();
@@ -85,6 +90,8 @@ private:
     void runSingleThread();
 
     virtual BaseObject* clone_impl() const;
+
+    void saveOutput();
 };
 
 #endif // SIMULATION_H

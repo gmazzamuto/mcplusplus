@@ -43,6 +43,7 @@ public:
     void setParent(BaseObject *parent);
     bool inheritsRandom() const;
     BaseObject *clone() const;
+    bool wasCloned() const;
 
 protected:
     void logMessage(const string &msg) const;
@@ -53,6 +54,7 @@ private:
     bool _hasAParent;
     BaseObject *_parent;
     list<BaseObject *> _childList;
+    bool _wasCloned;
 
     void removeChild(BaseObject *child);
     void deleteAllChildren();
