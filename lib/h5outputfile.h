@@ -16,15 +16,19 @@ public:
     virtual bool newFile(const char *fileName);
     void appendTransmittedExitPoints(const MCfloat *buffer, const hsize_t size);
     void appendReflectedExitPoints(const MCfloat *buffer, const hsize_t size);
+    void appendTransmittedWalkTimes(const MCfloat *buffer, const hsize_t size);
+    void appendReflectedWalkTimes(const MCfloat *buffer, const hsize_t size);
     void loadTransmittedExitPoints(MCfloat *destBuffer, const hsize_t *start=NULL, const hsize_t *count=NULL);
     void loadReflectedExitPoints(MCfloat *destBuffer, const hsize_t *start=NULL, const hsize_t *count=NULL);
+    void loadTransmittedWalkTimes(MCfloat *destBuffer, const hsize_t *start=NULL, const hsize_t *count=NULL);
+    void loadReflectedWalkTimes(MCfloat *destBuffer, const hsize_t *start=NULL, const hsize_t *count=NULL);
     unsigned long int transmitted();
     unsigned long int reflected();
     void writeXMLDescription(const char *inputFile);
     string loadXMLDescription();
 
 private:
-    bool createExitPointsDatasets();
+    bool createDatasets();
     void appendTo1Ddataset(const char *datasetName, const MCfloat *buffer, const hsize_t size);
     void loadFrom1Ddataset(const char *datasetName, MCfloat *destBuffer, const hsize_t *start, const hsize_t *count);
 };

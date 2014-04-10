@@ -67,6 +67,8 @@ private:
     vector<MCfloat> transmittedExitPoints;
     vector<MCfloat> reflectedExitPoints;
 
+    vector<MCfloat> transmittedWalkTimes, reflectedWalkTimes;
+
     //internal temporary variables
     const MCfloat *upperZBoundaries;
     const Material *materials;

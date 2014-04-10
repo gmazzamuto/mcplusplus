@@ -14,7 +14,7 @@ bool H5OutputFile::newFile(const char *fileName)
     if(!ret)
         return false;
 
-    ret = createExitPointsDatasets();
+    ret = createDatasets();
     if(!ret)
         return false;
     return true;
@@ -28,6 +28,16 @@ void H5OutputFile::appendTransmittedExitPoints(const MCfloat *buffer, const hsiz
 void H5OutputFile::appendReflectedExitPoints(const MCfloat *buffer, const hsize_t size)
 {
     appendTo1Ddataset("exit-points/reflected",buffer,size);
+}
+
+void H5OutputFile::appendTransmittedWalkTimes(const MCfloat *buffer, const hsize_t size)
+{
+    appendTo1Ddataset("walk-times/transmitted",buffer,size);
+}
+
+void H5OutputFile::appendReflectedWalkTimes(const MCfloat *buffer, const hsize_t size)
+{
+    appendTo1Ddataset("walk-times/reflected",buffer,size);
 }
 
 void H5OutputFile::appendTo1Ddataset(const char *datasetName, const MCfloat *buffer, const hsize_t size) {
@@ -59,6 +69,16 @@ void H5OutputFile::loadTransmittedExitPoints(MCfloat *destBuffer, const hsize_t 
 void H5OutputFile::loadReflectedExitPoints(MCfloat *destBuffer, const hsize_t *start, const hsize_t *count)
 {
     loadFrom1Ddataset("exit-points/reflected",destBuffer,start,count);
+}
+
+void H5OutputFile::loadTransmittedWalkTimes(MCfloat *destBuffer, const hsize_t *start, const hsize_t *count)
+{
+    loadFrom1Ddataset("walk-times/transmitted",destBuffer,start,count);
+}
+
+void H5OutputFile::loadReflectedWalkTimes(MCfloat *destBuffer, const hsize_t *start, const hsize_t *count)
+{
+    loadFrom1Ddataset("walk-times/reflected",destBuffer,start,count);
 }
 
 unsigned long H5OutputFile::transmitted()
@@ -130,7 +150,7 @@ string H5OutputFile::loadXMLDescription()
     return str;
 }
 
-bool H5OutputFile::createExitPointsDatasets()
+bool H5OutputFile::createDatasets()
 {
 
     newGroup("exit-points");
@@ -146,5 +166,10 @@ bool H5OutputFile::createExitPointsDatasets()
     ret = newDataset("exit-points/transmitted",ndims,dims,dims);
     if(!ret)
         return false;
+
+    newGroup("walk-times");
+    ret = newDataset("walk-times/reflected",ndims,dims,dims);
+    ret = newDataset("walk-times/transmitted",ndims,dims,dims);
+
     return true;
 }

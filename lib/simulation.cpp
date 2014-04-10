@@ -73,6 +73,8 @@ void Simulation::clear() {
     backreflected = 0;
     transmittedExitPoints.clear();
     reflectedExitPoints.clear();
+    transmittedWalkTimes.clear();
+    reflectedWalkTimes.clear();
 }
 
 void Simulation::setTotalWalkers(int N) {
@@ -297,8 +299,12 @@ void Simulation::runSingleThread() {
                 for (unsigned int i = 1; i <= nLayers; ++i) {
                     if(nInteractions[i]) {
                         transmitted++;
+
                         transmittedExitPoints.push_back(walker->r0[0]);
                         transmittedExitPoints.push_back(walker->r0[1]);
+
+                        transmittedWalkTimes.push_back(walker->walkTime);
+
                         diffuselyTransmitted = true;
                         break;
                     }
@@ -313,8 +319,12 @@ void Simulation::runSingleThread() {
                 for (unsigned int i = 1; i <= nLayers; ++i) {
                     if(nInteractions[i]) {
                         reflected++;
+
                         reflectedExitPoints.push_back(walker->r0[0]);
                         reflectedExitPoints.push_back(walker->r0[1]);
+
+                        reflectedWalkTimes.push_back(walker->walkTime);
+
                         diffuselyReflected = true;
                         break;
                     }
@@ -512,6 +522,8 @@ void Simulation::saveOutput()
         return;
     file.appendTransmittedExitPoints(transmittedExitPoints.data(),2*transmitted);
     file.appendReflectedExitPoints(reflectedExitPoints.data(),2*reflected);
+    file.appendTransmittedWalkTimes(transmittedWalkTimes.data(),transmitted);
+    file.appendReflectedWalkTimes(reflectedWalkTimes.data(),reflected);
     file.close();
     logMessage("Data written to %s", outputFile);
 }
