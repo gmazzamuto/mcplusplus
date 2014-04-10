@@ -65,6 +65,7 @@ private:
     vector<MCfloat> *currentTrajectory;
 
     vector<MCfloat> transmittedExitPoints;
+    vector<MCfloat> reflectedExitPoints;
 
     //internal temporary variables
     const MCfloat *upperZBoundaries;

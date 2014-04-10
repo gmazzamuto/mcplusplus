@@ -72,6 +72,7 @@ void Simulation::clear() {
     ballistic = 0;
     backreflected = 0;
     transmittedExitPoints.clear();
+    reflectedExitPoints.clear();
 }
 
 void Simulation::setTotalWalkers(int N) {
@@ -312,6 +313,8 @@ void Simulation::runSingleThread() {
                 for (unsigned int i = 1; i <= nLayers; ++i) {
                     if(nInteractions[i]) {
                         reflected++;
+                        reflectedExitPoints.push_back(walker->r0[0]);
+                        reflectedExitPoints.push_back(walker->r0[1]);
                         diffuselyReflected = true;
                         break;
                     }
@@ -364,6 +367,8 @@ unsigned int Simulation::layerAt(const MCfloat *r0) const {
         return nLayers+1;
     }
 }
+
+
 
 void Simulation::move(const MCfloat length) {
     onInterface = false;
@@ -506,6 +511,7 @@ void Simulation::saveOutput()
     else if(!file.openFile(outputFile))
         return;
     file.appendTransmittedExitPoints(transmittedExitPoints.data(),2*transmitted);
+    file.appendReflectedExitPoints(reflectedExitPoints.data(),2*reflected);
     file.close();
     logMessage("Data written to %s", outputFile);
 }

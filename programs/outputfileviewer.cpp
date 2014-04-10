@@ -7,7 +7,6 @@ OutputFileViewer::OutputFileViewer(const char *fileName, QWidget *parent) :
     file = NULL;
     transmittedExitPoints = NULL;
 
-
     file = new H5OutputFile();
     file->openFile(fileName);
 
@@ -18,6 +17,10 @@ OutputFileViewer::OutputFileViewer(const char *fileName, QWidget *parent) :
     transmitted = file->transmitted();
     transmittedExitPoints = (MCfloat*)malloc(2*sizeof(MCfloat)*transmitted);
     file->loadTransmittedExitPoints(transmittedExitPoints);
+
+    reflected = file->reflected();
+    reflectedExitPoints = (MCfloat*)malloc(2*sizeof(MCfloat)*reflected);
+    file->loadReflectedExitPoints(reflectedExitPoints);
 }
 
 OutputFileViewer::~OutputFileViewer()
@@ -30,6 +33,7 @@ OutputFileViewer::~OutputFileViewer()
 
 void OutputFileViewer::paint_GL_impl() {
     drawTransmittedExitPoints();
+    drawReflectedExitPoints();
     drawSample();
 }
 
@@ -42,6 +46,19 @@ void OutputFileViewer::drawTransmittedExitPoints()
     for (int i = 0; i < 2*transmitted; i+=2) {
         glColor3f( color.redF(), color.greenF(), color.blueF() );
         glVertex3f(transmittedExitPoints[i],transmittedExitPoints[i+1],z);
+    }
+    glEnd();
+}
+
+void OutputFileViewer::drawReflectedExitPoints()
+{
+    QColor color;
+    color = QColor((enum Qt::GlobalColor)(Qt::gray));
+    glBegin(GL_POINTS);
+    const MCfloat z = sample !=NULL ? sample->zBoundaries()->at(0) : 0;
+    for (int i = 0; i < 2*reflected; i+=2) {
+        glColor3f( color.redF(), color.greenF(), color.blueF() );
+        glVertex3f(reflectedExitPoints[i],reflectedExitPoints[i+1],z);
     }
     glEnd();
 }

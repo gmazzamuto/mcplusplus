@@ -22,9 +22,18 @@ bool H5OutputFile::newFile(const char *fileName)
 
 void H5OutputFile::appendTransmittedExitPoints(const MCfloat *buffer, const hsize_t size)
 {
+    appendTo1Ddataset("exit-points/transmitted",buffer,size);
+}
+
+void H5OutputFile::appendReflectedExitPoints(const MCfloat *buffer, const hsize_t size)
+{
+    appendTo1Ddataset("exit-points/reflected",buffer,size);
+}
+
+void H5OutputFile::appendTo1Ddataset(const char *datasetName, const MCfloat *buffer, const hsize_t size) {
     if(!size)
         return;
-    openDataSet("exit-points/transmitted");
+    openDataSet(datasetName);
 
     hsize_t dims[1];
     *dims = *extentDims();
@@ -45,9 +54,27 @@ void H5OutputFile::loadTransmittedExitPoints(const hsize_t *start, const hsize_t
     loadHyperSlab(start,count,destBuffer);
 }
 
+void H5OutputFile::loadReflectedExitPoints(MCfloat *destBuffer)
+{
+    openDataSet("exit-points/reflected");
+    loadAll(destBuffer);
+}
+
+void H5OutputFile::loadReflectedExitPoints(const hsize_t *start, const hsize_t *count, MCfloat *destBuffer)
+{
+    openDataSet("exit-points/reflected");
+    loadHyperSlab(start,count,destBuffer);
+}
+
 unsigned long H5OutputFile::transmitted()
 {
     openDataSet("exit-points/transmitted");
+    return extentDims()[0]/2;
+}
+
+unsigned long H5OutputFile::reflected()
+{
+    openDataSet("exit-points/reflected");
     return extentDims()[0]/2;
 }
 

@@ -20,12 +20,13 @@ public slots:
 private:
     void paint_GL_impl();
     void drawTransmittedExitPoints();
+    void drawReflectedExitPoints();
 
     H5OutputFile *file;
     Sample *sample;
 
-    unsigned long int transmitted;
-    MCfloat *transmittedExitPoints;
+    unsigned long int transmitted, reflected;
+    MCfloat *transmittedExitPoints, *reflectedExitPoints;
     void drawSample();
 };
 

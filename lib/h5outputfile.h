@@ -15,14 +15,19 @@ public:
 
     virtual bool newFile(const char *fileName);
     void appendTransmittedExitPoints(const MCfloat *buffer, const hsize_t size);
+    void appendReflectedExitPoints(const MCfloat *buffer, const hsize_t size);
     void loadTransmittedExitPoints(MCfloat *destBuffer);
     void loadTransmittedExitPoints(const hsize_t *start, const hsize_t *count, MCfloat *destBuffer);
+    void loadReflectedExitPoints(MCfloat *destBuffer);
+    void loadReflectedExitPoints(const hsize_t *start, const hsize_t *count, MCfloat *destBuffer);
     unsigned long int transmitted();
+    unsigned long int reflected();
     void writeXMLDescription(const char *inputFile);
     string loadXMLDescription();
 
 private:
     bool createExitPointsDatasets();
+    void appendTo1Ddataset(const char *datasetName, const MCfloat *buffer, const hsize_t size);
 };
 
 #endif // H5OUTPUTFILE_H
