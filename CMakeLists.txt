@@ -17,6 +17,8 @@ if(BUILD_DOCUMENTATION)
   endif()
 endif()
 
+option(SHARED_LIB "Build shared instead of static library" OFF)
+
 set(DOCUMENTATION_DIR ${CMAKE_INSTALL_PREFIX}/share/doc/MCPlusPlus)
 
 add_subdirectory(doc)
