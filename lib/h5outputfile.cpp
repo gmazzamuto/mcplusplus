@@ -42,28 +42,23 @@ void H5OutputFile::appendTo1Ddataset(const char *datasetName, const MCfloat *buf
     writeHyperSlab(dims,&size,buffer);
 }
 
-void H5OutputFile::loadTransmittedExitPoints(MCfloat *destBuffer)
+void H5OutputFile::loadFrom1Ddataset(const char *datasetName, MCfloat *destBuffer, const hsize_t *start, const hsize_t *count)
 {
-    openDataSet("exit-points/transmitted");
-    loadAll(destBuffer);
+    openDataSet(datasetName);
+    if(count!=NULL)
+        loadHyperSlab(start,count,destBuffer);
+    else
+        loadAll(destBuffer);
 }
 
-void H5OutputFile::loadTransmittedExitPoints(const hsize_t *start, const hsize_t *count, MCfloat *destBuffer)
+void H5OutputFile::loadTransmittedExitPoints(MCfloat *destBuffer, const hsize_t *start, const hsize_t *count)
 {
-    openDataSet("exit-points/transmitted");
-    loadHyperSlab(start,count,destBuffer);
+    loadFrom1Ddataset("exit-points/transmitted",destBuffer,start,count);
 }
 
-void H5OutputFile::loadReflectedExitPoints(MCfloat *destBuffer)
+void H5OutputFile::loadReflectedExitPoints(MCfloat *destBuffer, const hsize_t *start, const hsize_t *count)
 {
-    openDataSet("exit-points/reflected");
-    loadAll(destBuffer);
-}
-
-void H5OutputFile::loadReflectedExitPoints(const hsize_t *start, const hsize_t *count, MCfloat *destBuffer)
-{
-    openDataSet("exit-points/reflected");
-    loadHyperSlab(start,count,destBuffer);
+    loadFrom1Ddataset("exit-points/reflected",destBuffer,start,count);
 }
 
 unsigned long H5OutputFile::transmitted()
