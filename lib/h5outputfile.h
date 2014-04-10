@@ -15,7 +15,9 @@ public:
 
     virtual bool newFile(const char *fileName);
     void appendTransmittedExitPoints(const MCfloat *buffer, const hsize_t size);
-
+    void loadTransmittedExitPoints(MCfloat *destBuffer);
+    void loadTransmittedExitPoints(const hsize_t *start, const hsize_t *count, MCfloat *destBuffer);
+    unsigned long int transmitted();
 
 private:
     bool createExitPointsDatasets();

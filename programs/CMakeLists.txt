@@ -15,6 +15,7 @@ include_directories(. ../lib)
 QT4_WRAP_CPP(GLWidget_HEADERS_MOC glwidget.h)
 QT4_WRAP_CPP(SimulationViewer_HEADERS_MOC simulationviewer.h)
 QT4_WRAP_CPP(sourceViewer_HEADERS_MOC mainwindow.h)
+QT4_WRAP_CPP(OutputFileViewer_HEADERS_MOC outputfileviewer.h)
 
 add_executable(sourceViewer sourceviewer.cpp mainwindow.cpp glwidget.cpp ${sourceViewer_HEADERS_MOC} ${GLWidget_HEADERS_MOC})
 target_link_libraries(sourceViewer MCPlusPlus GL ${QT_LIBRARIES})
@@ -31,3 +32,8 @@ install (TARGETS gaussianBeamTransformation DESTINATION bin)
 add_executable(mcpp mcpp.cpp glwidget.cpp simulationviewer.cpp ${GLWidget_HEADERS_MOC} ${SimulationViewer_HEADERS_MOC})
 target_link_libraries(mcpp MCPlusPlus GL ${QT_LIBRARIES})
 install (TARGETS mcpp DESTINATION bin)
+
+add_executable(mcplot mcplot.cpp glwidget.cpp outputfileviewer.cpp ${GLWidget_HEADERS_MOC} ${OutputFileViewer_HEADERS_MOC})
+target_link_libraries(mcplot MCPlusPlus GL ${QT_LIBRARIES})
+install (TARGETS mcplot DESTINATION bin)
+

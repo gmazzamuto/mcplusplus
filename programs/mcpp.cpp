@@ -13,6 +13,7 @@ int main(int argc, char *argv[])
     sim->setNThreads(atoi(argv[3]));
 
     sim->setSeed(0);
+    sim->setOutputFileName("mcpp-output.h5");
     sim->run();
 
     if(parser.showTrajectoryEnabled()) {

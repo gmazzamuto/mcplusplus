@@ -31,6 +31,24 @@ void H5OutputFile::appendTransmittedExitPoints(const MCfloat *buffer, const hsiz
     writeHyperSlab(dims,&size,buffer);
 }
 
+void H5OutputFile::loadTransmittedExitPoints(MCfloat *destBuffer)
+{
+    openDataSet("exit-points/transmitted");
+    loadAll(destBuffer);
+}
+
+void H5OutputFile::loadTransmittedExitPoints(const hsize_t *start, const hsize_t *count, MCfloat *destBuffer)
+{
+    openDataSet("exit-points/transmitted");
+    loadHyperSlab(start,count,destBuffer);
+}
+
+unsigned long H5OutputFile::transmitted()
+{
+    openDataSet("exit-points/transmitted");
+    return extentDims()[0]/2;
+}
+
 bool H5OutputFile::createExitPointsDatasets()
 {
 
