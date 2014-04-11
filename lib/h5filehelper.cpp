@@ -6,8 +6,6 @@
 #include <string.h>
 #include <math.h>
 
-//#define PRINT_DEBUG_MSG
-
 H5FileHelper::H5FileHelper()
 {
     Exception::getAutoPrint(Efunc,&EclientData);

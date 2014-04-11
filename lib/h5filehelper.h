@@ -4,6 +4,8 @@
 #include "baseobject.h"
 #include <H5Cpp.h>
 
+//#define PRINT_DEBUG_MSG
+
 using namespace H5;
 
 class H5FileHelper : public BaseObject
