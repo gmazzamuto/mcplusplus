@@ -145,6 +145,9 @@ AbstractDistribution *XMLParser::distribution(const string name) const
     if(name == "uniform_0_2pi") {
         return new UniformDistribution(0,two_pi<MCfloat>());
     }
+    else if (name == "uniform_0_pi") {
+        return new UniformDistribution(0,pi<MCfloat>());
+    }
     else
         return new DeltaDistribution(atof(name.c_str()));
 }
