@@ -94,56 +94,56 @@ unsigned long H5OutputFile::reflected()
 
 void H5OutputFile::writeXMLDescription(const char *inputFile)
 {
+#ifdef PRINT_DEBUG_MSG
+    logMessage("Opening dataset XMLDescription...");
+#endif
     //read whole file to string
     std::ifstream f(inputFile);
     std::string str((std::istreambuf_iterator<char>(f)),
                     std::istreambuf_iterator<char>());
 
-    hid_t       filetype, memtype, space, dset;
     hsize_t     dims[1] = {1};
 
-    filetype = H5Tcopy (H5T_C_S1);
-    H5Tset_size (filetype, str.size());
-    memtype = H5Tcopy (H5T_C_S1);
-    H5Tset_size (memtype, str.size());
 
-    space = H5Screate_simple (1, dims, NULL);
+    StrType dtype(H5T_C_S1,str.size());
+    StrType memtype = dtype;
 
-    dset = H5Dcreate (file->getId(), "XMLDescription", filetype, space, H5P_DEFAULT);
-    H5Dwrite (dset, memtype, H5S_ALL, H5S_ALL, H5P_DEFAULT, str.data());
+    DataSpace dspace(1,dims,NULL);
 
-    H5Dclose (dset);
-    H5Sclose (space);
-    H5Tclose (filetype);
-    H5Tclose (memtype);
+    DataSet dset = file->createDataSet("XMLDescription",dtype,dspace,H5P_DEFAULT);
+    dset.write(str.data(),memtype,H5S_ALL, H5S_ALL, H5P_DEFAULT);
+
+    dset.close();
+    dspace.close();
+    dtype.close();
+    memtype.close();
 }
 
 string H5OutputFile::loadXMLDescription()
 {
+#ifdef PRINT_DEBUG_MSG
+    logMessage("Opening dataset XMLDescription...");
+#endif
     string str;
     if(!dataSetExists("XMLDescription"))
         return str;
-    hid_t       filetype, memtype, space, dset;
     size_t      sdim;
 
-    dset = H5Dopen (file->getId(), "XMLDescription");
+    DataSet dset = file->openDataSet("XMLDescription");
+    DataType dtype = dset.getDataType();
 
-    filetype = H5Dget_type (dset);
-    sdim = H5Tget_size (filetype) + 1; //including '\0'
-
-    space = H5Dget_space (dset);
+    sdim = dtype.getSize() + 1; //including '\0'
+    DataSpace dspace = dset.getSpace();
 
     char buf[sdim];
 
-    memtype = H5Tcopy (H5T_C_S1);
-    H5Tset_size (memtype, sdim);
+    StrType memtype(H5T_C_S1,sdim);
 
-    H5Dread (dset, memtype, H5S_ALL, H5S_ALL, H5P_DEFAULT, buf);
-
-    H5Dclose (dset);
-    H5Sclose (space);
-    H5Tclose (filetype);
-    H5Tclose (memtype);
+    dset.read(buf,memtype,H5S_ALL, H5S_ALL, H5P_DEFAULT);
+    dset.close();
+    dspace.close();
+    dtype.close();
+    memtype.close();
 
     str = buf;
     return str;
