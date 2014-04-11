@@ -74,7 +74,7 @@ void XMLParser::parse() {
 
 
     //source
-    string srcType = pt.get<string>("MCPlusPlus.MLSample.source.type", "__default__");
+    string srcType = pt.get<string>("MCPlusPlus.source.<xmlattr>.type", "__default__");
     if(src != NULL)
         delete src;
     if(srcType == "__default__") {
@@ -90,10 +90,13 @@ void XMLParser::parse() {
         AbstractDistribution *psi = distribution(pt.get<string>("MCPlusPlus.source.<xmlattr>.psi"));
 
         src->setk0Distribution(cosTheta,psi);
-
-        AbstractDistribution *walkTime = distribution(pt.get<string>("MCPlusPlus.source.<xmlattr>.walkTime"));
-        src->setWalkTimeDistribution(walkTime);
     }
+    else if(srcType == "IsotropicPointSource") {
+        src = new IsotropicPointSource(pt.get<MCfloat>("MCPlusPlus.source.<xmlattr>.rz"));
+    }
+
+    AbstractDistribution *walkTime = distribution(pt.get<string>("MCPlusPlus.source.<xmlattr>.walkTime"));
+    src->setWalkTimeDistribution(walkTime);
 
     //simulation
     if(sim!=NULL)
