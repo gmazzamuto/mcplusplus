@@ -47,7 +47,6 @@ void H5OutputFile::appendTo1Ddataset(const char *datasetName, const MCfloat *buf
 
     hsize_t dims[1];
     *dims = *extentDims();
-    dims[0]--;
 
     writeHyperSlab(dims,&size,buffer);
 }
@@ -156,20 +155,22 @@ bool H5OutputFile::createDatasets()
     newGroup("exit-points");
 
     int ndims = 1;
-    hsize_t dims[ndims];
+    hsize_t dims[ndims], chunkDims[ndims];
 
-    dims[0] = 1;
+    dims[0] = 0; chunkDims[0] = 2;
     bool ret = false;
-    ret = newDataset("exit-points/reflected",ndims,dims,dims);
+    ret = newDataset("exit-points/reflected",ndims,dims,chunkDims);
     if(!ret)
         return false;
-    ret = newDataset("exit-points/transmitted",ndims,dims,dims);
+    ret = newDataset("exit-points/transmitted",ndims,dims,chunkDims);
     if(!ret)
         return false;
+
+    chunkDims[0] = 1;
 
     newGroup("walk-times");
-    ret = newDataset("walk-times/reflected",ndims,dims,dims);
-    ret = newDataset("walk-times/transmitted",ndims,dims,dims);
+    ret = newDataset("walk-times/reflected",ndims,dims,chunkDims);
+    ret = newDataset("walk-times/transmitted",ndims,dims,chunkDims);
 
     return true;
 }
