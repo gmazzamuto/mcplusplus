@@ -180,8 +180,8 @@ IsotropicPointSource::IsotropicPointSource(MCfloat z0, BaseObject *parent) :
     Source(parent)
 {
     depth = z0;
-    cosThetaDistribution = new CosThetaGenerator(0);
-    psiDistribution = new IsotropicPsiGenerator;
+    cosThetaDistribution = new CosThetaGenerator(0,this);
+    psiDistribution = new IsotropicPsiGenerator(this);
 }
 
 void IsotropicPointSource::spinPosition(Walker *walker) const {
