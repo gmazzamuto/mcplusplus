@@ -11,7 +11,7 @@ OutputFileViewer::OutputFileViewer(const char *fileName, QWidget *parent) :
     file->openFile(fileName);
 
     XMLParser parser;
-    parser.parseString(file->loadXMLDescription());
+    parser.parseString(file->readXMLDescription());
     sample = parser.sample();
 
     transmitted = file->transmitted();

@@ -25,12 +25,14 @@ public:
     unsigned long int transmitted();
     unsigned long int reflected();
     void writeXMLDescription(const char *inputFile);
-    string loadXMLDescription();
+    string readXMLDescription();
 
 private:
     bool createDatasets();
     void appendTo1Ddataset(const char *datasetName, const MCfloat *buffer, const hsize_t size);
     void loadFrom1Ddataset(const char *datasetName, MCfloat *destBuffer, const hsize_t *start, const hsize_t *count);
+    void writeVLenString(const char *datasetName, const string str);
+    string readVLenString(const char *datasetName);
 };
 
 #endif // H5OUTPUTFILE_H

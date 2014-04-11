@@ -60,6 +60,55 @@ void H5OutputFile::loadFrom1Ddataset(const char *datasetName, MCfloat *destBuffe
         loadAll(destBuffer);
 }
 
+void H5OutputFile::writeVLenString(const char *datasetName, const string str)
+{
+#ifdef PRINT_DEBUG_MSG
+    logMessage("Opening dataset %s...", datasetName);
+#endif
+    hsize_t     dims[1] = {1};
+
+    const char *wdata[1];
+    wdata[0] = str.data();
+    StrType dtype(0, H5T_VARIABLE);
+
+    DataSpace dspace(1,dims);
+
+    DataSet dset = file->createDataSet(datasetName,dtype,dspace);
+    dset.write((void*)wdata,dtype);
+
+    dset.close();
+    dspace.close();
+    dtype.close();
+}
+
+string H5OutputFile::readVLenString(const char *datasetName)
+{
+#ifdef PRINT_DEBUG_MSG
+    logMessage("Opening dataset %s...", datasetName);
+#endif
+    string str;
+    if(!dataSetExists("XMLDescription"))
+        return str;
+
+    DataSet dset = file->openDataSet(datasetName);
+    DataType dtype = dset.getDataType();
+
+    DataSpace dspace = dset.getSpace();
+
+    char *buf[1];
+
+    dset.read(buf,dtype,H5P_DEFAULT);
+    str = buf[0];
+
+    dset.close();
+    dspace.close();
+    dtype.close();
+
+    H5Dvlen_reclaim(dtype.getId(),dspace.getId(),H5P_DEFAULT,buf);
+
+    return str;
+}
+
 void H5OutputFile::loadTransmittedExitPoints(MCfloat *destBuffer, const hsize_t *start, const hsize_t *count)
 {
     loadFrom1Ddataset("exit-points/transmitted",destBuffer,start,count);
@@ -94,59 +143,17 @@ unsigned long H5OutputFile::reflected()
 
 void H5OutputFile::writeXMLDescription(const char *inputFile)
 {
-#ifdef PRINT_DEBUG_MSG
-    logMessage("Opening dataset XMLDescription...");
-#endif
     //read whole file to string
     std::ifstream f(inputFile);
     std::string str((std::istreambuf_iterator<char>(f)),
                     std::istreambuf_iterator<char>());
 
-    hsize_t     dims[1] = {1};
-
-
-    StrType dtype(H5T_C_S1,str.size());
-    StrType memtype = dtype;
-
-    DataSpace dspace(1,dims,NULL);
-
-    DataSet dset = file->createDataSet("XMLDescription",dtype,dspace,H5P_DEFAULT);
-    dset.write(str.data(),memtype,H5S_ALL, H5S_ALL, H5P_DEFAULT);
-
-    dset.close();
-    dspace.close();
-    dtype.close();
-    memtype.close();
+    writeVLenString("XMLDescription", str);
 }
 
-string H5OutputFile::loadXMLDescription()
+string H5OutputFile::readXMLDescription()
 {
-#ifdef PRINT_DEBUG_MSG
-    logMessage("Opening dataset XMLDescription...");
-#endif
-    string str;
-    if(!dataSetExists("XMLDescription"))
-        return str;
-    size_t      sdim;
-
-    DataSet dset = file->openDataSet("XMLDescription");
-    DataType dtype = dset.getDataType();
-
-    sdim = dtype.getSize() + 1; //including '\0'
-    DataSpace dspace = dset.getSpace();
-
-    char buf[sdim];
-
-    StrType memtype(H5T_C_S1,sdim);
-
-    dset.read(buf,memtype,H5S_ALL, H5S_ALL, H5P_DEFAULT);
-    dset.close();
-    dspace.close();
-    dtype.close();
-    memtype.close();
-
-    str = buf;
-    return str;
+    return readVLenString("XMLDescription");
 }
 
 bool H5OutputFile::createDatasets()
