@@ -58,11 +58,6 @@ public:
     QSize minimumSizeHint() const;
     QSize sizeHint() const;
 
-    void addLine(float *r0, float *r1);
-    void addPoint(float *r0);
-    void addPoint(double *r0);
-    void clear();
-    void setLinesVector(vector<MCfloat> *v);
     void setDisplayedOriginPos(float *pos);
     void setDisplayedOriginPos(float x, float y, float z);
     void setDisplayedAxisLength(float length);
@@ -99,8 +94,6 @@ private:
     QPoint lastPos;
     QColor qtGreen;
     QColor qtPurple;
-    vector<MCfloat> *lines;
-    bool usingInternalVector;
     float displayedOriginPos[3];
     float displayedAxisLength;
 };

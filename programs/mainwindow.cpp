@@ -18,7 +18,9 @@ MainWindow::MainWindow(QWidget *parent) :
     focusedWaistSpinBox->setMaximum(50);
     focusedWaistSpinBox->setValue(focusedWaist);
 
-    glWidget = new GLWidget();
+    MyGLWidget *mglw = new MyGLWidget();
+    mglw->setLinePoints(&linePoints);
+    glWidget = mglw;
 
     QWidget *widget = new QWidget();
     QVBoxLayout *vertLayout = new QVBoxLayout();
@@ -36,7 +38,7 @@ MainWindow::MainWindow(QWidget *parent) :
 }
 
 void MainWindow::replot() {
-    glWidget->clear();
+    linePoints.clear();
 
     GaussianRayBundleSource *src = new GaussianRayBundleSource(100,focusedWaist,lensDistance);
     DeltaDistribution *delta1 = new DeltaDistribution(1);
@@ -57,7 +59,12 @@ void MainWindow::replot() {
         r1[0] = walker->r0[0] + t*walker->k0[0] / walker->k0[2];
         r1[1] = walker->r0[1] + t*walker->k0[1] / walker->k0[2];
         r1[2] = walker->r0[2] + t;
-        glWidget->addLine(r0,r1);
+        for (int i = 0; i < 3; ++i) {
+            linePoints.push_back(r0[i]);
+        }
+        for (int i = 0; i < 3; ++i) {
+            linePoints.push_back(r1[i]);
+        }
         delete walker;
     }
 
@@ -74,4 +81,30 @@ void MainWindow::onLensDistanceChanged(double val) {
 void MainWindow::onFocusedWaistChanged(double val) {
     focusedWaist = val;
     replot();
+}
+
+
+void MyGLWidget::setLinePoints(const vector<MCfloat> *vector)
+{
+    linePoints = vector;
+}
+
+void MyGLWidget::paint_GL_impl()
+{
+    glBegin(GL_LINES);
+
+    QColor color;
+    int i = 0;
+    int l = 0;
+    while(i < linePoints->size()) {
+        color = QColor((enum Qt::GlobalColor)(Qt::darkGray+l%15));
+        glColor3f( color.redF(), color.greenF(), color.blueF() );
+        glVertex3f(linePoints->at(i),linePoints->at(i+1),linePoints->at(i+2));
+        i+=3;
+        glVertex3f(linePoints->at(i),linePoints->at(i+1),linePoints->at(i+2));
+        i+=3;
+        l++;
+    }
+
+    glEnd();
 }

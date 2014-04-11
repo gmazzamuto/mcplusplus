@@ -60,8 +60,6 @@ GLWidget::GLWidget(QWidget *parent)
 
     qtGreen = QColor::fromCmykF(0.40, 0.0, 1.0, 0.0);
     qtPurple = QColor::fromCmykF(0.39, 0.39, 0.0, 0.0);
-    lines = new std::vector<MCfloat>();
-    usingInternalVector = true;
     displayedAxisLength = 0;
     xTrans = 0;
     yTrans = 0;
@@ -71,8 +69,6 @@ GLWidget::GLWidget(QWidget *parent)
 
 GLWidget::~GLWidget()
 {
-    if(usingInternalVector)
-        delete lines;
 }
 
 QSize GLWidget::minimumSizeHint() const
@@ -158,23 +154,6 @@ void GLWidget::paintGL()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    glBegin(GL_LINES);
-
-    QColor color;
-    int i = 0;
-    int l = 0;
-    while(i < lines->size()) {
-        color = QColor((enum Qt::GlobalColor)(Qt::darkGray+l%15));
-        glColor3f( color.redF(), color.greenF(), color.blueF() );
-        glVertex3f(lines->at(i),lines->at(i+1),lines->at(i+2));
-        i+=3;
-        glVertex3f(lines->at(i),lines->at(i+1),lines->at(i+2));
-        i+=3;
-        l++;
-    }
-
-    glEnd();
-
     //draw XYZ reference axes
     glBegin(GL_LINES);
     glColor3f(1,0,0);
@@ -259,36 +238,6 @@ void GLWidget::keyPressEvent(QKeyEvent * event)
 
     event->accept();
     updateGL();
-}
-
-void GLWidget::addLine(float *r0, float *r1) {
-    addPoint(r0);
-    addPoint(r1);
-}
-
-void GLWidget::addPoint(float *r0) {
-    for (int i = 0; i < 3; ++i) {
-        lines->push_back(r0[i]);
-    }
-}
-
-void GLWidget::addPoint(double *r0) {
-    float f[3];
-    for (int i = 0; i < 3; ++i) {
-        f[i] = (float)r0[i];
-    }
-    addPoint(f);
-}
-
-void GLWidget::clear() {
-    lines->clear();
-}
-
-void GLWidget::setLinesVector(vector<MCfloat> *v) {
-    if(usingInternalVector)
-        delete lines;
-    lines = v;
-    usingInternalVector = false;
 }
 
 void GLWidget::setDisplayedOriginPos(float *pos) {
