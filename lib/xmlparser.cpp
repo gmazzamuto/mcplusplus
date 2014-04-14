@@ -112,6 +112,19 @@ void XMLParser::parse() {
         sim->setSaveTrajectoryEnabled(boolean(str));
     } catch (ptree_bad_path) {
     }
+
+
+    //output
+    try {
+        ptree v = pt.get_child("MCPlusPlus.output");
+        string str = v.get<string>("<xmlattr>.exit-points", "__default__");
+        if(str!="__default__")
+            sim->setExitPointsSaveFlags(walkerSaveFlags(str));
+        str = v.get<string>("<xmlattr>.walk-times", "__default__");
+        if(str!="__default__")
+            sim->setWalkTimesSaveFlags(walkerSaveFlags(str));
+    } catch (ptree_bad_path) {
+    }
 }
 
 bool XMLParser::showTrajectoryEnabled() const
@@ -166,4 +179,28 @@ bool XMLParser::boolean(const string str) const
         e.str = str;
         throw e;
     };
+}
+
+unsigned int XMLParser::walkerSaveFlags(const string flags) {
+    unsigned int ret = 0;
+    for (unsigned int i = 0; i < flags.size(); ++i) {
+        switch (flags.at(i)) {
+        case 't':
+            ret |= Simulation::TRANSMITTED;
+            break;
+        case 'b':
+            ret |= Simulation::BALLISTIC;
+            break;
+        case 'r':
+            ret |= Simulation::REFLECTED;
+            break;
+        case 'k':
+            ret |= Simulation::BACKREFLECTED;
+            break;
+        default:
+            break;
+        }
+    }
+
+    return ret;
 }

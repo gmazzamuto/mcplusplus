@@ -38,6 +38,7 @@ private:
     AbstractDistribution *distribution(const string name) const;
     bool boolean(const string str) const;
     void parse();
+    unsigned int walkerSaveFlags(const string flags);
 };
 
 #endif // XMLPARSER_H

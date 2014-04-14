@@ -42,6 +42,16 @@ public:
     const vector<vector<MCfloat> *> *trajectories() const;
     void reportProgress() const;
 
+    enum walkerTypes {
+        TRANSMITTED = 1 << 0,
+        BALLISTIC = 1 << 1,
+        REFLECTED = 1 << 2,
+        BACKREFLECTED = 1 << 3,
+    };
+
+    void setWalkTimesSaveFlags(unsigned int value);
+    void setExitPointsSaveFlags(unsigned int value);
+
 private:
     const Sample *_sample;
     const Source *source;
@@ -95,6 +105,7 @@ private:
     virtual BaseObject* clone_impl() const;
 
     void saveOutput(bool saveRNGState=false);
+    unsigned int walkTimesSaveFlags, exitPointsSaveFlags;
 };
 
 #endif // SIMULATION_H

@@ -55,6 +55,8 @@ Simulation::Simulation(BaseObject *parent) :
     nThreads = 1;
     _totalWalkers = 0;
     outputFile = NULL;
+    walkTimesSaveFlags = 0;
+    exitPointsSaveFlags = 0;
     clear();
     mostRecentInstance = this;
     installSigHandler();
@@ -523,13 +525,29 @@ void Simulation::saveOutput(bool saveRNGState)
 
     if(saveRNGState)
         file.saveRNGState(generatorState());
-    file.appendTransmittedExitPoints(transmittedExitPoints.data(),2*transmitted);
-    file.appendReflectedExitPoints(reflectedExitPoints.data(),2*reflected);
-    file.appendTransmittedWalkTimes(transmittedWalkTimes.data(),transmitted);
-    file.appendReflectedWalkTimes(reflectedWalkTimes.data(),reflected);
+    if(transmitted && exitPointsSaveFlags & TRANSMITTED)
+        file.appendTransmittedExitPoints(transmittedExitPoints.data(),2*transmitted);
+    if(reflected && exitPointsSaveFlags & REFLECTED)
+        file.appendReflectedExitPoints(reflectedExitPoints.data(),2*reflected);
+    if(transmitted && walkTimesSaveFlags & TRANSMITTED)
+        file.appendTransmittedWalkTimes(transmittedWalkTimes.data(),transmitted);
+    if(reflected && walkTimesSaveFlags & REFLECTED)
+        file.appendReflectedWalkTimes(reflectedWalkTimes.data(),reflected);
     file.close();
     logMessage("Data written to %s", outputFile);
 }
+
+void Simulation::setExitPointsSaveFlags(unsigned int value)
+{
+    exitPointsSaveFlags = value;
+}
+
+
+void Simulation::setWalkTimesSaveFlags(unsigned int value)
+{
+    walkTimesSaveFlags = value;
+}
+
 
 void Simulation::setSaveTrajectoryEnabled(bool enabled) {
     saveTrajectory = enabled;
