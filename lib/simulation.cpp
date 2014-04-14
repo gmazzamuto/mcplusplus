@@ -74,9 +74,13 @@ void Simulation::clear() {
     ballistic = 0;
     backreflected = 0;
     transmittedExitPoints.clear();
+    ballisticExitPoints.clear();
     reflectedExitPoints.clear();
+    backreflectedExitPoints.clear();
     transmittedWalkTimes.clear();
+    ballisticWalkTimes.clear();
     reflectedWalkTimes.clear();
+    backreflectedWalkTimes.clear();
 }
 
 void Simulation::setTotalWalkers(int N) {
@@ -311,8 +315,14 @@ void Simulation::runSingleThread() {
                         break;
                     }
                 }
-                if(!diffuselyTransmitted)
+                if(!diffuselyTransmitted) {
                     ballistic++;
+
+                    ballisticExitPoints.push_back(walker->r0[0]);
+                    ballisticExitPoints.push_back(walker->r0[1]);
+
+                    ballisticWalkTimes.push_back(walker->walkTime);
+                }
                 break;
             }
 
@@ -331,8 +341,14 @@ void Simulation::runSingleThread() {
                         break;
                     }
                 }
-                if(!diffuselyReflected)
+                if(!diffuselyReflected) {
                     backreflected++;
+
+                    backreflectedExitPoints.push_back(walker->r0[0]);
+                    backreflectedExitPoints.push_back(walker->r0[1]);
+
+                    backreflectedWalkTimes.push_back(walker->walkTime);
+                }
                 break;
             }
         }
@@ -509,6 +525,8 @@ BaseObject* Simulation::clone_impl() const
     sim->setSource((Source*)source->clone());
     sim->_sample = _sample;
     sim->outputFile = outputFile;
+    sim->exitPointsSaveFlags = exitPointsSaveFlags;
+    sim->walkTimesSaveFlags = walkTimesSaveFlags;
     return sim;
 }
 
@@ -527,12 +545,22 @@ void Simulation::saveOutput(bool saveRNGState)
         file.saveRNGState(generatorState());
     if(transmitted && exitPointsSaveFlags & TRANSMITTED)
         file.appendTransmittedExitPoints(transmittedExitPoints.data(),2*transmitted);
+    if(ballistic && exitPointsSaveFlags & BALLISTIC)
+        file.appendBallisticExitPoints(ballisticExitPoints.data(),2*ballistic);
     if(reflected && exitPointsSaveFlags & REFLECTED)
         file.appendReflectedExitPoints(reflectedExitPoints.data(),2*reflected);
+    if(backreflected && exitPointsSaveFlags & BACKREFLECTED)
+        file.appendBackReflectedExitPoints(backreflectedExitPoints.data(),2*backreflected);
+
     if(transmitted && walkTimesSaveFlags & TRANSMITTED)
         file.appendTransmittedWalkTimes(transmittedWalkTimes.data(),transmitted);
+    if(ballistic && walkTimesSaveFlags & BALLISTIC)
+        file.appendBallisticExitPoints(ballisticWalkTimes.data(),ballistic);
     if(reflected && walkTimesSaveFlags & REFLECTED)
         file.appendReflectedWalkTimes(reflectedWalkTimes.data(),reflected);
+    if(backreflected && walkTimesSaveFlags & BACKREFLECTED)
+        file.appendBackReflectedWalkTimes(backreflectedWalkTimes.data(),backreflected);
+
     file.close();
     logMessage("Data written to %s", outputFile);
 }

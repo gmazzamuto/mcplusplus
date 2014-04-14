@@ -29,9 +29,19 @@ void H5OutputFile::appendTransmittedExitPoints(const MCfloat *buffer, const hsiz
     appendTo1Ddataset("exit-points/transmitted",buffer,size);
 }
 
+void H5OutputFile::appendBallisticExitPoints(const MCfloat *buffer, const hsize_t size)
+{
+    appendTo1Ddataset("exit-points/ballistic",buffer,size);
+}
+
 void H5OutputFile::appendReflectedExitPoints(const MCfloat *buffer, const hsize_t size)
 {
     appendTo1Ddataset("exit-points/reflected",buffer,size);
+}
+
+void H5OutputFile::appendBackReflectedExitPoints(const MCfloat *buffer, const hsize_t size)
+{
+    appendTo1Ddataset("exit-points/back-reflected",buffer,size);
 }
 
 void H5OutputFile::appendTransmittedWalkTimes(const MCfloat *buffer, const hsize_t size)
@@ -39,9 +49,19 @@ void H5OutputFile::appendTransmittedWalkTimes(const MCfloat *buffer, const hsize
     appendTo1Ddataset("walk-times/transmitted",buffer,size);
 }
 
+void H5OutputFile::appendBallisticWalkTimes(const MCfloat *buffer, const hsize_t size)
+{
+    appendTo1Ddataset("walk-times/ballistic",buffer,size);
+}
+
 void H5OutputFile::appendReflectedWalkTimes(const MCfloat *buffer, const hsize_t size)
 {
     appendTo1Ddataset("walk-times/reflected",buffer,size);
+}
+
+void H5OutputFile::appendBackReflectedWalkTimes(const MCfloat *buffer, const hsize_t size)
+{
+    appendTo1Ddataset("walk-times/back-reflected",buffer,size);
 }
 
 void H5OutputFile::appendTo1Ddataset(const char *datasetName, const MCfloat *buffer, const hsize_t size) {
@@ -118,9 +138,19 @@ void H5OutputFile::loadTransmittedExitPoints(MCfloat *destBuffer, const hsize_t 
     loadFrom1Ddataset("exit-points/transmitted",destBuffer,start,count);
 }
 
+void H5OutputFile::loadBallisticExitPoints(MCfloat *destBuffer, const hsize_t *start, const hsize_t *count)
+{
+    loadFrom1Ddataset("exit-points/ballistic",destBuffer,start,count);
+}
+
 void H5OutputFile::loadReflectedExitPoints(MCfloat *destBuffer, const hsize_t *start, const hsize_t *count)
 {
     loadFrom1Ddataset("exit-points/reflected",destBuffer,start,count);
+}
+
+void H5OutputFile::loadBackReflectedExitPoints(MCfloat *destBuffer, const hsize_t *start, const hsize_t *count)
+{
+    loadFrom1Ddataset("exit-points/back-reflected",destBuffer,start,count);
 }
 
 void H5OutputFile::loadTransmittedWalkTimes(MCfloat *destBuffer, const hsize_t *start, const hsize_t *count)
@@ -128,9 +158,19 @@ void H5OutputFile::loadTransmittedWalkTimes(MCfloat *destBuffer, const hsize_t *
     loadFrom1Ddataset("walk-times/transmitted",destBuffer,start,count);
 }
 
+void H5OutputFile::loadBallisticWalkTimes(MCfloat *destBuffer, const hsize_t *start, const hsize_t *count)
+{
+    loadFrom1Ddataset("walk-times/ballistic",destBuffer,start,count);
+}
+
 void H5OutputFile::loadReflectedWalkTimes(MCfloat *destBuffer, const hsize_t *start, const hsize_t *count)
 {
     loadFrom1Ddataset("walk-times/reflected",destBuffer,start,count);
+}
+
+void H5OutputFile::loadBackReflectedWalkTimes(MCfloat *destBuffer, const hsize_t *start, const hsize_t *count)
+{
+    loadFrom1Ddataset("walk-times/back-reflected",destBuffer,start,count);
 }
 
 void H5OutputFile::saveRNGState(const string s)
@@ -191,18 +231,18 @@ bool H5OutputFile::createDatasets()
 
     dims[0] = 0; chunkDims[0] = 2;
     bool ret = false;
-    ret = newDataset("exit-points/reflected",ndims,dims,chunkDims);
-    if(!ret)
-        return false;
     ret = newDataset("exit-points/transmitted",ndims,dims,chunkDims);
-    if(!ret)
-        return false;
+    ret = newDataset("exit-points/ballistic",ndims,dims,chunkDims);
+    ret = newDataset("exit-points/reflected",ndims,dims,chunkDims);
+    ret = newDataset("exit-points/back-reflected",ndims,dims,chunkDims);
 
     chunkDims[0] = 1;
 
     newGroup("walk-times");
-    ret = newDataset("walk-times/reflected",ndims,dims,chunkDims);
     ret = newDataset("walk-times/transmitted",ndims,dims,chunkDims);
+    ret = newDataset("walk-times/ballistic",ndims,dims,chunkDims);
+    ret = newDataset("walk-times/reflected",ndims,dims,chunkDims);
+    ret = newDataset("walk-times/back-reflected",ndims,dims,chunkDims);
 
     dims[0] = 1;
     StrType dtype(0, H5T_VARIABLE);
@@ -212,5 +252,5 @@ bool H5OutputFile::createDatasets()
     dtype.close();
     dspace.close();
 
-    return true;
+    return ret;
 }

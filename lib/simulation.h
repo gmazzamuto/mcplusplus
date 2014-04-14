@@ -74,10 +74,8 @@ private:
     vector<vector <MCfloat>*> *trajectoryPoints;
     vector<MCfloat> *currentTrajectory;
 
-    vector<MCfloat> transmittedExitPoints;
-    vector<MCfloat> reflectedExitPoints;
-
-    vector<MCfloat> transmittedWalkTimes, reflectedWalkTimes;
+    vector<MCfloat> transmittedExitPoints, ballisticExitPoints, reflectedExitPoints, backreflectedExitPoints;
+    vector<MCfloat> transmittedWalkTimes, ballisticWalkTimes, reflectedWalkTimes, backreflectedWalkTimes;
 
     //internal temporary variables
     const MCfloat *upperZBoundaries;
