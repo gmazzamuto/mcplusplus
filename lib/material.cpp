@@ -4,6 +4,8 @@
 Material::Material()
 {
     ls = 0;
+    n = 1;
+    v = LIGHT_SPEED;
 }
 
 /**
@@ -101,8 +103,7 @@ MCfloat NorlandOpticalAdhesive65::dispersionRelation(MCfloat lambda_um) {
 
 
 
-Vacuum::Vacuum()
+Vacuum::Vacuum() :
+    Material()
 {
-    ls = 0;
-    n = 1;
 }
