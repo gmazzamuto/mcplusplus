@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
     file.writeXMLDescription(argv[1]);
     file.close();
 
-    sim->setTotalWalkers(atoi(argv[2]));
+    sim->setTotalWalkers(atoll(argv[2]));
     sim->setNThreads(atoi(argv[3]));
 
     sim->setSeed(0);

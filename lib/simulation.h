@@ -29,13 +29,13 @@ public:
 
     const Sample *sample() const;
     void setSaveTrajectoryEnabled(bool enabled = true);
-    void setTotalWalkers(int N);
+    void setTotalWalkers(u_int64_t N);
     void setSample(Sample *sample);
     void setSource(Source *source);
     void setFresnelReflectionsEnabled(bool enable);
     void setNThreads(unsigned int value);
-    unsigned long int totalWalkers() const;
-    unsigned long int currentWalker() const;
+    u_int64_t totalWalkers() const;
+    u_int64_t currentWalker() const;
     void setOutputFileName(const char *name);
     void run();
     void clear();
@@ -61,12 +61,12 @@ private:
     bool fresnelReflectionsEnabled;
 
     //walker counters
-    unsigned long int _totalWalkers;  /**< @brief total number of walkers to be simulated*/
-    unsigned long int transmitted;  /**< @brief total number of walkers transmitted after at least one scattering event*/
-    unsigned long int reflected;  /**< @brief total number of walkers reflected after at least one scattering event*/
-    unsigned long int ballistic;  /**< @brief total number of walkers transmitted without undergoing any scattering event*/
-    unsigned long int backreflected;  /**< @brief total number of walkers reflected without undergoing any scattering event*/
-    unsigned long int n;
+    u_int64_t _totalWalkers;  /**< @brief total number of walkers to be simulated*/
+    u_int64_t transmitted;  /**< @brief total number of walkers transmitted after at least one scattering event*/
+    u_int64_t reflected;  /**< @brief total number of walkers reflected after at least one scattering event*/
+    u_int64_t ballistic;  /**< @brief total number of walkers transmitted without undergoing any scattering event*/
+    u_int64_t backreflected;  /**< @brief total number of walkers reflected without undergoing any scattering event*/
+    u_int64_t n;
 
     unsigned int nThreads;
 

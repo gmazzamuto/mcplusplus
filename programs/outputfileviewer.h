@@ -25,7 +25,7 @@ private:
     H5OutputFile *file;
     Sample *sample;
 
-    unsigned long int transmitted, reflected;
+    u_int64_t transmitted, reflected;
     MCfloat *transmittedExitPoints, *reflectedExitPoints;
     void drawSample();
 };

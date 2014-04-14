@@ -83,7 +83,7 @@ void Simulation::clear() {
     backreflectedWalkTimes.clear();
 }
 
-void Simulation::setTotalWalkers(int N) {
+void Simulation::setTotalWalkers(u_int64_t N) {
     _totalWalkers = N;
 }
 
@@ -123,12 +123,12 @@ void Simulation::setNThreads(unsigned int value)
     nThreads = value;
 }
 
-unsigned long Simulation::totalWalkers() const
+u_int64_t Simulation::totalWalkers() const
 {
     return _totalWalkers;
 }
 
-unsigned long int Simulation::currentWalker() const
+u_int64_t Simulation::currentWalker() const
 {
     return n;
 }
@@ -231,7 +231,7 @@ void Simulation::runSingleThread() {
     CosThetaGenerator deflCosine(0,this); // I set g=0 without any particular reason
 
     while(n < _totalWalkers) {
-        vector<unsigned long int> nInteractions;
+        vector<u_int64_t> nInteractions;
         currentTrajectory = new std::vector<MCfloat>();
         layer0 = 0;
 

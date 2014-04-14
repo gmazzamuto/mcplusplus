@@ -149,7 +149,7 @@ bool H5OutputFile::openFile_impl()
 
     DataSet dSet = file->openDataSet("photon-counters");
 
-    unsigned long int buf[4];
+    u_int64_t buf[4];
     dSet.read(buf,dSet.getDataType());
     _transmitted = buf[0];
     _ballistic = buf[1];
@@ -210,14 +210,14 @@ string H5OutputFile::readRNGState()
     return readVLenString("RNGState");
 }
 
-void H5OutputFile::appendPhotonCounts(const unsigned long transmitted, const unsigned long ballistic, const unsigned long reflected, const unsigned long backReflected)
+void H5OutputFile::appendPhotonCounts(const u_int64_t transmitted, const u_int64_t ballistic, const u_int64_t reflected, const u_int64_t backReflected)
 {
     _transmitted += transmitted;
     _ballistic += ballistic;
     _reflected += reflected;
     _backReflected += backReflected;
 
-    unsigned long int buf[4];
+    u_int64_t buf[4];
     buf[0] = _transmitted;
     buf[1] = _ballistic;
     buf[2] = _reflected;
@@ -227,22 +227,22 @@ void H5OutputFile::appendPhotonCounts(const unsigned long transmitted, const uns
     dset.close();
 }
 
-unsigned long H5OutputFile::transmitted()
+u_int64_t H5OutputFile::transmitted()
 {
     return _transmitted;
 }
 
-unsigned long H5OutputFile::ballistic()
+u_int64_t H5OutputFile::ballistic()
 {
     return _ballistic;
 }
 
-unsigned long H5OutputFile::reflected()
+u_int64_t H5OutputFile::reflected()
 {
     return _reflected;
 }
 
-unsigned long H5OutputFile::backReflected()
+u_int64_t H5OutputFile::backReflected()
 {
     return _backReflected;
 }
@@ -280,7 +280,7 @@ bool H5OutputFile::createDatasets()
     dims[0] = 4; chunkDims[0] = 1;
     try {
         dataSpace = new DataSpace (ndims, dims, dims);
-        dataSet  = new DataSet(file->createDataSet("photon-counters", PredType::NATIVE_INT32, *dataSpace));
+        dataSet  = new DataSet(file->createDataSet("photon-counters", PredType::NATIVE_INT64, *dataSpace));
     }
     catch (Exception error) {
         logMessage("Cannot create dataset %s.\n", "photon-counters");
