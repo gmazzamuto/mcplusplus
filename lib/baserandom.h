@@ -44,6 +44,8 @@ public:
 
     void dumpGenerator(const char *fileName) const;
     void loadGenerator(const char *fileName);
+    string generatorState() const;
+    void setGeneratorState(string state);
 
 protected:
     mt19937* mt;

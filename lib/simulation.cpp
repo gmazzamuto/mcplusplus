@@ -144,7 +144,7 @@ void Simulation::run() {
     if(nThreads == 1) {
         runSingleThread();
         if(!wasCloned())
-            saveOutput();
+            saveOutput(true);
     }
     else
         runMultipleThreads();
@@ -195,7 +195,7 @@ void Simulation::runMultipleThreads()
         ballistic+=sim->ballistic;
         backreflected+=sim->backreflected;
 
-        sim->saveOutput();
+        sim->saveOutput(n == 0 ? true : false);
         delete sim;
     }
 }
@@ -510,7 +510,7 @@ BaseObject* Simulation::clone_impl() const
     return sim;
 }
 
-void Simulation::saveOutput()
+void Simulation::saveOutput(bool saveRNGState)
 {
     H5OutputFile file;
     if(outputFile == NULL) {
@@ -520,6 +520,9 @@ void Simulation::saveOutput()
     }
     else if(!file.openFile(outputFile))
         return;
+
+    if(saveRNGState)
+        file.saveRNGState(generatorState());
     file.appendTransmittedExitPoints(transmittedExitPoints.data(),2*transmitted);
     file.appendReflectedExitPoints(reflectedExitPoints.data(),2*reflected);
     file.appendTransmittedWalkTimes(transmittedWalkTimes.data(),transmitted);

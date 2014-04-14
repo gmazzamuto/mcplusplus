@@ -94,7 +94,7 @@ private:
 
     virtual BaseObject* clone_impl() const;
 
-    void saveOutput();
+    void saveOutput(bool saveRNGState=false);
 };
 
 #endif // SIMULATION_H

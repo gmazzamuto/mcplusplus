@@ -1,10 +1,14 @@
 #include "h5outputfile.h"
+#include "xmlparser.h"
 
 #include <fstream>
+#include <string.h>
+#include <iostream>
 
 H5OutputFile::H5OutputFile()
     : H5FileHelper()
 {
+    sim = NULL;
 }
 
 bool H5OutputFile::newFile(const char *fileName)
@@ -62,23 +66,19 @@ void H5OutputFile::loadFrom1Ddataset(const char *datasetName, MCfloat *destBuffe
 
 void H5OutputFile::writeVLenString(const char *datasetName, const string str)
 {
+    closeDataSet();
 #ifdef PRINT_DEBUG_MSG
     logMessage("Opening dataset %s...", datasetName);
 #endif
-    hsize_t     dims[1] = {1};
 
     const char *wdata[1];
     wdata[0] = str.data();
-    StrType dtype(0, H5T_VARIABLE);
 
-    DataSpace dspace(1,dims);
-
-    DataSet dset = file->createDataSet(datasetName,dtype,dspace);
+    DataSet dset = file->openDataSet(datasetName);
+    DataType dtype = dset.getDataType();
     dset.write((void*)wdata,dtype);
 
     dset.close();
-    dspace.close();
-    dtype.close();
 }
 
 string H5OutputFile::readVLenString(const char *datasetName)
@@ -87,8 +87,10 @@ string H5OutputFile::readVLenString(const char *datasetName)
     logMessage("Opening dataset %s...", datasetName);
 #endif
     string str;
-    if(!dataSetExists("XMLDescription"))
+    if(!dataSetExists(datasetName))
         return str;
+
+    closeDataSet();
 
     DataSet dset = file->openDataSet(datasetName);
     DataType dtype = dset.getDataType();
@@ -97,8 +99,9 @@ string H5OutputFile::readVLenString(const char *datasetName)
 
     char *buf[1];
 
-    dset.read(buf,dtype,H5P_DEFAULT);
-    str = buf[0];
+    dset.read(buf,dtype);
+    if(buf[0] != NULL)
+        str = buf[0];
 
     dset.close();
     dspace.close();
@@ -129,6 +132,16 @@ void H5OutputFile::loadReflectedWalkTimes(MCfloat *destBuffer, const hsize_t *st
     loadFrom1Ddataset("walk-times/reflected",destBuffer,start,count);
 }
 
+void H5OutputFile::saveRNGState(const string s)
+{
+    writeVLenString("RNGState",s);
+}
+
+string H5OutputFile::readRNGState()
+{
+    return readVLenString("RNGState");
+}
+
 unsigned long H5OutputFile::transmitted()
 {
     openDataSet("exit-points/transmitted");
@@ -156,6 +169,17 @@ string H5OutputFile::readXMLDescription()
     return readVLenString("XMLDescription");
 }
 
+Simulation *H5OutputFile::simulation()
+{
+    if(sim != NULL)
+        return sim;
+    XMLParser parser;
+    parser.parseString(readXMLDescription());
+    sim = parser.simulation();
+    sim->setGeneratorState(readRNGState());
+    return sim;
+}
+
 bool H5OutputFile::createDatasets()
 {
 
@@ -178,6 +202,14 @@ bool H5OutputFile::createDatasets()
     newGroup("walk-times");
     ret = newDataset("walk-times/reflected",ndims,dims,chunkDims);
     ret = newDataset("walk-times/transmitted",ndims,dims,chunkDims);
+
+    dims[0] = 1;
+    StrType dtype(0, H5T_VARIABLE);
+    DataSpace dspace(1,dims);
+    file->createDataSet("RNGState",dtype,dspace);
+    file->createDataSet("XMLDescription",dtype,dspace);
+    dtype.close();
+    dspace.close();
 
     return true;
 }

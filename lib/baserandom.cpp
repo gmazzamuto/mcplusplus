@@ -7,6 +7,7 @@ BaseRandom::BaseRandom(BaseObject *parent) :
     BaseObject(NULL), mt(NULL)
 {
     _inheritsRandom = true;
+    mt = NULL;
 
     // we need to call the BaseObject constructor with NULL parent, and then
     // call setParent() here because we want setParent_impl() to be called (but
@@ -34,8 +35,6 @@ BaseRandom::~BaseRandom() {
 void BaseRandom::setSeed(unsigned int seed) {
     if(hasAParent() && parent()->inheritsRandom())
         return;
-    if(mt != NULL)
-        delete mt;
     _currentSeed = seed;
     setRNG(new mt19937(seed));
 }
@@ -52,10 +51,26 @@ void BaseRandom::loadGenerator(const char *fileName)
 {
     ifstream file;
     file.open(fileName);
-    mt = new mt19937(0);
+    mt19937 *mt = new mt19937(0);
     file >> *mt;
     setRNG(mt);
     file.close();
+}
+
+string BaseRandom::generatorState() const
+{
+    stringstream ss;
+    ss << *mt;
+    return ss.str();
+}
+
+void BaseRandom::setGeneratorState(string state)
+{
+    mt19937 *mt = new mt19937(0);
+    stringstream ss;
+    ss << state;
+    ss >> *mt;
+    setRNG(mt);
 }
 
 unsigned int BaseRandom::currentSeed() const
@@ -66,6 +81,8 @@ unsigned int BaseRandom::currentSeed() const
 void BaseRandom::setRNG(mt19937 *mt) {
     if(mt == NULL)
         return;
+    if(!hasAParent() && this->mt != NULL)
+        delete this->mt;
     this->mt = mt;
     setRNG_impl();
     std::list<BaseRandom *>::const_iterator iterator;
