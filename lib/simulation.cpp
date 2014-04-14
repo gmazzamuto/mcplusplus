@@ -561,6 +561,7 @@ void Simulation::saveOutput(bool saveRNGState)
     if(backreflected && walkTimesSaveFlags & BACKREFLECTED)
         file.appendBackReflectedWalkTimes(backreflectedWalkTimes.data(),backreflected);
 
+    file.appendPhotonCounts(transmitted,ballistic,reflected,backreflected);
     file.close();
     logMessage("Data written to %s", outputFile);
 }

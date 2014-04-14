@@ -34,8 +34,11 @@ public:
     void loadBackReflectedWalkTimes(MCfloat *destBuffer, const hsize_t *start=NULL, const hsize_t *count=NULL);
     void saveRNGState(const string s);
     string readRNGState();
+    void appendPhotonCounts(const unsigned long int transmitted, const unsigned long int ballistic, const unsigned long int reflected, const unsigned long int backReflected);
     unsigned long int transmitted();
+    unsigned long int ballistic();
     unsigned long int reflected();
+    unsigned long int backReflected();
     void writeXMLDescription(const char *inputFile);
     string readXMLDescription();
     Simulation *simulation() const;
@@ -48,6 +51,8 @@ private:
     void writeVLenString(const char *datasetName, const string str);
     string readVLenString(const char *datasetName);
     bool openFile_impl();
+
+    unsigned long int _transmitted, _ballistic, _reflected, _backReflected;
 
     XMLParser *_parser;
 };

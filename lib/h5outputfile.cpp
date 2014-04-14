@@ -8,6 +8,11 @@
 H5OutputFile::H5OutputFile()
     : H5FileHelper()
 {
+    _transmitted = 0;
+    _ballistic = 0;
+    _reflected = 0;
+    _backReflected = 0;
+    _parser = new XMLParser();
 }
 
 H5OutputFile::~H5OutputFile()
@@ -142,6 +147,16 @@ bool H5OutputFile::openFile_impl()
     _parser->parseString(readXMLDescription());
     _parser->simulation()->setGeneratorState(readRNGState());
 
+    DataSet dSet = file->openDataSet("photon-counters");
+
+    unsigned long int buf[4];
+    dSet.read(buf,dSet.getDataType());
+    _transmitted = buf[0];
+    _ballistic = buf[1];
+    _reflected = buf[2];
+    _backReflected = buf[3];
+
+    dSet.close();
     return true;
 }
 
@@ -195,16 +210,41 @@ string H5OutputFile::readRNGState()
     return readVLenString("RNGState");
 }
 
+void H5OutputFile::appendPhotonCounts(const unsigned long transmitted, const unsigned long ballistic, const unsigned long reflected, const unsigned long backReflected)
+{
+    _transmitted += transmitted;
+    _ballistic += ballistic;
+    _reflected += reflected;
+    _backReflected += backReflected;
+
+    unsigned long int buf[4];
+    buf[0] = _transmitted;
+    buf[1] = _ballistic;
+    buf[2] = _reflected;
+    buf[3] = _backReflected;
+    DataSet dset = file->openDataSet("photon-counters");
+    dset.write(buf,dset.getDataType());
+    dset.close();
+}
+
 unsigned long H5OutputFile::transmitted()
 {
-    openDataSet("exit-points/transmitted");
-    return extentDims()[0]/2;
+    return _transmitted;
+}
+
+unsigned long H5OutputFile::ballistic()
+{
+    return _ballistic;
 }
 
 unsigned long H5OutputFile::reflected()
 {
-    openDataSet("exit-points/reflected");
-    return extentDims()[0]/2;
+    return _reflected;
+}
+
+unsigned long H5OutputFile::backReflected()
+{
+    return _backReflected;
 }
 
 void H5OutputFile::writeXMLDescription(const char *inputFile)
@@ -234,14 +274,22 @@ XMLParser *H5OutputFile::xmlParser() const
 
 bool H5OutputFile::createDatasets()
 {
+    int ndims = 1;
+    hsize_t dims[ndims], chunkDims[ndims];
+    bool ret = false;
+    dims[0] = 4; chunkDims[0] = 1;
+    try {
+        dataSpace = new DataSpace (ndims, dims, dims);
+        dataSet  = new DataSet(file->createDataSet("photon-counters", PredType::NATIVE_INT32, *dataSpace));
+    }
+    catch (Exception error) {
+        logMessage("Cannot create dataset %s.\n", "photon-counters");
+        return false;
+    }
 
     newGroup("exit-points");
 
-    int ndims = 1;
-    hsize_t dims[ndims], chunkDims[ndims];
-
     dims[0] = 0; chunkDims[0] = 2;
-    bool ret = false;
     ret = newDataset("exit-points/transmitted",ndims,dims,chunkDims);
     ret = newDataset("exit-points/ballistic",ndims,dims,chunkDims);
     ret = newDataset("exit-points/reflected",ndims,dims,chunkDims);
