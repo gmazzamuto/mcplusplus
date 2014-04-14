@@ -1,30 +1,49 @@
 #include <stdio.h>
-#include "xmlparser.h"
 #include <QApplication>
 #include <QMainWindow>
 #include "h5outputfile.h"
 #include "simulationviewer.h"
+#include "xmlparser.h"
 
 int main(int argc, char *argv[])
 {
-    XMLParser parser;
-    parser.parseFile(argv[1]);
+    Simulation *sim;
 
-    Simulation *sim = parser.simulation();
-
+    H5File h5File;
     H5OutputFile file;
-    file.newFile("mcpp-output.h5");
-    file.writeXMLDescription(argv[1]);
-    file.close();
+    XMLParser *parser;
+
+    bool isValidH5 = false;
+
+    try {
+        isValidH5 = h5File.isHdf5("mcpp-output.h5");
+    }
+    catch (Exception e) {}
+
+    if(!isValidH5)
+    {
+        parser = new XMLParser();
+        parser->parseFile(argv[1]);
+        file.newFile("mcpp-output.h5");
+        file.writeXMLDescription(argv[1]);
+        sim = parser->simulation();
+        sim->setSeed(0);
+        file.close();
+    }
+    else {
+        file.openFile("mcpp-output.h5");
+        sim = file.simulation();
+        parser = file.xmlParser();
+    }
 
     sim->setTotalWalkers(atoll(argv[2]));
     sim->setNThreads(atoi(argv[3]));
 
-    sim->setSeed(0);
     sim->setOutputFileName("mcpp-output.h5");
     sim->run();
 
-    if(parser.showTrajectoryEnabled()) {
+    if(parser->showTrajectoryEnabled())
+    {
         QApplication a(argc, argv);
         QMainWindow w;
         SimulationViewer simViewer(sim);

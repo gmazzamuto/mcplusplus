@@ -3,10 +3,8 @@
     <material name="material1" n="1.5" ls="1" g="0"/>
   </materials>
   <MLSample left="Air" right="Air">
-    <layer material="material1" thickness="40" />
-    <layer material="Air" thickness="40" />
-    <layer material="material1" thickness="40" />
+    <layer material="material1" thickness="35" />
   </MLSample>
-  <source rx="0" ry="0" rz="20" cosTheta="1" psi="uniform_0_2pi" walkTime="0"/>
-  <simulation showTrajectory="false" />
+ <source type="IsotropicPointSource" rz="1" walkTime="0"/>
+ <output exit-points="tb" walk-times="tb" />
 </MCPlusPlus>
