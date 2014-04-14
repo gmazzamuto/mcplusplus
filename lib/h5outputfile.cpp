@@ -103,11 +103,12 @@ string H5OutputFile::readVLenString(const char *datasetName)
     if(buf[0] != NULL)
         str = buf[0];
 
+    if(buf[0] != NULL)
+        H5Dvlen_reclaim(dtype.getId(),dspace.getId(),H5P_DEFAULT,buf);
+
     dset.close();
     dspace.close();
     dtype.close();
-
-    H5Dvlen_reclaim(dtype.getId(),dspace.getId(),H5P_DEFAULT,buf);
 
     return str;
 }
