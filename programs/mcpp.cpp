@@ -24,8 +24,7 @@ int main(int argc, char *argv[])
     {
         parser = new XMLParser();
         parser->parseFile(argv[1]);
-        file.newFile("mcpp-output.h5");
-        file.writeXMLDescription(argv[1]);
+        file.newFromXML(argv[1],"mcpp-output.h5");
         sim = parser->simulation();
         sim->setSeed(0);
         file.close();

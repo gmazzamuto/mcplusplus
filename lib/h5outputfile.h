@@ -16,6 +16,7 @@ public:
     virtual ~H5OutputFile();
 
     virtual bool newFile(const char *fileName);
+    bool newFromXML(const char *xmlFile, const char *fileName);
     void appendTransmittedExitPoints(const MCfloat *buffer, const hsize_t size);
     void appendBallisticExitPoints(const MCfloat *buffer, const hsize_t size);
     void appendReflectedExitPoints(const MCfloat *buffer, const hsize_t size);

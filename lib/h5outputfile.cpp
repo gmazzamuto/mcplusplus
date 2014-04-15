@@ -33,6 +33,15 @@ bool H5OutputFile::newFile(const char *fileName)
     return true;
 }
 
+bool H5OutputFile::newFromXML(const char *xmlFile, const char *fileName)
+{
+    bool ret = newFile(fileName);
+    if(!ret)
+        return false;
+    writeXMLDescription(xmlFile);
+    return true;
+}
+
 void H5OutputFile::appendTransmittedExitPoints(const MCfloat *buffer, const hsize_t size)
 {
     appendTo1Ddataset("exit-points/transmitted",buffer,size);
