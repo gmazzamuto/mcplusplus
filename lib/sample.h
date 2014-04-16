@@ -23,7 +23,6 @@ public:
 
 private:
     unsigned int _nLayers;
-    deque<Material> layers;
     deque<MCfloat> _zBoundaries;
     deque<Material> materials;
 };

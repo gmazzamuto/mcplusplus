@@ -24,7 +24,6 @@ Sample::Sample(BaseObject *parent) :
 
 void Sample::addLayer(const Material &material, MCfloat thickness) {
     _nLayers++;
-    layers.push_back(material);
     _zBoundaries.push_back(_zBoundaries.back() + thickness);
     materials.insert(materials.end()-1,material);
 }
@@ -46,7 +45,6 @@ void Sample::addLayer(const Material &material, MCfloat thickness) {
 void Sample::addPreLayer(const Material &material, MCfloat thickness)
 {
     _nLayers++;
-    layers.push_front(material);
     _zBoundaries.push_front(_zBoundaries.front() - thickness);
     materials.insert(materials.begin()+1,material);
 }
