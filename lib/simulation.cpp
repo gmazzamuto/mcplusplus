@@ -199,10 +199,8 @@ void Simulation::runMultipleThreads()
         else
             sim->setSeed(n);
         sims.push_back(sim);
-    }
 
-    //launch threads
-    for (unsigned int n = 0; n < nThreads; ++n) {
+        //launch thread
         threads.push_back(new boost::thread(workerFunc,sims.at(n)));
     }
 
@@ -210,9 +208,7 @@ void Simulation::runMultipleThreads()
     for (unsigned int n = 0; n < nThreads; ++n) {
         boost::thread * thread = threads.at(n);
         thread->join();
-    }
 
-    for(unsigned int n = 0; n < nThreads; ++n) {
         Simulation *sim = sims.at(n);
         transmitted+=sim->transmitted;
         reflected+=sim->reflected;
