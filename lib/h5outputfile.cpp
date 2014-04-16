@@ -307,6 +307,7 @@ void H5OutputFile::setXMLParserEnabled(bool enable)
 
 bool H5OutputFile::createDatasets()
 {
+#define NWALKER_CHUNK sizeof(MCfloat) * 8192
     int ndims = 1;
     hsize_t dims[ndims], chunkDims[ndims];
     bool ret = false;
@@ -323,13 +324,13 @@ bool H5OutputFile::createDatasets()
     newGroup("RNGStates");
     newGroup("exit-points");
 
-    dims[0] = 0; chunkDims[0] = 2;
+    dims[0] = 0; chunkDims[0] = 2*NWALKER_CHUNK;
     ret = newDataset("exit-points/transmitted",ndims,dims,chunkDims);
     ret = newDataset("exit-points/ballistic",ndims,dims,chunkDims);
     ret = newDataset("exit-points/reflected",ndims,dims,chunkDims);
     ret = newDataset("exit-points/back-reflected",ndims,dims,chunkDims);
 
-    chunkDims[0] = 1;
+    chunkDims[0] = NWALKER_CHUNK;
 
     newGroup("walk-times");
     ret = newDataset("walk-times/transmitted",ndims,dims,chunkDims);
