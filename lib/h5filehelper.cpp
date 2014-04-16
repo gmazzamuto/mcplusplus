@@ -89,6 +89,9 @@ bool H5FileHelper::openFile(const char *fileName, const char* dataSetName)
     copyToInternalVariable(&fName,fileName);
     if(!success)
         return false;
+    success = openFile_impl();
+    if(!success)
+        return false;
     if(dataSetName != NULL)
         success = openDataSet(dataSetName);
     return success;
@@ -239,6 +242,11 @@ void H5FileHelper::newGroup(const char *name)
 void H5FileHelper::_openDataSet(const char *dataSetName) {
     dataSet = new DataSet (file->openDataSet(dataSetName));
     dataSpace = new DataSpace (dataSet->getSpace());
+}
+
+bool H5FileHelper::openFile_impl()
+{
+    return true;
 }
 
 /**

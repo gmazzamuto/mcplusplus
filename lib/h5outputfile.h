@@ -1,7 +1,7 @@
 #ifndef H5OUTPUTFILE_H
 #define H5OUTPUTFILE_H
 
-#include "simulation.h"
+#include "xmlparser.h"
 #include "h5filehelper.h"
 
 /**
@@ -13,6 +13,7 @@ class H5OutputFile : public H5FileHelper
 {
 public:
     H5OutputFile();
+    virtual ~H5OutputFile();
 
     virtual bool newFile(const char *fileName);
     void appendTransmittedExitPoints(const MCfloat *buffer, const hsize_t size);
@@ -37,7 +38,8 @@ public:
     unsigned long int reflected();
     void writeXMLDescription(const char *inputFile);
     string readXMLDescription();
-    Simulation *simulation();
+    Simulation *simulation() const;
+    XMLParser *xmlParser() const;
 
 private:
     bool createDatasets();
@@ -45,8 +47,9 @@ private:
     void loadFrom1Ddataset(const char *datasetName, MCfloat *destBuffer, const hsize_t *start, const hsize_t *count);
     void writeVLenString(const char *datasetName, const string str);
     string readVLenString(const char *datasetName);
+    bool openFile_impl();
 
-    Simulation *sim;
+    XMLParser *_parser;
 };
 
 #endif // H5OUTPUTFILE_H

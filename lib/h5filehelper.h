@@ -49,6 +49,7 @@ private:
     void resetErrorAutoPrint();
     bool _openFile(const char *fileName);
     void _openDataSet(const char *dataSetName);
+    virtual bool openFile_impl();
 };
 
 #endif // H5FILEHELPER_H

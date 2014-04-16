@@ -8,7 +8,11 @@
 H5OutputFile::H5OutputFile()
     : H5FileHelper()
 {
-    sim = NULL;
+}
+
+H5OutputFile::~H5OutputFile()
+{
+    delete _parser;
 }
 
 bool H5OutputFile::newFile(const char *fileName)
@@ -133,6 +137,14 @@ string H5OutputFile::readVLenString(const char *datasetName)
     return str;
 }
 
+bool H5OutputFile::openFile_impl()
+{
+    _parser->parseString(readXMLDescription());
+    _parser->simulation()->setGeneratorState(readRNGState());
+
+    return true;
+}
+
 void H5OutputFile::loadTransmittedExitPoints(MCfloat *destBuffer, const hsize_t *start, const hsize_t *count)
 {
     loadFrom1Ddataset("exit-points/transmitted",destBuffer,start,count);
@@ -210,15 +222,14 @@ string H5OutputFile::readXMLDescription()
     return readVLenString("XMLDescription");
 }
 
-Simulation *H5OutputFile::simulation()
+Simulation *H5OutputFile::simulation() const
 {
-    if(sim != NULL)
-        return sim;
-    XMLParser parser;
-    parser.parseString(readXMLDescription());
-    sim = parser.simulation();
-    sim->setGeneratorState(readRNGState());
-    return sim;
+    return _parser->simulation();
+}
+
+XMLParser *H5OutputFile::xmlParser() const
+{
+    return _parser;
 }
 
 bool H5OutputFile::createDatasets()
