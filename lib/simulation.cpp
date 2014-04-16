@@ -541,6 +541,8 @@ void Simulation::saveOutput(bool saveRNGState)
     else if(!file.openFile(outputFile))
         return;
 
+    file.setXMLParserEnabled(false);
+
     if(saveRNGState)
         file.saveRNGState(generatorState());
     if(transmitted && exitPointsSaveFlags & TRANSMITTED)

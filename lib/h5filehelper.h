@@ -19,7 +19,7 @@ public:
     void newGroup(const char *name);
     virtual bool newFile(const char *fileName);
     bool newDataset(const char *datasetName, int ndims, const hsize_t *dims, const hsize_t *chunk_dim);
-    bool dataSetExists(const char *dataSetName);
+    bool dataSetExists(const char *dataSetName) const;
     void loadHyperSlab(const hsize_t *start, const hsize_t *count, double *destBuffer);
     void writeHyperSlab(const hsize_t *start, const hsize_t *count, const double *srcBuffer);
     void loadAll(double *destBuffer);

@@ -34,7 +34,7 @@ public:
     void loadReflectedWalkTimes(MCfloat *destBuffer, const hsize_t *start=NULL, const hsize_t *count=NULL);
     void loadBackReflectedWalkTimes(MCfloat *destBuffer, const hsize_t *start=NULL, const hsize_t *count=NULL);
     void saveRNGState(const string s);
-    string readRNGState();
+    string readRNGState() const;
     void appendPhotonCounts(const u_int64_t transmitted, const u_int64_t ballistic, const u_int64_t reflected, const u_int64_t backReflected);
     u_int64_t transmitted();
     u_int64_t ballistic();
@@ -44,18 +44,20 @@ public:
     string readXMLDescription();
     Simulation *simulation() const;
     XMLParser *xmlParser() const;
+    void setXMLParserEnabled(bool enable);
 
 private:
     bool createDatasets();
     void appendTo1Ddataset(const char *datasetName, const MCfloat *buffer, const hsize_t size);
     void loadFrom1Ddataset(const char *datasetName, MCfloat *destBuffer, const hsize_t *start, const hsize_t *count);
     void writeVLenString(const char *datasetName, const string str);
-    string readVLenString(const char *datasetName);
+    string readVLenString(const char *datasetName) const;
     bool openFile_impl();
 
     u_int64_t _transmitted, _ballistic, _reflected, _backReflected;
 
     XMLParser *_parser;
+    bool XMLParserEnabled;
 };
 
 #endif // H5OUTPUTFILE_H

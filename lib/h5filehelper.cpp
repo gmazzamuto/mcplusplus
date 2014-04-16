@@ -198,7 +198,8 @@ bool H5FileHelper::newDataset(const char *datasetName, int ndims, const hsize_t 
  * @return true if the dataset exists, false otherwise
  */
 
-bool H5FileHelper::dataSetExists(const char *dataSetName) {
+bool H5FileHelper::dataSetExists(const char *dataSetName) const
+{
     return H5Lexists(file->getId(),dataSetName,H5P_DEFAULT);
 }
 

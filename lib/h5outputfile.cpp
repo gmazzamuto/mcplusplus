@@ -13,6 +13,7 @@ H5OutputFile::H5OutputFile()
     _reflected = 0;
     _backReflected = 0;
     _parser = new XMLParser();
+    XMLParserEnabled = true;
 }
 
 H5OutputFile::~H5OutputFile()
@@ -119,7 +120,7 @@ void H5OutputFile::writeVLenString(const char *datasetName, const string str)
     dset.close();
 }
 
-string H5OutputFile::readVLenString(const char *datasetName)
+string H5OutputFile::readVLenString(const char *datasetName) const
 {
 #ifdef PRINT_DEBUG_MSG
     logMessage("Opening dataset %s...", datasetName);
@@ -127,8 +128,6 @@ string H5OutputFile::readVLenString(const char *datasetName)
     string str;
     if(!dataSetExists(datasetName))
         return str;
-
-    closeDataSet();
 
     DataSet dset = file->openDataSet(datasetName);
     DataType dtype = dset.getDataType();
@@ -153,8 +152,10 @@ string H5OutputFile::readVLenString(const char *datasetName)
 
 bool H5OutputFile::openFile_impl()
 {
-    _parser->parseString(readXMLDescription());
-    _parser->simulation()->setGeneratorState(readRNGState());
+    if(XMLParserEnabled) {
+        _parser->parseString(readXMLDescription());
+        _parser->simulation()->setGeneratorState(readRNGState());
+    }
 
     DataSet dSet = file->openDataSet("photon-counters");
 
@@ -214,7 +215,7 @@ void H5OutputFile::saveRNGState(const string s)
     writeVLenString("RNGState",s);
 }
 
-string H5OutputFile::readRNGState()
+string H5OutputFile::readRNGState() const
 {
     return readVLenString("RNGState");
 }
@@ -279,6 +280,11 @@ Simulation *H5OutputFile::simulation() const
 XMLParser *H5OutputFile::xmlParser() const
 {
     return _parser;
+}
+
+void H5OutputFile::setXMLParserEnabled(bool enable)
+{
+    XMLParserEnabled = enable;
 }
 
 bool H5OutputFile::createDatasets()
