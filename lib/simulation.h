@@ -48,6 +48,7 @@ public:
         BALLISTIC = 1 << 1,
         REFLECTED = 1 << 2,
         BACKREFLECTED = 1 << 3,
+        ALL = 0xf,
     };
 
     void setWalkTimesSaveFlags(unsigned int value);

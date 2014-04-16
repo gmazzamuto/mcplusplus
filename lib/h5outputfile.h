@@ -15,7 +15,7 @@ public:
     H5OutputFile();
     virtual ~H5OutputFile();
 
-    virtual bool newFile(const char *fileName);
+    virtual bool newFile(const char *fileName, bool create_datasets=true);
     bool newFromXML(const char *xmlFile, const char *fileName);
     void appendTransmittedExitPoints(const MCfloat *buffer, const hsize_t size);
     void appendBallisticExitPoints(const MCfloat *buffer, const hsize_t size);
@@ -47,7 +47,7 @@ public:
     void setXMLParserEnabled(bool enable);
 
 private:
-    bool createDatasets();
+    bool createDatasets(uint exitPointsSaveFlags, uint walkTimesSaveFlags);
     bool createRNGDataset(uint seed);
     void appendTo1Ddataset(const char *datasetName, const MCfloat *buffer, const hsize_t size);
     void loadFrom1Ddataset(const char *datasetName, MCfloat *destBuffer, const hsize_t *start, const hsize_t *count);

@@ -20,8 +20,14 @@ public:
     void parseFile(const string &filename);
     void parseString(const string &xmlContent);
     bool showTrajectoryEnabled() const;
+    void setXMLFile(const string &filename);
+    void setXMLContent(const string &xmlContent);
     Simulation *simulation() const;
     Sample *sample() const;
+    void parseAll();
+    void parseOutput();
+    uint walkTimesSaveFlags() const;
+    uint exitPointsSaveFlags() const;
 
 private:
     ptree pt;
@@ -37,8 +43,8 @@ private:
     Material material(const string name) const;
     AbstractDistribution *distribution(const string name) const;
     bool boolean(const string str) const;
-    void parse();
     unsigned int walkerSaveFlags(const string flags);
+    unsigned int _walkTimesSaveFlags, _exitPointsSaveFlags;
 };
 
 #endif // XMLPARSER_H

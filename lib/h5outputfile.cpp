@@ -21,24 +21,32 @@ H5OutputFile::~H5OutputFile()
     delete _parser;
 }
 
-bool H5OutputFile::newFile(const char *fileName)
+bool H5OutputFile::newFile(const char *fileName, bool create_datasets)
 {
     bool ret = false;
     ret = H5FileHelper::newFile(fileName);
     if(!ret)
         return false;
 
-    ret = createDatasets();
-    if(!ret)
-        return false;
+    if(create_datasets) {
+        ret = createDatasets(Simulation::ALL, Simulation::ALL);
+        if(!ret)
+            return false;
+    }
     return true;
 }
 
 bool H5OutputFile::newFromXML(const char *xmlFile, const char *fileName)
 {
-    bool ret = newFile(fileName);
+    bool ret = newFile(fileName,false);
     if(!ret)
         return false;
+    XMLParser parser;
+    parser.setXMLFile(xmlFile);
+    parser.parseOutput();
+
+    createDatasets(parser.exitPointsSaveFlags(),parser.walkTimesSaveFlags());
+
     writeXMLDescription(xmlFile);
     return true;
 }
@@ -305,7 +313,7 @@ void H5OutputFile::setXMLParserEnabled(bool enable)
     XMLParserEnabled = enable;
 }
 
-bool H5OutputFile::createDatasets()
+bool H5OutputFile::createDatasets(uint exitPointsSaveFlags, uint walkTimesSaveFlags)
 {
 #define NWALKER_CHUNK sizeof(MCfloat) * 8192
     int ndims = 1;
@@ -322,21 +330,33 @@ bool H5OutputFile::createDatasets()
     }
 
     newGroup("RNGStates");
-    newGroup("exit-points");
 
-    dims[0] = 0; chunkDims[0] = 2*NWALKER_CHUNK;
-    ret = newDataset("exit-points/transmitted",ndims,dims,chunkDims);
-    ret = newDataset("exit-points/ballistic",ndims,dims,chunkDims);
-    ret = newDataset("exit-points/reflected",ndims,dims,chunkDims);
-    ret = newDataset("exit-points/back-reflected",ndims,dims,chunkDims);
+    if(exitPointsSaveFlags) {
+        newGroup("exit-points");
 
-    chunkDims[0] = NWALKER_CHUNK;
+        dims[0] = 0; chunkDims[0] = 2*NWALKER_CHUNK;
+        if(exitPointsSaveFlags & Simulation::TRANSMITTED)
+            ret = newDataset("exit-points/transmitted",ndims,dims,chunkDims);
+        if(exitPointsSaveFlags & Simulation::BALLISTIC)
+            ret = newDataset("exit-points/ballistic",ndims,dims,chunkDims);
+        if(exitPointsSaveFlags & Simulation::REFLECTED)
+            ret = newDataset("exit-points/reflected",ndims,dims,chunkDims);
+        if(exitPointsSaveFlags & Simulation::BACKREFLECTED)
+            ret = newDataset("exit-points/back-reflected",ndims,dims,chunkDims);
+    }
 
-    newGroup("walk-times");
-    ret = newDataset("walk-times/transmitted",ndims,dims,chunkDims);
-    ret = newDataset("walk-times/ballistic",ndims,dims,chunkDims);
-    ret = newDataset("walk-times/reflected",ndims,dims,chunkDims);
-    ret = newDataset("walk-times/back-reflected",ndims,dims,chunkDims);
+    if(walkTimesSaveFlags) {
+        chunkDims[0] = NWALKER_CHUNK;
+        newGroup("walk-times");
+        if(walkTimesSaveFlags & Simulation::TRANSMITTED)
+            ret = newDataset("walk-times/transmitted",ndims,dims,chunkDims);
+        if(walkTimesSaveFlags & Simulation::BALLISTIC)
+            ret = newDataset("walk-times/ballistic",ndims,dims,chunkDims);
+        if(walkTimesSaveFlags & Simulation::REFLECTED)
+            ret = newDataset("walk-times/reflected",ndims,dims,chunkDims);
+        if(walkTimesSaveFlags & Simulation::BACKREFLECTED)
+            ret = newDataset("walk-times/back-reflected",ndims,dims,chunkDims);
+    }
 
     dims[0] = 1;
     StrType dtype(0, H5T_VARIABLE);

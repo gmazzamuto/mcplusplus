@@ -17,21 +17,17 @@ XMLParser::XMLParser()
 
 void XMLParser::parseFile(const string &filename)
 {
-    read_xml(filename, pt, xml_parser::no_comments);
-    parse();
+    setXMLFile(filename);
+    parseAll();
 }
 
 void XMLParser::parseString(const string &xmlContent)
 {
-    if(xmlContent.empty())
-        return;
-    stringstream ss;
-    ss << xmlContent;
-    read_xml(ss, pt, xml_parser::no_comments);
-    parse();
+    setXMLContent(xmlContent);
+    parseAll();
 }
 
-void XMLParser::parse() {
+void XMLParser::parseAll() {
     //materials
     map<string,Material>::iterator it = materialMap.begin();
     BOOST_FOREACH(ptree::value_type &v, pt.get_child("MCPlusPlus.materials")) {
@@ -113,23 +109,53 @@ void XMLParser::parse() {
     } catch (ptree_bad_path) {
     }
 
-
     //output
+    parseOutput();
+    sim->setExitPointsSaveFlags(_exitPointsSaveFlags);
+    sim->setWalkTimesSaveFlags(_walkTimesSaveFlags);
+}
+
+void XMLParser::parseOutput()
+{
     try {
         ptree v = pt.get_child("MCPlusPlus.output");
         string str = v.get<string>("<xmlattr>.exit-points", "__default__");
         if(str!="__default__")
-            sim->setExitPointsSaveFlags(walkerSaveFlags(str));
+            _exitPointsSaveFlags = walkerSaveFlags(str);
         str = v.get<string>("<xmlattr>.walk-times", "__default__");
         if(str!="__default__")
-            sim->setWalkTimesSaveFlags(walkerSaveFlags(str));
+            _walkTimesSaveFlags = walkerSaveFlags(str);
     } catch (ptree_bad_path) {
     }
+}
+
+uint XMLParser::walkTimesSaveFlags() const
+{
+    return _walkTimesSaveFlags;
+}
+
+uint XMLParser::exitPointsSaveFlags() const
+{
+    return _exitPointsSaveFlags;
 }
 
 bool XMLParser::showTrajectoryEnabled() const
 {
     return showTrajectory;
+}
+
+void XMLParser::setXMLFile(const string &filename)
+{
+    read_xml(filename, pt, xml_parser::no_comments);
+}
+
+void XMLParser::setXMLContent(const string &xmlContent)
+{
+    if(xmlContent.empty())
+        return;
+    stringstream ss;
+    ss << xmlContent;
+    read_xml(ss, pt, xml_parser::no_comments);
 }
 
 Simulation *XMLParser::simulation() const
@@ -145,7 +171,7 @@ Sample *XMLParser::sample() const
 Material XMLParser::material(const string name) const
 {
     if(name == "Air")
-       return Air();
+        return Air();
     else if(name == "Vacuum")
         return Vacuum();
     else if(name == "GlassSlide")
