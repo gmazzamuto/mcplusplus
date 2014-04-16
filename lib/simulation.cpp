@@ -148,9 +148,17 @@ void Simulation::run() {
     time(&startTime);
 
     if(nThreads == 1) {
+        if(!wasCloned()) {
+            if(multipleRNGStates.size() == 0)
+                setSeed(0);
+            else
+                setGeneratorState(multipleRNGStates[0]);
+        }
+
         runSingleThread();
+
         if(!wasCloned())
-            saveOutput(true);
+            saveOutput();
     }
     else
         runMultipleThreads();
@@ -184,11 +192,21 @@ void Simulation::runMultipleThreads()
         if(n<remainder)
             nWalkers++;
         sim->setTotalWalkers(nWalkers);
-        sim->setSeed(currentSeed()+n);
+        if(n<multipleRNGStates.size()) {
+            sim->setSeed(n);
+            sim->setGeneratorState(multipleRNGStates[n]);
+        }
+        else
+            sim->setSeed(n);
         sims.push_back(sim);
-        threads.push_back(new boost::thread(workerFunc,sim));
     }
 
+    //launch threads
+    for (unsigned int n = 0; n < nThreads; ++n) {
+        threads.push_back(new boost::thread(workerFunc,sims.at(n)));
+    }
+
+    //wait for all threads to finish
     for (unsigned int n = 0; n < nThreads; ++n) {
         boost::thread * thread = threads.at(n);
         thread->join();
@@ -201,14 +219,14 @@ void Simulation::runMultipleThreads()
         ballistic+=sim->ballistic;
         backreflected+=sim->backreflected;
 
-        sim->saveOutput(n == 0 ? true : false);
+        sim->saveOutput();
         delete sim;
     }
 }
 
 void Simulation::runSingleThread() {
     clear();
-    logMessage("starting... Number of walkers = %u, seed = %u",totalWalkers(), currentSeed());
+    logMessage("starting... Number of walkers = %Lu, original seed = %u",totalWalkers(), currentSeed());
     nLayers = _sample->nLayers();
 
 
@@ -520,6 +538,11 @@ void Simulation::reportProgress() const
     logMessage(s);
 }
 
+void Simulation::setMultipleRNGStates(const vector<string> states)
+{
+    multipleRNGStates = states;
+}
+
 BaseObject* Simulation::clone_impl() const
 {
     Simulation *sim = new Simulation();
@@ -533,7 +556,7 @@ BaseObject* Simulation::clone_impl() const
     return sim;
 }
 
-void Simulation::saveOutput(bool saveRNGState)
+void Simulation::saveOutput()
 {
     H5OutputFile file;
     if(outputFile == NULL) {
@@ -546,8 +569,8 @@ void Simulation::saveOutput(bool saveRNGState)
 
     file.setXMLParserEnabled(false);
 
-    if(saveRNGState)
-        file.saveRNGState(generatorState());
+    file.saveRNGState(currentSeed(), generatorState());
+
     if(transmitted && exitPointsSaveFlags & TRANSMITTED)
         file.appendTransmittedExitPoints(transmittedExitPoints.data(),2*transmitted);
     if(ballistic && exitPointsSaveFlags & BALLISTIC)

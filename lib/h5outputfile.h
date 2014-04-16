@@ -33,8 +33,8 @@ public:
     void loadBallisticWalkTimes(MCfloat *destBuffer, const hsize_t *start=NULL, const hsize_t *count=NULL);
     void loadReflectedWalkTimes(MCfloat *destBuffer, const hsize_t *start=NULL, const hsize_t *count=NULL);
     void loadBackReflectedWalkTimes(MCfloat *destBuffer, const hsize_t *start=NULL, const hsize_t *count=NULL);
-    void saveRNGState(const string s);
-    string readRNGState() const;
+    void saveRNGState(const uint seed, const string s);
+    string readRNGState(const uint seed) const;
     void appendPhotonCounts(const u_int64_t transmitted, const u_int64_t ballistic, const u_int64_t reflected, const u_int64_t backReflected);
     u_int64_t transmitted();
     u_int64_t ballistic();
@@ -48,6 +48,7 @@ public:
 
 private:
     bool createDatasets();
+    bool createRNGDataset(uint seed);
     void appendTo1Ddataset(const char *datasetName, const MCfloat *buffer, const hsize_t size);
     void loadFrom1Ddataset(const char *datasetName, MCfloat *destBuffer, const hsize_t *start, const hsize_t *count);
     void writeVLenString(const char *datasetName, const string str);

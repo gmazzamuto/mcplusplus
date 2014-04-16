@@ -41,6 +41,7 @@ public:
     void clear();
     const vector<vector<MCfloat> *> *trajectories() const;
     void reportProgress() const;
+    void setMultipleRNGStates(const vector<string> states);
 
     enum walkerTypes {
         TRANSMITTED = 1 << 0,
@@ -68,7 +69,7 @@ private:
     u_int64_t backreflected;  /**< @brief total number of walkers reflected without undergoing any scattering event*/
     u_int64_t n;
 
-    unsigned int nThreads;
+    uint nThreads;
 
     //trajectories
     vector<vector <MCfloat>*> *trajectoryPoints;
@@ -102,8 +103,9 @@ private:
 
     virtual BaseObject* clone_impl() const;
 
-    void saveOutput(bool saveRNGState=false);
+    void saveOutput();
     unsigned int walkTimesSaveFlags, exitPointsSaveFlags;
+    vector<string> multipleRNGStates;
 };
 
 #endif // SIMULATION_H

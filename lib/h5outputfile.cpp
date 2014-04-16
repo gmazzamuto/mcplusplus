@@ -153,8 +153,19 @@ string H5OutputFile::readVLenString(const char *datasetName) const
 bool H5OutputFile::openFile_impl()
 {
     if(XMLParserEnabled) {
+        vector<string> RNGStates;
         _parser->parseString(readXMLDescription());
-        _parser->simulation()->setGeneratorState(readRNGState());
+        uint s = 0;
+        while (1) {
+            stringstream ss;
+            ss << "RNGStates/seed";
+            ss << s;
+            if(!dataSetExists(ss.str().c_str()))
+                break;
+            RNGStates.push_back(readRNGState(s));
+            s++;
+        }
+        _parser->simulation()->setMultipleRNGStates(RNGStates);
     }
 
     DataSet dSet = file->openDataSet("photon-counters");
@@ -210,14 +221,21 @@ void H5OutputFile::loadBackReflectedWalkTimes(MCfloat *destBuffer, const hsize_t
     loadFrom1Ddataset("walk-times/back-reflected",destBuffer,start,count);
 }
 
-void H5OutputFile::saveRNGState(const string s)
+void H5OutputFile::saveRNGState(const uint seed, const string s)
 {
-    writeVLenString("RNGState",s);
+    stringstream ss;
+    ss << "RNGStates/seed";
+    ss << seed;
+    createRNGDataset(seed);
+    writeVLenString(ss.str().c_str(),s);
 }
 
-string H5OutputFile::readRNGState() const
+string H5OutputFile::readRNGState(const uint seed) const
 {
-    return readVLenString("RNGState");
+    stringstream ss;
+    ss << "RNGStates/seed";
+    ss << seed;
+    return readVLenString(ss.str().c_str());
 }
 
 void H5OutputFile::appendPhotonCounts(const u_int64_t transmitted, const u_int64_t ballistic, const u_int64_t reflected, const u_int64_t backReflected)
@@ -302,6 +320,7 @@ bool H5OutputFile::createDatasets()
         return false;
     }
 
+    newGroup("RNGStates");
     newGroup("exit-points");
 
     dims[0] = 0; chunkDims[0] = 2;
@@ -320,11 +339,29 @@ bool H5OutputFile::createDatasets()
 
     dims[0] = 1;
     StrType dtype(0, H5T_VARIABLE);
-    DataSpace dspace(1,dims);
-    file->createDataSet("RNGState",dtype,dspace);
+    DataSpace dspace(1,dims,dims);
     file->createDataSet("XMLDescription",dtype,dspace);
     dtype.close();
     dspace.close();
 
     return ret;
+}
+
+bool H5OutputFile::createRNGDataset(uint seed)
+{
+    int ndims = 1;
+    hsize_t dims[ndims];
+    dims[0] = 1;
+    StrType dtype(0, H5T_VARIABLE);
+    DataSpace dspace(1,dims,dims);
+    stringstream ss;
+    ss << "RNGStates/seed";
+    ss << seed;
+    if(!dataSetExists(ss.str().c_str())) {
+        logMessage("Creating dataset %s",ss.str().c_str());
+        file->createDataSet(ss.str(),dtype,dspace);
+    }
+    dtype.close();
+    dspace.close();
+    return true;
 }
