@@ -13,7 +13,7 @@ H5OutputFile::H5OutputFile()
     _reflected = 0;
     _backReflected = 0;
     _parser = new XMLParser();
-    XMLParserEnabled = true;
+    XMLParserEnabled = false;
 }
 
 H5OutputFile::~H5OutputFile()

@@ -557,6 +557,7 @@ BaseObject* Simulation::clone_impl() const
 void Simulation::saveOutput()
 {
     H5OutputFile file;
+
     if(outputFile == NULL) {
         outputFile = "output.h5";
         logMessage("No output file name provided, writing to %s", outputFile);
@@ -564,8 +565,6 @@ void Simulation::saveOutput()
     }
     else if(!file.openFile(outputFile))
         return;
-
-    file.setXMLParserEnabled(false);
 
     file.saveRNGState(currentSeed(), generatorState());
 

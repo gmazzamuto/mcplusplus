@@ -11,6 +11,7 @@ int main(int argc, char *argv[])
 
     H5File h5File;
     H5OutputFile file;
+    file.setXMLParserEnabled(true);
     XMLParser *parser;
 
     bool isValidH5 = false;
