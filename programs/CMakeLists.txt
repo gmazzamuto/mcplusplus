@@ -37,3 +37,6 @@ add_executable(mcplot mcplot.cpp glwidget.cpp outputfileviewer.cpp ${GLWidget_HE
 target_link_libraries(mcplot MCPlusPlus GL ${QT_LIBRARIES})
 install (TARGETS mcplot DESTINATION bin)
 
+add_executable(mcwalktimehist mcwalktimehist.cpp)
+target_link_libraries(mcwalktimehist MCPlusPlus)
+install (TARGETS mcwalktimehist DESTINATION bin)
