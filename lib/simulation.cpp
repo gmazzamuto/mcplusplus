@@ -250,6 +250,7 @@ void Simulation::runSingleThread() {
         vector<u_int64_t> nInteractions;
         currentTrajectory = new std::vector<MCfloat>();
         layer0 = 0;
+        totalLengthInCurrentLayer = 0;
 
         walker = source->constructWalker();
         nInteractions.insert(nInteractions.begin(),nLayers+2,0);
@@ -422,7 +423,7 @@ void Simulation::move(const MCfloat length) {
         memcpy(walker->r0,walker->r1,3*sizeof(MCfloat));
         memcpy(walker->k0,walker->k1,3*sizeof(MCfloat));
 
-        walker->walkTime += length/materials[layer0].v;
+        totalLengthInCurrentLayer+=length;
         return;
     }
 
@@ -438,9 +439,11 @@ void Simulation::move(const MCfloat length) {
         intersection[i] = walker->r0[i] + walker->k1[i]*t;
     }
 
-    memcpy(walker->r0,intersection,3*sizeof(MCfloat)); //move to interface, r1 is now meaningless (should we set it to NULL?)
+    memcpy(walker->r0,intersection,3*sizeof(MCfloat)); //move to interface, r1 is now meaningless
+    totalLengthInCurrentLayer+=t;
+    walker->walkTime += totalLengthInCurrentLayer/materials[layer0].v;
+    totalLengthInCurrentLayer = 0;
     onInterface = true;
-    walker->walkTime += t/materials[layer0].v;
 
     //so we updated r0, now it's time to update k0
 

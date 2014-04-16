@@ -84,6 +84,7 @@ private:
     unsigned int nLayers;
     unsigned int layer0;
     unsigned int layer1;
+    MCfloat totalLengthInCurrentLayer;
     bool onInterface;
     time_t startTime;
     Walker *walker;
