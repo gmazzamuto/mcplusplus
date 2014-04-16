@@ -214,6 +214,7 @@ void Simulation::runSingleThread() {
 
     MCfloat *uzb = (MCfloat*)malloc((nLayers+2)*sizeof(MCfloat));
     Material *mat = (Material*)malloc((nLayers+2)*sizeof(Material));
+    MCfloat *mus = (MCfloat*)malloc((nLayers+2)*sizeof(MCfloat));
 
     for (unsigned int i = 0; i < nLayers+1; ++i) {
         uzb[i]=_sample->zBoundaries()->at(i);
@@ -221,6 +222,7 @@ void Simulation::runSingleThread() {
 
     for (unsigned int i = 0; i < nLayers+2; ++i) {
         mat[i]=*(_sample->material(i));
+        mus[i] = 1./mat[i].ls;
     }
 
     upperZBoundaries = uzb;
@@ -255,7 +257,7 @@ void Simulation::runSingleThread() {
             //spin k1 (i.e. scatter) only if the material is scattering
             //and we're not on an interface, use the old k1 otherwise
             if(materials[layer0].ls > 0) {
-                length = exponential_distribution<MCfloat>(materials[layer0].ls)(*mt);
+                length = exponential_distribution<MCfloat>(mus[layer0])(*mt);
                 if(!onInterface) {
 
                     nInteractions[layer0]++;
@@ -364,6 +366,7 @@ void Simulation::runSingleThread() {
     }
     free(uzb);
     free(mat);
+    free(mus);
 }
 
 /**
