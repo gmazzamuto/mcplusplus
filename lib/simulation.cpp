@@ -529,7 +529,6 @@ void Simulation::saveTrajectoryPoint(MCfloat *point) {
 
 void Simulation::reportProgress() const
 {
-    string msg;
     string s = str( format("Progress = %.1lf%% (%u / %u)") % (100.*currentWalker()/totalWalkers()) % currentWalker() % totalWalkers());
     logMessage(s);
 }
