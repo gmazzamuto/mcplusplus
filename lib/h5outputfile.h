@@ -17,22 +17,13 @@ public:
 
     virtual bool newFile(const char *fileName, bool create_datasets=true);
     bool newFromXML(const char *xmlFile, const char *fileName);
-    void appendTransmittedExitPoints(const MCfloat *buffer, const hsize_t size);
-    void appendBallisticExitPoints(const MCfloat *buffer, const hsize_t size);
-    void appendReflectedExitPoints(const MCfloat *buffer, const hsize_t size);
-    void appendBackReflectedExitPoints(const MCfloat *buffer, const hsize_t size);
-    void appendTransmittedWalkTimes(const MCfloat *buffer, const hsize_t size);
-    void appendBallisticWalkTimes(const MCfloat *buffer, const hsize_t size);
-    void appendReflectedWalkTimes(const MCfloat *buffer, const hsize_t size);
-    void appendBackReflectedWalkTimes(const MCfloat *buffer, const hsize_t size);
-    void loadTransmittedExitPoints(MCfloat *destBuffer, const hsize_t *start=NULL, const hsize_t *count=NULL);
-    void loadBallisticExitPoints(MCfloat *destBuffer, const hsize_t *start=NULL, const hsize_t *count=NULL);
-    void loadReflectedExitPoints(MCfloat *destBuffer, const hsize_t *start=NULL, const hsize_t *count=NULL);
-    void loadBackReflectedExitPoints(MCfloat *destBuffer, const hsize_t *start=NULL, const hsize_t *count=NULL);
-    void loadTransmittedWalkTimes(MCfloat *destBuffer, const hsize_t *start=NULL, const hsize_t *count=NULL);
-    void loadBallisticWalkTimes(MCfloat *destBuffer, const hsize_t *start=NULL, const hsize_t *count=NULL);
-    void loadReflectedWalkTimes(MCfloat *destBuffer, const hsize_t *start=NULL, const hsize_t *count=NULL);
-    void loadBackReflectedWalkTimes(MCfloat *destBuffer, const hsize_t *start=NULL, const hsize_t *count=NULL);
+    void appendExitKVectors(Simulation::walkerIndexes idx, const MCfloat *buffer, const hsize_t size);
+    void appendExitPoints(Simulation::walkerIndexes idx, const MCfloat *buffer, const hsize_t size);
+    void appendWalkTimes(Simulation::walkerIndexes idx, const MCfloat *buffer, const hsize_t size);
+    void loadExitPoints(Simulation::walkerIndexes idx, MCfloat *destBuffer, const hsize_t *start=NULL, const hsize_t *count=NULL);
+    void loadWalkTimes(Simulation::walkerIndexes idx, MCfloat *destBuffer, const hsize_t *start=NULL, const hsize_t *count=NULL);
+    void loadExitKVectors(Simulation::walkerIndexes idx, MCfloat *destBuffer, const hsize_t *start=NULL, const hsize_t *count=NULL);
+
     void saveRNGState(const uint seed, const string s);
     string readRNGState(const uint seed) const;
     void appendPhotonCounts(const u_int64_t transmitted, const u_int64_t ballistic, const u_int64_t reflected, const u_int64_t backReflected);
@@ -47,7 +38,7 @@ public:
     void setXMLParserEnabled(bool enable);
 
 private:
-    bool createDatasets(uint exitPointsSaveFlags, uint walkTimesSaveFlags);
+    bool createDatasets(uint walkTimesSaveFlags, uint exitPointsSaveFlags, uint exitKVectorsSaveFlags);
     bool createRNGDataset(uint seed);
     void appendTo1Ddataset(const char *datasetName, const MCfloat *buffer, const hsize_t size);
     void loadFrom1Ddataset(const char *datasetName, MCfloat *destBuffer, const hsize_t *start, const hsize_t *count);

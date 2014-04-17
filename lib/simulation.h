@@ -48,11 +48,27 @@ public:
         BALLISTIC = 1 << 1,
         REFLECTED = 1 << 2,
         BACKREFLECTED = 1 << 3,
-        ALL = 0xf,
+        ALL_WALKERS = 0xf,
+    };
+
+    enum walkerIndexes {
+        IDX_TRANSMITTED = 0,
+        IDX_BALLISTIC = 1,
+        IDX_REFLECTED = 2,
+        IDX_BACKREFLECTED = 3,
+    };
+
+    enum directions {
+        DIR_X = 1 << 0,
+        DIR_Y = 1 << 1,
+        DIR_Z = 1 << 2,
+        ALL_DIRS = 0xf,
     };
 
     void setWalkTimesSaveFlags(unsigned int value);
     void setExitPointsSaveFlags(unsigned int value);
+    void setExitKVectorsSaveFlags(unsigned int value);
+    void setExitKVectorsDirsSaveFlags(unsigned int value);
     void terminate();
 
 private:
@@ -77,8 +93,9 @@ private:
     vector<vector <MCfloat>*> *trajectoryPoints;
     vector<MCfloat> *currentTrajectory;
 
-    vector<MCfloat> transmittedExitPoints, ballisticExitPoints, reflectedExitPoints, backreflectedExitPoints;
-    vector<MCfloat> transmittedWalkTimes, ballisticWalkTimes, reflectedWalkTimes, backreflectedWalkTimes;
+    vector<MCfloat> exitPoints[4];
+    vector<MCfloat> walkTimes[4];
+    vector<MCfloat> exitKVectors[4];
 
     //internal temporary variables
     const MCfloat *upperZBoundaries;
@@ -99,7 +116,11 @@ private:
     void move(const MCfloat length);
     void reflect();
     void refract();
-    void saveTrajectoryPoint(MCfloat *point);
+
+    void appendTrajectoryPoint(MCfloat *point);
+    void appendWalkTime();
+    void appendExitPoint(walkerIndexes idx);
+    void appendExitKVector(walkerIndexes idx);
 
     void runMultipleThreads();
     void runSingleThread();
@@ -107,7 +128,8 @@ private:
     virtual BaseObject* clone_impl() const;
 
     void saveOutput();
-    unsigned int walkTimesSaveFlags, exitPointsSaveFlags;
+
+    unsigned int walkTimesSaveFlags, exitPointsSaveFlags, exitKVectorsDirsSaveFlags, exitKVectorsSaveFlags;
     vector<string> multipleRNGStates;
     bool forceTermination;
 };

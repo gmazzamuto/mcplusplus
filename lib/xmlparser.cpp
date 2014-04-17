@@ -113,6 +113,8 @@ void XMLParser::parseAll() {
     parseOutput();
     sim->setExitPointsSaveFlags(_exitPointsSaveFlags);
     sim->setWalkTimesSaveFlags(_walkTimesSaveFlags);
+    sim->setExitKVectorsSaveFlags(_exitKVectorsSaveFlags);
+    sim->setExitKVectorsDirsSaveFlags(_exitKVectorsDirsSaveFlags);
 }
 
 void XMLParser::parseOutput()
@@ -129,6 +131,16 @@ void XMLParser::parseOutput()
             _walkTimesSaveFlags = 0;
         else
             _walkTimesSaveFlags = walkerSaveFlags(str);
+        str = v.get<string>("<xmlattr>.exit-k-vectors-dirs", "__default__");
+        if(str=="__default__")
+            _exitKVectorsDirsSaveFlags = 0;
+        else
+            _exitKVectorsDirsSaveFlags = dirSaveFlags(str);
+        str = v.get<string>("<xmlattr>.exit-k-vectors", "__default__");
+        if(str=="__default__")
+            _exitKVectorsSaveFlags = 0;
+        else
+            _exitKVectorsSaveFlags = walkerSaveFlags(str);
     } catch (ptree_bad_path) {
     }
 }
@@ -141,6 +153,16 @@ uint XMLParser::walkTimesSaveFlags() const
 uint XMLParser::exitPointsSaveFlags() const
 {
     return _exitPointsSaveFlags;
+}
+
+uint XMLParser::exitKVectorsSaveFlags() const
+{
+    return _exitKVectorsSaveFlags;
+}
+
+uint XMLParser::exitKVectorsDirsSaveFlags() const
+{
+    return _exitKVectorsDirsSaveFlags;
 }
 
 bool XMLParser::showTrajectoryEnabled() const
@@ -226,6 +248,28 @@ unsigned int XMLParser::walkerSaveFlags(const string flags) {
             break;
         case 'k':
             ret |= Simulation::BACKREFLECTED;
+            break;
+        default:
+            break;
+        }
+    }
+
+    return ret;
+}
+
+unsigned int XMLParser::dirSaveFlags(const string flags)
+{
+    unsigned int ret = 0;
+    for (unsigned int i = 0; i < flags.size(); ++i) {
+        switch (flags.at(i)) {
+        case 'x':
+            ret |= Simulation::DIR_X;
+            break;
+        case 'y':
+            ret |= Simulation::DIR_Y;
+            break;
+        case 'z':
+            ret |= Simulation::DIR_Z;
             break;
         default:
             break;

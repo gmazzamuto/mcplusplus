@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
     u_int64_t transmitted = file.transmitted();
 
     MCfloat *wt = (MCfloat*)malloc(sizeof(MCfloat)*transmitted);
-    file.loadTransmittedWalkTimes(wt);
+    file.loadWalkTimes(Simulation::IDX_TRANSMITTED, wt);
 
     MCfloat min=1./0., max=-1./0.;
     MCfloat binSize = 5e-2;

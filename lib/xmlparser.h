@@ -28,6 +28,8 @@ public:
     void parseOutput();
     uint walkTimesSaveFlags() const;
     uint exitPointsSaveFlags() const;
+    uint exitKVectorsSaveFlags() const;
+    uint exitKVectorsDirsSaveFlags() const;
 
 private:
     ptree pt;
@@ -44,7 +46,9 @@ private:
     AbstractDistribution *distribution(const string name) const;
     bool boolean(const string str) const;
     unsigned int walkerSaveFlags(const string flags);
-    unsigned int _walkTimesSaveFlags, _exitPointsSaveFlags;
+    unsigned int dirSaveFlags(const string flags);
+
+    unsigned int _walkTimesSaveFlags, _exitPointsSaveFlags, _exitKVectorsDirsSaveFlags, _exitKVectorsSaveFlags;
 };
 
 #endif // XMLPARSER_H
