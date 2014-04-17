@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
     file.loadTransmittedWalkTimes(wt);
 
     MCfloat min=1./0., max=-1./0.;
-    MCfloat binSize = 1e-3;
+    MCfloat binSize = 5e-2;
 
     //find min and max values
     for (int i = 0; i < transmitted; ++i) {
