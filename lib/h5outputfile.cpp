@@ -381,7 +381,9 @@ bool H5OutputFile::createRNGDataset(uint seed)
     ss << "RNGStates/seed";
     ss << seed;
     if(!dataSetExists(ss.str().c_str())) {
+#ifdef PRINT_DEBUG_MSG
         logMessage("Creating dataset %s",ss.str().c_str());
+#endif
         file->createDataSet(ss.str(),dtype,dspace);
     }
     dtype.close();

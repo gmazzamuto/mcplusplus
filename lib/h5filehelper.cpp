@@ -273,6 +273,9 @@ void H5FileHelper::loadHyperSlab(const hsize_t *start, const hsize_t *count, dou
 #endif
     dataSpace->selectHyperslab(H5S_SELECT_SET, count, start);
     dataSet->read(destBuffer,PredType::NATIVE_DOUBLE,memspace,*dataSpace);
+#ifdef PRINT_DEBUG_MSG
+    logMessage("done.");
+#endif
 }
 
 /**
@@ -283,7 +286,13 @@ void H5FileHelper::loadHyperSlab(const hsize_t *start, const hsize_t *count, dou
  */
 
 void H5FileHelper::loadAll(double *destBuffer) {
+#ifdef PRINT_DEBUG_MSG
+    logMessage("Loading whole dataset...");
+#endif
     dataSet->read(destBuffer,PredType::NATIVE_DOUBLE,H5S_ALL,H5S_ALL);
+#ifdef PRINT_DEBUG_MSG
+    logMessage("done.");
+#endif
 }
 
 /**
