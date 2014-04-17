@@ -574,8 +574,19 @@ void Simulation::saveTrajectoryPoint(MCfloat *point) {
 
 void Simulation::reportProgress() const
 {
-    string s = str( format("Progress = %.1lf%% (%u / %u)") % (100.*currentWalker()/totalWalkers()) % currentWalker() % totalWalkers());
-    logMessage(s);
+    string s = str( format("Progress = %.1lf%% (%u / %u) ") % (100.*currentWalker()/totalWalkers()) % currentWalker() % totalWalkers());
+    time_t now;
+    time(&now);
+    double secsPerWalker = difftime(now,startTime) / currentWalker();
+    time_t eta = now + secsPerWalker*(totalWalkers()-currentWalker());
+    struct tm * timeinfo;
+    timeinfo = localtime (&eta);
+    char buffer [80];
+    strftime (buffer,80,"%F %T",timeinfo);
+    stringstream ss;
+    ss << s;
+    ss << "ETA: " << buffer;
+    logMessage(ss.str());
 }
 
 void Simulation::setMultipleRNGStates(const vector<string> states)
