@@ -53,6 +53,7 @@ public:
 
     void setWalkTimesSaveFlags(unsigned int value);
     void setExitPointsSaveFlags(unsigned int value);
+    void terminate();
 
 private:
     const Sample *_sample;
@@ -108,6 +109,7 @@ private:
     void saveOutput();
     unsigned int walkTimesSaveFlags, exitPointsSaveFlags;
     vector<string> multipleRNGStates;
+    bool forceTermination;
 };
 
 #endif // SIMULATION_H

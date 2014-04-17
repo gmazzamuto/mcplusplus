@@ -14,6 +14,8 @@ using namespace boost::math;
 using namespace boost::math::constants;
 
 Simulation *mostRecentInstance=NULL;
+vector<boost::thread*> threads;
+vector<Simulation *> sims;
 
 MCfloat module(const MCfloat *x) {
     return sqrt(x[0]*x[0] + x[1]*x[1] + x[2]*x[2]);
@@ -23,19 +25,39 @@ MCfloat module2D(const MCfloat x, const MCfloat y) {
     return sqrt(x*x + y*y);
 }
 
-void sigUsr1Handler(int signo) {
+void sigUsr1Handler(int sig, siginfo_t *siginfo, void *context) {
     Simulation *sim = mostRecentInstance;
 
-    if(mostRecentInstance == NULL)
+    if(sim == NULL)
         return;
 
     sim->reportProgress();
 }
 
-void installSigHandler() {
+void installSigUSR1Handler() {
     struct sigaction sa;
-    sa.sa_handler = sigUsr1Handler;
+    memset(&sa,0,sizeof(sa));
+    sa.sa_sigaction = sigUsr1Handler;
+    sa.sa_flags = SA_SIGINFO;
     sigaction(SIGUSR1,&sa,NULL);
+}
+
+void sigTermHandler(int sig, siginfo_t *siginfo, void *context) {
+    fprintf(stderr, "SIGTERM received... closing all threads\n");
+    for(uint i=0;i<sims.size();i++) {
+        Simulation *sim = sims.at(i);
+        if(sim == NULL)
+            continue;
+        sim->terminate();
+    }
+}
+
+void installSigTermHandler() {
+    struct sigaction sa;
+    memset(&sa,0,sizeof(sa));
+    sa.sa_sigaction = sigTermHandler;
+    sa.sa_flags = SA_SIGINFO;
+    sigaction(SIGTERM,&sa,NULL);
 }
 
 void workerFunc(Simulation *sim) {
@@ -59,7 +81,7 @@ Simulation::Simulation(BaseObject *parent) :
     exitPointsSaveFlags = 0;
     clear();
     mostRecentInstance = this;
-    installSigHandler();
+    installSigUSR1Handler();
 }
 
 Simulation::~Simulation() {
@@ -81,6 +103,7 @@ void Simulation::clear() {
     ballisticWalkTimes.clear();
     reflectedWalkTimes.clear();
     backreflectedWalkTimes.clear();
+    forceTermination = false;
 }
 
 void Simulation::setTotalWalkers(u_int64_t N) {
@@ -149,8 +172,12 @@ void Simulation::run() {
 
     if(nThreads == 1) {
         if(!wasCloned()) {
-            if(multipleRNGStates.size() == 0)
+            installSigTermHandler();
+            sims.clear();
+            sims.push_back(this);
+            if(multipleRNGStates.size() == 0) {
                 setSeed(0);
+            }
             else
                 setGeneratorState(multipleRNGStates[0]);
         }
@@ -180,8 +207,9 @@ void Simulation::run() {
 
 void Simulation::runMultipleThreads()
 {
-    vector<boost::thread*> threads;
-    vector<Simulation *> sims;
+    threads.clear();
+    sims.clear();
+    installSigTermHandler();
 
     unsigned int walkersPerThread = totalWalkers()/nThreads;
     unsigned int remainder = totalWalkers() % nThreads;
@@ -217,6 +245,7 @@ void Simulation::runMultipleThreads()
 
         sim->saveOutput();
         delete sim;
+        sims.at(n) = NULL;
     }
 }
 
@@ -246,7 +275,7 @@ void Simulation::runSingleThread() {
 
     CosThetaGenerator deflCosine(0,this); // I set g=0 without any particular reason
 
-    while(n < _totalWalkers) {
+    while(n < _totalWalkers && !forceTermination) {
         vector<u_int64_t> nInteractions;
         currentTrajectory = new std::vector<MCfloat>();
         layer0 = 0;
@@ -594,6 +623,11 @@ void Simulation::saveOutput()
 void Simulation::setExitPointsSaveFlags(unsigned int value)
 {
     exitPointsSaveFlags = value;
+}
+
+void Simulation::terminate()
+{
+    forceTermination = true;
 }
 
 
