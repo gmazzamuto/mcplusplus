@@ -277,7 +277,8 @@ void Simulation::runSingleThread() {
 
     while(n < _totalWalkers && !forceTermination) {
         vector<u_int64_t> nInteractions;
-        currentTrajectory = new std::vector<MCfloat>();
+        if(saveTrajectory)
+            currentTrajectory = new std::vector<MCfloat>();
         layer0 = 0;
         totalLengthInCurrentLayer = 0;
 
@@ -352,10 +353,13 @@ void Simulation::runSingleThread() {
                     if(nInteractions[i]) {
                         transmitted++;
 
-                        transmittedExitPoints.push_back(walker->r0[0]);
-                        transmittedExitPoints.push_back(walker->r0[1]);
+                        if(exitPointsSaveFlags & TRANSMITTED) {
+                            transmittedExitPoints.push_back(walker->r0[0]);
+                            transmittedExitPoints.push_back(walker->r0[1]);
+                        }
 
-                        transmittedWalkTimes.push_back(walker->walkTime);
+                        if(walkTimesSaveFlags & TRANSMITTED)
+                            transmittedWalkTimes.push_back(walker->walkTime);
 
                         diffuselyTransmitted = true;
                         break;
@@ -364,10 +368,13 @@ void Simulation::runSingleThread() {
                 if(!diffuselyTransmitted) {
                     ballistic++;
 
-                    ballisticExitPoints.push_back(walker->r0[0]);
-                    ballisticExitPoints.push_back(walker->r0[1]);
+                    if(exitPointsSaveFlags & BALLISTIC) {
+                        ballisticExitPoints.push_back(walker->r0[0]);
+                        ballisticExitPoints.push_back(walker->r0[1]);
+                    }
 
-                    ballisticWalkTimes.push_back(walker->walkTime);
+                    if(walkTimesSaveFlags & BALLISTIC)
+                            ballisticWalkTimes.push_back(walker->walkTime);
                 }
                 break;
             }
@@ -378,10 +385,13 @@ void Simulation::runSingleThread() {
                     if(nInteractions[i]) {
                         reflected++;
 
-                        reflectedExitPoints.push_back(walker->r0[0]);
-                        reflectedExitPoints.push_back(walker->r0[1]);
+                        if(exitPointsSaveFlags & REFLECTED) {
+                            reflectedExitPoints.push_back(walker->r0[0]);
+                            reflectedExitPoints.push_back(walker->r0[1]);
+                        }
 
-                        reflectedWalkTimes.push_back(walker->walkTime);
+                        if(walkTimesSaveFlags & REFLECTED)
+                            reflectedWalkTimes.push_back(walker->walkTime);
 
                         diffuselyReflected = true;
                         break;
@@ -390,10 +400,13 @@ void Simulation::runSingleThread() {
                 if(!diffuselyReflected) {
                     backreflected++;
 
-                    backreflectedExitPoints.push_back(walker->r0[0]);
-                    backreflectedExitPoints.push_back(walker->r0[1]);
+                    if(exitPointsSaveFlags & BACKREFLECTED) {
+                        backreflectedExitPoints.push_back(walker->r0[0]);
+                        backreflectedExitPoints.push_back(walker->r0[1]);
+                    }
 
-                    backreflectedWalkTimes.push_back(walker->walkTime);
+                    if(walkTimesSaveFlags & BACKREFLECTED)
+                        backreflectedWalkTimes.push_back(walker->walkTime);
                 }
                 break;
             }
