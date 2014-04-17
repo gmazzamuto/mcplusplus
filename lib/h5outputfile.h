@@ -17,12 +17,12 @@ public:
 
     virtual bool newFile(const char *fileName, bool create_datasets=true);
     bool newFromXML(const char *xmlFile, const char *fileName);
-    void appendExitKVectors(Simulation::walkerIndexes idx, const MCfloat *buffer, const hsize_t size);
-    void appendExitPoints(Simulation::walkerIndexes idx, const MCfloat *buffer, const hsize_t size);
-    void appendWalkTimes(Simulation::walkerIndexes idx, const MCfloat *buffer, const hsize_t size);
-    void loadExitPoints(Simulation::walkerIndexes idx, MCfloat *destBuffer, const hsize_t *start=NULL, const hsize_t *count=NULL);
-    void loadWalkTimes(Simulation::walkerIndexes idx, MCfloat *destBuffer, const hsize_t *start=NULL, const hsize_t *count=NULL);
-    void loadExitKVectors(Simulation::walkerIndexes idx, MCfloat *destBuffer, const hsize_t *start=NULL, const hsize_t *count=NULL);
+    void appendExitKVectors(Simulation::walkerType idx, const MCfloat *buffer, const hsize_t size);
+    void appendExitPoints(Simulation::walkerType idx, const MCfloat *buffer, const hsize_t size);
+    void appendWalkTimes(Simulation::walkerType idx, const MCfloat *buffer, const hsize_t size);
+    void loadExitPoints(Simulation::walkerType idx, MCfloat *destBuffer, const hsize_t *start=NULL, const hsize_t *count=NULL);
+    void loadWalkTimes(Simulation::walkerType idx, MCfloat *destBuffer, const hsize_t *start=NULL, const hsize_t *count=NULL);
+    void loadExitKVectors(Simulation::walkerType idx, MCfloat *destBuffer, const hsize_t *start=NULL, const hsize_t *count=NULL);
 
     void saveRNGState(const uint seed, const string s);
     string readRNGState(const uint seed) const;

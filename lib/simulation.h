@@ -43,19 +43,19 @@ public:
     void reportProgress() const;
     void setMultipleRNGStates(const vector<string> states);
 
-    enum walkerTypes {
-        TRANSMITTED = 1 << 0,
-        BALLISTIC = 1 << 1,
-        REFLECTED = 1 << 2,
-        BACKREFLECTED = 1 << 3,
-        ALL_WALKERS = 0xf,
+    enum walkerSaveFlags {
+        SAVE_TRANSMITTED = 1 << 0,
+        SAVE_BALLISTIC = 1 << 1,
+        SAVE_REFLECTED = 1 << 2,
+        SAVE_BACKREFLECTED = 1 << 3,
+        SAVE_ALL_WALKERS = 0xf,
     };
 
-    enum walkerIndexes {
-        IDX_TRANSMITTED = 0,
-        IDX_BALLISTIC = 1,
-        IDX_REFLECTED = 2,
-        IDX_BACKREFLECTED = 3,
+    enum walkerType {
+        TRANSMITTED = 0,
+        BALLISTIC = 1,
+        REFLECTED = 2,
+        BACKREFLECTED = 3,
     };
 
     enum directions {
@@ -119,8 +119,8 @@ private:
 
     void appendTrajectoryPoint(MCfloat *point);
     void appendWalkTime();
-    void appendExitPoint(walkerIndexes idx);
-    void appendExitKVector(walkerIndexes idx);
+    void appendExitPoint(walkerType idx);
+    void appendExitKVector(walkerType idx);
 
     void runMultipleThreads();
     void runSingleThread();

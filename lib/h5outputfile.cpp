@@ -29,7 +29,7 @@ bool H5OutputFile::newFile(const char *fileName, bool create_datasets)
         return false;
 
     if(create_datasets) {
-        ret = createDatasets(Simulation::ALL_WALKERS, Simulation::ALL_WALKERS, Simulation::ALL_WALKERS);
+        ret = createDatasets(Simulation::SAVE_ALL_WALKERS, Simulation::SAVE_ALL_WALKERS, Simulation::SAVE_ALL_WALKERS);
         if(!ret)
             return false;
     }
@@ -51,19 +51,19 @@ bool H5OutputFile::newFromXML(const char *xmlFile, const char *fileName)
     return true;
 }
 
-void H5OutputFile::appendExitKVectors(Simulation::walkerIndexes idx, const MCfloat *buffer, const hsize_t size)
+void H5OutputFile::appendExitKVectors(Simulation::walkerType idx, const MCfloat *buffer, const hsize_t size)
 {
     switch (idx) {
-    case Simulation::IDX_TRANSMITTED:
+    case Simulation::TRANSMITTED:
         appendTo1Ddataset("exit-k-vectors/transmitted",buffer,size);
         break;
-    case Simulation::IDX_BALLISTIC:
+    case Simulation::BALLISTIC:
         appendTo1Ddataset("exit-k-vectors/ballistic",buffer,size);
         break;
-    case Simulation::IDX_REFLECTED:
+    case Simulation::REFLECTED:
         appendTo1Ddataset("exit-k-vectors/reflected",buffer,size);
         break;
-    case Simulation::IDX_BACKREFLECTED:
+    case Simulation::BACKREFLECTED:
         appendTo1Ddataset("exit-k-vectors/back-reflected",buffer,size);
         break;
     default:
@@ -71,19 +71,19 @@ void H5OutputFile::appendExitKVectors(Simulation::walkerIndexes idx, const MCflo
     }
 }
 
-void H5OutputFile::appendExitPoints(Simulation::walkerIndexes idx, const MCfloat *buffer, const hsize_t size)
+void H5OutputFile::appendExitPoints(Simulation::walkerType idx, const MCfloat *buffer, const hsize_t size)
 {
     switch (idx) {
-    case Simulation::IDX_TRANSMITTED:
+    case Simulation::TRANSMITTED:
         appendTo1Ddataset("exit-points/transmitted",buffer,size);
         break;
-    case Simulation::IDX_BALLISTIC:
+    case Simulation::BALLISTIC:
         appendTo1Ddataset("exit-points/ballistic",buffer,size);
         break;
-    case Simulation::IDX_REFLECTED:
+    case Simulation::REFLECTED:
         appendTo1Ddataset("exit-points/reflected",buffer,size);
         break;
-    case Simulation::IDX_BACKREFLECTED:
+    case Simulation::BACKREFLECTED:
         appendTo1Ddataset("exit-points/back-reflected",buffer,size);
         break;
     default:
@@ -91,19 +91,19 @@ void H5OutputFile::appendExitPoints(Simulation::walkerIndexes idx, const MCfloat
     }
 }
 
-void H5OutputFile::appendWalkTimes(Simulation::walkerIndexes idx, const MCfloat *buffer, const hsize_t size)
+void H5OutputFile::appendWalkTimes(Simulation::walkerType idx, const MCfloat *buffer, const hsize_t size)
 {
     switch (idx) {
-    case Simulation::IDX_TRANSMITTED:
+    case Simulation::TRANSMITTED:
         appendTo1Ddataset("walk-times/transmitted",buffer,size);
         break;
-    case Simulation::IDX_BALLISTIC:
+    case Simulation::BALLISTIC:
         appendTo1Ddataset("walk-times/ballistic",buffer,size);
         break;
-    case Simulation::IDX_REFLECTED:
+    case Simulation::REFLECTED:
         appendTo1Ddataset("walk-times/reflected",buffer,size);
         break;
-    case Simulation::IDX_BACKREFLECTED:
+    case Simulation::BACKREFLECTED:
         appendTo1Ddataset("walk-times/back-reflected",buffer,size);
         break;
     default:
@@ -111,19 +111,19 @@ void H5OutputFile::appendWalkTimes(Simulation::walkerIndexes idx, const MCfloat 
     }
 }
 
-void H5OutputFile::loadExitPoints(Simulation::walkerIndexes idx, MCfloat *destBuffer, const hsize_t *start, const hsize_t *count)
+void H5OutputFile::loadExitPoints(Simulation::walkerType idx, MCfloat *destBuffer, const hsize_t *start, const hsize_t *count)
 {
     switch (idx) {
-    case Simulation::IDX_TRANSMITTED:
+    case Simulation::TRANSMITTED:
         loadFrom1Ddataset("exit-points/transmitted",destBuffer,start,count);
         break;
-    case Simulation::IDX_BALLISTIC:
+    case Simulation::BALLISTIC:
         loadFrom1Ddataset("exit-points/ballistic",destBuffer,start,count);
         break;
-    case Simulation::IDX_REFLECTED:
+    case Simulation::REFLECTED:
         loadFrom1Ddataset("exit-points/reflected",destBuffer,start,count);
         break;
-    case Simulation::IDX_BACKREFLECTED:
+    case Simulation::BACKREFLECTED:
         loadFrom1Ddataset("exit-points/back-reflected",destBuffer,start,count);
         break;
     default:
@@ -131,19 +131,19 @@ void H5OutputFile::loadExitPoints(Simulation::walkerIndexes idx, MCfloat *destBu
     }
 }
 
-void H5OutputFile::loadWalkTimes(Simulation::walkerIndexes idx, MCfloat *destBuffer, const hsize_t *start, const hsize_t *count)
+void H5OutputFile::loadWalkTimes(Simulation::walkerType idx, MCfloat *destBuffer, const hsize_t *start, const hsize_t *count)
 {
     switch (idx) {
-    case Simulation::IDX_TRANSMITTED:
+    case Simulation::TRANSMITTED:
         loadFrom1Ddataset("walk-times/transmitted",destBuffer,start,count);
         break;
-    case Simulation::IDX_BALLISTIC:
+    case Simulation::BALLISTIC:
         loadFrom1Ddataset("walk-times/ballistic",destBuffer,start,count);
         break;
-    case Simulation::IDX_REFLECTED:
+    case Simulation::REFLECTED:
         loadFrom1Ddataset("walk-times/reflected",destBuffer,start,count);
         break;
-    case Simulation::IDX_BACKREFLECTED:
+    case Simulation::BACKREFLECTED:
         loadFrom1Ddataset("walk-times/back-reflected",destBuffer,start,count);
         break;
     default:
@@ -151,19 +151,19 @@ void H5OutputFile::loadWalkTimes(Simulation::walkerIndexes idx, MCfloat *destBuf
     }
 }
 
-void H5OutputFile::loadExitKVectors(Simulation::walkerIndexes idx, MCfloat *destBuffer, const hsize_t *start, const hsize_t *count)
+void H5OutputFile::loadExitKVectors(Simulation::walkerType idx, MCfloat *destBuffer, const hsize_t *start, const hsize_t *count)
 {
     switch (idx) {
-    case Simulation::IDX_TRANSMITTED:
+    case Simulation::TRANSMITTED:
         loadFrom1Ddataset("exit-k-vectors/transmitted",destBuffer,start,count);
         break;
-    case Simulation::IDX_BALLISTIC:
+    case Simulation::BALLISTIC:
         loadFrom1Ddataset("exit-k-vectors/ballistic",destBuffer,start,count);
         break;
-    case Simulation::IDX_REFLECTED:
+    case Simulation::REFLECTED:
         loadFrom1Ddataset("exit-k-vectors/reflected",destBuffer,start,count);
         break;
-    case Simulation::IDX_BACKREFLECTED:
+    case Simulation::BACKREFLECTED:
         loadFrom1Ddataset("exit-k-vectors/back-reflected",destBuffer,start,count);
         break;
     default:
@@ -377,39 +377,39 @@ bool H5OutputFile::createDatasets(uint walkTimesSaveFlags, uint exitPointsSaveFl
         newGroup("exit-points");
 
         dims[0] = 0; chunkDims[0] = 2*NWALKER_CHUNK;
-        if(exitPointsSaveFlags & Simulation::TRANSMITTED)
+        if(exitPointsSaveFlags & Simulation::SAVE_TRANSMITTED)
             ret = newDataset("exit-points/transmitted",ndims,dims,chunkDims);
-        if(exitPointsSaveFlags & Simulation::BALLISTIC)
+        if(exitPointsSaveFlags & Simulation::SAVE_BALLISTIC)
             ret = newDataset("exit-points/ballistic",ndims,dims,chunkDims);
-        if(exitPointsSaveFlags & Simulation::REFLECTED)
+        if(exitPointsSaveFlags & Simulation::SAVE_REFLECTED)
             ret = newDataset("exit-points/reflected",ndims,dims,chunkDims);
-        if(exitPointsSaveFlags & Simulation::BACKREFLECTED)
+        if(exitPointsSaveFlags & Simulation::SAVE_BACKREFLECTED)
             ret = newDataset("exit-points/back-reflected",ndims,dims,chunkDims);
     }
 
     if(walkTimesSaveFlags) {
         dims[0] = 0; chunkDims[0] = NWALKER_CHUNK;
         newGroup("walk-times");
-        if(walkTimesSaveFlags & Simulation::TRANSMITTED)
+        if(walkTimesSaveFlags & Simulation::SAVE_TRANSMITTED)
             ret = newDataset("walk-times/transmitted",ndims,dims,chunkDims);
-        if(walkTimesSaveFlags & Simulation::BALLISTIC)
+        if(walkTimesSaveFlags & Simulation::SAVE_BALLISTIC)
             ret = newDataset("walk-times/ballistic",ndims,dims,chunkDims);
-        if(walkTimesSaveFlags & Simulation::REFLECTED)
+        if(walkTimesSaveFlags & Simulation::SAVE_REFLECTED)
             ret = newDataset("walk-times/reflected",ndims,dims,chunkDims);
-        if(walkTimesSaveFlags & Simulation::BACKREFLECTED)
+        if(walkTimesSaveFlags & Simulation::SAVE_BACKREFLECTED)
             ret = newDataset("walk-times/back-reflected",ndims,dims,chunkDims);
     }
 
     if(exitKVectorsSaveFlags) {
         dims[0] = 0; chunkDims[0] = 3*NWALKER_CHUNK/2;
         newGroup("exit-k-vectors");
-        if(exitKVectorsSaveFlags & Simulation::TRANSMITTED)
+        if(exitKVectorsSaveFlags & Simulation::SAVE_TRANSMITTED)
             ret = newDataset("exit-k-vectors/transmitted",ndims,dims,chunkDims);
-        if(exitKVectorsSaveFlags & Simulation::BALLISTIC)
+        if(exitKVectorsSaveFlags & Simulation::SAVE_BALLISTIC)
             ret = newDataset("exit-k-vectors/ballistic",ndims,dims,chunkDims);
-        if(exitKVectorsSaveFlags & Simulation::REFLECTED)
+        if(exitKVectorsSaveFlags & Simulation::SAVE_REFLECTED)
             ret = newDataset("exit-k-vectors/reflected",ndims,dims,chunkDims);
-        if(exitKVectorsSaveFlags & Simulation::BACKREFLECTED)
+        if(exitKVectorsSaveFlags & Simulation::SAVE_BACKREFLECTED)
             ret = newDataset("exit-k-vectors/back-reflected",ndims,dims,chunkDims);
     }
 
