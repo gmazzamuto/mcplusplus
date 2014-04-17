@@ -319,10 +319,12 @@ bool H5OutputFile::createDatasets(uint exitPointsSaveFlags, uint walkTimesSaveFl
     int ndims = 1;
     hsize_t dims[ndims], chunkDims[ndims];
     bool ret = false;
-    dims[0] = 4; chunkDims[0] = 1;
+    dims[0] = 4;
     try {
-        dataSpace = new DataSpace (ndims, dims, dims);
-        dataSet  = new DataSet(file->createDataSet("photon-counters", PredType::NATIVE_INT64, *dataSpace));
+        DataSpace dspace(ndims, dims, dims);
+        DataSet  dset = file->createDataSet("photon-counters", PredType::NATIVE_INT64, dspace);
+        dspace.close();
+        dset.close();
     }
     catch (Exception error) {
         logMessage("Cannot create dataset %s.\n", "photon-counters");
@@ -346,7 +348,7 @@ bool H5OutputFile::createDatasets(uint exitPointsSaveFlags, uint walkTimesSaveFl
     }
 
     if(walkTimesSaveFlags) {
-        chunkDims[0] = NWALKER_CHUNK;
+        dims[0] = 0; chunkDims[0] = NWALKER_CHUNK;
         newGroup("walk-times");
         if(walkTimesSaveFlags & Simulation::TRANSMITTED)
             ret = newDataset("walk-times/transmitted",ndims,dims,chunkDims);

@@ -120,10 +120,14 @@ void XMLParser::parseOutput()
     try {
         ptree v = pt.get_child("MCPlusPlus.output");
         string str = v.get<string>("<xmlattr>.exit-points", "__default__");
-        if(str!="__default__")
+        if(str=="__default__")
+            _exitPointsSaveFlags = 0;
+        else
             _exitPointsSaveFlags = walkerSaveFlags(str);
         str = v.get<string>("<xmlattr>.walk-times", "__default__");
-        if(str!="__default__")
+        if(str=="__default__")
+            _walkTimesSaveFlags = 0;
+        else
             _walkTimesSaveFlags = walkerSaveFlags(str);
     } catch (ptree_bad_path) {
     }
