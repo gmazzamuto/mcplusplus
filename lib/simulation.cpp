@@ -339,8 +339,7 @@ void Simulation::runSingleThread() {
 #ifdef DEBUG_TRAJECTORY
             printf("\t%lf\n",walker->k1[2]);
 #endif
-            move(length); //since I think that move() is conceptually the right place to increment walkTime it is convenient to pass the length as well
-                                 //or we might let length to be a private Simulation member, and update its value accordingly with its remaining portion when a reflection takes place
+            move(length);
 
 #ifdef DEBUG_TRAJECTORY
             printf("%d\t",layer0);
