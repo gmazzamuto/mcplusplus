@@ -1,5 +1,6 @@
 #include "walker.h"
 #include <stdlib.h>
+#include <string.h> //for memset()
 
 Walker::Walker()
 {
@@ -30,4 +31,13 @@ void Walker::swap_k0_k1()
     MCfloat *temp = k1;
     k1 = k0;
     k0 = temp;
+}
+
+void Walker::reset()
+{
+    memset(r0,0,3*sizeof(MCfloat));
+    memset(r1,0,3*sizeof(MCfloat));
+    memset(k0,0,3*sizeof(MCfloat));
+    memset(k1,0,3*sizeof(MCfloat));
+    walkTime = 0;
 }

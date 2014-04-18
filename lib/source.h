@@ -13,7 +13,7 @@ class Source : public BaseRandom
 {
 public:
     Source(BaseObject *parent=NULL);
-    virtual Walker *constructWalker() const;
+    void spin(Walker *walker) const;
     void setr0Distribution(AbstractDistribution **distrArray);
     void setk0Distribution(AbstractDistribution *cosThetaDistr, AbstractDistribution *psiDistr);
     void setWalkTimeDistribution(AbstractDistribution *distr);

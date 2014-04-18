@@ -47,8 +47,9 @@ void MainWindow::replot() {
 
     MCfloat t = lensDistance;
 
+    Walker *walker = new Walker();
     for (int i = 0; i < 1000; ++i) {
-        Walker *walker = src->constructWalker();
+        src->spin(walker);
 
         float r0[3];
         r0[0] = walker->r0[0];
@@ -65,9 +66,9 @@ void MainWindow::replot() {
         for (int i = 0; i < 3; ++i) {
             linePoints.push_back(r1[i]);
         }
-        delete walker;
     }
 
+    delete walker;
     delete delta1;
     delete src;
     glWidget->updateGL();

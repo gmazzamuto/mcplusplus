@@ -54,14 +54,11 @@ BaseObject *Source::clone_impl() const
  * @return A pointer to the newly constructed walker.
  */
 
-Walker* Source::constructWalker() const {
-    Walker *walker = new Walker();
-
+void Source::spin(Walker *walker) const {
+    walker->reset();
     spinPosition(walker); //the calling order is critical! GaussianRayBundleSource must spin the walker's position BEFORE calculating the direction vector
     spinDirection(walker);
     spinTime(walker);
-
-    return walker;
 }
 
 void Source::setr0Distribution(AbstractDistribution **distrArray) {

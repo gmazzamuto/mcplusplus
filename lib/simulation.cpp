@@ -273,6 +273,7 @@ void Simulation::runSingleThread() {
     materials = mat;
 
     n = 0;
+    walker = new Walker();
 
     CosThetaGenerator deflCosine(0,this); // I set g=0 without any particular reason
 
@@ -283,7 +284,7 @@ void Simulation::runSingleThread() {
         layer0 = 0;
         totalLengthInCurrentLayer = 0;
 
-        walker = source->constructWalker();
+        source->spin(walker);
         nInteractions.insert(nInteractions.begin(),nLayers+2,0);
 
         layer0 = layerAt(walker->r0); //updates also onInterface flag
@@ -431,11 +432,11 @@ void Simulation::runSingleThread() {
         printf("\nwalker reached layer %d\n",layer0);
 #endif
         n++;
-        delete walker;
     }
     free(uzb);
     free(mat);
     free(mus);
+    delete walker;
 }
 
 /**
