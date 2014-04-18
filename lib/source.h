@@ -98,6 +98,8 @@ private:
     virtual void spinTime(Walker *walker) const;
     virtual BaseObject *clone_impl() const;
 
+    virtual void describe_impl() const;
+
     MCfloat depth;
 };
 

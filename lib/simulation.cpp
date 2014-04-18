@@ -682,6 +682,14 @@ void Simulation::saveOutput()
     logMessage("Data written to %s", outputFile);
 }
 
+void Simulation::describe_impl() const
+{
+    logMessage("Sample description:");
+    _sample->describe();
+    logMessage("Source description:");
+    source->describe();
+}
+
 void Simulation::setExitPointsSaveFlags(unsigned int value)
 {
     exitPointsSaveFlags = value;

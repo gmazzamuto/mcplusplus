@@ -196,3 +196,8 @@ BaseObject *IsotropicPointSource::clone_impl() const
 {
     return new IsotropicPointSource(depth);
 }
+
+void IsotropicPointSource::describe_impl() const
+{
+    logMessage("z0 = %f", depth);
+}

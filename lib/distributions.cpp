@@ -74,6 +74,11 @@ BaseObject * DeltaDistribution::clone_impl() const
     return new DeltaDistribution(x0);
 }
 
+void DeltaDistribution::describe_impl() const
+{
+    logMessage("x0 = %f", x0);
+}
+
 
 
 

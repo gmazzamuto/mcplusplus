@@ -123,6 +123,22 @@ bool BaseObject::wasCloned() const
     return _wasCloned;
 }
 
+void BaseObject::describe() const
+{
+    describe_impl();
+}
+
+string BaseObject::typeName() const
+{
+    string str;
+#ifdef __GNUC__
+    str = abi::__cxa_demangle(typeid(*this).name(), 0, 0, 0);
+#else
+    str = "UNKNOWN OBJECT";
+#endif
+    return str;
+}
+
 string BaseObject::messagePrefix() const
 {
     time_t rawtime;
@@ -136,11 +152,10 @@ string BaseObject::messagePrefix() const
 
     string str = buffer;
 
-#ifdef __GNUC__
     str += "[";
-    str += abi::__cxa_demangle(typeid(*this).name(), 0, 0, 0);
+    str += typeName();
     str += "]";
-#endif
+
     str += " ";
     return str;
 }
@@ -151,6 +166,11 @@ void BaseObject::printLogMessage(const char *fmt, va_list arguments) const
         fprintf(stderr,fmt,NULL);
     else
         vfprintf(stderr,fmt,arguments);
+}
+
+void BaseObject::describe_impl() const
+{
+    logMessage("");
 }
 
 /**

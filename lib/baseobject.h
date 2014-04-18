@@ -6,6 +6,7 @@
 #include <boost/utility.hpp>
 #include "MCtypes.h"
 #include <cstdarg>
+#include <sstream>
 
 using namespace std;
 
@@ -44,8 +45,11 @@ public:
     bool inheritsRandom() const;
     BaseObject *clone() const;
     bool wasCloned() const;
+    void describe() const;
+    string typeName() const;
 
 protected:
+    void logMessage(const stringstream ss) const;
     void logMessage(const string &msg) const;
     void logMessage(const char* fmt, ...) const;
     bool _inheritsRandom;
@@ -67,6 +71,8 @@ private:
 
     string messagePrefix() const;
     void printLogMessage(const char *fmt, va_list arguments=NULL) const;
+
+    virtual void describe_impl() const;
 };
 
 #endif // BASEOBJECT_H

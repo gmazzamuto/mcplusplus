@@ -25,6 +25,8 @@ private:
     unsigned int _nLayers;
     deque<MCfloat> _zBoundaries;
     deque<Material> materials;
+
+    virtual void describe_impl() const;
 };
 
 #endif // SAMPLE_H

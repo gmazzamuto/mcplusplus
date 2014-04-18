@@ -94,3 +94,20 @@ unsigned int Sample::layerAt(MCfloat z)
     }
     return i;
 }
+
+void Sample::describe_impl() const
+{
+    for (uint i = 0; i < materials.size(); ++i) {
+        stringstream ss;
+        const Material *mat = &materials.at(i);
+        ss << "Layer  " << i;
+        if(i > 0 && i <= _nLayers)
+            ss << " thickness = " << _zBoundaries.at(i) - _zBoundaries.at(i-1) << "\t";
+        else
+            ss << " thickness = infinity";
+        ss << "\tMaterial: n = " << mat->n << "\tv = " << mat->v;
+        if(mat->ls > 0)
+             ss << "\tls = " << mat->ls << "\tg = " << mat->g;
+        logMessage(ss.str());
+    }
+}

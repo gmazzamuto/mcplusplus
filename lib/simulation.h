@@ -132,6 +132,8 @@ private:
     unsigned int walkTimesSaveFlags, exitPointsSaveFlags, exitKVectorsDirsSaveFlags, exitKVectorsSaveFlags;
     vector<string> multipleRNGStates;
     bool forceTermination;
+
+    virtual void describe_impl() const;
 };
 
 #endif // SIMULATION_H
