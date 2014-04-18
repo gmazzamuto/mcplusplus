@@ -326,12 +326,18 @@ void Simulation::runSingleThread() {
                         walker->k1[1] = (sinTheta*(walker->k0[1]*walker->k0[2]*cosPsi + walker->k0[0]*sinPsi))/temp + cosTheta*walker->k0[1];
                         walker->k1[2] = -sinTheta*cosPsi*temp + cosTheta*walker->k0[2];
                     }
+
+                    MCfloat mod = module(walker->k1);
+                    walker->k1[0]/=mod;
+                    walker->k1[1]/=mod;
+                    walker->k1[2]/=mod;
                 }
             }
             else { //no scattering
                 length = std::numeric_limits<MCfloat>::infinity();
             }
 
+            //compute new position
             walker->r1[0] = walker->r0[0] + length*walker->k1[0];
             walker->r1[1] = walker->r0[1] + length*walker->k1[1];
             walker->r1[2] = walker->r0[2] + length*walker->k1[2];
