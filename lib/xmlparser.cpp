@@ -131,12 +131,12 @@ void XMLParser::parseOutput()
             _walkTimesSaveFlags = 0;
         else
             _walkTimesSaveFlags = walkerSaveFlags(str);
-        str = v.get<string>("<xmlattr>.exit-k-vectors-dirs", "__default__");
+        str = v.get<string>("<xmlattr>.exit-k-dirs", "__default__");
         if(str=="__default__")
             _exitKVectorsDirsSaveFlags = 0;
         else
             _exitKVectorsDirsSaveFlags = dirSaveFlags(str);
-        str = v.get<string>("<xmlattr>.exit-k-vectors", "__default__");
+        str = v.get<string>("<xmlattr>.exit-k", "__default__");
         if(str=="__default__")
             _exitKVectorsSaveFlags = 0;
         else
