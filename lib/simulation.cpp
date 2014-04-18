@@ -289,7 +289,7 @@ void Simulation::runSingleThread() {
         layer0 = layerAt(walker->r0); //updates also onInterface flag
 
         memcpy(walker->k1,walker->k0,3*sizeof(MCfloat));
-        onInterface = true; //treat newly generated walker as it were on an interface, i.e. do not scatter
+        kNeedsToBeScattered = false; //at first, the walker propagates with the orignal k
 
         appendTrajectoryPoint(walker->r0);
 
@@ -301,11 +301,9 @@ void Simulation::runSingleThread() {
         MCfloat length;
         while(1) {
             //spin k1 (i.e. scatter) only if the material is scattering
-            //and we're not on an interface, use the old k1 otherwise
             if(materials[layer0].ls > 0) {
                 length = exponential_distribution<MCfloat>(mus[layer0])(*mt);
-                if(!onInterface) {
-
+                if(kNeedsToBeScattered) {
                     nInteractions[layer0]++;
 
                     deflCosine.setg(materials[layer0].g);
@@ -334,7 +332,7 @@ void Simulation::runSingleThread() {
                 }
             }
             else { //no scattering
-                length = std::numeric_limits<MCfloat>::infinity();
+                length = std::numeric_limits<MCfloat>::infinity(); //move() will take the walker to the closest interface
             }
 
             //compute new position
@@ -469,13 +467,13 @@ unsigned int Simulation::layerAt(const MCfloat *r0) const {
 
 
 void Simulation::move(const MCfloat length) {
-    onInterface = false;
     layer1 = layerAt(walker->r1);
     if(layer1 == layer0) {
         memcpy(walker->r0,walker->r1,3*sizeof(MCfloat));
         memcpy(walker->k0,walker->k1,3*sizeof(MCfloat));
 
         totalLengthInCurrentLayer+=length;
+        kNeedsToBeScattered = true;
         return;
     }
 
@@ -495,7 +493,7 @@ void Simulation::move(const MCfloat length) {
     totalLengthInCurrentLayer+=t;
     walker->walkTime += totalLengthInCurrentLayer/materials[layer0].v;
     totalLengthInCurrentLayer = 0;
-    onInterface = true;
+    kNeedsToBeScattered = false;
 
     //so we updated r0, now it's time to update k0
 

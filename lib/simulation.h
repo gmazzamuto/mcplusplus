@@ -104,7 +104,7 @@ private:
     unsigned int layer0;
     unsigned int layer1;
     MCfloat totalLengthInCurrentLayer;
-    bool onInterface;
+    bool kNeedsToBeScattered;
     time_t startTime;
     Walker *walker;
 
