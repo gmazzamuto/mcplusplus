@@ -351,72 +351,76 @@ void Simulation::runSingleThread() {
 #endif
             appendTrajectoryPoint(walker->r0);
 
-            if(layer0 == nLayers + 1) {
-                bool diffuselyTransmitted = false;
-                for (unsigned int i = 1; i <= nLayers; ++i) {
-                    if(nInteractions[i]) {
-                        transmitted++;
+                                      //this means that we are moving away from an interface,
+            if(!kNeedsToBeScattered)  //so the walker might be about to leave the sample
+            {
+                if(layer0 == nLayers + 1) {
+                    bool diffuselyTransmitted = false;
+                    for (unsigned int i = 1; i <= nLayers; ++i) {
+                        if(nInteractions[i]) {
+                            transmitted++;
 
-                        if(exitPointsSaveFlags & SAVE_TRANSMITTED)
-                            appendExitPoint(TRANSMITTED);
+                            if(exitPointsSaveFlags & SAVE_TRANSMITTED)
+                                appendExitPoint(TRANSMITTED);
 
-                        if(walkTimesSaveFlags & SAVE_TRANSMITTED)
-                            walkTimes[TRANSMITTED].push_back(walker->walkTime);
+                            if(walkTimesSaveFlags & SAVE_TRANSMITTED)
+                                walkTimes[TRANSMITTED].push_back(walker->walkTime);
 
-                        if(exitKVectorsSaveFlags & SAVE_TRANSMITTED)
-                            appendExitKVector(TRANSMITTED);
+                            if(exitKVectorsSaveFlags & SAVE_TRANSMITTED)
+                                appendExitKVector(TRANSMITTED);
 
-                        diffuselyTransmitted = true;
-                        break;
+                            diffuselyTransmitted = true;
+                            break;
+                        }
                     }
-                }
-                if(!diffuselyTransmitted) {
-                    ballistic++;
+                    if(!diffuselyTransmitted) {
+                        ballistic++;
 
-                    if(exitPointsSaveFlags & SAVE_BALLISTIC)
-                        appendExitPoint(BALLISTIC);
+                        if(exitPointsSaveFlags & SAVE_BALLISTIC)
+                            appendExitPoint(BALLISTIC);
 
-                    if(walkTimesSaveFlags & SAVE_BALLISTIC)
-                        walkTimes[BALLISTIC].push_back(walker->walkTime);
+                        if(walkTimesSaveFlags & SAVE_BALLISTIC)
+                            walkTimes[BALLISTIC].push_back(walker->walkTime);
 
-                    if(exitKVectorsSaveFlags & SAVE_BALLISTIC)
-                        appendExitKVector(BALLISTIC);
-                }
-                break;
-            }
-
-            if(layer0 == 0) {
-                bool diffuselyReflected = false;
-                for (unsigned int i = 1; i <= nLayers; ++i) {
-                    if(nInteractions[i]) {
-                        reflected++;
-
-                        if(exitPointsSaveFlags & SAVE_REFLECTED)
-                            appendExitPoint(REFLECTED);
-
-                        if(walkTimesSaveFlags & SAVE_REFLECTED)
-                            walkTimes[REFLECTED].push_back(walker->walkTime);
-
-                        if(exitKVectorsSaveFlags & SAVE_REFLECTED)
-                            appendExitKVector(REFLECTED);
-
-                        diffuselyReflected = true;
-                        break;
+                        if(exitKVectorsSaveFlags & SAVE_BALLISTIC)
+                            appendExitKVector(BALLISTIC);
                     }
+                    break;
                 }
-                if(!diffuselyReflected) {
-                    backreflected++;
 
-                    if(exitPointsSaveFlags & SAVE_BACKREFLECTED)
-                        appendExitPoint(BACKREFLECTED);
+                if(layer0 == 0) {
+                    bool diffuselyReflected = false;
+                    for (unsigned int i = 1; i <= nLayers; ++i) {
+                        if(nInteractions[i]) {
+                            reflected++;
 
-                    if(walkTimesSaveFlags & SAVE_BACKREFLECTED)
-                        walkTimes[BACKREFLECTED].push_back(walker->walkTime);
+                            if(exitPointsSaveFlags & SAVE_REFLECTED)
+                                appendExitPoint(REFLECTED);
 
-                    if(exitKVectorsSaveFlags & SAVE_BACKREFLECTED)
-                        appendExitKVector(BACKREFLECTED);
+                            if(walkTimesSaveFlags & SAVE_REFLECTED)
+                                walkTimes[REFLECTED].push_back(walker->walkTime);
+
+                            if(exitKVectorsSaveFlags & SAVE_REFLECTED)
+                                appendExitKVector(REFLECTED);
+
+                            diffuselyReflected = true;
+                            break;
+                        }
+                    }
+                    if(!diffuselyReflected) {
+                        backreflected++;
+
+                        if(exitPointsSaveFlags & SAVE_BACKREFLECTED)
+                            appendExitPoint(BACKREFLECTED);
+
+                        if(walkTimesSaveFlags & SAVE_BACKREFLECTED)
+                            walkTimes[BACKREFLECTED].push_back(walker->walkTime);
+
+                        if(exitKVectorsSaveFlags & SAVE_BACKREFLECTED)
+                            appendExitKVector(BACKREFLECTED);
+                    }
+                    break;
                 }
-                break;
             }
         } //end of walker
 
