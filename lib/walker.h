@@ -10,10 +10,15 @@ class Walker
 {
 public:
     Walker();
-    MCfloat r0[3];  /**< @brief position before the \f$ n \f$-th step*/
-    MCfloat r1[3];  /**< @brief position after the \f$ n \f$-th step*/
-    MCfloat k0[3];  /**< @brief direction unit vector for the \f$ (n-1) \f$-th step*/
-    MCfloat k1[3];  /**< @brief direction unit vector for the \f$ n \f$-th step*/
+    ~Walker();
+
+    void swap_r0_r1();
+    void swap_k0_k1();
+
+    MCfloat *r0;  /**< @brief position before the \f$ n \f$-th step*/
+    MCfloat *r1;  /**< @brief position after the \f$ n \f$-th step*/
+    MCfloat *k0;  /**< @brief direction unit vector for the \f$ (n-1) \f$-th step*/
+    MCfloat *k1;  /**< @brief direction unit vector for the \f$ n \f$-th step*/
     MCfloat walkTime;  /**< @brief total walk time */
 };
 

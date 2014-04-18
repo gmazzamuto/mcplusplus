@@ -288,8 +288,8 @@ void Simulation::runSingleThread() {
 
         layer0 = layerAt(walker->r0); //updates also onInterface flag
 
-        memcpy(walker->k1,walker->k0,3*sizeof(MCfloat));
-        kNeedsToBeScattered = false; //at first, the walker propagates with the orignal k
+        walker->swap_k0_k1();        //at first, the walker propagates
+        kNeedsToBeScattered = false; //with the orignal k
 
         appendTrajectoryPoint(walker->r0);
 
@@ -468,13 +468,11 @@ unsigned int Simulation::layerAt(const MCfloat *r0) const {
     }
 }
 
-
-
 void Simulation::move(const MCfloat length) {
     layer1 = layerAt(walker->r1);
     if(layer1 == layer0) {
-        memcpy(walker->r0,walker->r1,3*sizeof(MCfloat));
-        memcpy(walker->k0,walker->k1,3*sizeof(MCfloat));
+        walker->swap_r0_r1();
+        walker->swap_k0_k1();
 
         totalLengthInCurrentLayer+=length;
         kNeedsToBeScattered = true;
