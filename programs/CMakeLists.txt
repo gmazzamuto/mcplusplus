@@ -44,3 +44,7 @@ install (TARGETS mcwalktimehist DESTINATION bin)
 add_executable(mcexitpointsradialhist mcexitpointsradialhist.cpp)
 target_link_libraries(mcexitpointsradialhist MCPlusPlus)
 install (TARGETS mcexitpointsradialhist DESTINATION bin)
+
+add_executable(mc-exit-k-hist mc-exit-k-hist.cpp)
+target_link_libraries(mc-exit-k-hist MCPlusPlus)
+install (TARGETS mc-exit-k-hist DESTINATION bin)
