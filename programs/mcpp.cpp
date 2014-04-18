@@ -2,12 +2,20 @@
 #include "xmlparser.h"
 #include <QApplication>
 #include <QMainWindow>
+#include "h5outputfile.h"
 #include "simulationviewer.h"
 
 int main(int argc, char *argv[])
 {
     XMLParser parser;
-    Simulation *sim = parser.load(argv[1]);
+    parser.parseFile(argv[1]);
+
+    Simulation *sim = parser.simulation();
+
+    H5OutputFile file;
+    file.newFile("mcpp-output.h5");
+    file.writeXMLDescription(argv[1]);
+    file.close();
 
     sim->setTotalWalkers(atoi(argv[2]));
     sim->setNThreads(atoi(argv[3]));

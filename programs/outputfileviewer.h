@@ -1,6 +1,7 @@
 #ifndef OUTPUTFILEVIEWER_H
 #define OUTPUTFILEVIEWER_H
 
+#include "simulation.h"
 #include "glwidget.h"
 #include "h5outputfile.h"
 
@@ -21,9 +22,11 @@ private:
     void drawTransmittedExitPoints();
 
     H5OutputFile *file;
+    Sample *sample;
 
     unsigned long int transmitted;
     MCfloat *transmittedExitPoints;
+    void drawSample();
 };
 
 #endif // OUTPUTFILEVIEWER_H

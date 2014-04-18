@@ -22,16 +22,19 @@ public:
     void writeHyperSlab(const hsize_t *start, const hsize_t *count, const double *srcBuffer);
     void loadAll(double *destBuffer);
     void close();
+    void closeDataSet();
     const hsize_t *extentDims() const;
 
     int getRank() const;
     const char *getDataSetName() const;
     const char *currentDataset() const;
 
-private:
+protected:
     H5File *file;
     DataSet *dataSet;
     DataSpace *dataSpace;
+
+private:
     char *fName, *dName;
     bool opened;
     int ndims;
@@ -41,7 +44,6 @@ private:
     void *EclientData;
 
     void copyToInternalVariable(char **dest, const char *src);
-    void closeDataSet();
     void resetErrorAutoPrint();
     bool _openFile(const char *fileName);
     void _openDataSet(const char *dataSetName);

@@ -18,6 +18,8 @@ public:
     void loadTransmittedExitPoints(MCfloat *destBuffer);
     void loadTransmittedExitPoints(const hsize_t *start, const hsize_t *count, MCfloat *destBuffer);
     unsigned long int transmitted();
+    void writeXMLDescription(const char *inputFile);
+    string loadXMLDescription();
 
 private:
     bool createExitPointsDatasets();

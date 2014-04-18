@@ -1,28 +1,37 @@
 #include "xmlparser.h"
 
-#include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/exceptions.hpp>
 #include <boost/property_tree/xml_parser.hpp>
 #include <boost/foreach.hpp>
 #include <stdlib.h>
 
-using namespace boost::property_tree;
 using namespace boost::math::constants;
 
 XMLParser::XMLParser()
 {
     showTrajectory = false;
+    sim = NULL;
+    src = NULL;
+    _sample = NULL;
 }
 
-Simulation* XMLParser::load(const std::string &filename)
+void XMLParser::parseFile(const string &filename)
 {
-    using boost::property_tree::ptree;
-
-    ptree pt;
-
     read_xml(filename, pt, xml_parser::no_comments);
+    parse();
+}
 
+void XMLParser::parseString(const string &xmlContent)
+{
+    if(xmlContent.empty())
+        return;
+    stringstream ss;
+    ss << xmlContent;
+    read_xml(ss, pt, xml_parser::no_comments);
+    parse();
+}
 
+void XMLParser::parse() {
     //materials
     map<string,Material>::iterator it = materialMap.begin();
     BOOST_FOREACH(ptree::value_type &v, pt.get_child("MCPlusPlus.materials")) {
@@ -38,10 +47,12 @@ Simulation* XMLParser::load(const std::string &filename)
 
 
     //sample
-    Sample *sample = new Sample();
+    if(_sample != NULL)
+        delete _sample;
+    _sample = new Sample();
     string left = pt.get<string>("MCPlusPlus.MLSample.<xmlattr>.left");
     string right = pt.get<string>("MCPlusPlus.MLSample.<xmlattr>.right");
-    sample->setSurroundingEnvironment(material(left),material(right));
+    _sample->setSurroundingEnvironment(material(left),material(right));
 
     vector<Material> preLayerMaterial;
     vector<MCfloat> preLayerThickness;
@@ -49,7 +60,7 @@ Simulation* XMLParser::load(const std::string &filename)
         if(v.first == "layer" || v.first == "prelayer") {
             Material mat = material(v.second.get_child("<xmlattr>.material").data());
             if(v.first == "layer")
-                sample->addLayer(mat,v.second.get<MCfloat>("<xmlattr>.thickness"));
+                _sample->addLayer(mat,v.second.get<MCfloat>("<xmlattr>.thickness"));
             else if(v.first == "prelayer") {
                 preLayerMaterial.push_back(mat);
                 preLayerThickness.push_back(v.second.get<MCfloat>("<xmlattr>.thickness"));
@@ -58,13 +69,14 @@ Simulation* XMLParser::load(const std::string &filename)
     }
 
     for (int i = preLayerMaterial.size() - 1; i >= 0; --i) {
-        sample->addPreLayer(preLayerMaterial[i],preLayerThickness[i]);
+        _sample->addPreLayer(preLayerMaterial[i],preLayerThickness[i]);
     }
 
 
     //source
     string srcType = pt.get<string>("MCPlusPlus.MLSample.source.type", "__default__");
-    Source *src = NULL;
+    if(src != NULL)
+        delete src;
     if(srcType == "__default__") {
         src = new Source();
         AbstractDistribution *rDistr[3];
@@ -83,10 +95,11 @@ Simulation* XMLParser::load(const std::string &filename)
         src->setWalkTimeDistribution(walkTime);
     }
 
-
     //simulation
-    Simulation *sim = new Simulation();
-    sim->setSample(sample);
+    if(sim!=NULL)
+        delete sim;
+    sim = new Simulation();
+    sim->setSample(_sample);
     sim->setSource(src);
 
     try {
@@ -96,13 +109,21 @@ Simulation* XMLParser::load(const std::string &filename)
         sim->setSaveTrajectoryEnabled(boolean(str));
     } catch (ptree_bad_path) {
     }
-
-    return sim;
 }
 
 bool XMLParser::showTrajectoryEnabled() const
 {
     return showTrajectory;
+}
+
+Simulation *XMLParser::simulation() const
+{
+    return sim;
+}
+
+Sample *XMLParser::sample() const
+{
+    return _sample;
 }
 
 Material XMLParser::material(const string name) const
