@@ -40,3 +40,7 @@ install (TARGETS mcplot DESTINATION bin)
 add_executable(mcwalktimehist mcwalktimehist.cpp)
 target_link_libraries(mcwalktimehist MCPlusPlus)
 install (TARGETS mcwalktimehist DESTINATION bin)
+
+add_executable(mcexitpointsradialhist mcexitpointsradialhist.cpp)
+target_link_libraries(mcexitpointsradialhist MCPlusPlus)
+install (TARGETS mcexitpointsradialhist DESTINATION bin)
