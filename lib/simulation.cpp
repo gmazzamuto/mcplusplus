@@ -590,12 +590,14 @@ void Simulation::appendExitPoint(enum walkerType idx)
 
 void Simulation::appendExitKVector(Simulation::walkerType idx)
 {
+    // we must use k1 instead of k0 because the walker can leave the sample only
+    // when it is moving away from an interface
     if(exitKVectorsDirsSaveFlags & DIR_X)
-        exitKVectors[idx].push_back(walker->k0[0]);
+        exitKVectors[idx].push_back(walker->k1[0]);
     if(exitKVectorsDirsSaveFlags & DIR_Y)
-        exitKVectors[idx].push_back(walker->k0[1]);
+        exitKVectors[idx].push_back(walker->k1[1]);
     if(exitKVectorsDirsSaveFlags & DIR_Z)
-        exitKVectors[idx].push_back(walker->k0[2]);
+        exitKVectors[idx].push_back(walker->k1[2]);
 }
 
 void Simulation::reportProgress() const
