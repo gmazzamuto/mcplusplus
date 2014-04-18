@@ -3,6 +3,7 @@
 
 #include "source.h"
 #include "sample.h"
+#include "costhetagenerator.h"
 
 /**
  * @brief Base simulation class.
@@ -98,7 +99,12 @@ private:
     vector<MCfloat> exitKVectors[4];
 
     //internal temporary variables
-    const MCfloat *upperZBoundaries;
+    CosThetaGenerator deflCosine;
+    MCfloat currLayerLowerBoundary, currLayerUpperBoundary;
+    const Material *currentMaterial;
+    const MCfloat *mus;
+    MCfloat currentMus;
+    const MCfloat  *upperZBoundaries;
     const Material *materials;
     unsigned int nLayers;
     unsigned int layer0;
@@ -134,6 +140,7 @@ private:
     bool forceTermination;
 
     virtual void describe_impl() const;
+    void switchToLayer(const uint layer);
 };
 
 #endif // SIMULATION_H

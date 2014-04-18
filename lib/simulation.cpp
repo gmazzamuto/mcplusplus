@@ -1,6 +1,5 @@
 #include "simulation.h"
 #include "distributions.h"
-#include "costhetagenerator.h"
 #include "psigenerator.h"
 #include <signal.h>
 
@@ -81,6 +80,7 @@ Simulation::Simulation(BaseObject *parent) :
     exitPointsSaveFlags = 0;
     exitKVectorsDirsSaveFlags = 0;
     exitKVectorsSaveFlags = 0;
+    deflCosine.setParent(this);
     clear();
     mostRecentInstance = this;
     installSigUSR1Handler();
@@ -271,11 +271,10 @@ void Simulation::runSingleThread() {
 
     upperZBoundaries = uzb;
     materials = mat;
+    this->mus = mus;
 
     n = 0;
     walker = new Walker();
-
-    CosThetaGenerator deflCosine(0,this); // I set g=0 without any particular reason
 
     while(n < _totalWalkers && !forceTermination) {
         vector<u_int64_t> nInteractions;
@@ -287,7 +286,9 @@ void Simulation::runSingleThread() {
         source->spin(walker);
         nInteractions.insert(nInteractions.begin(),nLayers+2,0);
 
-        layer0 = layerAt(walker->r0); //updates also onInterface flag
+        layer0 = layerAt(walker->r0);
+        currentMaterial = &materials[layer0];
+        switchToLayer(layer0);
 
         walker->swap_k0_k1();        //at first, the walker propagates
         kNeedsToBeScattered = false; //with the orignal k
@@ -302,12 +303,11 @@ void Simulation::runSingleThread() {
         MCfloat length;
         while(1) {
             //spin k1 (i.e. scatter) only if the material is scattering
-            if(materials[layer0].ls > 0) {
-                length = exponential_distribution<MCfloat>(mus[layer0])(*mt);
+            if(currentMaterial->ls > 0) {
+                length = exponential_distribution<MCfloat>(currentMus)(*mt);
                 if(kNeedsToBeScattered) {
                     nInteractions[layer0]++;
 
-                    deflCosine.setg(materials[layer0].g);
                     MCfloat cosTheta = deflCosine.spin();
                     MCfloat sinTheta = sqrt(1-pow(cosTheta,2));
                     MCfloat psi = uniform_01<MCfloat>()(*mt)*two_pi<MCfloat>(); //uniform in [0,2pi)
@@ -470,8 +470,8 @@ unsigned int Simulation::layerAt(const MCfloat *r0) const {
 }
 
 void Simulation::move(const MCfloat length) {
-    layer1 = layerAt(walker->r1);
-    if(layer1 == layer0) {
+    if(walker->r1[2] > currLayerLowerBoundary && walker->r1[2] <= currLayerUpperBoundary)
+    {
         walker->swap_r0_r1();
         walker->swap_k0_k1();
 
@@ -494,8 +494,6 @@ void Simulation::move(const MCfloat length) {
 
     memcpy(walker->r0,intersection,3*sizeof(MCfloat)); //move to interface, r1 is now meaningless
     totalLengthInCurrentLayer+=t;
-    walker->walkTime += totalLengthInCurrentLayer/materials[layer0].v;
-    totalLengthInCurrentLayer = 0;
     kNeedsToBeScattered = false;
 
     //so we updated r0, now it's time to update k0
@@ -507,7 +505,7 @@ void Simulation::move(const MCfloat length) {
 #ifdef DEBUG_TRAJECTORY
         printf("interface with same n...\n");
 #endif
-        layer0 = layer1;
+        switchToLayer(layer1);
         return;
     }
 
@@ -572,7 +570,7 @@ void Simulation::refract() {
     walker->k1[0] *= n0/n1;
     walker->k1[1] *= n0/n1;
     walker->k1[2] = sign<MCfloat>(walker->k1[2])*cosTheta1; //cosTheta1 is positive
-    layer0=layer1;
+    switchToLayer(layer1);
 }
 
 void Simulation::appendTrajectoryPoint(MCfloat *point) {
@@ -691,6 +689,25 @@ void Simulation::describe_impl() const
     _sample->describe();
     logMessage("Source description:");
     source->describe();
+}
+
+void Simulation::switchToLayer(const uint layer)
+{
+    walker->walkTime += totalLengthInCurrentLayer/currentMaterial->v;
+    totalLengthInCurrentLayer = 0;
+
+    layer0=layer;
+    currentMaterial=&materials[layer0];
+    deflCosine.setg(currentMaterial->g);
+    currentMus = mus[layer0];
+    if(layer0 == 0)
+        currLayerLowerBoundary = -std::numeric_limits<MCfloat>::infinity();
+    else
+        currLayerLowerBoundary = upperZBoundaries[layer0-1];
+    if(layer0 <= nLayers)
+        currLayerUpperBoundary = upperZBoundaries[layer0];
+    else
+        currLayerUpperBoundary = std::numeric_limits<MCfloat>::infinity();
 }
 
 void Simulation::setExitPointsSaveFlags(unsigned int value)

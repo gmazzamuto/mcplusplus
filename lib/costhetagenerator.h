@@ -10,7 +10,7 @@
 class CosThetaGenerator : public AbstractDistribution
 {
 public:
-    CosThetaGenerator(MCfloat g, BaseObject *parent=NULL);
+    CosThetaGenerator(MCfloat g=0, BaseObject *parent=NULL);
 
     void setg(MCfloat g);
     MCfloat spin() const;
