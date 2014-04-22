@@ -26,12 +26,12 @@ int main(int argc, char *argv[])
             min = wt[i];
     }
 
-//    cout << "max = " << max << " min = " << min << endl;
-
     size_t nBins = ceil((max - min)/binSize);
 
-    u_int64_t histo[nBins];
-    memset(histo,0,nBins*sizeof(u_int64_t));
+//    cout << "max = " << max << " min = " << min << endl;
+//    cout << "nBins = " << nBins << endl;
+
+    u_int64_t *histo = (u_int64_t*)calloc(nBins,sizeof(u_int64_t));
 
     for (int i = 0; i < transmitted; ++i) {
         unsigned int index = (wt[i]-min)/binSize;
@@ -48,6 +48,7 @@ int main(int argc, char *argv[])
     }
 
     free(wt);
+    free(histo);
 
 
 

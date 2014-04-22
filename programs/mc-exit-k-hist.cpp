@@ -33,9 +33,10 @@ int main(int argc, char *argv[])
 
     cout << "binCenter\tP(kz)" << endl;
 
+    MCfloat lastBinCenter = (binSize*((nBins-1)+0.5));
     for (size_t i = 0; i < nBins; ++i) {
         MCfloat binCenter = binSize*(i+0.5);
-        cout << binCenter << "\t" << histo[i]/binCenter/histo[nBins-1];
+        cout << binCenter << "\t" << (histo[i]/binCenter/histo[nBins-1])*lastBinCenter*(2./5.+3./5.*lastBinCenter);
         cout << endl;
     }
 
