@@ -13,6 +13,8 @@ class Source : public BaseRandom
 {
 public:
     Source(BaseObject *parent=NULL);
+    ~Source();
+
     void spin(Walker *walker) const;
     void setr0Distribution(AbstractDistribution *x0Distribution, AbstractDistribution *y0Distribution, MCfloat _z0);
     void setk0Distribution(AbstractDistribution *cosThetaDistr, AbstractDistribution *psiDistr);
@@ -30,6 +32,7 @@ protected:
     virtual void spinPosition(Walker *walker) const;
     void spinTime(Walker *walker) const;
     virtual BaseObject *clone_impl() const;
+    void cloneInto(Source *src) const;
     MCfloat _z0;
 
 private:
@@ -48,6 +51,7 @@ class PencilBeamSource : public Source
 {
 public:
     PencilBeamSource(BaseObject *parent=NULL);
+    ~PencilBeamSource();
 
 private:
     virtual void spinDirection(Walker *walker) const;
@@ -73,6 +77,7 @@ class GaussianBeamSource : public Source
 public:
     GaussianBeamSource(MCfloat FWHM, BaseObject *parent=NULL);
     GaussianBeamSource(MCfloat xFWHM, MCfloat yFWHM, BaseObject *parent=NULL);
+    ~GaussianBeamSource();
 
 private:
     virtual BaseObject *clone_impl() const;
@@ -93,9 +98,9 @@ class IsotropicPointSource : public Source
 {
 public:
     IsotropicPointSource(MCfloat z0, BaseObject *parent=NULL);
+    ~IsotropicPointSource();
 
 private:
-    virtual void spinPosition(Walker *walker) const;
     virtual BaseObject *clone_impl() const;
 
     virtual void describe_impl() const;

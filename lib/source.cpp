@@ -14,6 +14,11 @@ Source::Source(BaseObject *parent) :
     _z0 = 0;
 }
 
+Source::~Source()
+{
+
+}
+
 void Source::spinDirection(Walker *walker) const {
     MCfloat cosTheta = cosThetaDistribution->spin();
     MCfloat sinTheta = sqrt(1 - pow(cosTheta,2));
@@ -39,14 +44,22 @@ void Source::spinTime(Walker *walker) const {
 BaseObject *Source::clone_impl() const
 {
     Source *src = new Source();
+    cloneInto(src);
+    return src;
+}
+
+void Source::cloneInto(Source *src) const
+{
     for (int i = 0; i < 2; ++i) {
-        src->r0Distribution[i] = (AbstractDistribution*)r0Distribution[i]->clone();
+        if(r0Distribution[i] != NULL)
+            src->r0Distribution[i] = (AbstractDistribution*)r0Distribution[i]->clone();
     }
     src->_z0 = z0();
-    src->setk0Distribution((AbstractDistribution*)cosThetaDistribution->clone(),(AbstractDistribution*)psiDistribution->clone());
-    src->setWalkTimeDistribution((AbstractDistribution*)walkTimeDistribution->clone());
+    if(cosThetaDistribution != NULL && psiDistribution != NULL)
+        src->setk0Distribution((AbstractDistribution*)cosThetaDistribution->clone(),(AbstractDistribution*)psiDistribution->clone());
+    if(walkTimeDistribution != NULL)
+        src->setWalkTimeDistribution((AbstractDistribution*)walkTimeDistribution->clone());
     src->setWavelength(wl);
-    return src;
 }
 
 /**
@@ -104,6 +117,11 @@ PencilBeamSource::PencilBeamSource(BaseObject *parent) :
 
 }
 
+PencilBeamSource::~PencilBeamSource()
+{
+
+}
+
 void PencilBeamSource::spinDirection(Walker *walker) const {
     walker->k0[2] = 1;
 }
@@ -114,7 +132,9 @@ void PencilBeamSource::spinPosition(Walker *walker) const {
 
 BaseObject *PencilBeamSource::clone_impl() const
 {
-    return new PencilBeamSource();
+    PencilBeamSource *src = new PencilBeamSource();
+    cloneInto(src);
+    return src;
 }
 
 
@@ -147,12 +167,15 @@ GaussianBeamSource::GaussianBeamSource(MCfloat xFWHM, MCfloat yFWHM, BaseObject 
     init(xFWHM,yFWHM);
 }
 
+GaussianBeamSource::~GaussianBeamSource()
+{
+
+}
+
 BaseObject *GaussianBeamSource::clone_impl() const
 {
     GaussianBeamSource *src = new GaussianBeamSource(xFWHM,yFWHM);
-    if(cosThetaDistribution != NULL && psiDistribution != NULL)
-        src->setk0Distribution((AbstractDistribution*)cosThetaDistribution->clone(),(AbstractDistribution*)psiDistribution->clone());
-    src->setWalkTimeDistribution((AbstractDistribution*)walkTimeDistribution->clone());
+    cloneInto(src);
     return src;
 }
 
@@ -160,12 +183,11 @@ void GaussianBeamSource::init(MCfloat xFWHM, MCfloat yFWHM)
 {
     this->xFWHM = xFWHM;
     this->yFWHM = yFWHM;
-    r0Distribution[0] = new NormalDistribution(0,xFWHM, this);
-    r0Distribution[1] = new NormalDistribution(0,yFWHM, this);
-    _z0 = 0;
-    r0Distribution[2] = new DeltaDistribution(_z0, this);
-    cosThetaDistribution = new DeltaDistribution(1,this);
-    psiDistribution = new DeltaDistribution(1,this); //to avoid generating a useless random number (sinTheta is 0)
+    AbstractDistribution *distr[2];
+    distr[0] = new NormalDistribution(0,xFWHM, this);
+    distr[1] = new NormalDistribution(0,yFWHM, this);
+    setr0Distribution(distr[0], distr[1],0);
+    setk0Distribution(new DeltaDistribution(1,this), new DeltaDistribution(1,this)); //to avoid generating a useless random number (sinTheta is 0)
 }
 
 
@@ -174,19 +196,22 @@ void GaussianBeamSource::init(MCfloat xFWHM, MCfloat yFWHM)
 IsotropicPointSource::IsotropicPointSource(MCfloat z0, BaseObject *parent) :
     Source(parent)
 {
-    _z0 = z0;
-    cosThetaDistribution = new CosThetaGenerator(0,this);
-    psiDistribution = new IsotropicPsiGenerator(this);
+    AbstractDistribution *distr[2];
+    distr[0] = new DeltaDistribution(0);
+    distr[1] = new DeltaDistribution(0);
+    setr0Distribution(distr[0], distr[1], z0);
+    setk0Distribution(new CosThetaGenerator(0,this), new IsotropicPsiGenerator(this));
 }
 
-void IsotropicPointSource::spinPosition(Walker *walker) const {
-    walker->r0[2] = _z0;
+IsotropicPointSource::~IsotropicPointSource()
+{
+
 }
 
 BaseObject *IsotropicPointSource::clone_impl() const
 {
-    IsotropicPointSource *src = new IsotropicPointSource(_z0);
-    src->setWalkTimeDistribution((AbstractDistribution*)walkTimeDistribution->clone());
+    IsotropicPointSource *src = new IsotropicPointSource(z0());
+    cloneInto(src);
     return src;
 }
 
