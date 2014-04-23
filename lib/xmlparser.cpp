@@ -89,6 +89,10 @@ void XMLParser::parseAll() {
     else if(srcType == "IsotropicPointSource") {
         src = new IsotropicPointSource(pt.get<MCfloat>("MCPlusPlus.source.<xmlattr>.rz"));
     }
+    else if(srcType == "PencilBeamSource") {
+        src = new PencilBeamSource();
+    }
+
 
     AbstractDistribution *walkTime = distribution(pt.get<string>("MCPlusPlus.source.<xmlattr>.walkTime"));
     src->setWalkTimeDistribution(walkTime);
