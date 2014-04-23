@@ -27,7 +27,7 @@ protected:
     AbstractDistribution *walkTimeDistribution;
     virtual void spinDirection(Walker *walker) const;
     virtual void spinPosition(Walker *walker) const;
-    virtual void spinTime(Walker *walker) const;
+    void spinTime(Walker *walker) const;
     virtual BaseObject *clone_impl() const;
 
 private:
@@ -50,7 +50,6 @@ public:
 private:
     virtual void spinDirection(Walker *walker) const;
     virtual void spinPosition(Walker *walker) const;
-    virtual void spinTime(Walker *walker) const;
     virtual BaseObject *clone_impl() const;
 };
 
@@ -95,7 +94,6 @@ public:
 
 private:
     virtual void spinPosition(Walker *walker) const;
-    virtual void spinTime(Walker *walker) const;
     virtual BaseObject *clone_impl() const;
 
     virtual void describe_impl() const;

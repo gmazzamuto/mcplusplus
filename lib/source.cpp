@@ -111,10 +111,6 @@ void PencilBeamSource::spinPosition(Walker *walker) const {
 
 }
 
-void PencilBeamSource::spinTime(Walker *walker) const {
-
-}
-
 BaseObject *PencilBeamSource::clone_impl() const
 {
     return new PencilBeamSource();
@@ -183,10 +179,6 @@ IsotropicPointSource::IsotropicPointSource(MCfloat z0, BaseObject *parent) :
 
 void IsotropicPointSource::spinPosition(Walker *walker) const {
     walker->r0[2] = depth;
-}
-
-void IsotropicPointSource::spinTime(Walker *walker) const {
-
 }
 
 BaseObject *IsotropicPointSource::clone_impl() const
