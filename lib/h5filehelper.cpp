@@ -4,7 +4,6 @@
 #include <iostream>
 
 #include <string.h>
-#include <math.h>
 
 H5FileHelper::H5FileHelper()
 {
