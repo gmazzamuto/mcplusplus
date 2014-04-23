@@ -78,9 +78,8 @@ void XMLParser::parseAll() {
         AbstractDistribution *rDistr[3];
         rDistr[0] = distribution(pt.get<string>("MCPlusPlus.source.<xmlattr>.rx"));
         rDistr[1] = distribution(pt.get<string>("MCPlusPlus.source.<xmlattr>.ry"));
-        rDistr[2] = distribution(pt.get<string>("MCPlusPlus.source.<xmlattr>.rz"));
 
-        src->setr0Distribution(rDistr);
+        src->setr0Distribution(rDistr[0], rDistr[1], pt.get<MCfloat>("MCPlusPlus.source.<xmlattr>.rz"));
 
         AbstractDistribution *cosTheta = distribution(pt.get<string>("MCPlusPlus.source.<xmlattr>.cosTheta"));
         AbstractDistribution *psi = distribution(pt.get<string>("MCPlusPlus.source.<xmlattr>.psi"));

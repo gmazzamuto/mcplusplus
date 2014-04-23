@@ -15,11 +15,10 @@ int main(int argc, char *argv[])
 
     source->setk0Distribution(delta1,unif2pi);
 
-    AbstractDistribution *rDistr[3];
+    AbstractDistribution *rDistr[2];
     rDistr[0] = deltaZ;
     rDistr[1] = deltaZ;
-    rDistr[2] = deltaZ;
-    source->setr0Distribution(rDistr);
+    source->setr0Distribution(rDistr[0],rDistr[1],20);
 
     source->setWalkTimeDistribution(delta0);
 

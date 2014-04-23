@@ -14,11 +14,12 @@ class Source : public BaseRandom
 public:
     Source(BaseObject *parent=NULL);
     void spin(Walker *walker) const;
-    void setr0Distribution(AbstractDistribution **distrArray);
+    void setr0Distribution(AbstractDistribution *x0Distribution, AbstractDistribution *y0Distribution, MCfloat _z0);
     void setk0Distribution(AbstractDistribution *cosThetaDistr, AbstractDistribution *psiDistr);
     void setWalkTimeDistribution(AbstractDistribution *distr);
     void setWavelength(MCfloat um);
     MCfloat wavelength() const;
+    MCfloat z0() const;
 
 protected:
     AbstractDistribution *r0Distribution[3];
@@ -29,6 +30,7 @@ protected:
     virtual void spinPosition(Walker *walker) const;
     void spinTime(Walker *walker) const;
     virtual BaseObject *clone_impl() const;
+    MCfloat _z0;
 
 private:
     MCfloat wl;
@@ -97,8 +99,6 @@ private:
     virtual BaseObject *clone_impl() const;
 
     virtual void describe_impl() const;
-
-    MCfloat depth;
 };
 
 #endif // SOURCE_H

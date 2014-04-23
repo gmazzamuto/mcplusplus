@@ -11,6 +11,7 @@ Source::Source(BaseObject *parent) :
     for (int i = 0; i < 3; ++i) {
         r0Distribution[i] = NULL;
     }
+    _z0 = 0;
 }
 
 void Source::spinDirection(Walker *walker) const {
@@ -38,11 +39,10 @@ void Source::spinTime(Walker *walker) const {
 BaseObject *Source::clone_impl() const
 {
     Source *src = new Source();
-    AbstractDistribution *r0Distr[3];
-    for (int i = 0; i < 3; ++i) {
-        r0Distr[i] = (AbstractDistribution*)r0Distribution[i]->clone();
+    for (int i = 0; i < 2; ++i) {
+        src->r0Distribution[i] = (AbstractDistribution*)r0Distribution[i]->clone();
     }
-    src->setr0Distribution(r0Distr);
+    src->_z0 = z0();
     src->setk0Distribution((AbstractDistribution*)cosThetaDistribution->clone(),(AbstractDistribution*)psiDistribution->clone());
     src->setWalkTimeDistribution((AbstractDistribution*)walkTimeDistribution->clone());
     src->setWavelength(wl);
@@ -61,22 +61,18 @@ void Source::spin(Walker *walker) const {
     spinTime(walker);
 }
 
-void Source::setr0Distribution(AbstractDistribution **distrArray) {
-    for (int i = 0; i < 3; ++i) {
-        if(r0Distribution[i] != NULL)
-            delete r0Distribution[i];
-        r0Distribution[i] = distrArray[i];
-        r0Distribution[i]->setParent(this);
-    }
+void Source::setr0Distribution(AbstractDistribution *x0Distribution, AbstractDistribution *y0Distribution, MCfloat z0) {
+    x0Distribution->setParent(this);
+    y0Distribution->setParent(this);
+    r0Distribution[0] = x0Distribution;
+    r0Distribution[1] = y0Distribution;
+    r0Distribution[2] = new DeltaDistribution(z0,this);
+    this->_z0 = z0;
 }
 
 void Source::setk0Distribution(AbstractDistribution *cosThetaDistr, AbstractDistribution *psiDistr) {
-    if(cosThetaDistribution != NULL)
-        delete cosThetaDistribution;
     cosThetaDistribution = cosThetaDistr;
     cosThetaDistribution->setParent(this);
-    if(psiDistribution != NULL)
-        delete psiDistribution;
     psiDistribution = psiDistr;
     psiDistribution->setParent(this);
 }
@@ -92,6 +88,11 @@ void Source::setWavelength(MCfloat um) {
 
 MCfloat Source::wavelength() const {
     return wl;
+}
+
+MCfloat Source::z0() const
+{
+    return _z0;
 }
 
 
@@ -161,7 +162,8 @@ void GaussianBeamSource::init(MCfloat xFWHM, MCfloat yFWHM)
     this->yFWHM = yFWHM;
     r0Distribution[0] = new NormalDistribution(0,xFWHM, this);
     r0Distribution[1] = new NormalDistribution(0,yFWHM, this);
-    r0Distribution[2] = new DeltaDistribution(0, this);
+    _z0 = 0;
+    r0Distribution[2] = new DeltaDistribution(_z0, this);
     cosThetaDistribution = new DeltaDistribution(1,this);
     psiDistribution = new DeltaDistribution(1,this); //to avoid generating a useless random number (sinTheta is 0)
 }
@@ -172,21 +174,23 @@ void GaussianBeamSource::init(MCfloat xFWHM, MCfloat yFWHM)
 IsotropicPointSource::IsotropicPointSource(MCfloat z0, BaseObject *parent) :
     Source(parent)
 {
-    depth = z0;
+    _z0 = z0;
     cosThetaDistribution = new CosThetaGenerator(0,this);
     psiDistribution = new IsotropicPsiGenerator(this);
 }
 
 void IsotropicPointSource::spinPosition(Walker *walker) const {
-    walker->r0[2] = depth;
+    walker->r0[2] = _z0;
 }
 
 BaseObject *IsotropicPointSource::clone_impl() const
 {
-    return new IsotropicPointSource(depth);
+    IsotropicPointSource *src = new IsotropicPointSource(_z0);
+    src->setWalkTimeDistribution((AbstractDistribution*)walkTimeDistribution->clone());
+    return src;
 }
 
 void IsotropicPointSource::describe_impl() const
 {
-    logMessage("z0 = %f", depth);
+    logMessage("z0 = %f", _z0);
 }
