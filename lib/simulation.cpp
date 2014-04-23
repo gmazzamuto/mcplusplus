@@ -449,24 +449,11 @@ void Simulation::runSingleThread() {
 
 unsigned int Simulation::layerAt(const MCfloat *r0) const {
     MCfloat z = r0[2];
-    if(z < upperZBoundaries[layer0]) { //search left
-        unsigned int i = layer0 + 1;
-        do {
-            i--;
-            if(r0[2] > upperZBoundaries[i])
-                return i+1;
-        }
-        while(i!=0);
-        return 0;
+    for (unsigned int i = 0; i < nLayers+1; ++i) {
+        if(z <= sample()->zBoundaries()->at(i))
+            return i;
     }
-    else //search right
-    {
-        for (unsigned int i = layer0; i < nLayers+1; ++i) {
-            if(z < upperZBoundaries[i])
-                return i;
-        }
-        return nLayers+1;
-    }
+    return nLayers+1;
 }
 
 void Simulation::move(const MCfloat length) {
