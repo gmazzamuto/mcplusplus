@@ -114,7 +114,7 @@ MCfloat Source::z0() const
 PencilBeamSource::PencilBeamSource(BaseObject *parent) :
     Source(parent)
 {
-
+    _z0 = -1*std::numeric_limits<MCfloat>::infinity();
 }
 
 PencilBeamSource::~PencilBeamSource()
@@ -127,7 +127,7 @@ void PencilBeamSource::spinDirection(Walker *walker) const {
 }
 
 void PencilBeamSource::spinPosition(Walker *walker) const {
-
+    walker->r0[2] = _z0;
 }
 
 BaseObject *PencilBeamSource::clone_impl() const
@@ -186,7 +186,7 @@ void GaussianBeamSource::init(MCfloat xFWHM, MCfloat yFWHM)
     AbstractDistribution *distr[2];
     distr[0] = new NormalDistribution(0,xFWHM, this);
     distr[1] = new NormalDistribution(0,yFWHM, this);
-    setr0Distribution(distr[0], distr[1],0);
+    setr0Distribution(distr[0], distr[1], -1*std::numeric_limits<MCfloat>::infinity());
     setk0Distribution(new DeltaDistribution(1,this), new DeltaDistribution(1,this)); //to avoid generating a useless random number (sinTheta is 0)
 }
 
