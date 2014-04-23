@@ -107,8 +107,11 @@ void XMLParser::parseAll() {
     try {
         ptree v = pt.get_child("MCPlusPlus.simulation");
         string str = v.get<string>("<xmlattr>.showTrajectory", "__default__");
-        showTrajectory = boolean(str);
-        sim->setSaveTrajectoryEnabled(boolean(str));
+        if(str != "__default__") {
+            showTrajectory = boolean(str);
+            sim->setSaveTrajectoryEnabled(showTrajectory);
+        }
+        sim->setTimeOriginZ(v.get<MCfloat>("<xmlattr>.time-origin-z", 0));
     } catch (ptree_bad_path) {
     }
 

@@ -80,6 +80,7 @@ Simulation::Simulation(BaseObject *parent) :
     exitPointsSaveFlags = 0;
     exitKVectorsDirsSaveFlags = 0;
     exitKVectorsSaveFlags = 0;
+    timeOriginZ = 0;
     deflCosine.setParent(this);
     clear();
     mostRecentInstance = this;
@@ -276,6 +277,36 @@ void Simulation::runSingleThread() {
     n = 0;
     walker = new Walker();
 
+    MCfloat timeOffset = 0;
+    MCfloat pos[3];
+    pos[0] = 0; pos[1] = 0;
+
+    pos[2] = source->z0();
+    layer0 = layerAt(pos);
+    pos[2] = timeOriginZ;
+    layer1 = layerAt(pos);
+
+    uint initialLayer = layer0;
+    uint leftLayer = min(layer0,layer1);
+    uint rightLayer = max(layer0,layer1);
+    MCfloat leftPoint = min(source->z0(), timeOriginZ);
+    if(leftPoint == -1*std::numeric_limits<MCfloat>::infinity())
+        leftPoint = min(upperZBoundaries[0],timeOriginZ);
+        initialLayer = 0;
+    }
+    MCfloat rightPoint = max(source->z0(), timeOriginZ);
+    if(leftLayer != rightLayer) { //add first and last portion of distance
+        timeOffset += (upperZBoundaries[leftLayer] - leftPoint)/materials[leftLayer].v;
+        timeOffset += (rightPoint - upperZBoundaries[rightLayer - 1])/materials[rightLayer].v;
+        for (uint i = leftLayer + 1; i <= rightLayer - 1 ; ++i) {
+            timeOffset += (upperZBoundaries[i] - upperZBoundaries[i-1])/materials[i].v;
+        }
+    }
+    else {
+        timeOffset += fabs(rightPoint - leftPoint)/materials[leftLayer].v;
+    }
+    timeOffset *= -1 * sign<MCfloat>(timeOriginZ - source->z0());
+
     while(n < _totalWalkers && !forceTermination) {
         vector<u_int64_t> nInteractions;
         if(saveTrajectory)
@@ -284,9 +315,12 @@ void Simulation::runSingleThread() {
         totalLengthInCurrentLayer = 0;
 
         source->spin(walker);
-        nInteractions.insert(nInteractions.begin(),nLayers+2,0);
+        if(walker->r0[2] == -1*std::numeric_limits<MCfloat>::infinity())
+            walker->r0[2] = leftPoint;
 
-        layer0 = layerAt(walker->r0);
+        walker->walkTime += timeOffset;
+
+        layer0 = initialLayer;
         currentMaterial = &materials[layer0];
         switchToLayer(layer0);
 
@@ -294,6 +328,7 @@ void Simulation::runSingleThread() {
         kNeedsToBeScattered = false; //with the orignal k
 
         appendTrajectoryPoint(walker->r0);
+        nInteractions.insert(nInteractions.begin(),nLayers+2,0);
 
 #ifdef DEBUG_TRAJECTORY
         printf("%d\t",layer0);
@@ -606,6 +641,11 @@ void Simulation::reportProgress() const
 void Simulation::setMultipleRNGStates(const vector<string> states)
 {
     multipleRNGStates = states;
+}
+
+void Simulation::setTimeOriginZ(const MCfloat z)
+{
+    timeOriginZ = z;
 }
 
 BaseObject* Simulation::clone_impl() const

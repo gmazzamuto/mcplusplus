@@ -43,6 +43,7 @@ public:
     const vector<vector<MCfloat> *> *trajectories() const;
     void reportProgress() const;
     void setMultipleRNGStates(const vector<string> states);
+    void setTimeOriginZ(const MCfloat z);
 
     enum walkerSaveFlags {
         SAVE_TRANSMITTED = 1 << 0,
@@ -79,6 +80,7 @@ private:
     //flags
     bool saveTrajectory;
     bool fresnelReflectionsEnabled;
+    MCfloat timeOriginZ;
 
     //walker counters
     u_int64_t _totalWalkers;  /**< @brief total number of walkers to be simulated*/
