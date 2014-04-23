@@ -70,7 +70,7 @@ Simulation::Simulation(BaseObject *parent) :
     source = NULL;
     upperZBoundaries = NULL;
     layer0 = 0;
-    trajectoryPoints = new std::vector<vector<MCfloat>*>();
+    trajectoryPoints = new vector<vector<MCfloat>*>();
     saveTrajectory = false;
     fresnelReflectionsEnabled = true;
     nThreads = 1;
@@ -292,7 +292,7 @@ void Simulation::runSingleThread() {
     uint leftLayer = min(layer0,layer1);
     uint rightLayer = max(layer0,layer1);
     MCfloat leftPoint = min(source->z0(), timeOriginZ);
-    if(leftPoint == -1*std::numeric_limits<MCfloat>::infinity())
+    if(leftPoint == -1*numeric_limits<MCfloat>::infinity()) {
         leftPoint = min(upperZBoundaries[0],timeOriginZ);
         initialLayer = 0;
     }
@@ -312,12 +312,12 @@ void Simulation::runSingleThread() {
     while(n < _totalWalkers && !forceTermination) {
         vector<u_int64_t> nInteractions;
         if(saveTrajectory)
-            currentTrajectory = new std::vector<MCfloat>();
+            currentTrajectory = new vector<MCfloat>();
         layer0 = 0;
         totalLengthInCurrentLayer = 0;
 
         source->spin(walker);
-        if(walker->r0[2] == -1*std::numeric_limits<MCfloat>::infinity())
+        if(walker->r0[2] == -1*numeric_limits<MCfloat>::infinity())
             walker->r0[2] = leftPoint;
 
         walker->walkTime += timeOffset;
@@ -370,7 +370,7 @@ void Simulation::runSingleThread() {
                 }
             }
             else { //no scattering
-                length = std::numeric_limits<MCfloat>::infinity(); //move() will take the walker to the closest interface
+                length = numeric_limits<MCfloat>::infinity(); //move() will take the walker to the closest interface
             }
 
             //compute new position
@@ -730,13 +730,13 @@ void Simulation::switchToLayer(const uint layer)
     deflCosine.setg(currentMaterial->g);
     currentMus = mus[layer0];
     if(layer0 == 0)
-        currLayerLowerBoundary = -std::numeric_limits<MCfloat>::infinity();
+        currLayerLowerBoundary = -numeric_limits<MCfloat>::infinity();
     else
         currLayerLowerBoundary = upperZBoundaries[layer0-1];
     if(layer0 <= nLayers)
         currLayerUpperBoundary = upperZBoundaries[layer0];
     else
-        currLayerUpperBoundary = std::numeric_limits<MCfloat>::infinity();
+        currLayerUpperBoundary = numeric_limits<MCfloat>::infinity();
 }
 
 void Simulation::setExitPointsSaveFlags(unsigned int value)
