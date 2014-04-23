@@ -4,7 +4,7 @@
 #include <cstddef>
 #include <list>
 #include <boost/utility.hpp>
-#include "MCtypes.h"
+#include "MCglobal.h"
 #include <cstdarg>
 #include <sstream>
 

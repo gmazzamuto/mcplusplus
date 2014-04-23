@@ -41,7 +41,7 @@
 #ifndef GLWIDGET_H
 #define GLWIDGET_H
 
-#include "MCtypes.h"
+#include "MCglobal.h"
 #include <vector>
 #include <QGLWidget>
 

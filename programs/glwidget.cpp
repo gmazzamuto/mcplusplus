@@ -42,8 +42,6 @@
 #include <QtOpenGL>
 #include <cmath>
 
-#include <iostream>
-
 #include "glwidget.h"
 
 #ifndef GL_MULTISAMPLE

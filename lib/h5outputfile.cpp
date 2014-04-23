@@ -3,7 +3,6 @@
 
 #include <fstream>
 #include <string.h>
-#include <iostream>
 
 H5OutputFile::H5OutputFile()
     : H5FileHelper()

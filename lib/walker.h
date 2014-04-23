@@ -1,7 +1,7 @@
 #ifndef WALKER_H
 #define WALKER_H
 
-#include "MCtypes.h"
+#include "MCglobal.h"
 #include <vector>
 
 using namespace std;

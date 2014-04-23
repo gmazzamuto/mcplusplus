@@ -3,7 +3,6 @@
 #include <boost/property_tree/exceptions.hpp>
 #include <boost/property_tree/xml_parser.hpp>
 #include <boost/foreach.hpp>
-#include <stdlib.h>
 
 using namespace boost::math::constants;
 

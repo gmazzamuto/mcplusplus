@@ -1,6 +1,5 @@
 #include "baseobject.h"
 
-#include <iostream>
 #include <ctime>
 #ifdef __GNUC__
 #include <typeinfo>

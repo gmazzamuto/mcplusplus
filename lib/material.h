@@ -1,7 +1,7 @@
 #ifndef MATERIAL_H
 #define MATERIAL_H
 
-#include "MCtypes.h"
+#include "MCglobal.h"
 
 const MCfloat LIGHT_SPEED = 299.792458; // um/ps
 //const MCfloat INV_LIGHT_SPEED = 1.0/LIGHT_SPEED;

@@ -1,6 +1,5 @@
 #include "baserandom.h"
 
-#include <iostream>
 #include <fstream>
 
 BaseRandom::BaseRandom(BaseObject *parent) :

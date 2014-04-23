@@ -1,5 +1,4 @@
 #include "walker.h"
-#include <stdlib.h>
 #include <string.h> //for memset()
 
 Walker::Walker()
