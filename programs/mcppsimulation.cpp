@@ -31,11 +31,11 @@ int main(int argc, char *argv[])
     material.g = 0;
     material.n = 1.5;
 
-    sample->addLayer(material,40);
-    sample->addLayer(freeSpace,40);
-    sample->addLayer(material,40);
+    sample->addLayer(&material,40);
+    sample->addLayer(&freeSpace,40);
+    sample->addLayer(&material,40);
 
-    sample->setSurroundingEnvironment(freeSpace);
+    sample->setSurroundingEnvironment(&freeSpace);
 
     Simulation *sim = new Simulation();
 

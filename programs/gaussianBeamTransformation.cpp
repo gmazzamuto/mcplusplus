@@ -21,13 +21,13 @@ int main(int argc, char *argv[])
 
     material0.n = 1.5;
     material1.n = 3;
-    sample->addLayer(material1,700);
+    sample->addLayer(&material1,700);
 
     material2.n = 2;
-    sample->addLayer(material2,300);
-    sample->addLayer(material2,2000);
+    sample->addLayer(&material2,300);
+    sample->addLayer(&material2,2000);
 
-    sample->setSurroundingEnvironment(material0,material2);
+    sample->setSurroundingEnvironment(&material0,&material2);
 
     bool success;
     success = source->focus(1000,sample);

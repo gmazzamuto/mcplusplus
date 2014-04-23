@@ -1,13 +1,15 @@
 #include "sample.h"
 
+#include <limits>
+
 Sample::Sample(BaseObject *parent) :
     BaseObject(parent)
 {
     _nLayers=0;
     _zBoundaries.push_back(0);
 
-    materials.push_front(Vacuum());
-    materials.push_back(Vacuum());
+    materials.push_front(new Vacuum());
+    materials.push_back(new Vacuum());
 }
 
 /**
@@ -22,7 +24,7 @@ Sample::Sample(BaseObject *parent) :
  * \f$ z=0 \f$.
  */
 
-void Sample::addLayer(const Material &material, MCfloat thickness) {
+void Sample::addLayer(Material *material, MCfloat thickness) {
     _nLayers++;
     _zBoundaries.push_back(_zBoundaries.back() + thickness);
     materials.insert(materials.end()-1,material);
@@ -42,18 +44,18 @@ void Sample::addLayer(const Material &material, MCfloat thickness) {
  * from left to right).
  */
 
-void Sample::addPreLayer(const Material &material, MCfloat thickness)
+void Sample::addPreLayer(Material *material, MCfloat thickness)
 {
     _nLayers++;
     _zBoundaries.push_front(_zBoundaries.front() - thickness);
     materials.insert(materials.begin()+1,material);
 }
 
-void Sample::setSurroundingEnvironment(const Material &material) {
+void Sample::setSurroundingEnvironment(Material *material) {
     setSurroundingEnvironment(material, material);
 }
 
-void Sample::setSurroundingEnvironment(const Material &frontMaterial, const Material &backMaterial) {
+void Sample::setSurroundingEnvironment(Material *frontMaterial, Material *backMaterial) {
     materials.pop_back();
     materials.pop_front();
     materials.push_front(frontMaterial);
@@ -80,8 +82,8 @@ const deque<MCfloat> *Sample::zBoundaries() const {
     return &_zBoundaries;
 }
 
-const Material *Sample::material(unsigned int layerIndex) const {
-    return &materials.at(layerIndex);
+Material *Sample::material(unsigned int layerIndex) const {
+    return materials.at(layerIndex);
 }
 
 unsigned int Sample::layerAt(MCfloat z)
@@ -99,14 +101,14 @@ void Sample::describe_impl() const
 {
     for (uint i = 0; i < materials.size(); ++i) {
         stringstream ss;
-        const Material *mat = &materials.at(i);
+        const Material *mat = materials.at(i);
         ss << "Layer  " << i;
         if(i > 0 && i <= _nLayers)
             ss << " thickness = " << _zBoundaries.at(i) - _zBoundaries.at(i-1) << "\t";
         else
             ss << " thickness = infinity";
         ss << "\tMaterial: n = " << mat->n << "\tv = " << mat->v;
-        if(mat->ls > 0)
+        if(mat->ls != numeric_limits<MCfloat>::infinity())
              ss << "\tls = " << mat->ls << "\tg = " << mat->g;
         logMessage(ss.str());
     }

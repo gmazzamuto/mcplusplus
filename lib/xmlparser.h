@@ -35,20 +35,21 @@ private:
     ptree pt;
 
     set<string> materialStrings;
-    map<string, Material> materialMap;
+    map<string, Material*> materialMap;
     map<string, Source *> sourceMap;
     bool showTrajectory;
     Simulation *sim;
     Sample *_sample;
     Source *src;
 
-    Material material(const string name) const;
+    Material *material(const string name) const;
     AbstractDistribution *distribution(const string name) const;
     bool boolean(const string str) const;
     unsigned int walkerSaveFlags(const string flags);
     unsigned int dirSaveFlags(const string flags);
 
     unsigned int _walkTimesSaveFlags, _exitPointsSaveFlags, _exitKVectorsDirsSaveFlags, _exitKVectorsSaveFlags;
+    void parseMaterials();
 };
 
 #endif // XMLPARSER_H

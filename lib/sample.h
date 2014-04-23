@@ -12,19 +12,19 @@ class Sample : public BaseObject
 {
 public:
     Sample(BaseObject *parent=NULL);
-    void addLayer(const Material &material, MCfloat thickness);
-    void addPreLayer(const Material &material, MCfloat thickness);
-    void setSurroundingEnvironment(const Material &material);
-    void setSurroundingEnvironment(const Material &frontMaterial, const Material &backMaterial);
+    void addLayer(Material *material, MCfloat thickness);
+    void addPreLayer(Material *material, MCfloat thickness);
+    void setSurroundingEnvironment(Material *material);
+    void setSurroundingEnvironment(Material *frontMaterial, Material *backMaterial);
     unsigned int nLayers() const;
     const deque<MCfloat> *zBoundaries() const;
-    const Material *material(unsigned int layerIndex) const;
+    Material *material(unsigned int layerIndex) const;
     unsigned int layerAt(MCfloat z);
 
 private:
     unsigned int _nLayers;
     deque<MCfloat> _zBoundaries;
-    deque<Material> materials;
+    deque<Material*> materials;
 
     virtual void describe_impl() const;
 };

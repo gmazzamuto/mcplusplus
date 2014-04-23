@@ -27,19 +27,9 @@ void XMLParser::parseString(const string &xmlContent)
 }
 
 void XMLParser::parseAll() {
-    //materials
-    map<string,Material>::iterator it = materialMap.begin();
-    BOOST_FOREACH(ptree::value_type &v, pt.get_child("MCPlusPlus.materials")) {
-        if(v.first != "material")
-            continue;
-        string name = v.second.get_child("<xmlattr>.name").data();
-        Material mat;
-        mat.ls = v.second.get<MCfloat>("<xmlattr>.ls");
-        mat.g = v.second.get<MCfloat>("<xmlattr>.g");
-        mat.n = v.second.get<MCfloat>("<xmlattr>.n");
-        materialMap.insert(it, pair<string,Material>(name,mat));
-    }
 
+    //materials
+    parseMaterials();
 
     //sample
     if(_sample != NULL)
@@ -49,11 +39,11 @@ void XMLParser::parseAll() {
     string right = pt.get<string>("MCPlusPlus.MLSample.<xmlattr>.right");
     _sample->setSurroundingEnvironment(material(left),material(right));
 
-    vector<Material> preLayerMaterial;
+    vector<Material*> preLayerMaterial;
     vector<MCfloat> preLayerThickness;
     BOOST_FOREACH(ptree::value_type &v, pt.get_child("MCPlusPlus.MLSample")) {
         if(v.first == "layer" || v.first == "prelayer") {
-            Material mat = material(v.second.get_child("<xmlattr>.material").data());
+            Material *mat = material(v.second.get_child("<xmlattr>.material").data());
             if(v.first == "layer")
                 _sample->addLayer(mat,v.second.get<MCfloat>("<xmlattr>.thickness"));
             else if(v.first == "prelayer") {
@@ -92,6 +82,9 @@ void XMLParser::parseAll() {
         src = new PencilBeamSource();
     }
 
+    ptree::const_assoc_iterator it = pt.find("MCPlusPlus.source.<xmlattr>.wavelength");
+    if(it != pt.not_found())
+        src->setWavelength(boost::lexical_cast<MCfloat>(it->second.data()));
 
     AbstractDistribution *walkTime = distribution(pt.get<string>("MCPlusPlus.source.<xmlattr>.walkTime"));
     src->setWalkTimeDistribution(walkTime);
@@ -199,16 +192,16 @@ Sample *XMLParser::sample() const
     return _sample;
 }
 
-Material XMLParser::material(const string name) const
+Material* XMLParser::material(const string name) const
 {
     if(name == "Air")
-        return Air();
+        return new Air();
     else if(name == "Vacuum")
-        return Vacuum();
+        return new Vacuum();
     else if(name == "GlassSlide")
-        return GlassSlide();
+        return new GlassSlide();
     else if(name == "NorlandOpticalAdhesive65")
-        return NorlandOpticalAdhesive65();
+        return new NorlandOpticalAdhesive65();
     else
         return materialMap.at(name);
 }
@@ -282,4 +275,19 @@ unsigned int XMLParser::dirSaveFlags(const string flags)
     }
 
     return ret;
+}
+
+void XMLParser::parseMaterials()
+{
+    map<string,Material*>::iterator it = materialMap.begin();
+    BOOST_FOREACH(ptree::value_type &v, pt.get_child("MCPlusPlus.materials")) {
+        if(v.first != "material")
+            continue;
+        string name = v.second.get_child("<xmlattr>.name").data();
+        Material *mat = new Material();
+        mat->ls = v.second.get<MCfloat>("<xmlattr>.ls");
+        mat->g = v.second.get<MCfloat>("<xmlattr>.g");
+        mat->n = v.second.get<MCfloat>("<xmlattr>.n");
+        materialMap.insert(it, pair<string,Material*>(name,mat));
+    }
 }

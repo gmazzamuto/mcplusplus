@@ -12,6 +12,7 @@ Source::Source(BaseObject *parent) :
         r0Distribution[i] = NULL;
     }
     _z0 = 0;
+    setWavelength(-1);
 }
 
 Source::~Source()

@@ -266,7 +266,9 @@ void Simulation::runSingleThread() {
     }
 
     for (unsigned int i = 0; i < nLayers+2; ++i) {
-        mat[i]=*(_sample->material(i));
+        Material *m = _sample->material(i);
+        m->setWavelegth(source->wavelength());
+        mat[i]=*m;
         mus[i] = 1./mat[i].ls;
     }
 
@@ -338,7 +340,7 @@ void Simulation::runSingleThread() {
         MCfloat length;
         while(1) {
             //spin k1 (i.e. scatter) only if the material is scattering
-            if(currentMaterial->ls > 0) {
+            if(currentMaterial->ls != numeric_limits<MCfloat>::infinity()) {
                 length = exponential_distribution<MCfloat>(currentMus)(*mt);
                 if(kNeedsToBeScattered) {
                     nInteractions[layer0]++;

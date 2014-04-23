@@ -1,9 +1,12 @@
 #include "material.h"
 #include <cmath>
+#include <limits>
+
+using namespace std;
 
 Material::Material()
 {
-    ls = 0;
+    ls = numeric_limits<MCfloat>::infinity(); //non-scattering medium
     n = 1;
     v = LIGHT_SPEED;
 }
@@ -40,7 +43,6 @@ MCfloat Material::dispersionRelation(MCfloat lambda_um) {
 Air::Air() :
     Material()
 {
-    ls = 0;
     n = 1.00027499;
 }
 
@@ -70,11 +72,11 @@ MCfloat Air::dispersionRelation(MCfloat lambda_um) {
 GlassSlide::GlassSlide() :
     Material()
 {
-    ls = 0;
     n = 1.5203;
 }
 
 MCfloat GlassSlide::dispersionRelation(MCfloat lambda_um) {
+    MC_ASSERT_MSG(lambda_um > 0, "Invalid wavelength");
     return sqrt(1 + 1.282086558597*pow(lambda_um,2)/(pow(lambda_um,2) - 0.01023694363174)
                     + 0.05984826992046*pow(lambda_um,2)/(pow(lambda_um,2) - 12.09530215672));
 }
@@ -85,7 +87,6 @@ MCfloat GlassSlide::dispersionRelation(MCfloat lambda_um) {
 NorlandOpticalAdhesive65::NorlandOpticalAdhesive65() :
     Material()
 {
-    ls = 0;
     n = 1.514;
 }
 
@@ -97,6 +98,7 @@ NorlandOpticalAdhesive65::NorlandOpticalAdhesive65() :
  */
 
 MCfloat NorlandOpticalAdhesive65::dispersionRelation(MCfloat lambda_um) {
+    MC_ASSERT_MSG(lambda_um > 0, "Invalid wavelength");
     return 1.50631 + 5.43562E-3/pow(lambda_um,2) + 27.7798E-6/pow(lambda_um,4);
 }
 
