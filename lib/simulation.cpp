@@ -312,7 +312,7 @@ void Simulation::runSingleThread() {
         vector<u_int64_t> nInteractions;
         if(saveTrajectory)
             currentTrajectory = new vector<MCfloat>();
-        layer0 = 0;
+
         totalLengthInCurrentLayer = 0;
 
         source->spin(&walker);
