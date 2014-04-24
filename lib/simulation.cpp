@@ -515,12 +515,10 @@ void Simulation::move(const MCfloat length) {
     zBoundary = upperZBoundaries[min(layer0,layer1)];
 
     MCfloat t = (zBoundary - walker->r0[2]) / walker->k1[2];
-    MCfloat intersection[3];
     for (int i = 0; i < 3; ++i) {
-        intersection[i] = walker->r0[i] + walker->k1[i]*t;
+        walker->r0[i] = walker->r0[i] + walker->k1[i]*t; //move to intersection with interface, r1 is now meaningless
     }
 
-    memcpy(walker->r0,intersection,3*sizeof(MCfloat)); //move to interface, r1 is now meaningless
     totalLengthInCurrentLayer+=t;
     kNeedsToBeScattered = false;
 
