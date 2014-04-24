@@ -277,7 +277,6 @@ void Simulation::runSingleThread() {
     this->mus = mus;
 
     n = 0;
-    walker = new Walker();
 
     MCfloat timeOffset = 0;
     MCfloat pos[3];
@@ -316,25 +315,25 @@ void Simulation::runSingleThread() {
         layer0 = 0;
         totalLengthInCurrentLayer = 0;
 
-        source->spin(walker);
-        if(walker->r0[2] == -1*numeric_limits<MCfloat>::infinity())
-            walker->r0[2] = leftPoint;
+        source->spin(&walker);
+        if(walker.r0[2] == -1*numeric_limits<MCfloat>::infinity())
+            walker.r0[2] = leftPoint;
 
-        walker->walkTime += timeOffset;
+        walker.walkTime += timeOffset;
 
         layer0 = initialLayer;
         currentMaterial = &materials[layer0];
         switchToLayer(layer0);
 
-        walker->swap_k0_k1();        //at first, the walker propagates
+        walker.swap_k0_k1();        //at first, the walker propagates
         kNeedsToBeScattered = false; //with the orignal k
 
-        appendTrajectoryPoint(walker->r0);
+        appendTrajectoryPoint(walker.r0);
         nInteractions.insert(nInteractions.begin(),nLayers+2,0);
 
 #ifdef DEBUG_TRAJECTORY
         printf("%d\t",layer0);
-        printf("%lf\t%lf\t%lf\t\t%lf", walker->r0[0], walker->r0[1], walker->r0[2],walker->k0[2]);
+        printf("%lf\t%lf\t%lf\t\t%lf", walker.r0[0], walker.r0[1], walker.r0[2],walker.k0[2]);
 #endif
 
         MCfloat length;
@@ -355,22 +354,22 @@ void Simulation::runSingleThread() {
                     sincosf(psi,&sinPsi,&cosPsi);
 #endif
 
-                    if(fabs(walker->k0[2]) > 0.999999) {
-                        walker->k1[0] = sinTheta*cosPsi;
-                        walker->k1[1] = sinTheta*sinPsi;
-                        walker->k1[2] = cosTheta*sign<MCfloat>(walker->k0[2]);
+                    if(fabs(walker.k0[2]) > 0.999999) {
+                        walker.k1[0] = sinTheta*cosPsi;
+                        walker.k1[1] = sinTheta*sinPsi;
+                        walker.k1[2] = cosTheta*sign<MCfloat>(walker.k0[2]);
                     }
                     else {
-                        MCfloat temp = sqrt(1-pow(walker->k0[2],2));
-                        walker->k1[0] = (sinTheta*(walker->k0[0]*walker->k0[2]*cosPsi - walker->k0[1]*sinPsi))/temp + cosTheta*walker->k0[0];
-                        walker->k1[1] = (sinTheta*(walker->k0[1]*walker->k0[2]*cosPsi + walker->k0[0]*sinPsi))/temp + cosTheta*walker->k0[1];
-                        walker->k1[2] = -sinTheta*cosPsi*temp + cosTheta*walker->k0[2];
+                        MCfloat temp = sqrt(1-pow(walker.k0[2],2));
+                        walker.k1[0] = (sinTheta*(walker.k0[0]*walker.k0[2]*cosPsi - walker.k0[1]*sinPsi))/temp + cosTheta*walker.k0[0];
+                        walker.k1[1] = (sinTheta*(walker.k0[1]*walker.k0[2]*cosPsi + walker.k0[0]*sinPsi))/temp + cosTheta*walker.k0[1];
+                        walker.k1[2] = -sinTheta*cosPsi*temp + cosTheta*walker.k0[2];
                     }
 
-                    MCfloat mod = module(walker->k1);
-                    walker->k1[0]/=mod;
-                    walker->k1[1]/=mod;
-                    walker->k1[2]/=mod;
+                    MCfloat mod = module(walker.k1);
+                    walker.k1[0]/=mod;
+                    walker.k1[1]/=mod;
+                    walker.k1[2]/=mod;
                 }
             }
             else { //no scattering
@@ -378,20 +377,20 @@ void Simulation::runSingleThread() {
             }
 
             //compute new position
-            walker->r1[0] = walker->r0[0] + length*walker->k1[0];
-            walker->r1[1] = walker->r0[1] + length*walker->k1[1];
-            walker->r1[2] = walker->r0[2] + length*walker->k1[2];
+            walker.r1[0] = walker.r0[0] + length*walker.k1[0];
+            walker.r1[1] = walker.r0[1] + length*walker.k1[1];
+            walker.r1[2] = walker.r0[2] + length*walker.k1[2];
 
 #ifdef DEBUG_TRAJECTORY
-            printf("\t%lf\n",walker->k1[2]);
+            printf("\t%lf\n",walker.k1[2]);
 #endif
             move(length);
 
 #ifdef DEBUG_TRAJECTORY
             printf("%d\t",layer0);
-            printf("%lf\t%lf\t%lf\t\t%lf", walker->r0[0], walker->r0[1], walker->r0[2],walker->k0[2]);
+            printf("%lf\t%lf\t%lf\t\t%lf", walker.r0[0], walker.r0[1], walker.r0[2],walker.k0[2]);
 #endif
-            appendTrajectoryPoint(walker->r0);
+            appendTrajectoryPoint(walker.r0);
 
                                       //this means that we are moving away from an interface,
             if(!kNeedsToBeScattered)  //so the walker might be about to leave the sample
@@ -406,7 +405,7 @@ void Simulation::runSingleThread() {
                                 appendExitPoint(TRANSMITTED);
 
                             if(walkTimesSaveFlags & FLAG_TRANSMITTED)
-                                walkTimes[TRANSMITTED].push_back(walker->walkTime);
+                                walkTimes[TRANSMITTED].push_back(walker.walkTime);
 
                             if(exitKVectorsSaveFlags & FLAG_TRANSMITTED)
                                 appendExitKVector(TRANSMITTED);
@@ -422,7 +421,7 @@ void Simulation::runSingleThread() {
                             appendExitPoint(BALLISTIC);
 
                         if(walkTimesSaveFlags & FLAG_BALLISTIC)
-                            walkTimes[BALLISTIC].push_back(walker->walkTime);
+                            walkTimes[BALLISTIC].push_back(walker.walkTime);
 
                         if(exitKVectorsSaveFlags & FLAG_BALLISTIC)
                             appendExitKVector(BALLISTIC);
@@ -440,7 +439,7 @@ void Simulation::runSingleThread() {
                                 appendExitPoint(REFLECTED);
 
                             if(walkTimesSaveFlags & FLAG_REFLECTED)
-                                walkTimes[REFLECTED].push_back(walker->walkTime);
+                                walkTimes[REFLECTED].push_back(walker.walkTime);
 
                             if(exitKVectorsSaveFlags & FLAG_REFLECTED)
                                 appendExitKVector(REFLECTED);
@@ -456,7 +455,7 @@ void Simulation::runSingleThread() {
                             appendExitPoint(BACKREFLECTED);
 
                         if(walkTimesSaveFlags & FLAG_BACKREFLECTED)
-                            walkTimes[BACKREFLECTED].push_back(walker->walkTime);
+                            walkTimes[BACKREFLECTED].push_back(walker.walkTime);
 
                         if(exitKVectorsSaveFlags & FLAG_BACKREFLECTED)
                             appendExitKVector(BACKREFLECTED);
@@ -477,7 +476,6 @@ void Simulation::runSingleThread() {
     free(uzb);
     free(mat);
     free(mus);
-    delete walker;
 }
 
 /**
@@ -498,10 +496,10 @@ unsigned int Simulation::layerAt(const MCfloat *r0) const {
 }
 
 void Simulation::move(const MCfloat length) {
-    if(walker->r1[2] > currLayerLowerBoundary && walker->r1[2] <= currLayerUpperBoundary)
+    if(walker.r1[2] > currLayerLowerBoundary && walker.r1[2] <= currLayerUpperBoundary)
     {
-        walker->swap_r0_r1();
-        walker->swap_k0_k1();
+        walker.swap_r0_r1();
+        walker.swap_k0_k1();
 
         totalLengthInCurrentLayer+=length;
         kNeedsToBeScattered = true;
@@ -511,12 +509,12 @@ void Simulation::move(const MCfloat length) {
     //handle interface
 
     MCfloat zBoundary=0;
-    layer1 = layer0 + sign(walker->k1[2]);
+    layer1 = layer0 + sign(walker.k1[2]);
     zBoundary = upperZBoundaries[min(layer0,layer1)];
 
-    MCfloat t = (zBoundary - walker->r0[2]) / walker->k1[2];
+    MCfloat t = (zBoundary - walker.r0[2]) / walker.k1[2];
     for (int i = 0; i < 3; ++i) {
-        walker->r0[i] = walker->r0[i] + walker->k1[i]*t; //move to intersection with interface, r1 is now meaningless
+        walker.r0[i] = walker.r0[i] + walker.k1[i]*t; //move to intersection with interface, r1 is now meaningless
     }
 
     totalLengthInCurrentLayer+=t;
@@ -537,7 +535,7 @@ void Simulation::move(const MCfloat length) {
 
     //handle reflection and refraction
 
-    MCfloat sinTheta0 = sqrt(1 - pow(walker->k1[2],2));
+    MCfloat sinTheta0 = sqrt(1 - pow(walker.k1[2],2));
     MCfloat sinTheta1 = n0*sinTheta0/n1;
 
     if(sinTheta1 > 1) {
@@ -556,7 +554,7 @@ void Simulation::move(const MCfloat length) {
             MCfloat cThetaSum, cThetaDiff; //cos(Theta0 + Theta1) and cos(Theta0 - Theta1)
             MCfloat sThetaSum, sThetaDiff; //sin(Theta0 + Theta1) and sin(Theta0 - Theta1)
 
-            MCfloat cosTheta0 = fabs(walker->k1[2]);
+            MCfloat cosTheta0 = fabs(walker.k1[2]);
 
             if(cosTheta0 > COSZERO) { //normal incidence
                 r = (n1-n0)/(n1+n0);
@@ -585,7 +583,7 @@ void Simulation::reflect() {
 #ifdef DEBUG_TRAJECTORY
     printf("reflect ...\n");
 #endif
-    walker->k1[2] *= -1; //flip k1 along z
+    walker.k1[2] *= -1; //flip k1 along z
 }
 
 void Simulation::refract() {
@@ -593,9 +591,9 @@ void Simulation::refract() {
     printf("refract ...\n");
 #endif
 
-    walker->k1[0] *= n0/n1;
-    walker->k1[1] *= n0/n1;
-    walker->k1[2] = sign<MCfloat>(walker->k1[2])*cosTheta1; //cosTheta1 is positive
+    walker.k1[0] *= n0/n1;
+    walker.k1[1] *= n0/n1;
+    walker.k1[2] = sign<MCfloat>(walker.k1[2])*cosTheta1; //cosTheta1 is positive
     switchToLayer(layer1);
 }
 
@@ -609,8 +607,8 @@ void Simulation::appendTrajectoryPoint(MCfloat *point) {
 
 void Simulation::appendExitPoint(enum walkerIndex idx)
 {
-    exitPoints[idx].push_back(walker->r0[0]);
-    exitPoints[idx].push_back(walker->r0[1]);
+    exitPoints[idx].push_back(walker.r0[0]);
+    exitPoints[idx].push_back(walker.r0[1]);
 }
 
 void Simulation::appendExitKVector(walkerIndex idx)
@@ -618,11 +616,11 @@ void Simulation::appendExitKVector(walkerIndex idx)
     // we must use k1 instead of k0 because the walker can leave the sample only
     // when it is moving away from an interface
     if(exitKVectorsDirsSaveFlags & DIR_X)
-        exitKVectors[idx].push_back(walker->k1[0]);
+        exitKVectors[idx].push_back(walker.k1[0]);
     if(exitKVectorsDirsSaveFlags & DIR_Y)
-        exitKVectors[idx].push_back(walker->k1[1]);
+        exitKVectors[idx].push_back(walker.k1[1]);
     if(exitKVectorsDirsSaveFlags & DIR_Z)
-        exitKVectors[idx].push_back(walker->k1[2]);
+        exitKVectors[idx].push_back(walker.k1[2]);
 }
 
 void Simulation::reportProgress() const
@@ -724,7 +722,7 @@ void Simulation::describe_impl() const
 
 void Simulation::switchToLayer(const uint layer)
 {
-    walker->walkTime += totalLengthInCurrentLayer/currentMaterial->v;
+    walker.walkTime += totalLengthInCurrentLayer/currentMaterial->v;
     totalLengthInCurrentLayer = 0;
 
     layer0=layer;

@@ -18,20 +18,6 @@ Walker::~Walker()
     free(k1);
 }
 
-void Walker::swap_r0_r1()
-{
-    MCfloat *temp = r1;
-    r1 = r0;
-    r0 = temp;
-}
-
-void Walker::swap_k0_k1()
-{
-    MCfloat *temp = k1;
-    k1 = k0;
-    k0 = temp;
-}
-
 void Walker::reset()
 {
     memset(r0,0,3*sizeof(MCfloat));

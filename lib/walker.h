@@ -12,8 +12,19 @@ public:
     Walker();
     ~Walker();
 
-    void swap_r0_r1();
-    void swap_k0_k1();
+    inline void swap_r0_r1()
+    {
+        MCfloat *temp = r1;
+        r1 = r0;
+        r0 = temp;
+    }
+
+    inline void swap_k0_k1()
+    {
+        MCfloat *temp = k1;
+        k1 = k0;
+        k0 = temp;
+    }
     void reset();
 
     MCfloat *r0;  /**< @brief position before the \f$ n \f$-th step*/

@@ -91,7 +91,7 @@ private:
     MCfloat totalLengthInCurrentLayer;
     bool kNeedsToBeScattered;
     time_t startTime;
-    Walker *walker;
+    Walker walker;
 
     MCfloat n0, n1, cosTheta1;
 
