@@ -23,6 +23,7 @@ public:
     bool loadExitPoints(walkerIndex type, MCfloat *destBuffer, const hsize_t *start=NULL, const hsize_t *count=NULL);
     bool loadWalkTimes(walkerIndex type, MCfloat *destBuffer, const hsize_t *start=NULL, const hsize_t *count=NULL);
     bool loadExitKVectors(walkerIndex type, MCfloat *destBuffer, const hsize_t *start=NULL, const hsize_t *count=NULL);
+    bool loadData(DataGroup group, walkerIndex type, MCfloat *destBuffer, const hsize_t *start=NULL, const hsize_t *count=NULL);
 
     void saveRNGState(const uint seed, const string s);
     string readRNGState(const uint seed) const;

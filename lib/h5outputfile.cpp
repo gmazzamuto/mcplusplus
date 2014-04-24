@@ -173,6 +173,27 @@ bool H5OutputFile::loadExitKVectors(walkerIndex type, MCfloat *destBuffer, const
     return ret;
 }
 
+bool H5OutputFile::loadData(DataGroup group, walkerIndex type, MCfloat *destBuffer, const hsize_t *start, const hsize_t *count)
+{
+    stringstream ss;
+    switch (group) {
+    case DATA_POINTS:
+        ss << "exit-points";
+        break;
+    case DATA_K:
+        ss << "exit-k-vectors";
+        break;
+    case DATA_TIMES:
+        ss << "walk-times";
+        break;
+    default:
+        break;
+    }
+
+    ss << "/" << walkerIndexToString(type);
+    return loadFrom1Ddataset(ss.str().c_str(),destBuffer,start,count);
+}
+
 void H5OutputFile::appendTo1Ddataset(const char *datasetName, const MCfloat *buffer, const hsize_t size) {
     if(!size)
         return;
@@ -261,10 +282,9 @@ bool H5OutputFile::openFile_impl()
     }
 
     DataSet dSet = file->openDataSet("photon-counters");
-
     dSet.read(_photonCounters,dSet.getDataType());
-
     dSet.close();
+
     return true;
 }
 
