@@ -8,7 +8,7 @@ using namespace std;
 
 typedef double MCfloat;
 
-enum walkerType {
+enum walkerIndex {
     TRANSMITTED = 0,
     BALLISTIC = 1,
     REFLECTED = 2,

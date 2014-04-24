@@ -47,7 +47,7 @@ bool H5OutputFile::newFromXML(const char *xmlFile, const char *fileName)
     return true;
 }
 
-void H5OutputFile::appendExitKVectors(walkerType type, const MCfloat *buffer, const hsize_t size)
+void H5OutputFile::appendExitKVectors(walkerIndex type, const MCfloat *buffer, const hsize_t size)
 {
     switch (type) {
     case TRANSMITTED:
@@ -67,7 +67,7 @@ void H5OutputFile::appendExitKVectors(walkerType type, const MCfloat *buffer, co
     }
 }
 
-void H5OutputFile::appendExitPoints(walkerType type, const MCfloat *buffer, const hsize_t size)
+void H5OutputFile::appendExitPoints(walkerIndex type, const MCfloat *buffer, const hsize_t size)
 {
     switch (type) {
     case TRANSMITTED:
@@ -87,7 +87,7 @@ void H5OutputFile::appendExitPoints(walkerType type, const MCfloat *buffer, cons
     }
 }
 
-void H5OutputFile::appendWalkTimes(walkerType type, const MCfloat *buffer, const hsize_t size)
+void H5OutputFile::appendWalkTimes(walkerIndex type, const MCfloat *buffer, const hsize_t size)
 {
     switch (type) {
     case TRANSMITTED:
@@ -107,7 +107,7 @@ void H5OutputFile::appendWalkTimes(walkerType type, const MCfloat *buffer, const
     }
 }
 
-void H5OutputFile::loadExitPoints(walkerType type, MCfloat *destBuffer, const hsize_t *start, const hsize_t *count)
+void H5OutputFile::loadExitPoints(walkerIndex type, MCfloat *destBuffer, const hsize_t *start, const hsize_t *count)
 {
     switch (type) {
     case TRANSMITTED:
@@ -127,7 +127,7 @@ void H5OutputFile::loadExitPoints(walkerType type, MCfloat *destBuffer, const hs
     }
 }
 
-void H5OutputFile::loadWalkTimes(walkerType type, MCfloat *destBuffer, const hsize_t *start, const hsize_t *count)
+void H5OutputFile::loadWalkTimes(walkerIndex type, MCfloat *destBuffer, const hsize_t *start, const hsize_t *count)
 {
     switch (type) {
     case TRANSMITTED:
@@ -147,7 +147,7 @@ void H5OutputFile::loadWalkTimes(walkerType type, MCfloat *destBuffer, const hsi
     }
 }
 
-void H5OutputFile::loadExitKVectors(walkerType type, MCfloat *destBuffer, const hsize_t *start, const hsize_t *count)
+void H5OutputFile::loadExitKVectors(walkerIndex type, MCfloat *destBuffer, const hsize_t *start, const hsize_t *count)
 {
     switch (type) {
     case TRANSMITTED:

@@ -17,12 +17,12 @@ public:
 
     virtual bool newFile(const char *fileName, bool create_datasets=true);
     bool newFromXML(const char *xmlFile, const char *fileName);
-    void appendExitKVectors(walkerType type, const MCfloat *buffer, const hsize_t size);
-    void appendExitPoints(walkerType type, const MCfloat *buffer, const hsize_t size);
-    void appendWalkTimes(walkerType type, const MCfloat *buffer, const hsize_t size);
-    void loadExitPoints(walkerType type, MCfloat *destBuffer, const hsize_t *start=NULL, const hsize_t *count=NULL);
-    void loadWalkTimes(walkerType type, MCfloat *destBuffer, const hsize_t *start=NULL, const hsize_t *count=NULL);
-    void loadExitKVectors(walkerType type, MCfloat *destBuffer, const hsize_t *start=NULL, const hsize_t *count=NULL);
+    void appendExitKVectors(walkerIndex type, const MCfloat *buffer, const hsize_t size);
+    void appendExitPoints(walkerIndex type, const MCfloat *buffer, const hsize_t size);
+    void appendWalkTimes(walkerIndex type, const MCfloat *buffer, const hsize_t size);
+    void loadExitPoints(walkerIndex type, MCfloat *destBuffer, const hsize_t *start=NULL, const hsize_t *count=NULL);
+    void loadWalkTimes(walkerIndex type, MCfloat *destBuffer, const hsize_t *start=NULL, const hsize_t *count=NULL);
+    void loadExitKVectors(walkerIndex type, MCfloat *destBuffer, const hsize_t *start=NULL, const hsize_t *count=NULL);
 
     void saveRNGState(const uint seed, const string s);
     string readRNGState(const uint seed) const;

@@ -113,8 +113,8 @@ private:
 
     void appendTrajectoryPoint(MCfloat *point);
     void appendWalkTime();
-    void appendExitPoint(walkerType idx);
-    void appendExitKVector(walkerType idx);
+    void appendExitPoint(walkerIndex idx);
+    void appendExitKVector(walkerIndex idx);
 
     void runMultipleThreads();
     void runSingleThread();
