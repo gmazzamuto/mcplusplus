@@ -107,64 +107,70 @@ void H5OutputFile::appendWalkTimes(walkerIndex type, const MCfloat *buffer, cons
     }
 }
 
-void H5OutputFile::loadExitPoints(walkerIndex type, MCfloat *destBuffer, const hsize_t *start, const hsize_t *count)
+bool H5OutputFile::loadExitPoints(walkerIndex type, MCfloat *destBuffer, const hsize_t *start, const hsize_t *count)
 {
+    bool ret = false;
     switch (type) {
     case TRANSMITTED:
-        loadFrom1Ddataset("exit-points/transmitted",destBuffer,start,count);
+        ret = loadFrom1Ddataset("exit-points/transmitted",destBuffer,start,count);
         break;
     case BALLISTIC:
-        loadFrom1Ddataset("exit-points/ballistic",destBuffer,start,count);
+        ret = loadFrom1Ddataset("exit-points/ballistic",destBuffer,start,count);
         break;
     case REFLECTED:
-        loadFrom1Ddataset("exit-points/reflected",destBuffer,start,count);
+        ret = loadFrom1Ddataset("exit-points/reflected",destBuffer,start,count);
         break;
     case BACKREFLECTED:
-        loadFrom1Ddataset("exit-points/back-reflected",destBuffer,start,count);
+        ret = loadFrom1Ddataset("exit-points/back-reflected",destBuffer,start,count);
         break;
     default:
         break;
     }
+    return ret;
 }
 
-void H5OutputFile::loadWalkTimes(walkerIndex type, MCfloat *destBuffer, const hsize_t *start, const hsize_t *count)
+bool H5OutputFile::loadWalkTimes(walkerIndex type, MCfloat *destBuffer, const hsize_t *start, const hsize_t *count)
 {
+    bool ret = false;
     switch (type) {
     case TRANSMITTED:
-        loadFrom1Ddataset("walk-times/transmitted",destBuffer,start,count);
+        ret = loadFrom1Ddataset("walk-times/transmitted",destBuffer,start,count);
         break;
     case BALLISTIC:
-        loadFrom1Ddataset("walk-times/ballistic",destBuffer,start,count);
+        ret = loadFrom1Ddataset("walk-times/ballistic",destBuffer,start,count);
         break;
     case REFLECTED:
-        loadFrom1Ddataset("walk-times/reflected",destBuffer,start,count);
+        ret = loadFrom1Ddataset("walk-times/reflected",destBuffer,start,count);
         break;
     case BACKREFLECTED:
-        loadFrom1Ddataset("walk-times/back-reflected",destBuffer,start,count);
+        ret = loadFrom1Ddataset("walk-times/back-reflected",destBuffer,start,count);
         break;
     default:
         break;
     }
+    return ret;
 }
 
-void H5OutputFile::loadExitKVectors(walkerIndex type, MCfloat *destBuffer, const hsize_t *start, const hsize_t *count)
+bool H5OutputFile::loadExitKVectors(walkerIndex type, MCfloat *destBuffer, const hsize_t *start, const hsize_t *count)
 {
+    bool ret = false;
     switch (type) {
     case TRANSMITTED:
-        loadFrom1Ddataset("exit-k-vectors/transmitted",destBuffer,start,count);
+        ret = loadFrom1Ddataset("exit-k-vectors/transmitted",destBuffer,start,count);
         break;
     case BALLISTIC:
-        loadFrom1Ddataset("exit-k-vectors/ballistic",destBuffer,start,count);
+        ret = loadFrom1Ddataset("exit-k-vectors/ballistic",destBuffer,start,count);
         break;
     case REFLECTED:
-        loadFrom1Ddataset("exit-k-vectors/reflected",destBuffer,start,count);
+        ret = loadFrom1Ddataset("exit-k-vectors/reflected",destBuffer,start,count);
         break;
     case BACKREFLECTED:
-        loadFrom1Ddataset("exit-k-vectors/back-reflected",destBuffer,start,count);
+        ret = loadFrom1Ddataset("exit-k-vectors/back-reflected",destBuffer,start,count);
         break;
     default:
         break;
     }
+    return ret;
 }
 
 void H5OutputFile::appendTo1Ddataset(const char *datasetName, const MCfloat *buffer, const hsize_t size) {
@@ -178,13 +184,15 @@ void H5OutputFile::appendTo1Ddataset(const char *datasetName, const MCfloat *buf
     writeHyperSlab(dims,&size,buffer);
 }
 
-void H5OutputFile::loadFrom1Ddataset(const char *datasetName, MCfloat *destBuffer, const hsize_t *start, const hsize_t *count)
+bool H5OutputFile::loadFrom1Ddataset(const char *datasetName, MCfloat *destBuffer, const hsize_t *start, const hsize_t *count)
 {
-    openDataSet(datasetName);
+    if(!openDataSet(datasetName))
+        return false;
     if(count!=NULL)
         loadHyperSlab(start,count,destBuffer);
     else
         loadAll(destBuffer);
+    return true;
 }
 
 void H5OutputFile::writeVLenString(const char *datasetName, const string str)

@@ -20,9 +20,9 @@ public:
     void appendExitKVectors(walkerIndex type, const MCfloat *buffer, const hsize_t size);
     void appendExitPoints(walkerIndex type, const MCfloat *buffer, const hsize_t size);
     void appendWalkTimes(walkerIndex type, const MCfloat *buffer, const hsize_t size);
-    void loadExitPoints(walkerIndex type, MCfloat *destBuffer, const hsize_t *start=NULL, const hsize_t *count=NULL);
-    void loadWalkTimes(walkerIndex type, MCfloat *destBuffer, const hsize_t *start=NULL, const hsize_t *count=NULL);
-    void loadExitKVectors(walkerIndex type, MCfloat *destBuffer, const hsize_t *start=NULL, const hsize_t *count=NULL);
+    bool loadExitPoints(walkerIndex type, MCfloat *destBuffer, const hsize_t *start=NULL, const hsize_t *count=NULL);
+    bool loadWalkTimes(walkerIndex type, MCfloat *destBuffer, const hsize_t *start=NULL, const hsize_t *count=NULL);
+    bool loadExitKVectors(walkerIndex type, MCfloat *destBuffer, const hsize_t *start=NULL, const hsize_t *count=NULL);
 
     void saveRNGState(const uint seed, const string s);
     string readRNGState(const uint seed) const;
@@ -42,7 +42,7 @@ private:
     bool createDatasets(uint walkTimesSaveFlags, uint exitPointsSaveFlags, uint exitKVectorsSaveFlags);
     bool createRNGDataset(uint seed);
     void appendTo1Ddataset(const char *datasetName, const MCfloat *buffer, const hsize_t size);
-    void loadFrom1Ddataset(const char *datasetName, MCfloat *destBuffer, const hsize_t *start, const hsize_t *count);
+    bool loadFrom1Ddataset(const char *datasetName, MCfloat *destBuffer, const hsize_t *start, const hsize_t *count);
     void writeVLenString(const char *datasetName, const string str);
     string readVLenString(const char *datasetName) const;
     bool openFile_impl();
