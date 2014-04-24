@@ -30,6 +30,8 @@ public:
     uint exitPointsSaveFlags() const;
     uint exitKVectorsSaveFlags() const;
     uint exitKVectorsDirsSaveFlags() const;
+    unsigned int walkerSaveFlags(const string flags) const;
+    unsigned int dirSaveFlags(const string flags) const;
 
 private:
     ptree pt;
@@ -45,8 +47,6 @@ private:
     Material *material(const string name) const;
     AbstractDistribution *distribution(const string name) const;
     bool boolean(const string str) const;
-    unsigned int walkerSaveFlags(const string flags);
-    unsigned int dirSaveFlags(const string flags);
 
     unsigned int _walkTimesSaveFlags, _exitPointsSaveFlags, _exitKVectorsDirsSaveFlags, _exitKVectorsSaveFlags;
     void parseMaterials();

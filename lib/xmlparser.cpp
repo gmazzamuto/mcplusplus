@@ -231,7 +231,7 @@ bool XMLParser::boolean(const string str) const
     };
 }
 
-unsigned int XMLParser::walkerSaveFlags(const string flags) {
+unsigned int XMLParser::walkerSaveFlags(const string flags) const {
     unsigned int ret = 0;
     for (unsigned int i = 0; i < flags.size(); ++i) {
         switch (flags.at(i)) {
@@ -255,7 +255,7 @@ unsigned int XMLParser::walkerSaveFlags(const string flags) {
     return ret;
 }
 
-unsigned int XMLParser::dirSaveFlags(const string flags)
+unsigned int XMLParser::dirSaveFlags(const string flags) const
 {
     unsigned int ret = 0;
     for (unsigned int i = 0; i < flags.size(); ++i) {
