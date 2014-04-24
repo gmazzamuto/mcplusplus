@@ -2,38 +2,114 @@
 #include "h5outputfile.h"
 
 #include <cmath>
+#include <unistd.h>
 
 using namespace std;
 
+const char *progName;
+MCfloat binSize = 5e-2;
+
+void usage(FILE *f) {
+    fprintf(f, "\n"
+            "usage: %s [options] inputFile.h5\n"
+            "\n"
+            "[options]:\n"
+            "\t -h display help\n"
+            "\t -b [size] bin size in ps (defaults to %f)\n"
+            "\t -t [tbrk] walker types (defaults to tb)\n"
+            "\n", progName, binSize);
+}
+
 int main(int argc, char *argv[])
 {
-    H5OutputFile file;
-    file.openFile(argv[1]);
-    u_int64_t transmitted = file.transmitted();
-    u_int64_t ballistic = file.ballistic();
+    progName = argv[0];
 
-    MCfloat *wt = (MCfloat*)malloc(sizeof(MCfloat)*transmitted);
-    file.loadWalkTimes(TRANSMITTED, wt);
+    const char *fileName;
+    unsigned int walkerFlags = FLAG_TRANSMITTED | FLAG_BALLISTIC;
 
-    MCfloat *wtb = (MCfloat*)malloc(sizeof(MCfloat)*ballistic);
-    file.loadWalkTimes(BALLISTIC, wtb);
+    char c;
+    extern char *optarg;
+    extern int optind;
 
-    MCfloat min=1./0., max=-1./0.;
-    MCfloat binSize = 5e-2;
+    MCfloat *wt[4];
+    memset(wt,0,4*sizeof(MCfloat *));
 
-    //find min and max values
-    for (int i = 0; i < transmitted; ++i) {
-        if(wt[i] > max)
-            max = wt[i];
-        if(wt[i] < min)
-            min = wt[i];
+    const u_int64_t *photonCounters;
+
+    while ((c = getopt(argc, argv, "hs:t:")) != -1) {
+        switch (c) {
+        case 'h':
+            usage(stdout);
+            exit(EXIT_SUCCESS);
+            break;
+
+        case 's':
+            binSize = atof(optarg);
+            break;
+
+        case 't':
+        {
+            XMLParser parser;
+            walkerFlags = parser.walkerSaveFlags(optarg);
+        }
+            break;
+
+        default:
+            break;
+        }
     }
 
-    for (int i = 0; i < ballistic; ++i) {
-        if(wtb[i] > max)
-            max = wt[i];
-        if(wtb[i] < min)
-            min = wt[i];
+    if(argc-optind != 1) {
+        fprintf(stderr,"Error: input file not specified\n");
+        usage(stderr);
+        exit(EXIT_FAILURE);
+    }
+
+    fileName = argv[optind++];
+
+    H5OutputFile file;
+    if(!file.openFile(fileName)) {
+        cerr << "Cannot open file " << fileName << endl;
+    }
+
+    photonCounters = file.photonCounters();
+
+    cerr << "Bin size: " << binSize << endl;
+    cerr << "Walker types: ";
+    if(walkerFlags & FLAG_TRANSMITTED)
+        cerr << "TRANSMITTED ";
+    if(walkerFlags & FLAG_BALLISTIC)
+        cerr << "BALLISTIC ";
+    if(walkerFlags & FLAG_REFLECTED)
+        cerr << "REFLECTED ";
+    if(walkerFlags & FLAG_BACKREFLECTED)
+        cerr << "BACKREFLECTED ";
+
+    cerr << endl;
+
+    //allocate memory
+    for (uint type = 0; type < 4; type++) {
+        if(walkerFlags & walkerIndexToFlag(type)) {
+            wt[type] = (MCfloat*)malloc(sizeof(MCfloat)*photonCounters[type]);
+            if(!file.loadWalkTimes((walkerIndex)type, wt[type])) {
+                free(wt[type]);
+                wt[type] = NULL;
+            }
+        }
+    }
+
+    MCfloat min=1./0., max=-1./0.;
+
+    //find min and max values
+    for (uint type = 0; type < 4; ++type) {
+        if(wt[type] == NULL)
+            continue;
+        for (u_int64_t i = 0; i < photonCounters[type]; ++i) {
+            if(wt[type][i] > max)
+                max = wt[type][i];
+            if(wt[type][i] < min)
+                min = wt[type][i];
+        }
     }
 
     if(min > 0)
@@ -41,35 +117,37 @@ int main(int argc, char *argv[])
 
     size_t nBins = ceil((max - min)/binSize);
 
-//    cout << "max = " << max << " min = " << min << endl;
-//    cout << "nBins = " << nBins << endl;
+    cerr << "max = " << max << " min = " << min << endl;
+    cerr << "nBins = " << nBins << endl;
 
     u_int64_t *histo = (u_int64_t*)calloc(nBins,sizeof(u_int64_t));
 
-    for (int i = 0; i < transmitted; ++i) {
-        unsigned int index = (wt[i]-min)/binSize;
-        histo[index]++;
-    }
+    //build histogram
+    for (uint type = 0; type < 4; ++type) {
+        if(wt[type] == NULL)
+            continue;
+        for (u_int64_t i = 0; i < photonCounters[type]; ++i) {
+            unsigned int index = (wt[type][i]-min)/binSize;
+            histo[index]++;
+        }
 
-    for (int i = 0; i < ballistic; ++i) {
-        unsigned int index = (wtb[i]-min)/binSize;
-        histo[index]++;
     }
 
     cout << "binCenter\tcounts\tlogCounts" << endl;
 
-    for (int i = 0; i < nBins; ++i) {
+    for (size_t i = 0; i < nBins; ++i) {
         cout << min + binSize*(i+0.5) << "\t" << histo[i];
         if(histo[i])
             cout << "\t" << log10(histo[i]);
         cout << endl;
     }
 
-    free(wt);
-    free(wtb);
-    free(histo);
-
-
+    //free allocated memory
+    for (uint type = 0; type < 4; ++type) {
+        if(wt[type] == NULL)
+            continue;
+        free(wt[type]);
+    }
 
     return 0;
 }
