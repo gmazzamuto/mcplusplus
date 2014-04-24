@@ -98,7 +98,7 @@ void XMLParser::parseAll() {
 
     try {
         ptree v = pt.get_child("MCPlusPlus.simulation");
-        string str = v.get<string>("<xmlattr>.showTrajectory", "__default__");
+        string str = v.get<string>("<xmlattr>.show-trajectory", "__default__");
         if(str != "__default__") {
             showTrajectory = boolean(str);
             sim->setSaveTrajectoryEnabled(showTrajectory);
