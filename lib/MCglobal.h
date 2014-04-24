@@ -4,9 +4,20 @@
 #include <iostream>
 #include <cstdlib>
 
+#ifndef DOUBLEPRECISION
+#define DOUBLEPRECISION
+#endif
+
+//#undef DOUBLEPRECISION
+
+#ifdef DOUBLEPRECISION
+typedef double MCfloat;
+#else
+typedef float MCfloat;
+#endif
+
 using namespace std;
 
-typedef double MCfloat;
 
 enum walkerIndex {
     TRANSMITTED = 0,

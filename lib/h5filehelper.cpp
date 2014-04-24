@@ -3,6 +3,12 @@
 
 #include <string.h>
 
+#ifdef DOUBLEPRECISION
+#define MCH5FLOAT PredType::NATIVE_DOUBLE
+#else
+#define MCH5FLOAT PredType::NATIVE_FLOAT
+#endif
+
 H5FileHelper::H5FileHelper()
 {
     Exception::getAutoPrint(Efunc,&EclientData);
@@ -166,7 +172,7 @@ bool H5FileHelper::newDataset(const char *datasetName, int ndims, const hsize_t 
 
     double fillvalue = 0.;
     DSetCreatPropList plist;
-    plist.setFillValue(PredType::NATIVE_DOUBLE, &fillvalue);
+    plist.setFillValue(MCH5FLOAT, &fillvalue);
 
     plist.setChunk(ndims,chunk_dim); //ndims is the rank
 
@@ -256,7 +262,7 @@ bool H5FileHelper::openFile_impl()
  * \pre destBuffer must be valid and big enough to hold all the hyperslab data.
  */
 
-void H5FileHelper::loadHyperSlab(const hsize_t *start, const hsize_t *count, double *destBuffer) {
+void H5FileHelper::loadHyperSlab(const hsize_t *start, const hsize_t *count, MCfloat *destBuffer) {
     hsize_t _start[ndims];
     for (int i = 0; i < ndims; ++i) {
         _start[i] = 0;
@@ -269,7 +275,7 @@ void H5FileHelper::loadHyperSlab(const hsize_t *start, const hsize_t *count, dou
     }
 #endif
     dataSpace->selectHyperslab(H5S_SELECT_SET, count, start);
-    dataSet->read(destBuffer,PredType::NATIVE_DOUBLE,memspace,*dataSpace);
+    dataSet->read(destBuffer,MCH5FLOAT,memspace,*dataSpace);
 #ifdef PRINT_DEBUG_MSG
     logMessage("done.");
 #endif
@@ -282,11 +288,11 @@ void H5FileHelper::loadHyperSlab(const hsize_t *start, const hsize_t *count, dou
  * \pre destBuffer must be valid and big enough to hold all the data.
  */
 
-void H5FileHelper::loadAll(double *destBuffer) {
+void H5FileHelper::loadAll(MCfloat *destBuffer) {
 #ifdef PRINT_DEBUG_MSG
     logMessage("Loading whole dataset...");
 #endif
-    dataSet->read(destBuffer,PredType::NATIVE_DOUBLE,H5S_ALL,H5S_ALL);
+    dataSet->read(destBuffer,MCH5FLOAT,H5S_ALL,H5S_ALL);
 #ifdef PRINT_DEBUG_MSG
     logMessage("done.");
 #endif
@@ -299,7 +305,7 @@ void H5FileHelper::loadAll(double *destBuffer) {
  * @param srcBuffer The buffer where the data to be written is stored
  */
 
-void H5FileHelper::writeHyperSlab(const hsize_t *start, const hsize_t *count, const double *srcBuffer) {
+void H5FileHelper::writeHyperSlab(const hsize_t *start, const hsize_t *count, const MCfloat *srcBuffer) {
     hsize_t extDims[ndims];
     for (int i = 0; i < ndims; ++i) {
         extDims[i] = start[i] + count[i];
@@ -323,7 +329,7 @@ void H5FileHelper::writeHyperSlab(const hsize_t *start, const hsize_t *count, co
     DataSpace memspace( ndims, count );
     memspace.selectHyperslab(H5S_SELECT_SET, count, _start);
     dataSpace->selectHyperslab(H5S_SELECT_SET, count, start);
-    dataSet->write(srcBuffer,PredType::NATIVE_DOUBLE,memspace,*dataSpace);
+    dataSet->write(srcBuffer,MCH5FLOAT,memspace,*dataSpace);
 }
 
 void H5FileHelper::copyToInternalVariable(char **dest, const char *src) {

@@ -349,7 +349,11 @@ void Simulation::runSingleThread() {
                     MCfloat sinTheta = sqrt(1-pow(cosTheta,2));
                     MCfloat psi = uniform_01<MCfloat>()(*mt)*two_pi<MCfloat>(); //uniform in [0,2pi)
                     MCfloat cosPsi, sinPsi;
+#ifdef DOUBLEPRECISION
                     sincos(psi,&sinPsi,&cosPsi);
+#else
+                    sincosf(psi,&sinPsi,&cosPsi);
+#endif
 
                     if(fabs(walker->k0[2]) > 0.999999) {
                         walker->k1[0] = sinTheta*cosPsi;
