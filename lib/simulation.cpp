@@ -626,17 +626,19 @@ void Simulation::appendExitKVector(walkerIndex idx)
 void Simulation::reportProgress() const
 {
     string s = str( format("Progress = %.1lf%% (%u / %u) ") % (100.*currentWalker()/totalWalkers()) % currentWalker() % totalWalkers());
-    time_t now;
-    time(&now);
-    double secsPerWalker = difftime(now,startTime) / currentWalker();
-    time_t eta = now + secsPerWalker*(totalWalkers()-currentWalker());
-    struct tm * timeinfo;
-    timeinfo = localtime (&eta);
-    char buffer [80];
-    strftime (buffer,80,"%F %T",timeinfo);
     stringstream ss;
     ss << s;
-    ss << "ETA: " << buffer;
+    if(currentWalker() > 0) {
+        time_t now;
+        time(&now);
+        double secsPerWalker = difftime(now,startTime) / currentWalker();
+        time_t eta = now + secsPerWalker*(totalWalkers()-currentWalker());
+        struct tm * timeinfo;
+        timeinfo = localtime (&eta);
+        char buffer [80];
+        strftime (buffer,80,"%F %T",timeinfo);
+        ss << "ETA: " << buffer;
+    }
     logMessage(ss.str());
 }
 
