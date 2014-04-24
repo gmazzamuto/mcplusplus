@@ -27,10 +27,11 @@ public:
     void saveRNGState(const uint seed, const string s);
     string readRNGState(const uint seed) const;
     void appendPhotonCounts(const u_int64_t transmitted, const u_int64_t ballistic, const u_int64_t reflected, const u_int64_t backReflected);
-    u_int64_t transmitted();
-    u_int64_t ballistic();
-    u_int64_t reflected();
-    u_int64_t backReflected();
+    u_int64_t transmitted() const;
+    u_int64_t ballistic() const;
+    u_int64_t reflected() const;
+    u_int64_t backReflected() const;
+    const u_int64_t *photonCounters() const;
     void writeXMLDescription(const char *inputFile);
     string readXMLDescription();
     Simulation *simulation() const;
@@ -46,7 +47,7 @@ private:
     string readVLenString(const char *datasetName) const;
     bool openFile_impl();
 
-    u_int64_t _transmitted, _ballistic, _reflected, _backReflected;
+    u_int64_t _photonCounters[4];
 
     XMLParser *_parser;
     bool XMLParserEnabled;

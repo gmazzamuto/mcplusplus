@@ -7,10 +7,7 @@
 H5OutputFile::H5OutputFile()
     : H5FileHelper()
 {
-    _transmitted = 0;
-    _ballistic = 0;
-    _reflected = 0;
-    _backReflected = 0;
+    memset(_photonCounters,0,sizeof(u_int64_t));
     _parser = new XMLParser();
     XMLParserEnabled = false;
 }
@@ -257,12 +254,7 @@ bool H5OutputFile::openFile_impl()
 
     DataSet dSet = file->openDataSet("photon-counters");
 
-    u_int64_t buf[4];
-    dSet.read(buf,dSet.getDataType());
-    _transmitted = buf[0];
-    _ballistic = buf[1];
-    _reflected = buf[2];
-    _backReflected = buf[3];
+    dSet.read(_photonCounters,dSet.getDataType());
 
     dSet.close();
     return true;
@@ -287,39 +279,39 @@ string H5OutputFile::readRNGState(const uint seed) const
 
 void H5OutputFile::appendPhotonCounts(const u_int64_t transmitted, const u_int64_t ballistic, const u_int64_t reflected, const u_int64_t backReflected)
 {
-    _transmitted += transmitted;
-    _ballistic += ballistic;
-    _reflected += reflected;
-    _backReflected += backReflected;
+    _photonCounters[TRANSMITTED] += transmitted;
+    _photonCounters[BALLISTIC] += ballistic;
+    _photonCounters[REFLECTED] += reflected;
+    _photonCounters[BACKREFLECTED] += backReflected;
 
-    u_int64_t buf[4];
-    buf[0] = _transmitted;
-    buf[1] = _ballistic;
-    buf[2] = _reflected;
-    buf[3] = _backReflected;
     DataSet dset = file->openDataSet("photon-counters");
-    dset.write(buf,dset.getDataType());
+    dset.write(_photonCounters,dset.getDataType());
     dset.close();
 }
 
-u_int64_t H5OutputFile::transmitted()
+u_int64_t H5OutputFile::transmitted() const
 {
-    return _transmitted;
+    return _photonCounters[TRANSMITTED];
 }
 
-u_int64_t H5OutputFile::ballistic()
+u_int64_t H5OutputFile::ballistic() const
 {
-    return _ballistic;
+    return _photonCounters[BALLISTIC];
 }
 
-u_int64_t H5OutputFile::reflected()
+u_int64_t H5OutputFile::reflected() const
 {
-    return _reflected;
+    return _photonCounters[REFLECTED];
 }
 
-u_int64_t H5OutputFile::backReflected()
+u_int64_t H5OutputFile::backReflected() const
 {
-    return _backReflected;
+    return _photonCounters[BACKREFLECTED];
+}
+
+const u_int64_t *H5OutputFile::photonCounters() const
+{
+    return _photonCounters;
 }
 
 void H5OutputFile::writeXMLDescription(const char *inputFile)
