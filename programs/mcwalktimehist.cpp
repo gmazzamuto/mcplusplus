@@ -10,9 +10,13 @@ int main(int argc, char *argv[])
     H5OutputFile file;
     file.openFile(argv[1]);
     u_int64_t transmitted = file.transmitted();
+    u_int64_t ballistic = file.ballistic();
 
     MCfloat *wt = (MCfloat*)malloc(sizeof(MCfloat)*transmitted);
     file.loadWalkTimes(Simulation::TRANSMITTED, wt);
+
+    MCfloat *wtb = (MCfloat*)malloc(sizeof(MCfloat)*ballistic);
+    file.loadWalkTimes(Simulation::BALLISTIC, wtb);
 
     MCfloat min=1./0., max=-1./0.;
     MCfloat binSize = 5e-2;
@@ -24,6 +28,16 @@ int main(int argc, char *argv[])
         if(wt[i] < min)
             min = wt[i];
     }
+
+    for (int i = 0; i < ballistic; ++i) {
+        if(wtb[i] > max)
+            max = wt[i];
+        if(wtb[i] < min)
+            min = wt[i];
+    }
+
+    if(min > 0)
+        min = 0;
 
     size_t nBins = ceil((max - min)/binSize);
 
@@ -37,6 +51,11 @@ int main(int argc, char *argv[])
         histo[index]++;
     }
 
+    for (int i = 0; i < ballistic; ++i) {
+        unsigned int index = (wtb[i]-min)/binSize;
+        histo[index]++;
+    }
+
     cout << "binCenter\tcounts\tlogCounts" << endl;
 
     for (int i = 0; i < nBins; ++i) {
@@ -47,6 +66,7 @@ int main(int argc, char *argv[])
     }
 
     free(wt);
+    free(wtb);
     free(histo);
 
 
