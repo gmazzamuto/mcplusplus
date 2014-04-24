@@ -261,13 +261,13 @@ unsigned int XMLParser::dirSaveFlags(const string flags)
     for (unsigned int i = 0; i < flags.size(); ++i) {
         switch (flags.at(i)) {
         case 'x':
-            ret |= Simulation::DIR_X;
+            ret |= DIR_X;
             break;
         case 'y':
-            ret |= Simulation::DIR_Y;
+            ret |= DIR_Y;
             break;
         case 'z':
-            ret |= Simulation::DIR_Z;
+            ret |= DIR_Z;
             break;
         default:
             break;

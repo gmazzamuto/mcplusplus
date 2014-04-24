@@ -611,7 +611,7 @@ void Simulation::appendExitPoint(enum walkerType idx)
     exitPoints[idx].push_back(walker->r0[1]);
 }
 
-void Simulation::appendExitKVector(Simulation::walkerType idx)
+void Simulation::appendExitKVector(walkerType idx)
 {
     // we must use k1 instead of k0 because the walker can leave the sample only
     // when it is moving away from an interface

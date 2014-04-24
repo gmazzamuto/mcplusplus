@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
     size_t transmitted = file.transmitted();
 
     MCfloat *ek = (MCfloat*)malloc(sizeof(MCfloat)*transmitted);
-    file.loadExitKVectors(Simulation::TRANSMITTED, ek);
+    file.loadExitKVectors(TRANSMITTED, ek);
     file.close();
 
     MCfloat binSize = 1e-2;

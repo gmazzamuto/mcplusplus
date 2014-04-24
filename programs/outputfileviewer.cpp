@@ -16,11 +16,11 @@ OutputFileViewer::OutputFileViewer(const char *fileName, QWidget *parent) :
 
     transmitted = file->transmitted();
     transmittedExitPoints = (MCfloat*)malloc(2*sizeof(MCfloat)*transmitted);
-    file->loadExitPoints(Simulation::TRANSMITTED, transmittedExitPoints);
+    file->loadExitPoints(TRANSMITTED, transmittedExitPoints);
 
     reflected = file->reflected();
     reflectedExitPoints = (MCfloat*)malloc(2*sizeof(MCfloat)*reflected);
-    file->loadExitPoints(Simulation::REFLECTED, reflectedExitPoints);
+    file->loadExitPoints(REFLECTED, reflectedExitPoints);
 }
 
 OutputFileViewer::~OutputFileViewer()

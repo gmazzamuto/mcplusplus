@@ -13,10 +13,10 @@ int main(int argc, char *argv[])
     u_int64_t ballistic = file.ballistic();
 
     MCfloat *wt = (MCfloat*)malloc(sizeof(MCfloat)*transmitted);
-    file.loadWalkTimes(Simulation::TRANSMITTED, wt);
+    file.loadWalkTimes(TRANSMITTED, wt);
 
     MCfloat *wtb = (MCfloat*)malloc(sizeof(MCfloat)*ballistic);
-    file.loadWalkTimes(Simulation::BALLISTIC, wtb);
+    file.loadWalkTimes(BALLISTIC, wtb);
 
     MCfloat min=1./0., max=-1./0.;
     MCfloat binSize = 5e-2;

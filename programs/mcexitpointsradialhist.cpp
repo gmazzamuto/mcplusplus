@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
     u_int64_t transmitted = file.transmitted();
 
     MCfloat *ep = (MCfloat*)malloc(sizeof(MCfloat)*2*transmitted);
-    file.loadExitPoints(Simulation::TRANSMITTED, ep);
+    file.loadExitPoints(TRANSMITTED, ep);
 
     MCfloat *modules = (MCfloat*)malloc(sizeof(MCfloat)*transmitted);
 

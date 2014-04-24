@@ -53,20 +53,6 @@ public:
         SAVE_ALL_WALKERS = 0xf,
     };
 
-    enum walkerType {
-        TRANSMITTED = 0,
-        BALLISTIC = 1,
-        REFLECTED = 2,
-        BACKREFLECTED = 3,
-    };
-
-    enum directions {
-        DIR_X = 1 << 0,
-        DIR_Y = 1 << 1,
-        DIR_Z = 1 << 2,
-        ALL_DIRS = 0xf,
-    };
-
     void setWalkTimesSaveFlags(unsigned int value);
     void setExitPointsSaveFlags(unsigned int value);
     void setExitKVectorsSaveFlags(unsigned int value);
