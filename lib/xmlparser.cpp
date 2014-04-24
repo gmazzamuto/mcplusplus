@@ -236,16 +236,16 @@ unsigned int XMLParser::walkerSaveFlags(const string flags) const {
     for (unsigned int i = 0; i < flags.size(); ++i) {
         switch (flags.at(i)) {
         case 't':
-            ret |= Simulation::SAVE_TRANSMITTED;
+            ret |= FLAG_TRANSMITTED;
             break;
         case 'b':
-            ret |= Simulation::SAVE_BALLISTIC;
+            ret |= FLAG_BALLISTIC;
             break;
         case 'r':
-            ret |= Simulation::SAVE_REFLECTED;
+            ret |= FLAG_REFLECTED;
             break;
         case 'k':
-            ret |= Simulation::SAVE_BACKREFLECTED;
+            ret |= FLAG_BACKREFLECTED;
             break;
         default:
             break;

@@ -15,6 +15,14 @@ enum walkerIndex {
     BACKREFLECTED = 3,
 };
 
+enum walkerFlags {
+    FLAG_TRANSMITTED = 1 << TRANSMITTED,
+    FLAG_BALLISTIC = 1 << BALLISTIC,
+    FLAG_REFLECTED = 1 << REFLECTED,
+    FLAG_BACKREFLECTED = 1 << BACKREFLECTED,
+    FLAG_ALL_WALKERS = 0xf,
+};
+
 enum directions {
     DIR_X = 1 << 0,
     DIR_Y = 1 << 1,

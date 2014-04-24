@@ -398,13 +398,13 @@ void Simulation::runSingleThread() {
                         if(nInteractions[i]) {
                             transmitted++;
 
-                            if(exitPointsSaveFlags & SAVE_TRANSMITTED)
+                            if(exitPointsSaveFlags & FLAG_TRANSMITTED)
                                 appendExitPoint(TRANSMITTED);
 
-                            if(walkTimesSaveFlags & SAVE_TRANSMITTED)
+                            if(walkTimesSaveFlags & FLAG_TRANSMITTED)
                                 walkTimes[TRANSMITTED].push_back(walker->walkTime);
 
-                            if(exitKVectorsSaveFlags & SAVE_TRANSMITTED)
+                            if(exitKVectorsSaveFlags & FLAG_TRANSMITTED)
                                 appendExitKVector(TRANSMITTED);
 
                             diffuselyTransmitted = true;
@@ -414,13 +414,13 @@ void Simulation::runSingleThread() {
                     if(!diffuselyTransmitted) {
                         ballistic++;
 
-                        if(exitPointsSaveFlags & SAVE_BALLISTIC)
+                        if(exitPointsSaveFlags & FLAG_BALLISTIC)
                             appendExitPoint(BALLISTIC);
 
-                        if(walkTimesSaveFlags & SAVE_BALLISTIC)
+                        if(walkTimesSaveFlags & FLAG_BALLISTIC)
                             walkTimes[BALLISTIC].push_back(walker->walkTime);
 
-                        if(exitKVectorsSaveFlags & SAVE_BALLISTIC)
+                        if(exitKVectorsSaveFlags & FLAG_BALLISTIC)
                             appendExitKVector(BALLISTIC);
                     }
                     break;
@@ -432,13 +432,13 @@ void Simulation::runSingleThread() {
                         if(nInteractions[i]) {
                             reflected++;
 
-                            if(exitPointsSaveFlags & SAVE_REFLECTED)
+                            if(exitPointsSaveFlags & FLAG_REFLECTED)
                                 appendExitPoint(REFLECTED);
 
-                            if(walkTimesSaveFlags & SAVE_REFLECTED)
+                            if(walkTimesSaveFlags & FLAG_REFLECTED)
                                 walkTimes[REFLECTED].push_back(walker->walkTime);
 
-                            if(exitKVectorsSaveFlags & SAVE_REFLECTED)
+                            if(exitKVectorsSaveFlags & FLAG_REFLECTED)
                                 appendExitKVector(REFLECTED);
 
                             diffuselyReflected = true;
@@ -448,13 +448,13 @@ void Simulation::runSingleThread() {
                     if(!diffuselyReflected) {
                         backreflected++;
 
-                        if(exitPointsSaveFlags & SAVE_BACKREFLECTED)
+                        if(exitPointsSaveFlags & FLAG_BACKREFLECTED)
                             appendExitPoint(BACKREFLECTED);
 
-                        if(walkTimesSaveFlags & SAVE_BACKREFLECTED)
+                        if(walkTimesSaveFlags & FLAG_BACKREFLECTED)
                             walkTimes[BACKREFLECTED].push_back(walker->walkTime);
 
-                        if(exitKVectorsSaveFlags & SAVE_BACKREFLECTED)
+                        if(exitKVectorsSaveFlags & FLAG_BACKREFLECTED)
                             appendExitKVector(BACKREFLECTED);
                     }
                     break;
@@ -679,31 +679,31 @@ void Simulation::saveOutput()
 
     file.saveRNGState(currentSeed(), generatorState());
 
-    if(transmitted && exitPointsSaveFlags & SAVE_TRANSMITTED)
+    if(transmitted && exitPointsSaveFlags & FLAG_TRANSMITTED)
         file.appendExitPoints(TRANSMITTED, exitPoints[TRANSMITTED].data(),2*transmitted);
-    if(ballistic && exitPointsSaveFlags & SAVE_BALLISTIC)
+    if(ballistic && exitPointsSaveFlags & FLAG_BALLISTIC)
         file.appendExitPoints(BALLISTIC, exitPoints[BALLISTIC].data(),2*ballistic);
-    if(reflected && exitPointsSaveFlags & SAVE_REFLECTED)
+    if(reflected && exitPointsSaveFlags & FLAG_REFLECTED)
         file.appendExitPoints(REFLECTED, exitPoints[REFLECTED].data(),2*reflected);
-    if(backreflected && exitPointsSaveFlags & SAVE_BACKREFLECTED)
+    if(backreflected && exitPointsSaveFlags & FLAG_BACKREFLECTED)
         file.appendExitPoints(BACKREFLECTED, exitPoints[BACKREFLECTED].data(),2*backreflected);
 
-    if(transmitted && walkTimesSaveFlags & SAVE_TRANSMITTED)
+    if(transmitted && walkTimesSaveFlags & FLAG_TRANSMITTED)
         file.appendWalkTimes(TRANSMITTED, walkTimes[TRANSMITTED].data(),transmitted);
-    if(ballistic && walkTimesSaveFlags & SAVE_BALLISTIC)
+    if(ballistic && walkTimesSaveFlags & FLAG_BALLISTIC)
         file.appendWalkTimes(BALLISTIC, walkTimes[BALLISTIC].data(),ballistic);
-    if(reflected && walkTimesSaveFlags & SAVE_REFLECTED)
+    if(reflected && walkTimesSaveFlags & FLAG_REFLECTED)
         file.appendWalkTimes(REFLECTED, walkTimes[REFLECTED].data(),reflected);
-    if(backreflected && walkTimesSaveFlags & SAVE_BACKREFLECTED)
+    if(backreflected && walkTimesSaveFlags & FLAG_BACKREFLECTED)
         file.appendWalkTimes(BACKREFLECTED, walkTimes[BACKREFLECTED].data(),backreflected);
 
-    if(transmitted && exitKVectorsSaveFlags & SAVE_TRANSMITTED)
+    if(transmitted && exitKVectorsSaveFlags & FLAG_TRANSMITTED)
         file.appendExitKVectors(TRANSMITTED, exitKVectors[TRANSMITTED].data(),exitKVectors[TRANSMITTED].size());
-    if(ballistic && exitKVectorsSaveFlags & SAVE_BALLISTIC)
+    if(ballistic && exitKVectorsSaveFlags & FLAG_BALLISTIC)
         file.appendExitKVectors(BALLISTIC, exitKVectors[BALLISTIC].data(),exitKVectors[BALLISTIC].size());
-    if(reflected && exitKVectorsSaveFlags & SAVE_REFLECTED)
+    if(reflected && exitKVectorsSaveFlags & FLAG_REFLECTED)
         file.appendExitKVectors(REFLECTED, exitKVectors[REFLECTED].data(),exitKVectors[REFLECTED].size());
-    if(backreflected && exitKVectorsSaveFlags & SAVE_BACKREFLECTED)
+    if(backreflected && exitKVectorsSaveFlags & FLAG_BACKREFLECTED)
         file.appendExitKVectors(BACKREFLECTED, exitKVectors[BACKREFLECTED].data(),exitKVectors[BACKREFLECTED].size());
 
 

@@ -25,7 +25,7 @@ bool H5OutputFile::newFile(const char *fileName, bool create_datasets)
         return false;
 
     if(create_datasets) {
-        ret = createDatasets(Simulation::SAVE_ALL_WALKERS, Simulation::SAVE_ALL_WALKERS, Simulation::SAVE_ALL_WALKERS);
+        ret = createDatasets(FLAG_ALL_WALKERS, FLAG_ALL_WALKERS, FLAG_ALL_WALKERS);
         if(!ret)
             return false;
     }
@@ -368,39 +368,39 @@ bool H5OutputFile::createDatasets(uint walkTimesSaveFlags, uint exitPointsSaveFl
         newGroup("exit-points");
 
         dims[0] = 0; chunkDims[0] = 2*NWALKER_CHUNK;
-        if(exitPointsSaveFlags & Simulation::SAVE_TRANSMITTED)
+        if(exitPointsSaveFlags & FLAG_TRANSMITTED)
             ret = newDataset("exit-points/transmitted",ndims,dims,chunkDims);
-        if(exitPointsSaveFlags & Simulation::SAVE_BALLISTIC)
+        if(exitPointsSaveFlags & FLAG_BALLISTIC)
             ret = newDataset("exit-points/ballistic",ndims,dims,chunkDims);
-        if(exitPointsSaveFlags & Simulation::SAVE_REFLECTED)
+        if(exitPointsSaveFlags & FLAG_REFLECTED)
             ret = newDataset("exit-points/reflected",ndims,dims,chunkDims);
-        if(exitPointsSaveFlags & Simulation::SAVE_BACKREFLECTED)
+        if(exitPointsSaveFlags & FLAG_BACKREFLECTED)
             ret = newDataset("exit-points/back-reflected",ndims,dims,chunkDims);
     }
 
     if(walkTimesSaveFlags) {
         dims[0] = 0; chunkDims[0] = NWALKER_CHUNK;
         newGroup("walk-times");
-        if(walkTimesSaveFlags & Simulation::SAVE_TRANSMITTED)
+        if(walkTimesSaveFlags & FLAG_TRANSMITTED)
             ret = newDataset("walk-times/transmitted",ndims,dims,chunkDims);
-        if(walkTimesSaveFlags & Simulation::SAVE_BALLISTIC)
+        if(walkTimesSaveFlags & FLAG_BALLISTIC)
             ret = newDataset("walk-times/ballistic",ndims,dims,chunkDims);
-        if(walkTimesSaveFlags & Simulation::SAVE_REFLECTED)
+        if(walkTimesSaveFlags & FLAG_REFLECTED)
             ret = newDataset("walk-times/reflected",ndims,dims,chunkDims);
-        if(walkTimesSaveFlags & Simulation::SAVE_BACKREFLECTED)
+        if(walkTimesSaveFlags & FLAG_BACKREFLECTED)
             ret = newDataset("walk-times/back-reflected",ndims,dims,chunkDims);
     }
 
     if(exitKVectorsSaveFlags) {
         dims[0] = 0; chunkDims[0] = 3*NWALKER_CHUNK/2;
         newGroup("exit-k-vectors");
-        if(exitKVectorsSaveFlags & Simulation::SAVE_TRANSMITTED)
+        if(exitKVectorsSaveFlags & FLAG_TRANSMITTED)
             ret = newDataset("exit-k-vectors/transmitted",ndims,dims,chunkDims);
-        if(exitKVectorsSaveFlags & Simulation::SAVE_BALLISTIC)
+        if(exitKVectorsSaveFlags & FLAG_BALLISTIC)
             ret = newDataset("exit-k-vectors/ballistic",ndims,dims,chunkDims);
-        if(exitKVectorsSaveFlags & Simulation::SAVE_REFLECTED)
+        if(exitKVectorsSaveFlags & FLAG_REFLECTED)
             ret = newDataset("exit-k-vectors/reflected",ndims,dims,chunkDims);
-        if(exitKVectorsSaveFlags & Simulation::SAVE_BACKREFLECTED)
+        if(exitKVectorsSaveFlags & FLAG_BACKREFLECTED)
             ret = newDataset("exit-k-vectors/back-reflected",ndims,dims,chunkDims);
     }
 

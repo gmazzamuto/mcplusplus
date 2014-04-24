@@ -44,15 +44,6 @@ public:
     void reportProgress() const;
     void setMultipleRNGStates(const vector<string> states);
     void setTimeOriginZ(const MCfloat z);
-
-    enum walkerSaveFlags {
-        SAVE_TRANSMITTED = 1 << 0,
-        SAVE_BALLISTIC = 1 << 1,
-        SAVE_REFLECTED = 1 << 2,
-        SAVE_BACKREFLECTED = 1 << 3,
-        SAVE_ALL_WALKERS = 0xf,
-    };
-
     void setWalkTimesSaveFlags(unsigned int value);
     void setExitPointsSaveFlags(unsigned int value);
     void setExitKVectorsSaveFlags(unsigned int value);
