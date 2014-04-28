@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
     Air freeSpace;
     Material material;
 
-    material.ls = 1;
+    material.ls = 0.5;
     material.g = 0;
     material.n = 1.5;
 
@@ -45,20 +45,20 @@ int main(int argc, char *argv[])
     sim->setNThreads(atoi(argv[2]));
 
     sim->setSeed(0);
-//    sim->setSaveTrajectoryEnabled(true);
+    sim->setSaveTrajectoryEnabled(true);
     sim->run();
 
-//    QApplication a(argc, argv);
-//    QMainWindow w;
-//    SimulationViewer simViewer(sim);
+    QApplication a(argc, argv);
+    QMainWindow w;
+    SimulationViewer simViewer(sim);
 
-//    simViewer.setDisplayedOriginPos(0,0,-600);
-//    simViewer.setDisplayedAxisLength(500);
+    simViewer.setDisplayedOriginPos(0,0,-600);
+    simViewer.setDisplayedAxisLength(500);
 
-//    w.setCentralWidget(&simViewer);
-//    w.show();
+    w.setCentralWidget(&simViewer);
+    w.show();
 
-//    a.exec();
+    a.exec();
 
 
     return 0;

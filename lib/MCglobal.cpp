@@ -19,3 +19,25 @@ uint walkerIndexToFlag(uint index)
 {
     return 1 << index;
 }
+
+
+string walkerIndexToString(uint index)
+{
+    switch (index) {
+    case TRANSMITTED:
+        return "transmitted";
+
+    case BALLISTIC:
+        return "ballistic";
+
+    case REFLECTED:
+        return "reflected";
+
+    case BACKREFLECTED:
+        return "back-reflected";
+
+    default:
+        return "";
+        break;
+    }
+}

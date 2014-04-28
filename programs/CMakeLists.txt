@@ -37,14 +37,7 @@ add_executable(mcplot mcplot.cpp glwidget.cpp outputfileviewer.cpp ${GLWidget_HE
 target_link_libraries(mcplot MCPlusPlus GL ${QT_LIBRARIES})
 install (TARGETS mcplot DESTINATION bin)
 
-add_executable(mcwalktimehist mcwalktimehist.cpp)
-target_link_libraries(mcwalktimehist MCPlusPlus)
-install (TARGETS mcwalktimehist DESTINATION bin)
+add_executable(mchist mchist.cpp)
+target_link_libraries(mchist MCPlusPlus)
+install (TARGETS mchist DESTINATION bin)
 
-add_executable(mcexitpointsradialhist mcexitpointsradialhist.cpp)
-target_link_libraries(mcexitpointsradialhist MCPlusPlus)
-install (TARGETS mcexitpointsradialhist DESTINATION bin)
-
-add_executable(mc-exit-k-hist mc-exit-k-hist.cpp)
-target_link_libraries(mc-exit-k-hist MCPlusPlus)
-install (TARGETS mc-exit-k-hist DESTINATION bin)
