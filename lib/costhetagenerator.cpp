@@ -16,7 +16,8 @@ MCfloat CosThetaGenerator::spin() const {
     }
     else {
         MCfloat temp;
-        temp = 1 - g + 2*g*uniform_01<MCfloat>()(*mt);
+        const MCfloat xi = uniform_01<MCfloat>()(*mt);
+        temp = 1 - g + 2*g*xi;
         temp = (1-g*g)/temp;
         temp = 1 + g*g - temp*temp;
         temp = temp/(2*g);
