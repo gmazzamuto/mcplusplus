@@ -21,6 +21,10 @@ MCfloat CosThetaGenerator::spin() const {
         temp = (1-g*g)/temp;
         temp = 1 + g*g - temp*temp;
         temp = temp/(2*g);
+        if(temp < -1.)
+            temp = -1.;
+        else if(temp > 1.)
+            temp = 1.;
         return temp;
     }
 }
