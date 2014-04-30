@@ -3,8 +3,10 @@
 #include <boost/property_tree/exceptions.hpp>
 #include <boost/property_tree/xml_parser.hpp>
 #include <boost/foreach.hpp>
+#include <boost/optional.hpp>
 
 using namespace boost::math::constants;
+using namespace boost;
 
 XMLParser::XMLParser()
 {
@@ -82,7 +84,7 @@ void XMLParser::parseAll() {
         src = new PencilBeamSource();
     }
 
-    ptree::const_assoc_iterator it = pt.find("MCPlusPlus.source.<xmlattr>.wavelength");
+    it = pt.find("MCPlusPlus.source.<xmlattr>.wavelength");
     if(it != pt.not_found())
         src->setWavelength(boost::lexical_cast<MCfloat>(it->second.data()));
 
@@ -279,15 +281,23 @@ unsigned int XMLParser::dirSaveFlags(const string flags) const
 
 void XMLParser::parseMaterials()
 {
-    map<string,Material*>::iterator it = materialMap.begin();
+    optional<MCfloat> element;
+    map<string,Material*>::iterator map_it = materialMap.begin();
     BOOST_FOREACH(ptree::value_type &v, pt.get_child("MCPlusPlus.materials")) {
         if(v.first != "material")
             continue;
         string name = v.second.get_child("<xmlattr>.name").data();
         Material *mat = new Material();
-        mat->ls = v.second.get<MCfloat>("<xmlattr>.ls");
-        mat->g = v.second.get<MCfloat>("<xmlattr>.g");
-        mat->n = v.second.get<MCfloat>("<xmlattr>.n");
-        materialMap.insert(it, pair<string,Material*>(name,mat));
+        it = v.second.find("ls");
+        element = v.second.get_optional<MCfloat>("<xmlattr>.ls");
+        if(element.is_initialized())
+            mat->ls = element.get();
+        element = v.second.get_optional<MCfloat>("<xmlattr>.g");
+        if(element.is_initialized())
+            mat->g = element.get();
+        element = v.second.get_optional<MCfloat>("<xmlattr>.n");
+        if(element.is_initialized())
+            mat->n = element.get();
+        materialMap.insert(map_it, pair<string,Material*>(name,mat));
     }
 }

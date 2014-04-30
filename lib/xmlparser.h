@@ -35,6 +35,7 @@ public:
 
 private:
     ptree pt;
+    ptree::const_assoc_iterator it;
 
     set<string> materialStrings;
     map<string, Material*> materialMap;
