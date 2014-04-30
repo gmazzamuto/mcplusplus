@@ -48,6 +48,7 @@ void BaseRandom::dumpGenerator(const char *fileName) const
 
 void BaseRandom::loadGenerator(const char *fileName)
 {
+    logMessage("Loading RNG state from: %s",fileName);
     ifstream file;
     file.open(fileName);
     mt19937 *mt = new mt19937(0);

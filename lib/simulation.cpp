@@ -741,6 +741,13 @@ void Simulation::switchToLayer(const uint layer)
         currLayerUpperBoundary = numeric_limits<MCfloat>::infinity();
 }
 
+void Simulation::setRNG_impl()
+{
+    vector<string> states;
+    states.push_back(generatorState());
+    setMultipleRNGStates(states);
+}
+
 void Simulation::setExitPointsSaveFlags(unsigned int value)
 {
     exitPointsSaveFlags = value;

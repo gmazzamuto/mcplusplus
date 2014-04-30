@@ -120,6 +120,7 @@ private:
 
     virtual void describe_impl() const;
     void switchToLayer(const uint layer);
+    virtual void setRNG_impl();
 };
 
 #endif // SIMULATION_H
