@@ -664,6 +664,7 @@ BaseObject* Simulation::clone_impl() const
     sim->walkTimesSaveFlags = walkTimesSaveFlags;
     sim->exitKVectorsSaveFlags = exitKVectorsSaveFlags;
     sim->exitKVectorsDirsSaveFlags = exitKVectorsDirsSaveFlags;
+    sim->setTimeOriginZ(timeOriginZ);
     return sim;
 }
 
