@@ -313,8 +313,6 @@ void Simulation::runSingleThread() {
         if(saveTrajectory)
             currentTrajectory = new vector<MCfloat>();
 
-        totalLengthInCurrentLayer = 0;
-
         source->spin(&walker);
         if(walker.r0[2] == -1*numeric_limits<MCfloat>::infinity())
             walker.r0[2] = leftPoint;
@@ -322,10 +320,10 @@ void Simulation::runSingleThread() {
         walker.walkTime += timeOffset;
 
         layer0 = initialLayer;
-        currentMaterial = &materials[layer0];
-        switchToLayer(layer0);
+        totalLengthInCurrentLayer = 0;
+        updateLayerVariables(layer0);
 
-        walker.swap_k0_k1();        //at first, the walker propagates
+        walker.swap_k0_k1();         //at first, the walker propagates
         kNeedsToBeScattered = false; //with the orignal k
 
         appendTrajectoryPoint(walker.r0);
@@ -727,7 +725,10 @@ void Simulation::switchToLayer(const uint layer)
 {
     walker.walkTime += totalLengthInCurrentLayer/currentMaterial->v;
     totalLengthInCurrentLayer = 0;
+    updateLayerVariables(layer);
+}
 
+void Simulation::updateLayerVariables(const uint layer) {
     layer0=layer;
     currentMaterial=&materials[layer0];
     deflCosine.setg(currentMaterial->g);
