@@ -17,6 +17,7 @@ public:
 
     virtual bool newFile(const char *fileName, bool create_datasets=true);
     bool newFromXML(const char *xmlFile, const char *fileName);
+    bool newFromXMLContent(const string xmlContent, const char *fileName);
     void appendExitKVectors(walkerIndex type, const MCfloat *buffer, const hsize_t size);
     void appendExitPoints(walkerIndex type, const MCfloat *buffer, const hsize_t size);
     void appendWalkTimes(walkerIndex type, const MCfloat *buffer, const hsize_t size);

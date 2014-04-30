@@ -47,6 +47,21 @@ bool H5OutputFile::newFromXML(const char *xmlFile, const char *fileName)
     return true;
 }
 
+bool H5OutputFile::newFromXMLContent(const string xmlContent, const char *fileName)
+{
+    bool ret = newFile(fileName,false);
+    if(!ret)
+        return false;
+    XMLParser parser;
+    parser.setXMLContent(xmlContent);
+    parser.parseOutput();
+
+    createDatasets(parser.walkTimesSaveFlags(),parser.exitPointsSaveFlags(),parser.exitKVectorsSaveFlags());
+
+    writeXMLDescription(xmlContent.c_str());
+    return true;
+}
+
 void H5OutputFile::appendExitKVectors(walkerIndex type, const MCfloat *buffer, const hsize_t size)
 {
     switch (type) {
