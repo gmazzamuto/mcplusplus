@@ -1,6 +1,7 @@
 cmake_minimum_required (VERSION 2.8)
 
 project(MCPlusPlus)
+enable_testing()
 
 if(NOT CMAKE_BUILD_TYPE)
     message(STATUS "No build type selected, default to Release")
@@ -24,6 +25,7 @@ set(DOCUMENTATION_DIR ${CMAKE_INSTALL_PREFIX}/share/doc/MCPlusPlus)
 add_subdirectory(doc)
 add_subdirectory(lib)
 add_subdirectory(programs)
+add_subdirectory(tests)
 
 add_custom_target(documentation)
 add_dependencies(documentation main-documentation libMCPlusPlus-documentation)
