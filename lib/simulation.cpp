@@ -391,33 +391,15 @@ void Simulation::runSingleThread() {
                     bool diffuselyTransmitted = false;
                     for (unsigned int i = 1; i <= nLayers; ++i) {
                         if(nInteractions[i]) {
-                            photonCounters[TRANSMITTED]++;
 
-                            if(exitPointsSaveFlags & FLAG_TRANSMITTED)
-                                appendExitPoint(TRANSMITTED);
-
-                            if(walkTimesSaveFlags & FLAG_TRANSMITTED)
-                                walkTimes[TRANSMITTED].push_back(walker.walkTime);
-
-                            if(exitKVectorsSaveFlags & FLAG_TRANSMITTED)
-                                appendExitKVector(TRANSMITTED);
+                            appendWalker(TRANSMITTED);
 
                             diffuselyTransmitted = true;
                             break;
                         }
                     }
-                    if(!diffuselyTransmitted) {
-                        photonCounters[BALLISTIC]++;
-
-                        if(exitPointsSaveFlags & FLAG_BALLISTIC)
-                            appendExitPoint(BALLISTIC);
-
-                        if(walkTimesSaveFlags & FLAG_BALLISTIC)
-                            walkTimes[BALLISTIC].push_back(walker.walkTime);
-
-                        if(exitKVectorsSaveFlags & FLAG_BALLISTIC)
-                            appendExitKVector(BALLISTIC);
-                    }
+                    if(!diffuselyTransmitted)
+                        appendWalker(BALLISTIC);
                     break;
                 }
 
@@ -425,33 +407,15 @@ void Simulation::runSingleThread() {
                     bool diffuselyReflected = false;
                     for (unsigned int i = 1; i <= nLayers; ++i) {
                         if(nInteractions[i]) {
-                            photonCounters[REFLECTED]++;
 
-                            if(exitPointsSaveFlags & FLAG_REFLECTED)
-                                appendExitPoint(REFLECTED);
-
-                            if(walkTimesSaveFlags & FLAG_REFLECTED)
-                                walkTimes[REFLECTED].push_back(walker.walkTime);
-
-                            if(exitKVectorsSaveFlags & FLAG_REFLECTED)
-                                appendExitKVector(REFLECTED);
+                            appendWalker(REFLECTED);
 
                             diffuselyReflected = true;
                             break;
                         }
                     }
-                    if(!diffuselyReflected) {
-                        photonCounters[BACKREFLECTED]++;
-
-                        if(exitPointsSaveFlags & FLAG_BACKREFLECTED)
-                            appendExitPoint(BACKREFLECTED);
-
-                        if(walkTimesSaveFlags & FLAG_BACKREFLECTED)
-                            walkTimes[BACKREFLECTED].push_back(walker.walkTime);
-
-                        if(exitKVectorsSaveFlags & FLAG_BACKREFLECTED)
-                            appendExitKVector(BACKREFLECTED);
-                    }
+                    if(!diffuselyReflected)
+                        appendWalker(BACKREFLECTED);
                     break;
                 }
             }
@@ -613,6 +577,21 @@ void Simulation::appendExitKVector(walkerIndex idx)
         exitKVectors[idx].push_back(walker.k1[1]);
     if(exitKVectorsDirsSaveFlags & DIR_Z)
         exitKVectors[idx].push_back(walker.k1[2]);
+}
+
+void Simulation::appendWalker(walkerIndex idx)
+{
+    photonCounters[idx]++;
+    walkerFlags flags = walkerIndexToFlag(idx);
+
+    if(exitPointsSaveFlags & flags)
+        appendExitPoint(idx);
+
+    if(walkTimesSaveFlags & flags)
+        walkTimes[idx].push_back(walker.walkTime);
+
+    if(exitKVectorsSaveFlags & flags)
+        appendExitKVector(idx);
 }
 
 void Simulation::reportProgress() const

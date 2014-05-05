@@ -103,6 +103,7 @@ private:
     void appendWalkTime();
     void appendExitPoint(walkerIndex idx);
     void appendExitKVector(walkerIndex idx);
+    void appendWalker(walkerIndex idx);
 
     void runMultipleThreads();
     void runSingleThread();
