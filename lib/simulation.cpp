@@ -706,6 +706,8 @@ void Simulation::switchToLayer(const uint layer)
 }
 
 void Simulation::updateLayerVariables(const uint layer) {
+    if(layer0 == layer)
+        return;
     layer0=layer;
     currentMaterial=&materials[layer0];
     deflCosine.setg(currentMaterial->g);
