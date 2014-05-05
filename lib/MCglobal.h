@@ -50,7 +50,7 @@ enum DataGroup {
 #define MC_ASSERT_MSG(x, msg) if(!x) { cerr << "=========== ERROR ===========" << endl; cerr << "msg" << endl; abort(); }
 
 extern uint walkerFlagToIndex(walkerFlags flag);
-extern uint walkerIndexToFlag(uint index);
+extern walkerFlags walkerIndexToFlag(uint index);
 extern string walkerIndexToString(uint index);
 
 #endif // MCGLOBAL_H

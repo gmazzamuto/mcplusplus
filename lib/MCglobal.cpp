@@ -15,9 +15,9 @@ uint walkerFlagToIndex(walkerFlags flag)
 }
 
 
-uint walkerIndexToFlag(uint index)
+walkerFlags walkerIndexToFlag(uint index)
 {
-    return 1 << index;
+    return (walkerFlags)(1 << index);
 }
 
 
