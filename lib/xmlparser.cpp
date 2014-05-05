@@ -121,6 +121,7 @@ void XMLParser::parseOutput()
 {
     try {
         ptree v = pt.get_child("MCPlusPlus.output");
+        _outputFileName = v.get<string>("<xmlattr>.file", "");
         string str = v.get<string>("<xmlattr>.exit-points", "__default__");
         if(str=="__default__")
             _exitPointsSaveFlags = 0;
@@ -163,6 +164,11 @@ uint XMLParser::exitKVectorsSaveFlags() const
 uint XMLParser::exitKVectorsDirsSaveFlags() const
 {
     return _exitKVectorsDirsSaveFlags;
+}
+
+const string XMLParser::outputFileName() const
+{
+    return _outputFileName;
 }
 
 bool XMLParser::showTrajectoryEnabled() const

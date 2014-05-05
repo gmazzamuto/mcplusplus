@@ -30,6 +30,7 @@ public:
     uint exitPointsSaveFlags() const;
     uint exitKVectorsSaveFlags() const;
     uint exitKVectorsDirsSaveFlags() const;
+    const string outputFileName() const;
     unsigned int walkerSaveFlags(const string flags) const;
     unsigned int dirSaveFlags(const string flags) const;
 
@@ -44,6 +45,7 @@ private:
     Simulation *sim;
     Sample *_sample;
     Source *src;
+    string _outputFileName;
 
     Material *material(const string name) const;
     AbstractDistribution *distribution(const string name) const;
