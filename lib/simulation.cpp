@@ -101,6 +101,7 @@ void Simulation::clear() {
         photonCounters[i] = 0;
     }
 
+    _nInteractions = NULL;
     forceTermination = false;
 }
 
@@ -302,8 +303,12 @@ void Simulation::runSingleThread() {
     }
     timeOffset *= -1 * sign<MCfloat>(timeOriginZ - source->z0());
 
+    layer0 = numeric_limits<unsigned int>::max(); //otherwise updateLayerVariables() won't work
+
     while(n < _totalWalkers && !forceTermination) {
+        walkerExitedSample = false;
         vector<u_int64_t> nInteractions;
+        _nInteractions = &nInteractions;
         if(saveTrajectory)
             currentTrajectory = new vector<MCfloat>();
 
@@ -313,9 +318,8 @@ void Simulation::runSingleThread() {
 
         walker.walkTime += timeOffset;
 
-        layer0 = initialLayer;
         totalLengthInCurrentLayer = 0;
-        updateLayerVariables(layer0);
+        updateLayerVariables(initialLayer);
 
         walker.swap_k0_k1();         //at first, the walker propagates
         kNeedsToBeScattered = false; //with the orignal k
@@ -384,41 +388,8 @@ void Simulation::runSingleThread() {
 #endif
             appendTrajectoryPoint(walker.r0);
 
-                                      //this means that we are moving away from an interface,
-            if(!kNeedsToBeScattered)  //so the walker might be about to leave the sample
-            {
-                if(layer0 == nLayers + 1) {
-                    bool diffuselyTransmitted = false;
-                    for (unsigned int i = 1; i <= nLayers; ++i) {
-                        if(nInteractions[i]) {
-
-                            appendWalker(TRANSMITTED);
-
-                            diffuselyTransmitted = true;
-                            break;
-                        }
-                    }
-                    if(!diffuselyTransmitted)
-                        appendWalker(BALLISTIC);
-                    break;
-                }
-
-                if(layer0 == 0) {
-                    bool diffuselyReflected = false;
-                    for (unsigned int i = 1; i <= nLayers; ++i) {
-                        if(nInteractions[i]) {
-
-                            appendWalker(REFLECTED);
-
-                            diffuselyReflected = true;
-                            break;
-                        }
-                    }
-                    if(!diffuselyReflected)
-                        appendWalker(BACKREFLECTED);
-                    break;
-                }
-            }
+            if(walkerExitedSample)
+                break;
         } //end of walker
 
         if(saveTrajectory)
@@ -486,52 +457,85 @@ void Simulation::move(const MCfloat length) {
         printf("interface with same n...\n");
 #endif
         switchToLayer(layer1);
-        return;
     }
+    else { //handle reflection and refraction
 
-    //handle reflection and refraction
+        MCfloat sinTheta0 = sqrt(1 - pow(walker.k1[2],2));
+        MCfloat sinTheta1 = n0*sinTheta0/n1;
 
-    MCfloat sinTheta0 = sqrt(1 - pow(walker.k1[2],2));
-    MCfloat sinTheta1 = n0*sinTheta0/n1;
-
-    if(sinTheta1 > 1) {
+        if(sinTheta1 > 1) {
 #ifdef DEBUG_TRAJECTORY
-        printf("TIR ");
+            printf("TIR ");
 #endif
-        reflect();
-    }
-    else {
+            reflect();
+        }
+        else {
 #define COSZERO (1.0-1.0E-12)
-        MCfloat r;
-        cosTheta1 = sqrt(1 - pow(sinTheta1,2)); //will also be used by refract()
-        if(fresnelReflectionsEnabled)
-        {
-            //calculate the probability r(Theta0,n0,n1) of being reflected
-            MCfloat cThetaSum, cThetaDiff; //cos(Theta0 + Theta1) and cos(Theta0 - Theta1)
-            MCfloat sThetaSum, sThetaDiff; //sin(Theta0 + Theta1) and sin(Theta0 - Theta1)
+            MCfloat r;
+            cosTheta1 = sqrt(1 - pow(sinTheta1,2)); //will also be used by refract()
+            if(fresnelReflectionsEnabled)
+            {
+                //calculate the probability r(Theta0,n0,n1) of being reflected
+                MCfloat cThetaSum, cThetaDiff; //cos(Theta0 + Theta1) and cos(Theta0 - Theta1)
+                MCfloat sThetaSum, sThetaDiff; //sin(Theta0 + Theta1) and sin(Theta0 - Theta1)
 
-            MCfloat cosTheta0 = fabs(walker.k1[2]);
+                MCfloat cosTheta0 = fabs(walker.k1[2]);
 
-            if(cosTheta0 > COSZERO) { //normal incidence
-                r = (n1-n0)/(n1+n0);
-                r *= r;
+                if(cosTheta0 > COSZERO) { //normal incidence
+                    r = (n1-n0)/(n1+n0);
+                    r *= r;
+                }
+                else { //general case
+                    cThetaSum = cosTheta0*cosTheta1 - sinTheta0*sinTheta1;
+                    cThetaDiff = cosTheta0*cosTheta1 + sinTheta0*sinTheta1;
+                    sThetaSum = sinTheta0*cosTheta1 + cosTheta0*sinTheta1;
+                    sThetaDiff = sinTheta0*cosTheta1 - cosTheta0*sinTheta1;
+                    r = 0.5*sThetaDiff*sThetaDiff*(cThetaDiff*cThetaDiff+cThetaSum*cThetaSum)/(sThetaSum*sThetaSum*cThetaDiff*cThetaDiff);
+                }
+
+                MCfloat xi = uniform_01<MCfloat>()(*mt);
+
+                if(xi <= r)
+                    reflect();
+                else
+                    refract();
             }
-            else { //general case
-                cThetaSum = cosTheta0*cosTheta1 - sinTheta0*sinTheta1;
-                cThetaDiff = cosTheta0*cosTheta1 + sinTheta0*sinTheta1;
-                sThetaSum = sinTheta0*cosTheta1 + cosTheta0*sinTheta1;
-                sThetaDiff = sinTheta0*cosTheta1 - cosTheta0*sinTheta1;
-                r = 0.5*sThetaDiff*sThetaDiff*(cThetaDiff*cThetaDiff+cThetaSum*cThetaSum)/(sThetaSum*sThetaSum*cThetaDiff*cThetaDiff);
-            }
+            else
+                refract();
+        }
+    }
 
-            MCfloat xi = uniform_01<MCfloat>()(*mt);
+    //check if walker exited the sample
+    if(layer0 == nLayers + 1) {
+        bool diffuselyTransmitted = false;
+        for (unsigned int i = 1; i <= nLayers; ++i) {
+            if((*_nInteractions)[i]) {
 
-            if(xi <= r) {
-                reflect(); //we come back to run() without keeping track of the extra unused step length
-                return;
+                appendWalker(TRANSMITTED);
+
+                diffuselyTransmitted = true;
+                break;
             }
         }
-        refract();
+        if(!diffuselyTransmitted)
+            appendWalker(BALLISTIC);
+        walkerExitedSample = true;
+    }
+
+    if(layer0 == 0) {
+        bool diffuselyReflected = false;
+        for (unsigned int i = 1; i <= nLayers; ++i) {
+            if((*_nInteractions)[i]) {
+
+                appendWalker(REFLECTED);
+
+                diffuselyReflected = true;
+                break;
+            }
+        }
+        if(!diffuselyReflected)
+            appendWalker(BACKREFLECTED);
+        walkerExitedSample = true;
     }
 }
 

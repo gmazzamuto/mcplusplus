@@ -85,8 +85,10 @@ private:
     unsigned int nLayers;
     unsigned int layer0;
     unsigned int layer1;
+    const vector<u_int64_t> *_nInteractions;
     MCfloat totalLengthInCurrentLayer;
     bool kNeedsToBeScattered;
+    bool walkerExitedSample;
     time_t startTime;
     Walker walker;
 
