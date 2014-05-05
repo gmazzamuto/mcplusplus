@@ -332,6 +332,16 @@ void H5OutputFile::appendPhotonCounts(const u_int64_t transmitted, const u_int64
     dset.close();
 }
 
+void H5OutputFile::appendPhotonCounts(const u_int64_t *counters)
+{
+    for (uint i = 0; i < 4; ++i) {
+        _photonCounters[i] += counters[i];
+    }
+    DataSet dset = file->openDataSet("photon-counters");
+    dset.write(_photonCounters,dset.getDataType());
+    dset.close();
+}
+
 u_int64_t H5OutputFile::transmitted() const
 {
     return _photonCounters[TRANSMITTED];

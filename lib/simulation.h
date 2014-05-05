@@ -61,10 +61,7 @@ private:
 
     //walker counters
     u_int64_t _totalWalkers;  /**< @brief total number of walkers to be simulated*/
-    u_int64_t transmitted;  /**< @brief total number of walkers transmitted after at least one scattering event*/
-    u_int64_t reflected;  /**< @brief total number of walkers reflected after at least one scattering event*/
-    u_int64_t ballistic;  /**< @brief total number of walkers transmitted without undergoing any scattering event*/
-    u_int64_t backreflected;  /**< @brief total number of walkers reflected without undergoing any scattering event*/
+    u_int64_t photonCounters[4];
     u_int64_t n;
 
     uint nThreads;

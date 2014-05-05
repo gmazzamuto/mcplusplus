@@ -94,15 +94,11 @@ Simulation::~Simulation() {
 }
 
 void Simulation::clear() {
-    transmitted = 0;
-    reflected = 0;
-    ballistic = 0;
-    backreflected = 0;
-
     for (int i = 0; i < 4; ++i) {
         exitPoints[i].clear();
         exitKVectors[i].clear();
         walkTimes[i].clear();
+        photonCounters[i] = 0;
     }
 
     forceTermination = false;
@@ -194,10 +190,9 @@ void Simulation::run() {
 
     stringstream stream;
     stream << "================\n";
-    stream << "transmitted: " << transmitted << endl;
-    stream << "reflected: " << reflected << endl;
-    stream << "ballistic: " << ballistic << endl;
-    stream << "back-reflected: " << backreflected << endl;
+    for (uint i = 0; i < 4; ++i) {
+        stream << walkerIndexToString(i) << ": " << photonCounters[i] << endl;
+    }
 
     cout << stream.str();
 
@@ -240,10 +235,9 @@ void Simulation::runMultipleThreads()
         thread->join();
 
         Simulation *sim = sims.at(n);
-        transmitted+=sim->transmitted;
-        reflected+=sim->reflected;
-        ballistic+=sim->ballistic;
-        backreflected+=sim->backreflected;
+        for (uint i = 0; i < 4; ++i) {
+            sim->photonCounters[i] += photonCounters[i];
+        }
 
         sim->saveOutput();
         delete sim;
@@ -397,7 +391,7 @@ void Simulation::runSingleThread() {
                     bool diffuselyTransmitted = false;
                     for (unsigned int i = 1; i <= nLayers; ++i) {
                         if(nInteractions[i]) {
-                            transmitted++;
+                            photonCounters[TRANSMITTED]++;
 
                             if(exitPointsSaveFlags & FLAG_TRANSMITTED)
                                 appendExitPoint(TRANSMITTED);
@@ -413,7 +407,7 @@ void Simulation::runSingleThread() {
                         }
                     }
                     if(!diffuselyTransmitted) {
-                        ballistic++;
+                        photonCounters[BALLISTIC]++;
 
                         if(exitPointsSaveFlags & FLAG_BALLISTIC)
                             appendExitPoint(BALLISTIC);
@@ -431,7 +425,7 @@ void Simulation::runSingleThread() {
                     bool diffuselyReflected = false;
                     for (unsigned int i = 1; i <= nLayers; ++i) {
                         if(nInteractions[i]) {
-                            reflected++;
+                            photonCounters[REFLECTED]++;
 
                             if(exitPointsSaveFlags & FLAG_REFLECTED)
                                 appendExitPoint(REFLECTED);
@@ -447,7 +441,7 @@ void Simulation::runSingleThread() {
                         }
                     }
                     if(!diffuselyReflected) {
-                        backreflected++;
+                        photonCounters[BACKREFLECTED]++;
 
                         if(exitPointsSaveFlags & FLAG_BACKREFLECTED)
                             appendExitPoint(BACKREFLECTED);
@@ -680,35 +674,35 @@ void Simulation::saveOutput()
 
     file.saveRNGState(currentSeed(), generatorState());
 
-    if(transmitted && exitPointsSaveFlags & FLAG_TRANSMITTED)
-        file.appendExitPoints(TRANSMITTED, exitPoints[TRANSMITTED].data(),2*transmitted);
-    if(ballistic && exitPointsSaveFlags & FLAG_BALLISTIC)
-        file.appendExitPoints(BALLISTIC, exitPoints[BALLISTIC].data(),2*ballistic);
-    if(reflected && exitPointsSaveFlags & FLAG_REFLECTED)
-        file.appendExitPoints(REFLECTED, exitPoints[REFLECTED].data(),2*reflected);
-    if(backreflected && exitPointsSaveFlags & FLAG_BACKREFLECTED)
-        file.appendExitPoints(BACKREFLECTED, exitPoints[BACKREFLECTED].data(),2*backreflected);
+    if(photonCounters[TRANSMITTED] && exitPointsSaveFlags & FLAG_TRANSMITTED)
+        file.appendExitPoints(TRANSMITTED, exitPoints[TRANSMITTED].data(),exitPoints[TRANSMITTED].size());
+    if(photonCounters[BALLISTIC] && exitPointsSaveFlags & FLAG_BALLISTIC)
+        file.appendExitPoints(BALLISTIC, exitPoints[BALLISTIC].data(),exitPoints[BALLISTIC].size());
+    if(photonCounters[REFLECTED] && exitPointsSaveFlags & FLAG_REFLECTED)
+        file.appendExitPoints(REFLECTED, exitPoints[REFLECTED].data(),exitPoints[REFLECTED].size());
+    if(photonCounters[BACKREFLECTED] && exitPointsSaveFlags & FLAG_BACKREFLECTED)
+        file.appendExitPoints(BACKREFLECTED, exitPoints[BACKREFLECTED].data(),exitPoints[BACKREFLECTED].size());
 
-    if(transmitted && walkTimesSaveFlags & FLAG_TRANSMITTED)
-        file.appendWalkTimes(TRANSMITTED, walkTimes[TRANSMITTED].data(),transmitted);
-    if(ballistic && walkTimesSaveFlags & FLAG_BALLISTIC)
-        file.appendWalkTimes(BALLISTIC, walkTimes[BALLISTIC].data(),ballistic);
-    if(reflected && walkTimesSaveFlags & FLAG_REFLECTED)
-        file.appendWalkTimes(REFLECTED, walkTimes[REFLECTED].data(),reflected);
-    if(backreflected && walkTimesSaveFlags & FLAG_BACKREFLECTED)
-        file.appendWalkTimes(BACKREFLECTED, walkTimes[BACKREFLECTED].data(),backreflected);
+    if(photonCounters[TRANSMITTED] && walkTimesSaveFlags & FLAG_TRANSMITTED)
+        file.appendWalkTimes(TRANSMITTED, walkTimes[TRANSMITTED].data(),walkTimes[TRANSMITTED].size());
+    if(photonCounters[BALLISTIC] && walkTimesSaveFlags & FLAG_BALLISTIC)
+        file.appendWalkTimes(BALLISTIC, walkTimes[BALLISTIC].data(),walkTimes[BALLISTIC].size());
+    if(photonCounters[REFLECTED] && walkTimesSaveFlags & FLAG_REFLECTED)
+        file.appendWalkTimes(REFLECTED, walkTimes[REFLECTED].data(),walkTimes[REFLECTED].size());
+    if(photonCounters[BACKREFLECTED] && walkTimesSaveFlags & FLAG_BACKREFLECTED)
+        file.appendWalkTimes(BACKREFLECTED, walkTimes[BACKREFLECTED].data(),walkTimes[BACKREFLECTED].size());
 
-    if(transmitted && exitKVectorsSaveFlags & FLAG_TRANSMITTED)
+    if(photonCounters[TRANSMITTED] && exitKVectorsSaveFlags & FLAG_TRANSMITTED)
         file.appendExitKVectors(TRANSMITTED, exitKVectors[TRANSMITTED].data(),exitKVectors[TRANSMITTED].size());
-    if(ballistic && exitKVectorsSaveFlags & FLAG_BALLISTIC)
+    if(photonCounters[BALLISTIC] && exitKVectorsSaveFlags & FLAG_BALLISTIC)
         file.appendExitKVectors(BALLISTIC, exitKVectors[BALLISTIC].data(),exitKVectors[BALLISTIC].size());
-    if(reflected && exitKVectorsSaveFlags & FLAG_REFLECTED)
+    if(photonCounters[REFLECTED] && exitKVectorsSaveFlags & FLAG_REFLECTED)
         file.appendExitKVectors(REFLECTED, exitKVectors[REFLECTED].data(),exitKVectors[REFLECTED].size());
-    if(backreflected && exitKVectorsSaveFlags & FLAG_BACKREFLECTED)
+    if(photonCounters[BACKREFLECTED] && exitKVectorsSaveFlags & FLAG_BACKREFLECTED)
         file.appendExitKVectors(BACKREFLECTED, exitKVectors[BACKREFLECTED].data(),exitKVectors[BACKREFLECTED].size());
 
 
-    file.appendPhotonCounts(transmitted,ballistic,reflected,backreflected);
+    file.appendPhotonCounts(photonCounters);
     file.close();
     logMessage("Data written to %s", outputFile);
 }

@@ -29,6 +29,7 @@ public:
     void saveRNGState(const uint seed, const string s);
     string readRNGState(const uint seed) const;
     void appendPhotonCounts(const u_int64_t transmitted, const u_int64_t ballistic, const u_int64_t reflected, const u_int64_t backReflected);
+    void appendPhotonCounts(const u_int64_t *counters);
     u_int64_t transmitted() const;
     u_int64_t ballistic() const;
     u_int64_t reflected() const;
