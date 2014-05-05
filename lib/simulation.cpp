@@ -236,7 +236,7 @@ void Simulation::runMultipleThreads()
 
         Simulation *sim = sims.at(n);
         for (uint i = 0; i < 4; ++i) {
-            sim->photonCounters[i] += photonCounters[i];
+            photonCounters[i] += sim->photonCounters[i];
         }
 
         sim->saveOutput();
