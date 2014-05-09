@@ -8,6 +8,11 @@
 
 using namespace std;
 
+/**
+ * @brief The Sample class describes a multi-layer sample made of infinitely
+ * extended slabs
+ */
+
 class Sample : public BaseObject
 {
 public:
@@ -15,7 +20,7 @@ public:
     void addLayer(Material *material, MCfloat thickness);
     void addPreLayer(Material *material, MCfloat thickness);
     void setSurroundingEnvironment(Material *material);
-    void setSurroundingEnvironment(Material *frontMaterial, Material *backMaterial);
+    void setSurroundingEnvironment(Material *leftMaterial, Material *rightMaterial);
     unsigned int nLayers() const;
     const deque<MCfloat> *zBoundaries() const;
     Material *material(unsigned int layerIndex) const;

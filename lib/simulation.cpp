@@ -93,6 +93,10 @@ Simulation::~Simulation() {
         mostRecentInstance = NULL;
 }
 
+/**
+ * @brief Clears the simulation internal data
+ */
+
 void Simulation::clear() {
     for (int i = 0; i < 4; ++i) {
         exitPoints[i].clear();
@@ -140,10 +144,20 @@ void Simulation::setFresnelReflectionsEnabled(bool enable)
     fresnelReflectionsEnabled = enable;
 }
 
+/**
+ * @brief Sets the number of parallel threads to be used
+ * @param value
+ */
+
 void Simulation::setNThreads(unsigned int value)
 {
     nThreads = value;
 }
+
+/**
+ * @brief The total number of photons to be simulated
+ * @return
+ */
 
 u_int64_t Simulation::totalWalkers() const
 {
@@ -163,7 +177,9 @@ void Simulation::setOutputFileName(const char *name)
 /**
  * @brief Runs the simulation
  *
- * \pre The RNG has to be valid (see BaseRandom)
+ * Defaults to single thread operation. Use setNThreads() to set the number of
+ * parallel threads used to run the simulation. \pre The RNG has to be valid
+ * (see BaseRandom)
  */
 
 void Simulation::run() {
@@ -422,6 +438,13 @@ unsigned int Simulation::layerAt(const MCfloat *r0) const {
     return nLayers+1;
 }
 
+/**
+ * @brief Moves the walker according to r1 and k1.
+ * @param length
+ *
+ * This function also takes care of handling the crossing of an interface
+ */
+
 void Simulation::move(const MCfloat length) {
     if(walker.r1[2] > currLayerLowerBoundary && walker.r1[2] <= currLayerUpperBoundary)
     {
@@ -598,6 +621,13 @@ void Simulation::appendWalker(walkerType idx)
         appendExitKVector(idx);
 }
 
+/**
+ * @brief Print progress information
+ *
+ * This can also be triggered by sending the USR1 signal to the process that
+ * instantiated the Simulation object.
+ */
+
 void Simulation::reportProgress() const
 {
     string s = str( format("Progress = %.1lf%% (%u / %u) ") % (100.*currentWalker()/totalWalkers()) % currentWalker() % totalWalkers());
@@ -617,10 +647,31 @@ void Simulation::reportProgress() const
     logMessage(ss.str());
 }
 
+/**
+ * @brief Sets a vector of RNG states to be used by the threads.
+ * @param states
+ *
+ *
+ * If the vector is not set or has fewer elements than the specified number of
+ * threads to be run, a new RNG with a sequential seed will be created.
+ */
+
 void Simulation::setMultipleRNGStates(const vector<string> states)
 {
     multipleRNGStates = states;
 }
+
+/**
+ * @brief Sets the coordinate \f$ z_0 \f$ of the origin of times (\f$ t = 0 \f$)
+ * @param z
+ *
+ *
+ * If the photon source is placed at a coordinate \f$ z \neq z_0 \f$, then the
+ * photon time distribution -- which is specified at the source position -- is
+ * offset (with sign) by the time it takes for the photon to travel from the
+ * source to \f$ z_0 \f$ (or viceversa) flying in a straight line and crossing
+ * the boundaries at 90°. This property defaults to \f$ z = 0 \f$.
+ */
 
 void Simulation::setTimeOriginZ(const MCfloat z)
 {
@@ -643,6 +694,13 @@ BaseObject* Simulation::clone_impl() const
     return sim;
 }
 
+/**
+ * @brief Save the simulated output to file
+ *
+ * The data is saved to the file specified by setOutputFileName() which must
+ * exist. Otherwise "output.h5" is used.
+ */
+
 void Simulation::saveOutput()
 {
     H5OutputFile file;
@@ -652,8 +710,9 @@ void Simulation::saveOutput()
         logMessage("No output file name provided, writing to %s", outputFile);
         file.newFile(outputFile);
     }
-    else if(!file.openFile(outputFile))
-        return;
+    else if(!file.openFile(outputFile)) {
+        file.newFile("output.h5");
+    }
 
     file.saveRNGState(currentSeed(), generatorState());
 
@@ -682,12 +741,29 @@ void Simulation::describe_impl() const
     source->describe();
 }
 
+/**
+ * @brief Switches to the adjacent layer when the photon crosses an interface.
+ * @param layer
+ *
+ *
+ * This function updates the walker walk time with the total time spent in the previous
+ * layer. It then calls updateLayerVariables().
+ */
+
 void Simulation::switchToLayer(const uint layer)
 {
     walker.walkTime += totalLengthInCurrentLayer/currentMaterial->v;
     totalLengthInCurrentLayer = 0;
     updateLayerVariables(layer);
 }
+
+/**
+ * @brief Updates the internal variables caching the layer parameters
+ * @param layer
+ *
+ *
+ * This function does nothing if layer equals layer0.
+ */
 
 void Simulation::updateLayerVariables(const uint layer) {
     if(layer0 == layer)
@@ -745,7 +821,7 @@ void Simulation::setSaveTrajectoryEnabled(bool enabled) {
 }
 
 /**
- * @brief Returns the trajectory of the last simulated walker
+ * @brief Returns the trajectories of the simulated photons
  * @return
  */
 

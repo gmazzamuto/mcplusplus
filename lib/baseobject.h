@@ -30,6 +30,8 @@ using namespace std;
  * Qt's <a
  * href="http://qt-project.org/doc/qt-5.0/qtcore/object.html#identity-vs-value">
  * Identity vs Value</a> which explains the same concept applied to QObjects.
+ *
+ * BaseObject can be cloned using clone().
  */
 
 class BaseObject : private boost::noncopyable

@@ -9,6 +9,10 @@
 using namespace boost::property_tree;
 using namespace std;
 
+/**
+ * @brief The XMLParser class parses the XML file describing a simulation.
+ */
+
 class XMLParser
 {
 public:

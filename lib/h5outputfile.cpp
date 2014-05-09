@@ -32,6 +32,17 @@ bool H5OutputFile::newFile(const char *fileName, bool create_datasets)
     return true;
 }
 
+/**
+ * @brief Creates a new file based on the parameters specified in an XML file.
+ * @param xmlFile
+ * @param fileName
+ * @return true on success, false on failure
+ *
+ * The given XML file is parsed by XMLParser and only the needed datasets are
+ * created. The content of the XML file itself is copied in the dataset
+ * "XMLDescription".
+ */
+
 bool H5OutputFile::newFromXML(const char *xmlFile, const char *fileName)
 {
     bool ret = newFile(fileName,false);
@@ -46,6 +57,16 @@ bool H5OutputFile::newFromXML(const char *xmlFile, const char *fileName)
     writeXMLDescription(xmlFile);
     return true;
 }
+
+/**
+ * @brief Creates a new file based on the parameters specified in the given XML
+ *        description.
+ * @param xmlContent
+ * @param fileName
+ * @return true on success, false on failure
+ *
+ * As newFromXML(), but use the specified XML instead of reading it from a file.
+ */
 
 bool H5OutputFile::newFromXMLContent(const string xmlContent, const char *fileName)
 {

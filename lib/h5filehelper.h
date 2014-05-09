@@ -8,6 +8,10 @@
 
 using namespace H5;
 
+/**
+ * @brief The H5FileHelper class is a convenience wrapper around H5::H5File.
+ */
+
 class H5FileHelper : public BaseObject
 {
 public:

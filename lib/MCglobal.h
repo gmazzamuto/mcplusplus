@@ -16,8 +16,17 @@ typedef double MCfloat;
 typedef float MCfloat;
 #endif
 
+/*! \file */
+
 using namespace std;
 
+/**
+ * @brief The walkerType enum enumerates the possible photon classifications
+ * based on how the photon exited the sample.
+ *
+ * This enum is also intended to be used as index for arrays or vectors
+ * containing data for each photon type.
+ */
 
 enum walkerType {
     TRANSMITTED = 0,
@@ -25,6 +34,15 @@ enum walkerType {
     REFLECTED = 2,
     BACKREFLECTED = 3,
 };
+
+/**
+ * @brief The walkerFlags enum is used to select one or more photon types.
+ *
+ * This enum is intended to be used in a bitwise fashion only.
+ *
+ * \warning Do not use this enum as an index for arrays or vectors. Use
+ * #walkerType instead.
+ */
 
 enum walkerFlags {
     FLAG_TRANSMITTED = 1 << TRANSMITTED,

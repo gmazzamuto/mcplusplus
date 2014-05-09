@@ -106,6 +106,11 @@ void BaseObject::setParent_impl(BaseObject *parent) {
 
 }
 
+/**
+ * @brief Determines whether or not the object derives from BaseRandom
+ * @return true if the object derives from BaseRandom, false otherwise
+ */
+
 bool BaseObject::inheritsRandom() const {
     return _inheritsRandom;
 }
@@ -117,15 +122,30 @@ BaseObject *BaseObject::clone() const
     return clonedObject;
 }
 
+/**
+ * @brief Determines whether or not the object was cloned
+ * @return true if the object was constructed by cloning another object via
+ * clone(), false if not
+ */
+
 bool BaseObject::wasCloned() const
 {
     return _wasCloned;
 }
 
+/**
+ * @brief Prints a description of the object and its main properties.
+ */
+
 void BaseObject::describe() const
 {
     describe_impl();
 }
+
+/**
+ * @brief The class name of the object.
+ * @return
+ */
 
 string BaseObject::typeName() const
 {

@@ -20,7 +20,7 @@ Sample::Sample(BaseObject *parent) :
  *
  * A layer is an infinitely extended slab with the given material and the given
  * finite thickness (measured along \f$ z \f$). Layers are stacked from left to
- * right. The first interface of the first \em scattering layer is placed in
+ * right. The first interface of the first layer is placed in
  * \f$ z=0 \f$.
  */
 
@@ -36,12 +36,8 @@ void Sample::addLayer(Material *material, MCfloat thickness) {
  * @param thickness
  *
  *
- * A pre-layer, if present, is an infinitely extended slab with the given
- * material and the given finite thickness (measured along \f$ z \f$). In
- * contrast with ordinary layers, a pre-layer (usually representing a sample
- * holder/container wall) must be a \em non-scattering material and will be
- * stacked in the negative \f$ z \f$ direction (i.e. pre-layers are stacked
- * from left to right).
+ * Pre-layers are stacked from left to right. The first interface of the first
+ * layer is placed in \f$ z=0 \f$.
  */
 
 void Sample::addPreLayer(Material *material, MCfloat thickness)
@@ -51,16 +47,33 @@ void Sample::addPreLayer(Material *material, MCfloat thickness)
     materials.insert(materials.begin()+1,material);
 }
 
+/**
+ * @brief Set the material that surrounds the sample
+ * @param material
+ */
+
 void Sample::setSurroundingEnvironment(Material *material) {
     setSurroundingEnvironment(material, material);
 }
 
-void Sample::setSurroundingEnvironment(Material *frontMaterial, Material *backMaterial) {
+/**
+ * @brief Set the materials surrounding the sample on the two sides (left and
+ *        right)
+ * @param leftMaterial
+ * @param rightMaterial
+ */
+
+void Sample::setSurroundingEnvironment(Material *leftMaterial, Material *rightMaterial) {
     materials.pop_back();
     materials.pop_front();
-    materials.push_front(frontMaterial);
-    materials.push_back(backMaterial);
+    materials.push_front(leftMaterial);
+    materials.push_back(rightMaterial);
 }
+
+/**
+ * @brief The total number of layers and pre-layers that make up the sample
+ * @return
+ */
 
 unsigned int Sample::nLayers() const {
     return _nLayers;
@@ -75,16 +88,29 @@ unsigned int Sample::nLayers() const {
  * The n-th element of this deque is the upper boundary of the n-th layer. The
  * 0-th element is the upper boundary of the surrounding environment
  * semi-infinte space towards negative infinity.
- *
  */
 
 const deque<MCfloat> *Sample::zBoundaries() const {
     return &_zBoundaries;
 }
 
+/**
+ * @brief The material of the \f$ i \f$-th layer
+ * @param layerIndex
+ * @return
+ */
+
 Material *Sample::material(unsigned int layerIndex) const {
     return materials.at(layerIndex);
 }
+
+/**
+ * @brief The index of the layer in which the given \f$ z \f$ lies
+ * @param z
+ * @return
+ *
+ * Interfaces are considered to belong to the leftmost layer
+ */
 
 unsigned int Sample::layerAt(MCfloat z)
 {

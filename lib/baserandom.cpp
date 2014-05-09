@@ -38,6 +38,11 @@ void BaseRandom::setSeed(unsigned int seed) {
     setRNG(new mt19937(seed));
 }
 
+/**
+ * @brief Dumps the RNG internal state to file
+ * @param fileName
+ */
+
 void BaseRandom::dumpGenerator(const char *fileName) const
 {
     ofstream file;
@@ -45,6 +50,11 @@ void BaseRandom::dumpGenerator(const char *fileName) const
     file << *mt;
     file.close();
 }
+
+/**
+ * @brief Loads a RNG state from file
+ * @param fileName
+ */
 
 void BaseRandom::loadGenerator(const char *fileName)
 {
@@ -57,12 +67,25 @@ void BaseRandom::loadGenerator(const char *fileName)
     file.close();
 }
 
+/**
+ * @brief The RNG internal state
+ * @return
+ */
+
 string BaseRandom::generatorState() const
 {
     stringstream ss;
     ss << *mt;
     return ss.str();
 }
+
+/**
+ * @brief Set the internal RNG state
+ * @param state
+ *
+ *
+ * Use generatorState() to obtain the RNG internal state of a BaseRandom object
+ */
 
 void BaseRandom::setGeneratorState(string state)
 {
@@ -73,10 +96,23 @@ void BaseRandom::setGeneratorState(string state)
     setRNG(mt);
 }
 
+/**
+ * @brief The seed currently used by the RNG
+ * @return
+ */
+
 unsigned int BaseRandom::currentSeed() const
 {
     return _currentSeed;
 }
+
+/**
+ * @brief Sets the RNG
+ * @param mt
+ *
+ *
+ * The specified RNG is propagated to all child BaseRandoms.
+ */
 
 void BaseRandom::setRNG(mt19937 *mt) {
     if(mt == NULL)
