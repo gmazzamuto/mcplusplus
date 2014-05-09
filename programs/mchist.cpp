@@ -310,9 +310,11 @@ int main(int argc, char *argv[])
         cout << "binCenter\tintensity" << endl;
 
         MCfloat dr = binSize;
+        MCfloat scale1 = (photonCounters[0]+photonCounters[1]+photonCounters[2]+photonCounters[3]);
         for (int i = 0; i < nBins; ++i) {
             MCfloat r = binSize*i;
-            MCfloat intensity = histo[i] / (pi<MCfloat>()*(2*r*dr+dr*dr));
+            MCfloat scale2 = scale1 * (2*pi<MCfloat>()*(i+0.5)*dr*dr);
+            MCfloat intensity = histo[i] / scale2;
             cout << r + dr/2 << "\t" << intensity;
             cout << endl;
         }
