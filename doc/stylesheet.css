@@ -54,7 +54,10 @@ h1 {
 
 p, div.dynheader {
     margin: 0 auto;
-    padding: 14px 14px 14px 14px;
+    margin-top: 6px;
+    margin-bottom: 6px;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 ul {
