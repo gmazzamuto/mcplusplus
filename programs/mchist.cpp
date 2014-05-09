@@ -95,8 +95,8 @@ int main(int argc, char *argv[])
 
     cerr << "Walker types: ";
     for (uint type = 0; type < 4; ++type) {
-        if(walkerFlags & walkerIndexToFlag(type))
-            cerr << walkerIndexToString(type) << " ";
+        if(walkerFlags & walkerTypeToFlag(type))
+            cerr << walkerTypeToString(type) << " ";
     }
 
     cerr << endl;
@@ -132,9 +132,9 @@ int main(int argc, char *argv[])
     MCfloat *data[4];
     memset(data,0,4*sizeof(MCfloat *));
     for (uint type = 0; type < 4; type++) {
-        if(walkerFlags & walkerIndexToFlag(type)) {
+        if(walkerFlags & walkerTypeToFlag(type)) {
             data[type] = (MCfloat*)malloc(sizeof(MCfloat)*photonCounters[type]*entriesPerWalker);
-            if(!file.loadData((DataGroup)dataGroup,(walkerIndex)type, data[type])) {
+            if(!file.loadData((DataGroup)dataGroup,(walkerType)type, data[type])) {
                 free(data[type]);
                 data[type] = NULL;
             }
@@ -258,7 +258,7 @@ int main(int argc, char *argv[])
         MCfloat *modules[4];
         memset(modules,0,4*sizeof(MCfloat *));
         for (uint type = 0; type < 4; type++) {
-            if(walkerFlags & walkerIndexToFlag(type)) {
+            if(walkerFlags & walkerTypeToFlag(type)) {
                 modules[type] = (MCfloat*)malloc(sizeof(MCfloat)*photonCounters[type]);
             }
         }

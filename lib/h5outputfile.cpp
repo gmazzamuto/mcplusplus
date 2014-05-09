@@ -62,7 +62,7 @@ bool H5OutputFile::newFromXMLContent(const string xmlContent, const char *fileNa
     return true;
 }
 
-void H5OutputFile::appendExitKVectors(walkerIndex type, const MCfloat *buffer, const hsize_t size)
+void H5OutputFile::appendExitKVectors(walkerType type, const MCfloat *buffer, const hsize_t size)
 {
     switch (type) {
     case TRANSMITTED:
@@ -82,7 +82,7 @@ void H5OutputFile::appendExitKVectors(walkerIndex type, const MCfloat *buffer, c
     }
 }
 
-void H5OutputFile::appendExitPoints(walkerIndex type, const MCfloat *buffer, const hsize_t size)
+void H5OutputFile::appendExitPoints(walkerType type, const MCfloat *buffer, const hsize_t size)
 {
     switch (type) {
     case TRANSMITTED:
@@ -102,7 +102,7 @@ void H5OutputFile::appendExitPoints(walkerIndex type, const MCfloat *buffer, con
     }
 }
 
-void H5OutputFile::appendWalkTimes(walkerIndex type, const MCfloat *buffer, const hsize_t size)
+void H5OutputFile::appendWalkTimes(walkerType type, const MCfloat *buffer, const hsize_t size)
 {
     switch (type) {
     case TRANSMITTED:
@@ -122,7 +122,7 @@ void H5OutputFile::appendWalkTimes(walkerIndex type, const MCfloat *buffer, cons
     }
 }
 
-bool H5OutputFile::loadExitPoints(walkerIndex type, MCfloat *destBuffer, const hsize_t *start, const hsize_t *count)
+bool H5OutputFile::loadExitPoints(walkerType type, MCfloat *destBuffer, const hsize_t *start, const hsize_t *count)
 {
     bool ret = false;
     switch (type) {
@@ -144,7 +144,7 @@ bool H5OutputFile::loadExitPoints(walkerIndex type, MCfloat *destBuffer, const h
     return ret;
 }
 
-bool H5OutputFile::loadWalkTimes(walkerIndex type, MCfloat *destBuffer, const hsize_t *start, const hsize_t *count)
+bool H5OutputFile::loadWalkTimes(walkerType type, MCfloat *destBuffer, const hsize_t *start, const hsize_t *count)
 {
     bool ret = false;
     switch (type) {
@@ -166,7 +166,7 @@ bool H5OutputFile::loadWalkTimes(walkerIndex type, MCfloat *destBuffer, const hs
     return ret;
 }
 
-bool H5OutputFile::loadExitKVectors(walkerIndex type, MCfloat *destBuffer, const hsize_t *start, const hsize_t *count)
+bool H5OutputFile::loadExitKVectors(walkerType type, MCfloat *destBuffer, const hsize_t *start, const hsize_t *count)
 {
     bool ret = false;
     switch (type) {
@@ -188,7 +188,7 @@ bool H5OutputFile::loadExitKVectors(walkerIndex type, MCfloat *destBuffer, const
     return ret;
 }
 
-bool H5OutputFile::loadData(DataGroup group, walkerIndex type, MCfloat *destBuffer, const hsize_t *start, const hsize_t *count)
+bool H5OutputFile::loadData(DataGroup group, walkerType type, MCfloat *destBuffer, const hsize_t *start, const hsize_t *count)
 {
     stringstream ss;
     switch (group) {
@@ -205,7 +205,7 @@ bool H5OutputFile::loadData(DataGroup group, walkerIndex type, MCfloat *destBuff
         break;
     }
 
-    ss << "/" << walkerIndexToString(type);
+    ss << "/" << walkerTypeToString(type);
     return loadFrom1Ddataset(ss.str().c_str(),destBuffer,start,count);
 }
 

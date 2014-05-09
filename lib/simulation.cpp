@@ -192,7 +192,7 @@ void Simulation::run() {
     stringstream stream;
     stream << "================\n";
     for (uint i = 0; i < 4; ++i) {
-        stream << walkerIndexToString(i) << ": " << photonCounters[i] << endl;
+        stream << walkerTypeToString(i) << ": " << photonCounters[i] << endl;
     }
 
     cout << stream.str();
@@ -565,13 +565,13 @@ void Simulation::appendTrajectoryPoint(MCfloat *point) {
     }
 }
 
-void Simulation::appendExitPoint(enum walkerIndex idx)
+void Simulation::appendExitPoint(enum walkerType idx)
 {
     exitPoints[idx].push_back(walker.r0[0]);
     exitPoints[idx].push_back(walker.r0[1]);
 }
 
-void Simulation::appendExitKVector(walkerIndex idx)
+void Simulation::appendExitKVector(walkerType idx)
 {
     // we must use k1 instead of k0 because the walker can leave the sample only
     // when it is moving away from an interface
@@ -583,10 +583,10 @@ void Simulation::appendExitKVector(walkerIndex idx)
         exitKVectors[idx].push_back(walker.k1[2]);
 }
 
-void Simulation::appendWalker(walkerIndex idx)
+void Simulation::appendWalker(walkerType idx)
 {
     photonCounters[idx]++;
-    walkerFlags flags = walkerIndexToFlag(idx);
+    walkerFlags flags = walkerTypeToFlag(idx);
 
     if(exitPointsSaveFlags & flags)
         appendExitPoint(idx);
@@ -659,14 +659,14 @@ void Simulation::saveOutput()
 
     for (uint type = 0; type < 4; ++type) {
         //exit points
-        if(photonCounters[type] && exitPointsSaveFlags & walkerIndexToFlag(type))
-            file.appendExitPoints((walkerIndex)type, exitPoints[type].data(),exitPoints[type].size());
+        if(photonCounters[type] && exitPointsSaveFlags & walkerTypeToFlag(type))
+            file.appendExitPoints((walkerType)type, exitPoints[type].data(),exitPoints[type].size());
         //walk times
-        if(photonCounters[type] && walkTimesSaveFlags & walkerIndexToFlag(type))
-            file.appendWalkTimes((walkerIndex)type, walkTimes[type].data(),walkTimes[type].size());
+        if(photonCounters[type] && walkTimesSaveFlags & walkerTypeToFlag(type))
+            file.appendWalkTimes((walkerType)type, walkTimes[type].data(),walkTimes[type].size());
         //exit k vectors
-        if(photonCounters[type] && exitKVectorsSaveFlags & walkerIndexToFlag(type))
-            file.appendExitKVectors((walkerIndex)type, exitKVectors[type].data(),exitKVectors[type].size());
+        if(photonCounters[type] && exitKVectorsSaveFlags & walkerTypeToFlag(type))
+            file.appendExitKVectors((walkerType)type, exitKVectors[type].data(),exitKVectors[type].size());
     }
 
     file.appendPhotonCounts(photonCounters);

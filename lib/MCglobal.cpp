@@ -1,6 +1,6 @@
 #include "MCglobal.h"
 
-uint walkerFlagToIndex(walkerFlags flag)
+uint walkerFlagToType(walkerFlags flag)
 {
     uint ret = 0xffffffff;
     if(ret != FLAG_ALL_WALKERS) {
@@ -15,13 +15,13 @@ uint walkerFlagToIndex(walkerFlags flag)
 }
 
 
-walkerFlags walkerIndexToFlag(uint index)
+walkerFlags walkerTypeToFlag(uint index)
 {
     return (walkerFlags)(1 << index);
 }
 
 
-string walkerIndexToString(uint index)
+string walkerTypeToString(uint index)
 {
     switch (index) {
     case TRANSMITTED:

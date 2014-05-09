@@ -19,7 +19,7 @@ typedef float MCfloat;
 using namespace std;
 
 
-enum walkerIndex {
+enum walkerType {
     TRANSMITTED = 0,
     BALLISTIC = 1,
     REFLECTED = 2,
@@ -49,8 +49,8 @@ enum DataGroup {
 
 #define MC_ASSERT_MSG(x, msg) if(!x) { cerr << "=========== ERROR ===========" << endl; cerr << "msg" << endl; abort(); }
 
-extern uint walkerFlagToIndex(walkerFlags flag);
-extern walkerFlags walkerIndexToFlag(uint index);
-extern string walkerIndexToString(uint index);
+extern uint walkerFlagToType(walkerFlags flag);
+extern walkerFlags walkerTypeToFlag(uint index);
+extern string walkerTypeToString(uint index);
 
 #endif // MCGLOBAL_H

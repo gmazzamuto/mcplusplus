@@ -18,13 +18,13 @@ public:
     virtual bool newFile(const char *fileName, bool create_datasets=true);
     bool newFromXML(const char *xmlFile, const char *fileName);
     bool newFromXMLContent(const string xmlContent, const char *fileName);
-    void appendExitKVectors(walkerIndex type, const MCfloat *buffer, const hsize_t size);
-    void appendExitPoints(walkerIndex type, const MCfloat *buffer, const hsize_t size);
-    void appendWalkTimes(walkerIndex type, const MCfloat *buffer, const hsize_t size);
-    bool loadExitPoints(walkerIndex type, MCfloat *destBuffer, const hsize_t *start=NULL, const hsize_t *count=NULL);
-    bool loadWalkTimes(walkerIndex type, MCfloat *destBuffer, const hsize_t *start=NULL, const hsize_t *count=NULL);
-    bool loadExitKVectors(walkerIndex type, MCfloat *destBuffer, const hsize_t *start=NULL, const hsize_t *count=NULL);
-    bool loadData(DataGroup group, walkerIndex type, MCfloat *destBuffer, const hsize_t *start=NULL, const hsize_t *count=NULL);
+    void appendExitKVectors(walkerType type, const MCfloat *buffer, const hsize_t size);
+    void appendExitPoints(walkerType type, const MCfloat *buffer, const hsize_t size);
+    void appendWalkTimes(walkerType type, const MCfloat *buffer, const hsize_t size);
+    bool loadExitPoints(walkerType type, MCfloat *destBuffer, const hsize_t *start=NULL, const hsize_t *count=NULL);
+    bool loadWalkTimes(walkerType type, MCfloat *destBuffer, const hsize_t *start=NULL, const hsize_t *count=NULL);
+    bool loadExitKVectors(walkerType type, MCfloat *destBuffer, const hsize_t *start=NULL, const hsize_t *count=NULL);
+    bool loadData(DataGroup group, walkerType type, MCfloat *destBuffer, const hsize_t *start=NULL, const hsize_t *count=NULL);
 
     void saveRNGState(const uint seed, const string s);
     string readRNGState(const uint seed) const;
