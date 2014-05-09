@@ -657,33 +657,17 @@ void Simulation::saveOutput()
 
     file.saveRNGState(currentSeed(), generatorState());
 
-    if(photonCounters[TRANSMITTED] && exitPointsSaveFlags & FLAG_TRANSMITTED)
-        file.appendExitPoints(TRANSMITTED, exitPoints[TRANSMITTED].data(),exitPoints[TRANSMITTED].size());
-    if(photonCounters[BALLISTIC] && exitPointsSaveFlags & FLAG_BALLISTIC)
-        file.appendExitPoints(BALLISTIC, exitPoints[BALLISTIC].data(),exitPoints[BALLISTIC].size());
-    if(photonCounters[REFLECTED] && exitPointsSaveFlags & FLAG_REFLECTED)
-        file.appendExitPoints(REFLECTED, exitPoints[REFLECTED].data(),exitPoints[REFLECTED].size());
-    if(photonCounters[BACKREFLECTED] && exitPointsSaveFlags & FLAG_BACKREFLECTED)
-        file.appendExitPoints(BACKREFLECTED, exitPoints[BACKREFLECTED].data(),exitPoints[BACKREFLECTED].size());
-
-    if(photonCounters[TRANSMITTED] && walkTimesSaveFlags & FLAG_TRANSMITTED)
-        file.appendWalkTimes(TRANSMITTED, walkTimes[TRANSMITTED].data(),walkTimes[TRANSMITTED].size());
-    if(photonCounters[BALLISTIC] && walkTimesSaveFlags & FLAG_BALLISTIC)
-        file.appendWalkTimes(BALLISTIC, walkTimes[BALLISTIC].data(),walkTimes[BALLISTIC].size());
-    if(photonCounters[REFLECTED] && walkTimesSaveFlags & FLAG_REFLECTED)
-        file.appendWalkTimes(REFLECTED, walkTimes[REFLECTED].data(),walkTimes[REFLECTED].size());
-    if(photonCounters[BACKREFLECTED] && walkTimesSaveFlags & FLAG_BACKREFLECTED)
-        file.appendWalkTimes(BACKREFLECTED, walkTimes[BACKREFLECTED].data(),walkTimes[BACKREFLECTED].size());
-
-    if(photonCounters[TRANSMITTED] && exitKVectorsSaveFlags & FLAG_TRANSMITTED)
-        file.appendExitKVectors(TRANSMITTED, exitKVectors[TRANSMITTED].data(),exitKVectors[TRANSMITTED].size());
-    if(photonCounters[BALLISTIC] && exitKVectorsSaveFlags & FLAG_BALLISTIC)
-        file.appendExitKVectors(BALLISTIC, exitKVectors[BALLISTIC].data(),exitKVectors[BALLISTIC].size());
-    if(photonCounters[REFLECTED] && exitKVectorsSaveFlags & FLAG_REFLECTED)
-        file.appendExitKVectors(REFLECTED, exitKVectors[REFLECTED].data(),exitKVectors[REFLECTED].size());
-    if(photonCounters[BACKREFLECTED] && exitKVectorsSaveFlags & FLAG_BACKREFLECTED)
-        file.appendExitKVectors(BACKREFLECTED, exitKVectors[BACKREFLECTED].data(),exitKVectors[BACKREFLECTED].size());
-
+    for (uint type = 0; type < 4; ++type) {
+        //exit points
+        if(photonCounters[type] && exitPointsSaveFlags & walkerIndexToFlag(type))
+            file.appendExitPoints((walkerIndex)type, exitPoints[type].data(),exitPoints[type].size());
+        //walk times
+        if(photonCounters[type] && walkTimesSaveFlags & walkerIndexToFlag(type))
+            file.appendWalkTimes((walkerIndex)type, walkTimes[type].data(),walkTimes[type].size());
+        //exit k vectors
+        if(photonCounters[type] && exitKVectorsSaveFlags & walkerIndexToFlag(type))
+            file.appendExitKVectors((walkerIndex)type, exitKVectors[type].data(),exitKVectors[type].size());
+    }
 
     file.appendPhotonCounts(photonCounters);
     file.close();
