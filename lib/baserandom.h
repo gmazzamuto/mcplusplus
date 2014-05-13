@@ -42,8 +42,8 @@ public:
     void setSeed(unsigned int seed);
     unsigned int currentSeed() const;
 
-    void dumpGenerator(const char *fileName) const;
-    void loadGenerator(const char *fileName);
+    void dumpGeneratorState(const char *fileName) const;
+    void loadGeneratorState(const char *fileName);
     string generatorState() const;
     void setGeneratorState(string state);
 

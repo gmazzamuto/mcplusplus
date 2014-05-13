@@ -43,7 +43,7 @@ void BaseRandom::setSeed(unsigned int seed) {
  * @param fileName
  */
 
-void BaseRandom::dumpGenerator(const char *fileName) const
+void BaseRandom::dumpGeneratorState(const char *fileName) const
 {
     ofstream file;
     file.open(fileName);
@@ -56,7 +56,7 @@ void BaseRandom::dumpGenerator(const char *fileName) const
  * @param fileName
  */
 
-void BaseRandom::loadGenerator(const char *fileName)
+void BaseRandom::loadGeneratorState(const char *fileName)
 {
     logMessage("Loading RNG state from: %s",fileName);
     ifstream file;
