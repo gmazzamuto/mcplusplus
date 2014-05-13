@@ -1,7 +1,9 @@
 /**
   \mainpage
 
-  \section Introduction
+  \tableofcontents
+
+  \section Introduction Introduction
 
 Numerous areas of science employ Monte Carlo (MC) methods to simulate complex
 processes. Light propagation in random media, often referred to as photon
@@ -12,7 +14,7 @@ generally considered the gold standard of modeling and is used to investigate
 complex systems and processes, to validate simpler models, as well as to
 evaluate data.
 
-  \section Motivation
+  \section Motivation Motivation
 
 Being originally introduced in biomedical optics for the counting of fluence
 rate distribution in biological tissues for the purpose of estimation laser
@@ -67,7 +69,7 @@ Source, Detector and Scattering medium are entered. Depending on the
 application, the objects are tuned to the appropriate feature of light-tissue
 interaction and the simulation is performed.
 
-  \section References
+  \section References References
 
 rearranged from:
 
@@ -78,6 +80,43 @@ Doronin, A. and Meglinski, I. "Online object oriented Monte Carlo computational 
 <em>Biomedical optics express</em>, 9(2), 2461 (2011)
 
   \section HowToInstall How to install
-  MCPlusPlus uses CMake for building.
 
-  */
+Extract the source tarball and create a new folder that will be used for
+compilation. This is called the build folder. Open a terminal in the build
+folder and issue the following command:
+
+\code cmake pathToSourceFolder\endcode
+
+where @c pathToSourceFolder is the absolute or relative path to the extracted
+source folder. This will prepare the files needed for compilation.
+
+If you wish to specify an installation path different from your system's
+default (for example you want to install in @c /home/yourname/local), append
+the following option to the command above:
+
+\code -DCMAKE_INSTALL_PREFIX=/home/yourname/local\endcode
+
+If you have dependencies installed in non-standard paths, for example in
+@c /home/yourname/local/include/, you can add that path to the @c cmake command
+line like this:
+
+\code -DCMAKE_CXX_FLAGS=-I/home/yourname/local/include/\endcode
+
+Once @c cmake has been run, you can build the project and install it in the
+specified folder with the following command:
+
+\code make install\endcode
+
+If you installed in a local folder, in order to be able to use the software
+you'll have to export the following environment variables in every shell that
+you open:
+
+\code
+export PATH=/home/yourname/local/bin:$PATH
+export LD_LIBRARY_PATH=/home/yourname/local/lib:$LD_LIBRARY_PATH
+\endcode
+
+assuming, again, your installation prefix to be @c /home/yourname/local/. You
+can also place the two lines above in your shell's configuration file.
+
+*/
