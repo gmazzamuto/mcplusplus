@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
 
     sim->setSample(sample);
     sim->setSource(source);
-    sim->setTotalWalkers(atoi(argv[1]));
+    sim->setNWalkers(atoi(argv[1]));
     sim->setNThreads(atoi(argv[2]));
 
     sim->setSeed(0);

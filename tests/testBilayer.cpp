@@ -44,7 +44,7 @@ int main() {
     parser.parseAll();
 
     Simulation *sim = parser.simulation();
-    sim->setTotalWalkers(100000);
+    sim->setNWalkers(100000);
     sim->setNThreads(4);
     sim->setOutputFileName(outputFileName);
 

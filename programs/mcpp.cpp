@@ -77,7 +77,7 @@ int main(int argc, char *argv[])
 
     file.close();
 
-    sim->setTotalWalkers(atoll(argv[2]));
+    sim->setNWalkers(atoll(argv[2]));
     sim->setNThreads(atoi(argv[3]));
 
     sim->setOutputFileName(outputFileName.c_str());

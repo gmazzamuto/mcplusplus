@@ -109,7 +109,7 @@ void Simulation::clear() {
     forceTermination = false;
 }
 
-void Simulation::setTotalWalkers(u_int64_t N) {
+void Simulation::setNWalkers(u_int64_t N) {
     _totalWalkers = N;
 }
 
@@ -159,7 +159,7 @@ void Simulation::setNThreads(unsigned int value)
  * @return
  */
 
-u_int64_t Simulation::totalWalkers() const
+u_int64_t Simulation::nWalkers() const
 {
     return _totalWalkers;
 }
@@ -225,15 +225,15 @@ void Simulation::runMultipleThreads()
     sims.clear();
     installSigTermHandler();
 
-    unsigned int walkersPerThread = totalWalkers()/nThreads;
-    unsigned int remainder = totalWalkers() % nThreads;
+    unsigned int walkersPerThread = nWalkers()/nThreads;
+    unsigned int remainder = nWalkers() % nThreads;
 
     for (unsigned int n = 0; n < nThreads; ++n) {
         Simulation *sim = (Simulation *)clone();
         unsigned int nWalkers = walkersPerThread;
         if(n<remainder)
             nWalkers++;
-        sim->setTotalWalkers(nWalkers);
+        sim->setNWalkers(nWalkers);
         if(n<multipleRNGStates.size()) {
             sim->setSeed(n);
             sim->setGeneratorState(multipleRNGStates[n]);
@@ -264,7 +264,7 @@ void Simulation::runMultipleThreads()
 
 void Simulation::runSingleThread() {
     clear();
-    logMessage("starting... Number of walkers = %Lu, original seed = %u",totalWalkers(), currentSeed());
+    logMessage("starting... Number of walkers = %Lu, original seed = %u",nWalkers(), currentSeed());
     nLayers = _sample->nLayers();
 
 
@@ -630,14 +630,14 @@ void Simulation::appendWalker(walkerType idx)
 
 void Simulation::reportProgress() const
 {
-    string s = str( format("Progress = %.1lf%% (%u / %u) ") % (100.*currentWalker()/totalWalkers()) % currentWalker() % totalWalkers());
+    string s = str( format("Progress = %.1lf%% (%u / %u) ") % (100.*currentWalker()/nWalkers()) % currentWalker() % nWalkers());
     stringstream ss;
     ss << s;
     if(currentWalker() > 0) {
         time_t now;
         time(&now);
         double secsPerWalker = difftime(now,startTime) / currentWalker();
-        time_t eta = now + secsPerWalker*(totalWalkers()-currentWalker());
+        time_t eta = now + secsPerWalker*(nWalkers()-currentWalker());
         struct tm * timeinfo;
         timeinfo = localtime (&eta);
         char buffer [80];

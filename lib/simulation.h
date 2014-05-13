@@ -17,12 +17,12 @@ public:
 
     const Sample *sample() const;
     void setSaveTrajectoryEnabled(bool enabled = true);
-    void setTotalWalkers(u_int64_t N);
+    void setNWalkers(u_int64_t N);
     void setSample(Sample *sample);
     void setSource(Source *source);
     void setFresnelReflectionsEnabled(bool enable);
     void setNThreads(unsigned int value);
-    u_int64_t totalWalkers() const;
+    u_int64_t nWalkers() const;
     u_int64_t currentWalker() const;
     void setOutputFileName(const char *name);
     void run();
