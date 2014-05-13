@@ -697,8 +697,9 @@ BaseObject* Simulation::clone_impl() const
 /**
  * @brief Save the simulated output to file
  *
- * The data is saved to the file specified by setOutputFileName() which must
- * exist. Otherwise "output.h5" is used.
+ * The data is saved to the file specified by setOutputFileName(). If the
+ * specified file does not exist, it is created. If the specified file exists,
+ * data is appended to it. In all other cases "output.h5" is used.
  */
 
 void Simulation::saveOutput()
@@ -710,7 +711,11 @@ void Simulation::saveOutput()
         logMessage("No output file name provided, writing to %s", outputFile);
         file.newFile(outputFile);
     }
+    else if(access(outputFile,F_OK)<0) {
+        file.newFile(outputFile);
+    }
     else if(!file.openFile(outputFile)) {
+        logMessage("Cannot open %s, writing to output.h5", outputFile);
         file.newFile("output.h5");
     }
 
