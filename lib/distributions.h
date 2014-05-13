@@ -5,7 +5,7 @@
 #include "baserandom.h"
 
 /**
-  * \defgroup Distributions
+  * \defgroup Distributions Distributions
   * \brief Classes providing random distributions
   */
 
