@@ -11,8 +11,8 @@ using namespace boost::random;
  * RNG.
  *
  * BaseRandom objects can be instantiated as stand-alone objects if they are
- * created without specifying a parent. In this case they will use their own RNG
- * which is initialized with setSeed(). Therefore it is mandatory to call
+ * created without specifying a parent. In this case they will use their own
+ * RNG which is initialized with setSeed(). Therefore it is mandatory to call
  * setSeed() for stand-alone objects before any call to functions needing RNG.
  *
  * If a parent / child relationship involving BaseRandom objects exists, then
@@ -31,6 +31,10 @@ using namespace boost::random;
  * setSeed() on the parent object. Again, calling setSeed() is mandatory
  * to initialize the RNG, but it needs to be called only once (in the topmost
  * BaseRandom parent).
+ *
+ * The methods loadGeneratorState() and setGeneratorState() allow to specify a
+ * custom internal state of the RNG and can be used in place of setSeed(), with
+ * everything described above still holding.
  */
 
 class BaseRandom : public BaseObject
