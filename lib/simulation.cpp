@@ -109,6 +109,11 @@ void Simulation::clear() {
     forceTermination = false;
 }
 
+/**
+ * @brief Set the total number of walkers to simulated.
+ * @param N
+ */
+
 void Simulation::setNWalkers(u_int64_t N) {
     _totalWalkers = N;
 }
@@ -624,8 +629,8 @@ void Simulation::appendWalker(walkerType idx)
 /**
  * @brief Print progress information
  *
- * This can also be triggered by sending the USR1 signal to the process that
- * instantiated the Simulation object.
+ * This can also be triggered by sending the USR1 signal to the process
+ * instantiating the Simulation object.
  */
 
 void Simulation::reportProgress() const
@@ -808,6 +813,16 @@ void Simulation::setExitKVectorsDirsSaveFlags(unsigned int value)
 {
     exitKVectorsDirsSaveFlags = value;
 }
+
+/**
+ * @brief Gracefully terminates the currently running simulation
+ *
+ * Causes run() to return as soon as the photon currently being simulated is
+ * completed. The simulation data is written to the output file as usual. This
+ * function can also be triggered by sending the TERM signal to the process
+ * instantiating the Simulation object; every thread will be terminated
+ * gracefully.
+ */
 
 void Simulation::terminate()
 {

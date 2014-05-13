@@ -7,6 +7,27 @@
 
 /**
  * @brief The Simulation class is the core of the MC method
+ *
+ * In order to set up a simulation, you first have to specify a Sample and a
+ * Source using setSample() and setSource(). Use setNWalkers() to specify the
+ * total number of walkers to be simulated. The output file can be specified
+ * using setOutputFileName(); output flags can be specified with their setter
+ * functions: setWalkTimesSaveFlags(), etc.
+ *
+ * Before running the simulation, a RNG has to be initialized by either calling
+ * setSeed(), loadGeneratorState() or setGeneratorState(). Use run() to start
+ * the simulation.
+ *
+ * If you want to run the simulation in parallel threads, use setNThreads() to
+ * specify the number of threads to be used. In this case multiple RNG states
+ * can be loaded with setMultipleRNGStates(), otherwise sequential numbers from
+ * 0 to the number of threads will be used as seeds for each thread.
+ *
+ * <h2>Signals</h2>
+ * The progress of the simulation currently running can be printed on stderr by
+ * sending the USR1 signal to the process instantiating a Simulation object. By
+ * sending the TERM signal the simulation can be gracefully terminated (see
+ * terminate()).
  */
 
 class Simulation : public BaseRandom
