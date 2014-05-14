@@ -30,6 +30,8 @@ add_subdirectory(tests)
 add_custom_target(documentation)
 add_dependencies(documentation main-documentation libMCPlusPlus-documentation)
 
+add_custom_target(run_install COMMAND make install)
+
 # uninstall target
 configure_file(
     "${CMAKE_CURRENT_SOURCE_DIR}/cmake_uninstall.cmake.in"

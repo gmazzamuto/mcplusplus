@@ -29,6 +29,6 @@ if(DOXYGEN_FOUND)
     set(DOXYGEN_OUTDIR ${DOCUMENTATION_DIR}/libMCPlusPlus)
     configure_file(Doxyfile.in
                    ${PROJECT_BINARY_DIR}/Doxyfile  @ONLY)
-    add_custom_target(libMCPlusPlus-documentation SOURCES DoxygenLayout.xml
-                      COMMAND  mkdir -p  ${DOXYGEN_OUTDIR} && ${DOXYGEN_EXECUTABLE} ${PROJECT_BINARY_DIR}/Doxyfile WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
+    add_custom_target(libMCPlusPlus-documentation SOURCES DoxygenLayout.xml DEPENDS run_install
+                      COMMAND mkdir -p  ${DOXYGEN_OUTDIR} && ${DOXYGEN_EXECUTABLE} ${PROJECT_BINARY_DIR}/Doxyfile WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 endif()
