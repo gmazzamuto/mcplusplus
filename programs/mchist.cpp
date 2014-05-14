@@ -40,14 +40,14 @@ int main(int argc, char *argv[])
     char c;
     extern char *optarg;
     extern int optind;
-    while ((c = getopt(argc, argv, "hs:t:")) != -1) {
+    while ((c = getopt(argc, argv, "hb:t:")) != -1) {
         switch (c) {
         case 'h':
             usage(stdout);
             exit(EXIT_SUCCESS);
             break;
 
-        case 's':
+        case 'b':
             binSize = atof(optarg);
             break;
 
