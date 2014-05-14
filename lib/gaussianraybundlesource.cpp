@@ -78,6 +78,7 @@ void GaussianRayBundleSource::setZWaist(MCfloat value)
 {
     zWaistReal = value;
     zWaistInEnvironment = value;
+    _z0 = zLens();
 }
 
 /**
@@ -104,6 +105,7 @@ void GaussianRayBundleSource::setZLens(MCfloat value)
 {
     zWaistInEnvironment = value + d;
     zWaistReal = zWaistInEnvironment;
+    _z0 = zLens();
 }
 
 MCfloat GaussianRayBundleSource::zLens() const
