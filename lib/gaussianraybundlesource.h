@@ -31,7 +31,7 @@ class GaussianRayBundleSource : public Source
 {
 public:
     GaussianRayBundleSource(MCfloat lensWaist, MCfloat waist, MCfloat lensDistance, BaseObject *parent=NULL);
-    GaussianRayBundleSource(MCfloat collimatedXWaist, MCfloat collimatedYWaist, MCfloat focusedXWaist, MCfloat focusedYWaist, MCfloat lensDistance, BaseObject *parent=NULL);
+    GaussianRayBundleSource(MCfloat lensXWaist, MCfloat lensYWaist, MCfloat xWaist, MCfloat yWaist, MCfloat lensDistance, BaseObject *parent=NULL);
     bool focus(MCfloat zWaistReal, Sample *sample);
     void setZLens(MCfloat value);
 
