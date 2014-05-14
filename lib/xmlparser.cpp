@@ -1,5 +1,7 @@
 #include "xmlparser.h"
 
+#include "gaussianraybundlesource.h"
+
 #include <boost/property_tree/exceptions.hpp>
 #include <boost/property_tree/xml_parser.hpp>
 #include <boost/foreach.hpp>
@@ -29,6 +31,7 @@ void XMLParser::parseString(const string &xmlContent)
 }
 
 void XMLParser::parseAll() {
+    optional<MCfloat> attr;
 
     //materials
     parseMaterials();
@@ -61,6 +64,7 @@ void XMLParser::parseAll() {
 
 
     //source
+    ptree::value_type v = pt.get_child("MCPlusPlus.source").front();
     string srcType = pt.get<string>("MCPlusPlus.source.<xmlattr>.type", "__default__");
     if(src != NULL)
         delete src;
@@ -83,10 +87,87 @@ void XMLParser::parseAll() {
     else if(srcType == "PencilBeamSource") {
         src = new PencilBeamSource();
     }
+    else if(srcType == "GaussianRayBundleSource") {
+        MCfloat lensXWaist, lensYWaist;
+        MCfloat xWaist, yWaist;
+        MCfloat lensDistance;
+        Exception e;
 
-    it = pt.find("MCPlusPlus.source.<xmlattr>.wavelength");
-    if(it != pt.not_found())
-        src->setWavelength(boost::lexical_cast<MCfloat>(it->second.data()));
+        attr = v.second.get_optional<MCfloat>("lensWaist");
+        if(attr.is_initialized()) {
+            lensXWaist = attr.get();
+            lensYWaist = lensXWaist;
+        }
+        else {
+            attr = v.second.get_optional<MCfloat>("lensXWaist");
+            if(attr.is_initialized()) {
+                lensXWaist = attr.get();
+            }
+            else {
+                e.str = "Needed attr lensWaist OR lensXWaist OR lensYWaist not found";
+                throw e;
+            }
+            attr = v.second.get_optional<MCfloat>("lensYWaist");
+            if(attr.is_initialized()) {
+                lensYWaist = attr.get();
+            }
+            else {
+                e.str = "Needed attr lensWaist OR lensXWaist OR lensYWaist not found";
+                throw e;
+            }
+        }
+
+        attr = v.second.get_optional<MCfloat>("waist");
+        if(attr.is_initialized()) {
+            xWaist = attr.get();
+            yWaist = xWaist;
+        }
+        else {
+            attr = v.second.get_optional<MCfloat>("xWaist");
+            if(attr.is_initialized()) {
+                xWaist = attr.get();
+            }
+            else {
+                e.str = "Needed attr waist OR xWaist OR yWaist not found";
+                throw e;
+            }
+            attr = v.second.get_optional<MCfloat>("yWaist");
+            if(attr.is_initialized()) {
+                yWaist = attr.get();
+            }
+            else {
+                e.str = "Needed attr waist OR xWaist OR yWaist not found";
+                throw e;
+            }
+        }
+
+        attr = v.second.get_optional<MCfloat>("lensDistance");
+        if(attr.is_initialized()) {
+            lensDistance = attr.get();
+        }
+        else {
+            e.str = "Needed attr lensDistance not found";
+            throw e;
+        }
+
+        GaussianRayBundleSource *grb = new GaussianRayBundleSource(lensXWaist,lensYWaist,xWaist,yWaist,lensDistance);
+
+        attr = v.second.get_optional<MCfloat>("zLens");
+        if(attr.is_initialized()) {
+            grb->setZLens(attr.get());
+        }
+
+        attr = v.second.get_optional<MCfloat>("focus");
+        if(attr.is_initialized()) {
+            grb->focus(attr.get(), _sample);
+        }
+
+        src = grb;
+    }
+
+    attr = v.second.get_optional<MCfloat>("wavelength");
+    if(attr.is_initialized())
+        src->setWavelength(attr.get());
 
     AbstractDistribution *walkTime = distribution(pt.get<string>("MCPlusPlus.source.<xmlattr>.walkTime"));
     src->setWalkTimeDistribution(walkTime);
