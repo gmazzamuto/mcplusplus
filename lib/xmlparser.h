@@ -17,7 +17,7 @@ class XMLParser
 {
 public:
 
-    struct InvalidBool {string str;};
+    struct Exception {string str;};
 
     XMLParser();
 

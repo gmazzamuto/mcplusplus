@@ -233,8 +233,9 @@ bool XMLParser::boolean(const string str) const
     else if(str == "false")
         return false;
     else {
-        struct InvalidBool e;
-        e.str = str;
+        struct Exception e;
+        e.str = "Invalid bool: ";
+        e.str.append(str);
         throw e;
     };
 }
