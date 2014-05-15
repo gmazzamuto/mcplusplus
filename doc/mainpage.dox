@@ -29,6 +29,8 @@ photons is finite. This is especially true because this kind of simulations
 have an inherently parallel nature and so they can leverage nowadays
 multi-threading CPUs and GPUs.
 
+Some excerpts rearranged from \cite svensson2013breakdown \cite contini1997photonMigration.
+
   \section Motivation Motivation
 
 As its name suggests, MCPlusPlus is entirely written in C++. We think that the
