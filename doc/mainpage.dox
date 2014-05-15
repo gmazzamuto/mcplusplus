@@ -14,70 +14,40 @@ generally considered the gold standard of modeling and is used to investigate
 complex systems and processes, to validate simpler models, as well as to
 evaluate data.
 
+Given the complexity of the radiative transfer equation (RTE) -- a widely used
+analytical model for light diffusion through turbid media -- approximations
+such as the diffusion approximation (DA) are most often used. However these
+simplifications do not perform equally well in every situation and they have
+their shortcomings. On the other hand the RTE directly follows from energy
+conservation. Its derivation is phenomenological, where the complex wave
+propagation is reduced to a Poissonian random walk with exponentially
+distributed steps between scattering events, with correlations in
+directionality given by the phase function. With the computing power available
+nowadays, it is possible to implement a Monte Carlo method to find exact
+solutions to the RTE, the only approximation being that the number of simulated
+photons is finite. This is especially true because this kind of simulations
+have an inherently parallel nature and so they can leverage nowadays
+multi-threading CPUs and GPUs.
+
   \section Motivation Motivation
 
-Being originally introduced in biomedical optics for the counting of fluence
-rate distribution in biological tissues for the purpose of estimation laser
-radiation dose, in the last decades the MC approach has become a primary tool
-for a number of needs in biomedical optics.
+As its name suggests, MCPlusPlus is entirely written in C++. We think that the
+Object-oriented programming (OOP) paradigm and the abstraction layer that it
+provides apply very well to the problem described above. OOP allows to
+encapsulate concepts as reusable objects, thus providing ease of maintenance,
+increased code understandability and modular architecture. With this powerful
+tool, we can implement a software package that is much more flexible than the
+most widely used MC codes, yet having equal to superior performance. The OOP
+makes it easy to expand and customize the code, that's why we can provide some
+unique features such as:
 
-It should be pointed out, however, that due to the diversity of optical
-modalities utilizing different properties of light and mechanisms of
-light-tissue interactions, including scattering, absorption, anisotropy,
-reflection, refraction, transmittance, interference, polarization,
-depolarization, coherent scattering, phase shift, time-delaying, etc., a new MC
-code is typically required to be developed for the particular application.
-Due to a number of practical applications the MC model undergoes continuous
-modifications and changes dedicated to inclusion of diverse properties of
-incident optical/laser radiation, configuration of the sources and detectors,
-structure of the medium and the conditions of light detection. Past attempts to
-unify these MC codes are mainly based on the use of structured programming.
-While structured programming is known for years, it limits the ability to
-handle a large code without decreasing its functionality and manageability. In
-practice, the increasing diversity of the MC applications results to a
-substantial growth of the model’s source code and leads to the development of a
-set of separate MC codes dedicated each for a particular purpose.
+- customizable photon source (time distribution, k vector distribution)
 
-To generalize and unify the code for a multi-purpose use in various biomedical
-optics applications we apply the Object Oriented Programming (OOP) concept. The
-OOP is widely used in mainstream application development and has been found
-extremely effective in design of complex multi-parametric systems, providing
-highly intuitive approach of programming. The key features of OOP allow the MC
-to be separated into logical components, described by objects. Thus, each
-photon packets has been defined as the object. The photon objects interact with
-the object - medium or medium components also defined as objects. Splitting the
-medium into the objects allows developing the tissues model more iteratively
-and uniformly. The distribution of scattering centers, macro-inhomogeneities,
-such as blood vessels, tumors, aneurisms, etc. can be formed by combination of
-3D elementary volumes (objects) presenting spatial variations in the tissues.
-Moreover, actual structure of a biological tissue can be imported into the
-model as an object (image) provided by OCT, Photo-Acoustic Tomography (PAT),
-ultrasound, MRI, etc. Utilizing the inheritance feature of OOP the smart
-hierarchy structure of the code has been created to prevent creation of
-multiple classes for similar tasks. The hierarchy allows "allied" objects to
-share variables and members, significantly reducing the amount of source code
-and paving the way to extend and generalize the MC for various applications. In
-addition, the variations of scattering phase functions, such as Mie, Rayleigh
-and Henyey-Greenstein could be defined using the polymorphism feature of OOP
-that allows to handle the modeling with no changes of the source code. Thus,
-the OOP approach significantly increases the efficiency of the model
-manageability and provides superior opportunities to generalize MC to combine
-previously developed MC models in a way to imitate a particular experiment
-taking into account various features of optical radiation and light-tissue
-interaction. By the selection of a certain application the parameters of the
-Source, Detector and Scattering medium are entered. Depending on the
-application, the objects are tuned to the appropriate feature of light-tissue
-interaction and the simulation is performed.
+- time resolved statistics
 
-  \section References References
+- resuming a previously run simulation, appending new statistics to it
 
-rearranged from:
-
-Alerstam, E., Svensson, T. and Andersson-Engels, S. "Parallel computing with graphics processing units for high-speed Monte Carlo simulation of photon migration".
-<em>Journal of biomedical optics</em>, 6(13), 060504–060504 (2008)
-
-Doronin, A. and Meglinski, I. "Online object oriented Monte Carlo computational tool for the needs of biomedical optics".
-<em>Biomedical optics express</em>, 9(2), 2461 (2011)
+- granular output in binary format (H5)
 
   \section HowToInstall How to install
 
