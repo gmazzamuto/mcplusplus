@@ -228,9 +228,9 @@ int main(int argc, char *argv[])
                 continue;
             for (u_int64_t i = 0; i < photonCounters[type]; ++i) {
                 unsigned int index = acos(data[type][i])/binSizea;
-                if(index >= nBins) { //see mcml (??)
+                if(index > nBins - 1) { //see mcml (??)
+                    cerr << "Warning: index = " << index << endl;
                     index = nBins - 1;
-                    cerr << "Warning: index = " << acos(data[type][i])/binSizea << endl;
                 }
                 histoa[index]++;
             }
@@ -238,7 +238,7 @@ int main(int argc, char *argv[])
 
         cout << "kz\tP(kz)/kz\tcounts\tcostheta\tcounts\tscaled" << endl;
 
-        MCfloat scale1 = 2.0*pi<MCfloat>()*binSizea*(photonCounters[0]+photonCounters[1]+photonCounters[2]+photonCounters[3]);
+        MCfloat scale1 = photonCounters[0]+photonCounters[1]+photonCounters[2]+photonCounters[3];
         MCfloat lastBinCenter = (binSize*((nBins-1)+0.5));
         for (size_t i = 0; i < nBins; ++i) {
             MCfloat binCenter = binSize*(i+0.5);
@@ -247,8 +247,8 @@ int main(int argc, char *argv[])
 
             cout << "\t" << cos(binSizea*(i+0.5));
             cout << "\t" << histoa[i];
-            MCfloat scale2 = 1.0/(sin((i+0.5)*binSizea)*scale1);
-            cout << "\t" << histoa[i] * scale2;
+            MCfloat scale2 = scale1*4.0*pi<MCfloat>()*sin((i+0.5)*binSizea)*sin(binSizea/2.);
+            cout << "\t" << histoa[i] / scale2;
 
             cout << endl;
         }
