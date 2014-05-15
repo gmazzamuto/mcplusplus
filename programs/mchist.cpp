@@ -284,8 +284,14 @@ int main(int argc, char *argv[])
             if(data[type] == NULL)
                 continue;
             for (u_int64_t i = 0; i < photonCounters[type]; ++i) {
-                if(modules[type][i] > max)
+                if(modules[type][i] > max) {
                     max = modules[type][i];
+                    if(max > 10000) {
+                        max = 10000;
+                        type = 5; //break outer loop
+                        break;
+                    }
+                }
             }
         }
 
@@ -296,8 +302,11 @@ int main(int argc, char *argv[])
         cerr << "nBins = " << nBins << endl;
 
         //build histogram
-        u_int64_t histo[nBins];
-        memset(histo,0,nBins*sizeof(u_int64_t));
+        u_int64_t *histo = (u_int64_t*)calloc(nBins, sizeof(u_int64_t));
+        if(histo == NULL) {
+            cerr << "Cannot allocate memory" << endl;
+            exit(EXIT_FAILURE);
+        }
         for (uint type = 0; type < 4; ++type) {
             if(data[type] == NULL)
                 continue;
@@ -324,6 +333,8 @@ int main(int argc, char *argv[])
                 continue;
             free(modules[type]);
         }
+
+        free(histo);
     }
 
 
