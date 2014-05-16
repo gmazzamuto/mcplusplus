@@ -579,9 +579,12 @@ void Simulation::refract() {
     printf("refract ...\n");
 #endif
 
-    walker.k1[0] *= n0/n1;
-    walker.k1[1] *= n0/n1;
-    walker.k1[2] = sign<MCfloat>(walker.k1[2])*cosTheta1; //cosTheta1 is positive
+    if(fabs(walker.k1[2]) <= COSZERO)  //not normal incidence
+    {
+        walker.k1[0] *= n0/n1;
+        walker.k1[1] *= n0/n1;
+        walker.k1[2] = sign<MCfloat>(walker.k1[2])*cosTheta1; //cosTheta1 is positive
+    }
     switchToLayer(layer1);
 }
 
