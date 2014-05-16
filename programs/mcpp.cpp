@@ -37,7 +37,12 @@ int main(int argc, char *argv[])
                                  std::istreambuf_iterator<char>());
 
         parser = new XMLParser();
-        parser->parseFile(argv[1]);
+        try {
+            parser->parseFile(argv[1]);
+        } catch (XMLParser::Exception e) {
+            cerr << "Error: " << e.str << endl;
+            exit(EXIT_FAILURE);
+        }
         outputFileName = parser->outputFileName();
         if(outputFileName == "") {
             outputFileName = "mcpp-output.h5";
