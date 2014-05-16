@@ -113,6 +113,19 @@ MCfloat GaussianRayBundleSource::zLens() const
     return zWaistInEnvironment - d;
 }
 
+void GaussianRayBundleSource::describe_impl() const
+{
+    stringstream ss;
+    ss << "xWaist = " << xWaist << " yWaist = " << yWaist << " xLensWaist = " << xLensWaist << " xLensWaist = " << xLensWaist << endl;
+    logMessage(ss.str());
+    ss.str(std::string());
+    ss << "zWaistReal = " << zWaistReal << " zWaistInEnvironment = " << zWaistInEnvironment << " d = " << d << endl;
+    logMessage(ss.str());
+    ss.str(std::string());
+    ss << "zLens = " << zLens() << endl;
+    logMessage(ss.str());
+}
+
 /**
  * @brief Moves the lens in order to have the waist at the specified position
  * @param zWaist \f$ z \f$ coordinate of the waist

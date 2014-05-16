@@ -42,6 +42,7 @@ private:
     void setZWaist(MCfloat value);
     MCfloat zWaist();
     MCfloat zLens() const;
+    virtual void describe_impl() const;
 
     MCfloat xWaist, yWaist, xLensWaist, yLensWaist;
     MCfloat zWaistReal;
