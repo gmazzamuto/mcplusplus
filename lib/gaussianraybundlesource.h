@@ -43,6 +43,7 @@ private:
     MCfloat zWaist();
     MCfloat zLens() const;
     virtual void describe_impl() const;
+    virtual BaseObject *clone_impl() const;
 
     MCfloat xWaist, yWaist, xLensWaist, yLensWaist;
     MCfloat zWaistReal;

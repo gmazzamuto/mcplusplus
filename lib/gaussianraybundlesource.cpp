@@ -126,6 +126,13 @@ void GaussianRayBundleSource::describe_impl() const
     logMessage(ss.str());
 }
 
+BaseObject *GaussianRayBundleSource::clone_impl() const
+{
+    GaussianRayBundleSource *src = new GaussianRayBundleSource(xLensWaist,yLensWaist,xWaist,yWaist,d);
+    src->walkTimeDistribution = walkTimeDistribution;
+    return src;
+}
+
 /**
  * @brief Moves the lens in order to have the waist at the specified position
  * @param zWaist \f$ z \f$ coordinate of the waist
