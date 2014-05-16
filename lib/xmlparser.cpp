@@ -376,7 +376,6 @@ void XMLParser::parseMaterials()
             continue;
         string name = v.second.get_child("<xmlattr>.name").data();
         Material *mat = new Material();
-        it = v.second.find("ls");
         element = v.second.get_optional<MCfloat>("<xmlattr>.ls");
         if(element.is_initialized())
             mat->ls = element.get();
