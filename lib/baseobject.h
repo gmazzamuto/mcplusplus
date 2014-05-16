@@ -51,7 +51,6 @@ public:
     string typeName() const;
 
 protected:
-    void logMessage(const stringstream ss) const;
     void logMessage(const string &msg) const;
     void logMessage(const char* fmt, ...) const;
     bool _inheritsRandom;
