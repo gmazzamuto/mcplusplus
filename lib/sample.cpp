@@ -123,6 +123,11 @@ unsigned int Sample::layerAt(MCfloat z)
     return i;
 }
 
+MCfloat Sample::totalThickness() const
+{
+    return _zBoundaries.at(_zBoundaries.size()-1);
+}
+
 void Sample::describe_impl() const
 {
     for (uint i = 0; i < materials.size(); ++i) {

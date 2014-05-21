@@ -25,6 +25,7 @@ public:
     const deque<MCfloat> *zBoundaries() const;
     Material *material(unsigned int layerIndex) const;
     unsigned int layerAt(MCfloat z);
+    MCfloat totalThickness() const;
 
 private:
     unsigned int _nLayers;
