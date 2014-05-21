@@ -67,6 +67,8 @@ public slots:
     void setXRotation(int angle);
     void setYRotation(int angle);
     void setZRotation(int angle);
+    void grab(const QString fileName = "");
+    void setGrabFileName(const QString fileName);
 
 signals:
     void xRotationChanged(int angle);
@@ -94,6 +96,7 @@ private:
     QPoint lastPos;
     QColor qtGreen;
     QColor qtPurple;
+    QString grabFileName;
     float displayedOriginPos[3];
     float displayedAxisLength;
 };

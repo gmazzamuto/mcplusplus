@@ -62,6 +62,8 @@ GLWidget::GLWidget(QWidget *parent)
     xTrans = 0;
     yTrans = 0;
     zTrans = 0;
+
+    grabFileName = "grab.png";
     setFocusPolicy(Qt::StrongFocus);
 }
 
@@ -116,6 +118,18 @@ void GLWidget::setZRotation(int angle)
         emit zRotationChanged(angle);
         updateGL();
     }
+}
+
+void GLWidget::grab(const QString fileName)
+{
+    cerr << "Grabbing framebuffer ..." << endl;
+    grabFrameBuffer().save(fileName.isEmpty() ? grabFileName : fileName);
+    cerr << "grabFrameBuffer " <<  glGetError() << endl;
+}
+
+void GLWidget::setGrabFileName(const QString fileName)
+{
+    grabFileName = fileName;
 }
 
 void GLWidget::setScale(MCfloat value) {
