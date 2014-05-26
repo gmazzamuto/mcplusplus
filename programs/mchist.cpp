@@ -35,7 +35,7 @@ void usage(FILE *f) {
             "\t -h display help\n"
             "\t -b [size] binning\n"
             "\t           (bin size for times and points, # of bins for kz)\n"
-            "\t -c [size] binning for 2nd dimension"
+            "\t -c [size] binning for 2nd dimension\n"
             "\t -t [tbrk] walker types (defaults to tb)\n"
             "\n", progName);
 }
