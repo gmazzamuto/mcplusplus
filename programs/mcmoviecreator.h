@@ -10,6 +10,8 @@ class MCMovieCreator : public GLWidget
 public:
     explicit MCMovieCreator(QString fileName, QWidget *parent = 0);
     void setPoints(const MCfloat *points, size_t n);
+    void setBinSize(const MCfloat ps);
+    void setWalkerFlags(unsigned int value);
 
 signals:
 
@@ -27,6 +29,8 @@ private:
     QString currentText;
     const MCfloat *points;
     size_t nPoints;
+    MCfloat binSize;
+    unsigned int wFlags;
 };
 
 #endif // MCMOVIECREATOR_H

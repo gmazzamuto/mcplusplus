@@ -14,10 +14,11 @@ MCMovieCreator::MCMovieCreator(QString fileName, QWidget *parent) :
     memset(dataTimes,0,4*sizeof(MCfloat *));
     memset(dataPoints,0,4*sizeof(MCfloat *));
     points = NULL;
+    binSize = 5e-2;
+    wFlags = FLAG_TRANSMITTED | FLAG_BALLISTIC;
 }
 
 void MCMovieCreator::createMovie() {
-    unsigned int wFlags = FLAG_TRANSMITTED | FLAG_BALLISTIC;
     const u_int64_t *photonCounters = file.photonCounters();
     //allocate memory and load data from file
     for (uint type = 0; type < 4; type++) {
@@ -39,8 +40,6 @@ void MCMovieCreator::createMovie() {
             }
         }
     }
-
-    MCfloat binSize = 5e-2;
 
     MCfloat minVal=1./0., maxVal=-1./0.;
 
@@ -126,5 +125,15 @@ void MCMovieCreator::setPoints(const MCfloat *points, size_t n)
 {
     this->points = points;
     nPoints = n;
+}
+
+void MCMovieCreator::setBinSize(const MCfloat ps)
+{
+    binSize = ps;
+}
+
+void MCMovieCreator::setWalkerFlags(unsigned int value)
+{
+    wFlags = value;
 }
 
