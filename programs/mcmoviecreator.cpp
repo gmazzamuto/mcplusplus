@@ -71,13 +71,8 @@ void MCMovieCreator::createMovie(const QString fileName) {
             containers[index].push_back(dataPoints[type][c++]);
             containers[index].push_back(dataPoints[type][c++]);
         }
-    }
-
-    for (uint type = 0; type < 4; ++type) {
-        if(dataTimes[type] != NULL)
-            free(dataTimes[type]);
-        if(dataPoints[type] != NULL)
-            free(dataPoints[type]);
+        free(dataTimes[type]);
+        free(dataPoints[type]);
     }
 
     H5Movie movie;
