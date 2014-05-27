@@ -3,12 +3,6 @@
 
 #include <string.h>
 
-#ifdef DOUBLEPRECISION
-#define MCH5FLOAT PredType::NATIVE_DOUBLE
-#else
-#define MCH5FLOAT PredType::NATIVE_FLOAT
-#endif
-
 H5FileHelper::H5FileHelper(BaseObject *parent) :
     BaseObject(parent)
 {
@@ -78,6 +72,8 @@ void H5FileHelper::closeDataSet() {
             free(dims);
         dims = NULL;
     }
+
+    closeDataSet_impl();
 }
 
 /**
@@ -164,7 +160,7 @@ bool H5FileHelper::newFile(const char *fileName) {
     return true;
 }
 
-bool H5FileHelper::newDataset(const char *datasetName, int ndims, const hsize_t *dims, const hsize_t *chunk_dim)
+bool H5FileHelper::newDataset(const char *datasetName, int ndims, const hsize_t *dims, const hsize_t *chunk_dim, PredType type)
 {
 #ifdef PRINT_DEBUG_MSG
     logMessage("Creating new dataset %s... ",datasetName);
@@ -173,7 +169,7 @@ bool H5FileHelper::newDataset(const char *datasetName, int ndims, const hsize_t 
 
     double fillvalue = 0.;
     DSetCreatPropList plist;
-    plist.setFillValue(MCH5FLOAT, &fillvalue);
+    plist.setFillValue(type, &fillvalue);
 
     plist.setChunk(ndims,chunk_dim); //ndims is the rank
 
@@ -183,7 +179,7 @@ bool H5FileHelper::newDataset(const char *datasetName, int ndims, const hsize_t 
 
     try {
         dataSpace = new DataSpace (ndims, dims, maxdims);
-        dataSet  = new DataSet(file->createDataSet(datasetName, PredType::NATIVE_DOUBLE, *dataSpace, plist));
+        dataSet  = new DataSet(file->createDataSet(datasetName, type, *dataSpace, plist));
         openDataSet(datasetName);
     }
     catch (Exception error) {
@@ -252,6 +248,11 @@ void H5FileHelper::_openDataSet(const char *dataSetName) {
 bool H5FileHelper::openFile_impl()
 {
     return true;
+}
+
+void H5FileHelper::closeDataSet_impl()
+{
+
 }
 
 /**
@@ -331,6 +332,40 @@ void H5FileHelper::writeHyperSlab(const hsize_t *start, const hsize_t *count, co
     memspace.selectHyperslab(H5S_SELECT_SET, count, _start);
     dataSpace->selectHyperslab(H5S_SELECT_SET, count, start);
     dataSet->write(srcBuffer,MCH5FLOAT,memspace,*dataSpace);
+}
+
+/**
+ * @brief Writes a hyperslab in the current dataset
+ * @param start Offset of the start of hyperslab
+ * @param count Number of blocks to be written
+ * @param srcBuffer The buffer where the data to be written is stored
+ */
+
+void H5FileHelper::writeHyperSlab(const hsize_t *start, const hsize_t *count, const u_int64_t *srcBuffer) {
+    hsize_t extDims[ndims];
+    for (int i = 0; i < ndims; ++i) {
+        extDims[i] = start[i] + count[i];
+    }
+
+    dataSet->extend(extDims);
+
+    *dataSpace = dataSet->getSpace();
+    dataSpace->getSimpleExtentDims(dims);
+
+#ifdef PRINT_DEBUG_MSG
+    for (int i = 0; i < ndims; ++i) {
+        logMessage("writeHyperSlab dim%d: [%llu %llu]",i,start[i],start[i]+count[i]-1);
+    }
+#endif
+
+    hsize_t _start[ndims];
+    for (int i = 0; i < ndims; ++i)
+        _start[i] = 0;
+
+    DataSpace memspace( ndims, count );
+    memspace.selectHyperslab(H5S_SELECT_SET, count, _start);
+    dataSpace->selectHyperslab(H5S_SELECT_SET, count, start);
+    dataSet->write(srcBuffer,PredType::NATIVE_UINT64,memspace,*dataSpace);
 }
 
 void H5FileHelper::copyToInternalVariable(char **dest, const char *src) {

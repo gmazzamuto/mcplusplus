@@ -4,7 +4,13 @@
 #include "baseobject.h"
 #include <H5Cpp.h>
 
-//#define PRINT_DEBUG_MSG
+#ifdef DOUBLEPRECISION
+#define MCH5FLOAT PredType::NATIVE_DOUBLE
+#else
+#define MCH5FLOAT PredType::NATIVE_FLOAT
+#endif
+
+#define PRINT_DEBUG_MSG
 
 using namespace H5;
 
@@ -22,10 +28,11 @@ public:
     bool openDataSet(const char *dataSetName);
     void newGroup(const char *name);
     virtual bool newFile(const char *fileName);
-    bool newDataset(const char *datasetName, int ndims, const hsize_t *dims, const hsize_t *chunk_dim);
+    bool newDataset(const char *datasetName, int ndims, const hsize_t *dims, const hsize_t *chunk_dim, PredType type=MCH5FLOAT);
     bool dataSetExists(const char *dataSetName) const;
     void loadHyperSlab(const hsize_t *start, const hsize_t *count, MCfloat *destBuffer);
     void writeHyperSlab(const hsize_t *start, const hsize_t *count, const MCfloat *srcBuffer);
+    void writeHyperSlab(const hsize_t *start, const hsize_t *count, const u_int64_t *srcBuffer);
     void loadAll(MCfloat *destBuffer);
     void close();
     void closeDataSet();
@@ -39,12 +46,12 @@ protected:
     H5File *file;
     DataSet *dataSet;
     DataSpace *dataSpace;
+    int ndims;
+    hsize_t *dims;
 
 private:
     char *fName, *dName;
     bool opened;
-    int ndims;
-    hsize_t *dims;
 
     H5E_auto2_t Efunc;
     void *EclientData;
@@ -54,6 +61,7 @@ private:
     bool _openFile(const char *fileName);
     void _openDataSet(const char *dataSetName);
     virtual bool openFile_impl();
+    virtual void closeDataSet_impl();
 };
 
 #endif // H5FILEHELPER_H

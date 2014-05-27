@@ -1,20 +1,26 @@
 #include <stdio.h>
-#include <QApplication>
-#include <QMainWindow>
-#include <QAction>
-#include <QTimer>
 #include "mcmoviecreator.h"
+
+#include "h5movie.h"
+
+#include <boost/optional.hpp>
+
+using namespace boost;
 
 const char *progName;
 
 void usage(FILE *f) {
     fprintf(f, "\n"
-            "usage: %s [options] inputFile.h5\n"
+            "usage: %s [options] inputFile.h5 outputFile.h5\n"
             "\n"
             "[options]:\n"
             "\t -h display help\n"
-            "\t -b [size] binning in time\n"
+            "\t -b [size] binning in time (in ps)\n"
+            "\t -s [size] binning in space (in um)\n"
             "\t -t [tbrk] walker types (defaults to tb)\n"
+            "\t -x [pos] x coordinate of the top-right corner of the square\n"
+            "\t -y [pos] y coordinate of the top-right corner of the square\n"
+            "\t -w [size] square width\n"
             "\n", progName);
 }
 
@@ -24,12 +30,16 @@ int main(int argc, char *argv[])
 
     unsigned int wFlags = FLAG_TRANSMITTED | FLAG_BALLISTIC;
     MCfloat binSize = 5e-2;
+    MCfloat binSizeX = 5e-2;
+    optional<MCfloat> x;
+    optional<MCfloat> y;
+    optional<MCfloat> width;
 
     //parse command line options
     char c;
     extern char *optarg;
     extern int optind;
-    while ((c = getopt(argc, argv, "hb:t:")) != -1) {
+    while ((c = getopt(argc, argv, "hb:s:t:x:y:w:")) != -1) {
         switch (c) {
         case 'h':
             usage(stdout);
@@ -38,6 +48,22 @@ int main(int argc, char *argv[])
 
         case 'b':
             binSize = atof(optarg);
+            break;
+
+        case 's':
+            binSizeX = atof(optarg);
+            break;
+
+        case 'x':
+            x = atof(optarg);
+            break;
+
+        case 'y':
+            y = atof(optarg);
+            break;
+
+        case 'w':
+            width = atof(optarg);
             break;
 
         case 't':
@@ -52,38 +78,37 @@ int main(int argc, char *argv[])
         }
     }
 
-    if(argc-optind < 1) {
-        fprintf(stderr,"Error: input file not specified\n");
+    if(!x.is_initialized() || !y.is_initialized()) {
+        fprintf(stderr,"Error: square coordinates not specified\n");
+        usage(stderr);
+        exit(EXIT_FAILURE);
+    }
+
+    if(!width.is_initialized()) {
+        fprintf(stderr,"Error: square length not specified\n");
+        usage(stderr);
+        exit(EXIT_FAILURE);
+    }
+
+    if(argc-optind < 2) {
+        fprintf(stderr,"Error: files not specified\n");
         usage(stderr);
         exit(EXIT_FAILURE);
     }
 
     const char *fileName = argv[optind++];
+    const char *outputFileName = argv[optind++];
 
-    QApplication a(argc, argv);
-    QMainWindow w;
     MCMovieCreator movieCreator(fileName);
     movieCreator.setBinSize(binSize);
+    movieCreator.setBinSizeX(binSizeX);
     movieCreator.setWalkerFlags(wFlags);
+    QRectF sq;
+    sq.setTopRight(QPointF(x.get(),y.get()));
+    sq.setBottomLeft(QPointF(x.get()-width.get(),y.get()-width.get()));
+    movieCreator.setSquare(sq);
 
-    QAction *grabFrameBufferAct = new QAction("&Grab Frame Buffer", &w);
-    grabFrameBufferAct->setShortcut(QObject::tr("Ctrl+G"));
-    QObject::connect(grabFrameBufferAct, SIGNAL(triggered()),
-            &movieCreator, SLOT(grab()));
-
-    w.addAction(grabFrameBufferAct);
-    w.setCentralWidget(&movieCreator);
-    w.resize(800,800);
-    w.show();
-
-    QTimer timer;
-    timer.setSingleShot(true);
-    timer.setInterval(100);
-    QObject::connect(&timer, SIGNAL(timeout()), &movieCreator, SLOT(createMovie()));
-
-    timer.start();
-
-    a.exec();
+    movieCreator.createMovie(outputFileName);
     return 0;
 }
 

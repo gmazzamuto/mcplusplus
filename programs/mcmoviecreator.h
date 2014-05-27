@@ -1,36 +1,29 @@
 #ifndef MCMOVIECREATOR_H
 #define MCMOVIECREATOR_H
 
-#include "glwidget.h"
+#include <QString>
+#include <QRectF>
 #include "h5outputfile.h"
 
-class MCMovieCreator : public GLWidget
+class MCMovieCreator : public H5FileHelper
 {
-    Q_OBJECT
+
 public:
-    explicit MCMovieCreator(QString fileName, QWidget *parent = 0);
-    void setPoints(const MCfloat *points, size_t n);
+    explicit MCMovieCreator(QString fileName, BaseObject *parent = 0);
     void setBinSize(const MCfloat ps);
-    void setWalkerFlags(unsigned int value);
-
-signals:
-
-public slots:
-    void createMovie();
-
-private:
-    virtual void paint_GL_impl();
-
+    void setBinSizeX(const MCfloat um);
+    void setWalkerFlags(const unsigned int value);
+    void setSquare(const QRectF rect);
+    void createMovie(const QString fileName);
 
 private:
     MCfloat *dataTimes[4];
     MCfloat *dataPoints[4];
     H5OutputFile file;
-    QString currentText;
-    const MCfloat *points;
-    size_t nPoints;
     MCfloat binSize;
+    MCfloat binSizeX;
     unsigned int wFlags;
+    QRectF sq;
 };
 
 #endif // MCMOVIECREATOR_H

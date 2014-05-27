@@ -16,7 +16,6 @@ QT4_WRAP_CPP(GLWidget_HEADERS_MOC glwidget.h)
 QT4_WRAP_CPP(SimulationViewer_HEADERS_MOC simulationviewer.h)
 QT4_WRAP_CPP(sourceViewer_HEADERS_MOC mainwindow.h)
 QT4_WRAP_CPP(OutputFileViewer_HEADERS_MOC outputfileviewer.h)
-QT4_WRAP_CPP(MCMovieCreator_HEADERS_MOC mcmoviecreator.h)
 
 add_executable(sourceViewer sourceviewer.cpp mainwindow.cpp glwidget.cpp ${sourceViewer_HEADERS_MOC} ${GLWidget_HEADERS_MOC})
 target_link_libraries(sourceViewer MCPlusPlus GL ${QT_LIBRARIES})
@@ -42,7 +41,7 @@ add_executable(mchist mchist.cpp)
 target_link_libraries(mchist MCPlusPlus)
 install (TARGETS mchist DESTINATION bin)
 
-add_executable(mcmovie mcmovie.cpp glwidget.cpp mcmoviecreator.cpp ${GLWidget_HEADERS_MOC} ${MCMovieCreator_HEADERS_MOC})
+add_executable(mcmovie mcmovie.cpp glwidget.cpp mcmoviecreator.cpp h5movie.cpp ${GLWidget_HEADERS_MOC})
 target_link_libraries(mcmovie MCPlusPlus GL ${QT_LIBRARIES})
 install (TARGETS mcmovie DESTINATION bin)
 

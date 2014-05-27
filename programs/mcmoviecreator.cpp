@@ -1,24 +1,22 @@
 #include "mcmoviecreator.h"
 
-#include <QApplication>
 #include <QString>
 
-MCMovieCreator::MCMovieCreator(QString fileName, QWidget *parent) :
-    GLWidget(parent)
+#include "h5movie.h"
+
+MCMovieCreator::MCMovieCreator(QString fileName, BaseObject *parent) :
+    H5FileHelper(parent)
 {
-    file.setXMLParserEnabled(true);
     file.openFile(fileName.toStdString().c_str());
 
-    setDisplayedOriginPos(0,0,-600);
-    setDisplayedAxisLength(500);
     memset(dataTimes,0,4*sizeof(MCfloat *));
     memset(dataPoints,0,4*sizeof(MCfloat *));
-    points = NULL;
     binSize = 5e-2;
+    binSizeX = 5e-2;
     wFlags = FLAG_TRANSMITTED | FLAG_BALLISTIC;
 }
 
-void MCMovieCreator::createMovie() {
+void MCMovieCreator::createMovie(const QString fileName) {
     const u_int64_t *photonCounters = file.photonCounters();
     //allocate memory and load data from file
     for (uint type = 0; type < 4; type++) {
@@ -64,7 +62,6 @@ void MCMovieCreator::createMovie() {
     }
 
     size_t c = 0;
-    MCfloat z = file.simulation()->sample()->totalThickness();
     for (uint type = 0; type < 4; ++type) {
         if(dataTimes[type] == NULL)
             continue;
@@ -73,7 +70,6 @@ void MCMovieCreator::createMovie() {
             unsigned int index = (dataTimes[type][i]-minVal)/binSize;
             containers[index].push_back(dataPoints[type][c++]);
             containers[index].push_back(dataPoints[type][c++]);
-            containers[index].push_back(z);
         }
     }
 
@@ -84,52 +80,55 @@ void MCMovieCreator::createMovie() {
             free(dataPoints[type]);
     }
 
+    H5Movie movie;
+    movie.newFile(fileName.toAscii());
+
+    MCfloat left = sq.left();
+    MCfloat bottom = sq.bottom();
+    const unsigned int nBinsX = ceil(sq.width()/binSizeX);
+    const unsigned int nBinsY = nBinsX;
+
+    hsize_t dims[3];
+    dims[0] = nBinsX;
+    dims[1] = nBinsY;
+    dims[2] = 1;
+
+    movie.newDataset("histogram",3,dims,dims,PredType::NATIVE_UINT64);
+
+    u_int64_t *hist = (u_int64_t*)malloc(nBinsX*nBinsY*sizeof(u_int64_t));
+
     for (uint i = 0; i < nBins; ++i) {
-        currentText = QString("%1 ps").arg(binSize*(i+0.5));
-        stringstream ss;
-        ss << "grab-";
-        ss << setw(5) << setfill('0') << i;
-        ss << ".png";
-
-        setPoints(containers[i].data(),containers[i].size());
-        setGrabFileName(ss.str().c_str());
-        updateGL();
-        qApp->processEvents();
-        grab();
-
+        memset(hist,0,nBinsX*nBinsY*sizeof(u_int64_t)); //clear hist
+        c = 0;
+        MCfloat *d = containers[i].data();
+        size_t nCoords = containers[i].size();
+        for (int n = 0; n < nCoords; n+=2) {
+            size_t x = (d[n]-left) / binSizeX;
+            size_t y = (d[n+1]-bottom) / binSizeX;
+            if(x < nBinsX && y < nBinsY)
+                hist[x*nBinsY+y]++;
+        }
+        movie.writeFrame(hist,i);
         containers[i].clear();
     }
 
+    movie.close();
     containers.clear();
-    setPoints(NULL,0);
-}
-
-void MCMovieCreator::paint_GL_impl()
-{
-    if(points != NULL) {
-        glBegin(GL_POINTS);
-        glColor3f( 1,1,1 );
-        for (int i = 0; i < nPoints; i+=3) {
-            glVertex3f(points[i],points[i+1],points[i+2]);
-        }
-        glEnd();
-    }
-
-    QFont font;
-    font.setPointSize(18);
-    glColor3f( 1,1,1 );
-    renderText(120,150,10,currentText,font);
-}
-
-void MCMovieCreator::setPoints(const MCfloat *points, size_t n)
-{
-    this->points = points;
-    nPoints = n;
 }
 
 void MCMovieCreator::setBinSize(const MCfloat ps)
 {
     binSize = ps;
+}
+
+void MCMovieCreator::setBinSizeX(const MCfloat um)
+{
+    binSizeX = um;
+}
+
+void MCMovieCreator::setSquare(const QRectF pos)
+{
+    sq = pos;
 }
 
 void MCMovieCreator::setWalkerFlags(unsigned int value)
