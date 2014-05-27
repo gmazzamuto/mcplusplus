@@ -15,7 +15,7 @@ using namespace H5;
 class H5FileHelper : public BaseObject
 {
 public:
-    H5FileHelper();
+    H5FileHelper(BaseObject *parent=NULL);
     virtual ~H5FileHelper();
     bool openFile(const char *fileName, const char *dataSetName=NULL);
     void reopen();

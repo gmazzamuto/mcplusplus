@@ -9,7 +9,8 @@
 #define MCH5FLOAT PredType::NATIVE_FLOAT
 #endif
 
-H5FileHelper::H5FileHelper()
+H5FileHelper::H5FileHelper(BaseObject *parent) :
+    BaseObject(parent)
 {
     Exception::getAutoPrint(Efunc,&EclientData);
     fName = NULL;
