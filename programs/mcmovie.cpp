@@ -21,6 +21,8 @@ void usage(FILE *f) {
             "\t -x [pos] x coordinate of the top-right corner of the square\n"
             "\t -y [pos] y coordinate of the top-right corner of the square\n"
             "\t -w [size] square width\n"
+            "\t -i [start frame #]\n"
+            "\t -j [end frame]\n"
             "\n", progName);
 }
 
@@ -34,12 +36,14 @@ int main(int argc, char *argv[])
     optional<MCfloat> x;
     optional<MCfloat> y;
     optional<MCfloat> width;
+    long long startFrame = 0;
+    long long endFrame = 1;
 
     //parse command line options
     char c;
     extern char *optarg;
     extern int optind;
-    while ((c = getopt(argc, argv, "hb:s:t:x:y:w:")) != -1) {
+    while ((c = getopt(argc, argv, "hb:s:t:x:y:w:i:j:")) != -1) {
         switch (c) {
         case 'h':
             usage(stdout);
@@ -64,6 +68,14 @@ int main(int argc, char *argv[])
 
         case 'w':
             width = atof(optarg);
+            break;
+
+        case 'i':
+            startFrame = atoll(optarg);
+            break;
+
+        case 'j':
+            endFrame = atoll(optarg);
             break;
 
         case 't':
@@ -103,6 +115,7 @@ int main(int argc, char *argv[])
     movieCreator.setBinSize(binSize);
     movieCreator.setBinSizeX(binSizeX);
     movieCreator.setWalkerFlags(wFlags);
+    movieCreator.setTimeRange(startFrame,endFrame);
     QRectF sq;
     sq.setTopRight(QPointF(x.get(),y.get()));
     sq.setBottomLeft(QPointF(x.get()-width.get(),y.get()-width.get()));

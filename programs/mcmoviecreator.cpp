@@ -14,6 +14,8 @@ MCMovieCreator::MCMovieCreator(QString fileName, BaseObject *parent) :
     binSize = 5e-2;
     binSizeX = 5e-2;
     wFlags = FLAG_TRANSMITTED | FLAG_BALLISTIC;
+    startFrame = 0;
+    endFrame = 1;
 }
 
 void MCMovieCreator::createMovie(const QString fileName) {
@@ -92,7 +94,9 @@ void MCMovieCreator::createMovie(const QString fileName) {
 
     u_int64_t *hist = (u_int64_t*)malloc(nBinsX*nBinsY*sizeof(u_int64_t));
 
-    for (uint i = 0; i < nBins; ++i) {
+    for (hsize_t i = startFrame; i < endFrame; ++i) {
+        if(i >= nBins)
+            break;
         memset(hist,0,nBinsX*nBinsY*sizeof(u_int64_t)); //clear hist
         c = 0;
         MCfloat *d = containers[i].data();
@@ -109,6 +113,12 @@ void MCMovieCreator::createMovie(const QString fileName) {
 
     movie.close();
     containers.clear();
+}
+
+void MCMovieCreator::setTimeRange(const hsize_t startFrame, const hsize_t endFrame)
+{
+    this->startFrame = startFrame;
+    this->endFrame = endFrame;
 }
 
 void MCMovieCreator::setBinSize(const MCfloat ps)
