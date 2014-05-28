@@ -82,9 +82,16 @@ void MCMovieCreator::createMovie(const QString fileName) {
                 c++; c++;
                 continue;
             }
-            unsigned int t = (time-minVal)/binSize;
-            size_t x = (dataPoints[type][c++]-left) / binSizeX;
-            size_t y = (dataPoints[type][c++]-bottom) / binSizeX;
+            const size_t t = (time-minVal)/binSize;
+            const MCfloat X = dataPoints[type][c++];
+            const MCfloat Y = dataPoints[type][c++];
+
+            if(X < left || Y < bottom)
+                continue;
+
+            const size_t x = (X-left) / binSizeX;
+            const size_t y = (Y-bottom) / binSizeX;
+
             if(t < nBins && x < nBinsX && y < nBinsY)
                 hist[t*nBinsPerFrame+x*nBinsY+y]++;
         }
