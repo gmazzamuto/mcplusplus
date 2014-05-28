@@ -41,41 +41,15 @@ void MCMovieCreator::createMovie(const QString fileName) {
         }
     }
 
-    MCfloat minVal=1./0., maxVal=-1./0.;
 
-    //find min and max values
-    for (uint type = 0; type < 4; ++type) {
-        if(dataTimes[type] == NULL)
-            continue;
-        for (u_int64_t i = 0; i < photonCounters[type]; ++i) {
-            if(dataTimes[type][i] > maxVal)
-                maxVal = dataTimes[type][i];
-            if(dataTimes[type][i] < minVal)
-                minVal = dataTimes[type][i];
-        }
-    }
+
+
+    MCfloat minVal=startFrame*binSize, maxVal=endFrame*binSize;
 
     unsigned int nBins = ceil((maxVal - minVal)/binSize);
+
     if(nBins == 0)
         nBins = 1;
-    vector<vector<MCfloat> > containers;
-    for (uint i = 0; i < nBins; ++i) {
-        containers.push_back(vector<MCfloat>());
-    }
-
-    size_t c = 0;
-    for (uint type = 0; type < 4; ++type) {
-        if(dataTimes[type] == NULL)
-            continue;
-        c = 0;
-        for (u_int64_t i = 0; i < photonCounters[type]; ++i) {
-            unsigned int index = (dataTimes[type][i]-minVal)/binSize;
-            containers[index].push_back(dataPoints[type][c++]);
-            containers[index].push_back(dataPoints[type][c++]);
-        }
-        free(dataTimes[type]);
-        free(dataPoints[type]);
-    }
 
     H5Movie movie;
     movie.newFile(fileName.toAscii());
@@ -90,29 +64,41 @@ void MCMovieCreator::createMovie(const QString fileName) {
     dims[1] = nBinsY;
     dims[2] = 1;
 
+    hsize_t nBinsPerFrame = nBinsX*nBinsY;
+
     movie.newDataset("histogram",3,dims,dims,PredType::NATIVE_UINT64);
 
-    u_int64_t *hist = (u_int64_t*)malloc(nBinsX*nBinsY*sizeof(u_int64_t));
+    u_int64_t *hist = (u_int64_t*)malloc(nBins*nBinsPerFrame*sizeof(u_int64_t));
 
-    for (hsize_t i = startFrame; i < endFrame; ++i) {
-        if(i >= nBins)
-            break;
-        memset(hist,0,nBinsX*nBinsY*sizeof(u_int64_t)); //clear hist
+
+    size_t c = 0;
+    for (uint type = 0; type < 4; ++type) {
+        if(dataTimes[type] == NULL)
+            continue;
         c = 0;
-        MCfloat *d = containers[i].data();
-        size_t nCoords = containers[i].size();
-        for (int n = 0; n < nCoords; n+=2) {
-            size_t x = (d[n]-left) / binSizeX;
-            size_t y = (d[n+1]-bottom) / binSizeX;
-            if(x < nBinsX && y < nBinsY)
-                hist[x*nBinsY+y]++;
+        for (u_int64_t i = 0; i < photonCounters[type]; ++i) {
+            const MCfloat time = dataTimes[type][i];
+            if(time > maxVal || time < minVal) {
+                c++; c++;
+                continue;
+            }
+            unsigned int t = (time-minVal)/binSize;
+            size_t x = (dataPoints[type][c++]-left) / binSizeX;
+            size_t y = (dataPoints[type][c++]-bottom) / binSizeX;
+            if(t < nBins && x < nBinsX && y < nBinsY)
+                hist[t*nBinsPerFrame+x*nBinsY+y]++;
         }
-        movie.writeFrame(hist,i);
-        containers[i].clear();
+        free(dataTimes[type]);
+        free(dataPoints[type]);
+    }
+
+
+    for (hsize_t i = 0; i < nBins; ++i) {
+        movie.writeFrame(&hist[i*nBinsPerFrame],startFrame + i);
     }
 
     movie.close();
-    containers.clear();
+    free(hist);
 }
 
 void MCMovieCreator::setTimeRange(const hsize_t startFrame, const hsize_t endFrame)
