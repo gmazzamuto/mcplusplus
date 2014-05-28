@@ -14,8 +14,8 @@ MCMovieCreator::MCMovieCreator(QString fileName, BaseObject *parent) :
     binSize = 5e-2;
     binSizeX = 5e-2;
     wFlags = FLAG_TRANSMITTED | FLAG_BALLISTIC;
-    startFrame = 0;
-    endFrame = 1;
+    startTime = 0;
+    endTime = 1;
 }
 
 void MCMovieCreator::createMovie(const QString fileName) {
@@ -44,7 +44,7 @@ void MCMovieCreator::createMovie(const QString fileName) {
 
 
 
-    MCfloat minVal=startFrame*binSize, maxVal=endFrame*binSize;
+    MCfloat minVal=startTime, maxVal=endTime;
 
     unsigned int nBins = ceil((maxVal - minVal)/binSize);
 
@@ -99,19 +99,18 @@ void MCMovieCreator::createMovie(const QString fileName) {
         free(dataPoints[type]);
     }
 
-
-    for (hsize_t i = 0; i < nBins; ++i) {
-        movie.writeFrame(&hist[i*nBinsPerFrame],startFrame + i);
+    for (size_t i = 0; i < nBins; ++i) {
+        movie.writeFrame(&hist[i*nBinsPerFrame], i);
     }
 
     movie.close();
     free(hist);
 }
 
-void MCMovieCreator::setTimeRange(const hsize_t startFrame, const hsize_t endFrame)
+void MCMovieCreator::setTimeRange(const MCfloat startTime, const MCfloat endTime)
 {
-    this->startFrame = startFrame;
-    this->endFrame = endFrame;
+    this->startTime = startTime;
+    this->endTime = endTime;
 }
 
 void MCMovieCreator::setBinSize(const MCfloat ps)

@@ -15,7 +15,7 @@ public:
     void setWalkerFlags(const unsigned int value);
     void setSquare(const QRectF rect);
     void createMovie(const QString fileName);
-    void setTimeRange(const hsize_t startFrame, const hsize_t endFrame);
+    void setTimeRange(const MCfloat startTime, const MCfloat endTime);
 
 private:
     MCfloat *dataTimes[4];
@@ -25,7 +25,7 @@ private:
     MCfloat binSizeX;
     unsigned int wFlags;
     QRectF sq;
-    hsize_t startFrame, endFrame;
+    MCfloat startTime, endTime;
 };
 
 #endif // MCMOVIECREATOR_H

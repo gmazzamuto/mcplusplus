@@ -21,8 +21,8 @@ void usage(FILE *f) {
             "\t -x [pos] x coordinate of the top-right corner of the square\n"
             "\t -y [pos] y coordinate of the top-right corner of the square\n"
             "\t -w [size] square width\n"
-            "\t -i [start frame #]\n"
-            "\t -j [end frame]\n"
+            "\t -i [ps] start time\n"
+            "\t -j [ps] end time\n"
             "\n", progName);
 }
 
@@ -36,8 +36,8 @@ int main(int argc, char *argv[])
     optional<MCfloat> x;
     optional<MCfloat> y;
     optional<MCfloat> width;
-    long long startFrame = 0;
-    long long endFrame = 1;
+    MCfloat startTime = 0;
+    MCfloat endTime = 0;
 
     //parse command line options
     char c;
@@ -71,11 +71,11 @@ int main(int argc, char *argv[])
             break;
 
         case 'i':
-            startFrame = atoll(optarg);
+            startTime = atof(optarg);
             break;
 
         case 'j':
-            endFrame = atoll(optarg);
+            endTime = atof(optarg);
             break;
 
         case 't':
@@ -88,6 +88,12 @@ int main(int argc, char *argv[])
         default:
             break;
         }
+    }
+
+    if(startTime == endTime) {
+        fprintf(stderr,"Error: please specify a valid time range\n");
+        usage(stderr);
+        exit(EXIT_FAILURE);
     }
 
     if(!x.is_initialized() || !y.is_initialized()) {
@@ -115,7 +121,7 @@ int main(int argc, char *argv[])
     movieCreator.setBinSize(binSize);
     movieCreator.setBinSizeX(binSizeX);
     movieCreator.setWalkerFlags(wFlags);
-    movieCreator.setTimeRange(startFrame,endFrame);
+    movieCreator.setTimeRange(startTime,endTime);
     QRectF sq;
     sq.setTopRight(QPointF(x.get(),y.get()));
     sq.setBottomLeft(QPointF(x.get()-width.get(),y.get()-width.get()));
