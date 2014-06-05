@@ -292,7 +292,7 @@ int main(int argc, char *argv[])
                 if(dataGroup[1] == DATA_K)
                     index[1] = acos(histoData[1][type][i])/binSize[1];
                 else
-                    index[1] = (histoData[1][type][i]-minVal[0])/binSize[1];
+                    index[1] = (histoData[1][type][i]-minVal[1])/binSize[1];
             }
             histo[index[0]*nBins[1] + index[1]]++;
         }
