@@ -47,9 +47,17 @@ unique features such as:
 
 - time resolved statistics
 
-- resuming a previously run simulation, appending new statistics to it
+- resuming a previously run simulation, appending new statistics
 
 - granular output in binary format (H5)
+
+- multi threading
+
+- XML input
+
+  \section Download Download
+
+  MCPlusPlus-1.0.tar.gz (100KB)
 
   \section HowToInstall How to install
 
