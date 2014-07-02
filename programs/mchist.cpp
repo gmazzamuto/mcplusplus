@@ -278,23 +278,31 @@ int main(int argc, char *argv[])
 
     //build histogram
     MCfloat scale1 = (photonCounters[0]+photonCounters[1]+photonCounters[2]+photonCounters[3]);
-    u_int64_t *histo = (u_int64_t *)calloc(nBins[0]*nBins[1],sizeof(u_int64_t));
+    size_t totBins = nBins[0]*nBins[1];
+    u_int64_t *histo = (u_int64_t *)calloc(totBins,sizeof(u_int64_t));
     for (uint type = 0; type < 4; ++type) {
         if(histoData[0][type] == NULL)
             continue;
         for (u_int64_t i = 0; i < photonCounters[type]; ++i) {
-            unsigned int index[2] = {0,0};
+            size_t index[2] = {0,0};
             if(dataGroup[0] == DATA_K)
                 index[0] = acos(histoData[0][type][i])/binSize[0];
             else
                 index[0] = (histoData[0][type][i]-minVal[0])/binSize[0];
+
+            if(index[0] >= nBins[0])
+                continue;
+
             if(histo2D) {
                 if(dataGroup[1] == DATA_K)
                     index[1] = acos(histoData[1][type][i])/binSize[1];
                 else
                     index[1] = (histoData[1][type][i]-minVal[1])/binSize[1];
+                if(index[1] >= nBins[1])
+                    continue;
             }
-            histo[index[0]*nBins[1] + index[1]]++;
+            size_t idx =  index[0]*nBins[1] + index[1];
+            histo[idx]++;
         }
     }
 
