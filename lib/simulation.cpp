@@ -211,17 +211,18 @@ void Simulation::run() {
         runMultipleThreads();
 
     stringstream stream;
-    stream << "================\n";
+    stream << "\n\n================\n";
     for (uint i = 0; i < 4; ++i) {
         stream << walkerTypeToString(i) << ": " << photonCounters[i] << endl;
     }
 
-    cout << stream.str();
-
     time_t now;
     time(&now);
 
-    logMessage("Completed in %.f seconds",difftime(now,startTime));
+    if(nThreads > 1)
+        logMessage("%s\nCompleted in %.f seconds\n================\n",stream.str().c_str(), difftime(now,startTime));
+    else
+        logMessage("%s\nCompleted in %.f seconds (seed %u)\n================\n",stream.str().c_str(),difftime(now,startTime),currentSeed());
 }
 
 void Simulation::runMultipleThreads()
