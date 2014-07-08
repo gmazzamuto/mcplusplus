@@ -23,11 +23,11 @@
  * can be loaded with setMultipleRNGStates(), otherwise sequential numbers from
  * 0 to the number of threads will be used as seeds for each thread.
  *
- * <h2>Signals</h2>
- * The progress of the simulation currently running can be printed on stderr by
- * sending the USR1 signal to the process instantiating a Simulation object. By
- * sending the TERM signal the simulation can be gracefully terminated (see
- * terminate()).
+ * <h2>Signals</h2> The progress of the simulation currently running can be
+ * printed on stderr by sending the USR1 signal to the process instantiating a
+ * Simulation object. Progress of all threads can be printed by sending
+ * SIGUSR2. Finally the TERM signal causes the simulation to terminate
+ * gracefully (see terminate()).
  */
 
 class Simulation : public BaseRandom
@@ -57,6 +57,7 @@ public:
     void setExitKVectorsSaveFlags(unsigned int value);
     void setExitKVectorsDirsSaveFlags(unsigned int value);
     void terminate();
+    uint nThreads();
 
 private:
     const Sample *_sample;
@@ -72,7 +73,7 @@ private:
     u_int64_t photonCounters[4];
     u_int64_t n;
 
-    uint nThreads;
+    uint _nThreads;
 
     //trajectories
     vector<vector <MCfloat>*> *trajectoryPoints;

@@ -12,6 +12,7 @@ using namespace boost;
 using namespace boost::math;
 using namespace boost::math::constants;
 
+Simulation *mainSimulation=NULL;
 Simulation *mostRecentInstance=NULL;
 vector<boost::thread*> threads;
 vector<Simulation *> sims;
@@ -33,12 +34,31 @@ void sigUsr1Handler(int sig, siginfo_t *siginfo, void *context) {
     sim->reportProgress();
 }
 
+void sigUsr2Handler(int sig, siginfo_t *siginfo, void *context) {
+    fprintf(stderr,"===============================\n");
+    for (unsigned int n = 0; n < mainSimulation->nThreads(); ++n) {
+        Simulation *sim = sims.at(n);
+        if(sim == NULL)
+            continue;
+        sim->reportProgress();
+    }
+    fprintf(stderr,"===============================\n");
+}
+
 void installSigUSR1Handler() {
     struct sigaction sa;
     memset(&sa,0,sizeof(sa));
     sa.sa_sigaction = sigUsr1Handler;
     sa.sa_flags = SA_SIGINFO;
     sigaction(SIGUSR1,&sa,NULL);
+}
+
+void installSigUSR2Handler() {
+    struct sigaction sa;
+    memset(&sa,0,sizeof(sa));
+    sa.sa_sigaction = sigUsr2Handler;
+    sa.sa_flags = SA_SIGINFO;
+    sigaction(SIGUSR2,&sa,NULL);
 }
 
 void sigTermHandler(int sig, siginfo_t *siginfo, void *context) {
@@ -73,7 +93,7 @@ Simulation::Simulation(BaseObject *parent) :
     trajectoryPoints = new vector<vector<MCfloat>*>();
     saveTrajectory = false;
     fresnelReflectionsEnabled = true;
-    nThreads = 1;
+    _nThreads = 1;
     _totalWalkers = 0;
     outputFile = NULL;
     walkTimesSaveFlags = 0;
@@ -156,7 +176,7 @@ void Simulation::setFresnelReflectionsEnabled(bool enable)
 
 void Simulation::setNThreads(unsigned int value)
 {
-    nThreads = value;
+    _nThreads = value;
 }
 
 /**
@@ -188,10 +208,12 @@ void Simulation::setOutputFileName(const char *name)
  */
 
 void Simulation::run() {
+    installSigUSR2Handler();
     time(&startTime);
 
-    if(nThreads == 1) {
+    if(_nThreads == 1) {
         if(!wasCloned()) {
+            mainSimulation = this;
             installSigTermHandler();
             sims.clear();
             sims.push_back(this);
@@ -207,8 +229,10 @@ void Simulation::run() {
         if(!wasCloned())
             saveOutput();
     }
-    else
+    else {
+        mainSimulation = this;
         runMultipleThreads();
+    }
 
     stringstream stream;
     stream << "\n\n================\n";
@@ -219,7 +243,7 @@ void Simulation::run() {
     time_t now;
     time(&now);
 
-    if(nThreads > 1)
+    if(_nThreads > 1)
         logMessage("%s\nCompleted in %.f seconds\n================\n",stream.str().c_str(), difftime(now,startTime));
     else
         logMessage("%s\nCompleted in %.f seconds (seed %u)\n================\n",stream.str().c_str(),difftime(now,startTime),currentSeed());
@@ -231,10 +255,10 @@ void Simulation::runMultipleThreads()
     sims.clear();
     installSigTermHandler();
 
-    unsigned int walkersPerThread = nWalkers()/nThreads;
-    unsigned int remainder = nWalkers() % nThreads;
+    unsigned int walkersPerThread = nWalkers()/_nThreads;
+    unsigned int remainder = nWalkers() % _nThreads;
 
-    for (unsigned int n = 0; n < nThreads; ++n) {
+    for (unsigned int n = 0; n < _nThreads; ++n) {
         Simulation *sim = (Simulation *)clone();
         unsigned int nWalkers = walkersPerThread;
         if(n<remainder)
@@ -253,7 +277,7 @@ void Simulation::runMultipleThreads()
     }
 
     //wait for all threads to finish
-    for (unsigned int n = 0; n < nThreads; ++n) {
+    for (unsigned int n = 0; n < _nThreads; ++n) {
         boost::thread * thread = threads.at(n);
         thread->join();
 
@@ -263,8 +287,12 @@ void Simulation::runMultipleThreads()
         }
 
         sim->saveOutput();
-        delete sim;
+
+        if(mostRecentInstance == sim)
+            mostRecentInstance = NULL;
+
         sims.at(n) = NULL;
+        delete sim;
     }
 }
 
@@ -639,7 +667,7 @@ void Simulation::appendWalker(walkerType idx)
 
 void Simulation::reportProgress() const
 {
-    string s = str( format("Progress = %.1lf%% (%u / %u) ") % (100.*currentWalker()/nWalkers()) % currentWalker() % nWalkers());
+    string s = str( format("Seed %u: progress = %.1lf%% (%u / %u) ") % currentSeed() % (100.*currentWalker()/nWalkers()) % currentWalker() % nWalkers());
     stringstream ss;
     ss << s;
     if(currentWalker() > 0) {
@@ -831,6 +859,11 @@ void Simulation::setExitKVectorsDirsSaveFlags(unsigned int value)
 void Simulation::terminate()
 {
     forceTermination = true;
+}
+
+uint Simulation::nThreads()
+{
+    return _nThreads;
 }
 
 
