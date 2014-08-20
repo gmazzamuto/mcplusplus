@@ -292,8 +292,8 @@ int main(int argc, char *argv[])
     //build histogram
     MCfloat scale1 = (photonCounters[0]+photonCounters[1]+photonCounters[2]+photonCounters[3]);
     size_t nStridedBins[2];
-    nStridedBins[0] = nBins[0] / binStride[0];  //check rounding
-    nStridedBins[1] = nBins[1] / binStride[1];
+    nStridedBins[0] = nBins[0] / binStride[0] + 1;
+    nStridedBins[1] = nBins[1] / binStride[1] + 1;
     size_t totBins = nStridedBins[0]*nStridedBins[1];
     u_int64_t *histo = (u_int64_t *)calloc(totBins,sizeof(u_int64_t));
     MCfloat degPerRad = 180/pi<MCfloat>();
@@ -369,7 +369,6 @@ int main(int argc, char *argv[])
             MCfloat binCenter = cos(binSize[0]*(i+0.5)/degPerRad);
             MCfloat scale2 = scale1*4.0*pi<MCfloat>()*sin((i+0.5)*binSize[0]/degPerRad)*sin(binSize[0]/2./degPerRad);
             cout << binCenter;
-            MCfloat lastBinCenter = (binSize[0]*((nBins[0]-1)+0.5));
             for (unsigned int j = 0; j < nBins[1]; ++j) {
                 if(j % binStride[1] != 0)
                     continue;
