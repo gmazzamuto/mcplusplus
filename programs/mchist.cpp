@@ -33,9 +33,8 @@ void usage(FILE *f) {
             "\tdata2 is optional and specifies binning in the 2nd dimension\n\n"
             "[options]:\n"
             "\t -h display help\n"
-            "\t -b [size] binning\n"
-            "\t           (bin size for times and points, # of bins for kz)\n"
-            "\t -c [size] binning for 2nd dimension\n"
+            "\t -b [size] bin size (in deg for kz)\n"
+            "\t -c [size] bin size for 2nd dimension (in deg for kz)\n"
             "\t -t [tbrk] walker types (defaults to tb)\n"
             "\n", progName);
 }
@@ -69,14 +68,20 @@ void preprocessData(DataGroup dataGroup, int dimension) {
 
 
     if(dataGroup == DATA_K) {
-        if(binSize[dimension] < 0)  //here binSize is the value of -b flag
-            nBins[dimension] = 100;
-        else
-            nBins[dimension] = binSize[dimension];
 
-        minVal[dimension] = 0;
-        maxVal[dimension] = 1;
-        binSize[dimension] = pi<MCfloat>()/2./nBins[dimension];
+        minVal[dimension] = 90;
+        maxVal[dimension] = 90;
+
+        if(_data[TRANSMITTED] != NULL || _data[BALLISTIC] != NULL) {
+            minVal[dimension] = 0;
+        }
+
+        if(_data[REFLECTED] != NULL || _data[BACKREFLECTED] != NULL) {
+            maxVal[dimension] = 180;
+        }
+
+        nBins[dimension] = (maxVal[dimension]-minVal[dimension])/binSize[dimension];
+
         histoData[dimension] = _data;
     }
 
@@ -277,13 +282,14 @@ int main(int argc, char *argv[])
     MCfloat scale1 = (photonCounters[0]+photonCounters[1]+photonCounters[2]+photonCounters[3]);
     size_t totBins = nBins[0]*nBins[1];
     u_int64_t *histo = (u_int64_t *)calloc(totBins,sizeof(u_int64_t));
+    MCfloat degPerRad = 180/pi<MCfloat>();
     for (uint type = 0; type < 4; ++type) {
         if(histoData[0][type] == NULL)
             continue;
         for (u_int64_t i = 0; i < photonCounters[type]; ++i) {
             size_t index[2] = {0,0};
             if(dataGroup[0] == DATA_K)
-                index[0] = acos(histoData[0][type][i])/binSize[0];
+                index[0] = (acos(histoData[0][type][i])*degPerRad - minVal[0])/binSize[0];
             else
                 index[0] = (histoData[0][type][i]-minVal[0])/binSize[0];
 
@@ -292,7 +298,7 @@ int main(int argc, char *argv[])
 
             if(histo2D) {
                 if(dataGroup[1] == DATA_K)
-                    index[1] = acos(histoData[1][type][i])/binSize[1];
+                    index[1] = (acos(histoData[1][type][i])*degPerRad - minVal[1])/binSize[1];
                 else
                     index[1] = (histoData[1][type][i]-minVal[1])/binSize[1];
                 if(index[1] >= nBins[1])
