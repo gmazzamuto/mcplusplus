@@ -61,9 +61,6 @@ void preprocessData(DataGroup dataGroup, int dimension) {
             }
         }
 
-        if(minTemp > 0)
-            minTemp = 0;
-
         maxVal[dimension] = maxTemp;
         minVal[dimension] = minTemp;
         nBins[dimension] = ceil((maxTemp - minTemp)/binSize[dimension]);
@@ -273,7 +270,7 @@ int main(int argc, char *argv[])
         preprocessData(dataGroup[1], 1);
 
     for (int i = 0; i < 2; ++i) {
-        cerr << "dim " << i << " nbins = " << nBins[i] << endl;
+        cerr << "dim " << i << " nbins = " << nBins[i] << " minVal = " << minVal[i] << endl;
     }
 
     //build histogram
@@ -342,8 +339,10 @@ int main(int argc, char *argv[])
             MCfloat binCenter = cos(binSize[0]*(i+0.5));
             MCfloat scale2 = scale1*4.0*pi<MCfloat>()*sin((i+0.5)*binSize[0])*sin(binSize[0]/2.);
             cout << binCenter;
+            MCfloat lastBinCenter = (binSize[0]*((nBins[0]-1)+0.5));
             for (unsigned int j = 0; j < nBins[1]; ++j) {
                 cout << "\t" << histo[i*nBins[1] + j]/scale2;
+                cout << "\t" << (histo[i*nBins[1] + j]/binCenter/histo[(nBins[0]-1)*nBins[1] + j])*lastBinCenter*(2./5.+3./5.*lastBinCenter);
             }
             cout << endl;
         }
