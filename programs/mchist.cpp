@@ -12,6 +12,7 @@ using namespace std;
 const char *progName;
 MCfloat minVal[2], maxVal[2];
 size_t nBins[2] = {1,1};
+size_t binStride[2] = {1,1};
 MCfloat **histoData[2];
 MCfloat *data[2][4];
 MCfloat binSize[] = {-1, -1};
@@ -35,6 +36,8 @@ void usage(FILE *f) {
             "\t -h display help\n"
             "\t -b [size] bin size (in deg for kz)\n"
             "\t -c [size] bin size for 2nd dimension (in deg for kz)\n"
+            "\t -m [M] print only one bin every M bins\n"
+            "\t -n [N] print only one bin every N bins (2nd dim)\n"
             "\t -t [tbrk] walker types (defaults to tb)\n"
             "\n", progName);
 }
@@ -141,7 +144,7 @@ int main(int argc, char *argv[])
     char c;
     extern char *optarg;
     extern int optind;
-    while ((c = getopt(argc, argv, "hb:c:t:")) != -1) {
+    while ((c = getopt(argc, argv, "hb:c:t:m:n:")) != -1) {
         switch (c) {
         case 'h':
             usage(stdout);
@@ -154,6 +157,14 @@ int main(int argc, char *argv[])
 
         case 'c':
             binSize[1] = atof(optarg);
+            break;
+
+        case 'm':
+            binStride[0] = atoi(optarg);
+            break;
+
+        case 'n':
+            binStride[1] = atoi(optarg);
             break;
 
         case 't':
@@ -280,7 +291,10 @@ int main(int argc, char *argv[])
 
     //build histogram
     MCfloat scale1 = (photonCounters[0]+photonCounters[1]+photonCounters[2]+photonCounters[3]);
-    size_t totBins = nBins[0]*nBins[1];
+    size_t nStridedBins[2];
+    nStridedBins[0] = nBins[0] / binStride[0];  //check rounding
+    nStridedBins[1] = nBins[1] / binStride[1];
+    size_t totBins = nStridedBins[0]*nStridedBins[1];
     u_int64_t *histo = (u_int64_t *)calloc(totBins,sizeof(u_int64_t));
     MCfloat degPerRad = 180/pi<MCfloat>();
     for (uint type = 0; type < 4; ++type) {
@@ -296,6 +310,9 @@ int main(int argc, char *argv[])
             if(index[0] >= nBins[0])
                 continue;
 
+            if(index[0] % binStride[0] != 0)
+                continue;
+
             if(histo2D) {
                 if(dataGroup[1] == DATA_K)
                     index[1] = (acos(histoData[1][type][i])*degPerRad - minVal[1])/binSize[1];
@@ -303,8 +320,11 @@ int main(int argc, char *argv[])
                     index[1] = (histoData[1][type][i]-minVal[1])/binSize[1];
                 if(index[1] >= nBins[1])
                     continue;
+                if(index[1] % binStride[1] != 0)
+                    continue;
             }
-            size_t idx =  index[0]*nBins[1] + index[1];
+
+            size_t idx =  (index[0]/binStride[0])*nStridedBins[1] + index[1]/binStride[1];
             histo[idx]++;
         }
     }
@@ -328,6 +348,8 @@ int main(int argc, char *argv[])
     }
     if(histo2D)
         for (unsigned int i = 0; i < nBins[1]; ++i) {
+            if(i % binStride[1] != 0)
+                continue;
             if(dataGroup[1] == DATA_K)
                 cout << "\tb-" << cos(binSize[1]*(i+0.5));
             else
@@ -342,13 +364,16 @@ int main(int argc, char *argv[])
     switch (dataGroup[0]) {
     case DATA_K:
         for (unsigned int i = 0; i < nBins[0]; ++i) {
-            MCfloat binCenter = cos(binSize[0]*(i+0.5));
-            MCfloat scale2 = scale1*4.0*pi<MCfloat>()*sin((i+0.5)*binSize[0])*sin(binSize[0]/2.);
+            if(i % binStride[0] != 0)
+                continue;
+            MCfloat binCenter = cos(binSize[0]*(i+0.5)/degPerRad);
+            MCfloat scale2 = scale1*4.0*pi<MCfloat>()*sin((i+0.5)*binSize[0]/degPerRad)*sin(binSize[0]/2./degPerRad);
             cout << binCenter;
             MCfloat lastBinCenter = (binSize[0]*((nBins[0]-1)+0.5));
             for (unsigned int j = 0; j < nBins[1]; ++j) {
-                cout << "\t" << histo[i*nBins[1] + j]/scale2;
-                cout << "\t" << (histo[i*nBins[1] + j]/binCenter/histo[(nBins[0]-1)*nBins[1] + j])*lastBinCenter*(2./5.+3./5.*lastBinCenter);
+                if(j % binStride[1] != 0)
+                    continue;
+                cout << "\t" << histo[(i/binStride[0])*nStridedBins[1] + j/binStride[1]]/scale2;
             }
             cout << endl;
         }
@@ -356,11 +381,15 @@ int main(int argc, char *argv[])
 
     case DATA_TIMES:
         for (unsigned int i = 0; i < nBins[0]; ++i) {
+            if(i % binStride[0] != 0)
+                continue;
             MCfloat binCenter = binSize[0]*(i+0.5);
             MCfloat scale2 = scale1;
             cout << binCenter;
             for (unsigned int j = 0; j < nBins[1]; ++j) {
-                cout << "\t" << histo[i*nBins[1] + j]/scale2;
+                if(j % binStride[1] != 0)
+                    continue;
+                cout << "\t" << histo[(i/binStride[0])*nStridedBins[1] + j/binStride[1]]/scale2;
             }
             cout << endl;
         }
@@ -368,12 +397,16 @@ int main(int argc, char *argv[])
 
     case DATA_POINTS:
         for (unsigned int i = 0; i < nBins[0]; ++i) {
+            if(i % binStride[0] != 0)
+                continue;
             MCfloat dr = binSize[0];
             MCfloat binCenter = binSize[0]*(i+0.5);
             MCfloat scale2 = scale1 * (2*pi<MCfloat>()*(i+0.5)*dr*dr);
             cout << binCenter;
             for (unsigned int j = 0; j < nBins[1]; ++j) {
-                cout << "\t" << histo[i*nBins[1] + j]/scale2;
+                if(j % binStride[1] != 0)
+                    continue;
+                cout << "\t" << histo[(i/binStride[0])*nStridedBins[1] + j/binStride[1]]/scale2;
             }
             cout << endl;
         }
