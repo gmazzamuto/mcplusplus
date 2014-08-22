@@ -382,7 +382,7 @@ int main(int argc, char *argv[])
         for (unsigned int i = 0; i < nBins[0]; ++i) {
             if(i % binStride[0] != 0)
                 continue;
-            MCfloat binCenter = binSize[0]*(i+0.5);
+            MCfloat binCenter = floor(minVal[0]/binSize[0])*binSize[0] + binSize[0]*(i+0.5);
             MCfloat scale2 = scale1;
             cout << binCenter;
             for (unsigned int j = 0; j < nBins[1]; ++j) {
