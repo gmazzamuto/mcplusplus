@@ -97,8 +97,11 @@ void preprocessData(DataGroup dataGroup, int dimension) {
 
         //compute modules
         for (uint type = 0; type < 4; ++type) {
-            if(_data[type] == NULL)
+            if(_data[type] == NULL) {
+                free(modules[type]);
+                modules[type] = NULL;
                 continue;
+            }
             u_int64_t j = 0;
             for (u_int64_t i = 0; i < photonCounters[type]; ++i) {
                 modules[type][i] = sqrt(_data[type][j]*_data[type][j] + _data[type][j+1]*_data[type][j+1]);
@@ -294,8 +297,8 @@ int main(int argc, char *argv[])
     size_t nStridedBins[2];
     nStridedBins[0] = nBins[0] / binStride[0] + 1;
     nStridedBins[1] = nBins[1] / binStride[1] + 1;
-    size_t totBins = nStridedBins[0]*nStridedBins[1];
-    u_int64_t *histo = (u_int64_t *)calloc(totBins,sizeof(u_int64_t));
+    size_t totStridedBins = nStridedBins[0]*nStridedBins[1];
+    u_int64_t *histo = (u_int64_t *)calloc(totStridedBins,sizeof(u_int64_t));
     MCfloat degPerRad = 180/pi<MCfloat>();
     for (uint type = 0; type < 4; ++type) {
         if(histoData[0][type] == NULL)
