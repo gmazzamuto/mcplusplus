@@ -60,6 +60,7 @@ enum directions {
 };
 
 enum DataGroup {
+    DATA_NONE,
     DATA_POINTS,
     DATA_K,
     DATA_TIMES,

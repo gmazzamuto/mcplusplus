@@ -38,6 +38,7 @@ void usage(FILE *f) {
             "\t -c [size] bin size for 2nd dimension (in deg for kz)\n"
             "\t -m [M] print only one bin every M bins\n"
             "\t -n [N] print only one bin every N bins (2nd dim)\n"
+            "\t -v output also spatial variance (valid only for 1d histograms on time)\n"
             "\t -t [tbrk] walker types (defaults to tb)\n"
             "\n", progName);
 }
@@ -140,6 +141,7 @@ void preprocessData(DataGroup dataGroup, int dimension) {
 int main(int argc, char *argv[])
 {
     bool histo2D = false;
+    bool computeSpatialVariance = false;
 
     progName = argv[0];
 
@@ -147,7 +149,7 @@ int main(int argc, char *argv[])
     char c;
     extern char *optarg;
     extern int optind;
-    while ((c = getopt(argc, argv, "hb:c:t:m:n:")) != -1) {
+    while ((c = getopt(argc, argv, "hb:c:t:m:n:v")) != -1) {
         switch (c) {
         case 'h':
             usage(stdout);
@@ -170,6 +172,10 @@ int main(int argc, char *argv[])
             binStride[1] = atoi(optarg);
             break;
 
+        case 'v':
+            computeSpatialVariance = true;
+            break;
+
         case 't':
         {
             XMLParser parser;
@@ -189,7 +195,7 @@ int main(int argc, char *argv[])
     }
 
     const char *fileName = argv[optind++];
-    DataGroup dataGroup[2];
+    DataGroup dataGroup[2] = {DATA_NONE, DATA_NONE};
     const char *dataGroupString = argv[optind++];
     if(strcmp(dataGroupString,"times") == 0)
         dataGroup[0] = DATA_TIMES;
@@ -223,6 +229,19 @@ int main(int argc, char *argv[])
         fprintf(stderr,"Error: data and data2 cannot be the same\n");
         exit(EXIT_FAILURE);
     }
+
+    if(histo2D && computeSpatialVariance) {
+        fprintf(stderr,"Error: cannot use -v option with a 2d histogram\n");
+        exit(EXIT_FAILURE);
+    }
+
+    if(computeSpatialVariance && dataGroup[0] != DATA_TIMES) {
+        fprintf(stderr,"Error: option -v can only be used with \"times\" data type\n");
+        exit(EXIT_FAILURE);
+    }
+
+    if(computeSpatialVariance)
+        dataGroup[1] = DATA_POINTS;
 
     //end options
 
@@ -273,7 +292,7 @@ int main(int argc, char *argv[])
     for (int i = 0; i < 2; ++i) {
         memset(data[i],0,4*sizeof(MCfloat *));
         for (uint type = 0; type < 4; type++) {
-            if(wFlags & walkerTypeToFlag(type)) {
+            if(dataGroup[i] != DATA_NONE && (wFlags & walkerTypeToFlag(type) )) {
                 data[i][type] = (MCfloat*)malloc(sizeof(MCfloat)*photonCounters[type]*entriesPerWalker[i]);
                 if(!file.loadData((DataGroup)dataGroup[i],(walkerType)type, data[i][type])) {
                     free(data[i][type]);
@@ -281,14 +300,13 @@ int main(int argc, char *argv[])
                 }
             }
         }
-        if(i == 0 && !histo2D)
-            break;
     }
+
     preprocessData(dataGroup[0], 0);
-    if(histo2D)
+    if(dataGroup[1] != DATA_NONE)
         preprocessData(dataGroup[1], 1);
 
-    for (int i = 0; i < 2; ++i) {
+    for (int i = 0; i < (histo2D ? 2 : 1); ++i) {
         cerr << "dim " << i << " nbins = " << nBins[i] << " minVal = " << minVal[i] << endl;
     }
 
@@ -296,9 +314,16 @@ int main(int argc, char *argv[])
     MCfloat scale1 = (photonCounters[0]+photonCounters[1]+photonCounters[2]+photonCounters[3]);
     size_t nStridedBins[2];
     nStridedBins[0] = nBins[0] / binStride[0] + 1;
-    nStridedBins[1] = nBins[1] / binStride[1] + 1;
+    if(computeSpatialVariance) {
+        nBins[1] = 1;
+        nStridedBins[1] = 1;
+        binStride[1] = 1;
+    }
+    else
+        nStridedBins[1] = nBins[1] / binStride[1] + 1;
     size_t totStridedBins = nStridedBins[0]*nStridedBins[1];
     u_int64_t *histo = (u_int64_t *)calloc(totStridedBins,sizeof(u_int64_t));
+    MCfloat *variance = (MCfloat *)calloc(totStridedBins,sizeof(MCfloat));
     MCfloat degPerRad = 180/pi<MCfloat>();
     for (uint type = 0; type < 4; ++type) {
         if(histoData[0][type] == NULL)
@@ -329,7 +354,18 @@ int main(int argc, char *argv[])
 
             size_t idx =  (index[0]/binStride[0])*nStridedBins[1] + index[1]/binStride[1];
             histo[idx]++;
+            if(computeSpatialVariance) {
+                variance[idx] += pow(histoData[1][type][i],2);
+            }
         }
+    }
+
+    cerr << "done building histogram" << endl;
+
+    if(computeSpatialVariance) {
+        cerr << "computeSpatialVariance..." << endl;
+        for(size_t i; i < totStridedBins; i++)
+            variance[i] /= histo[i];
     }
 
     //print histogram
@@ -361,6 +397,9 @@ int main(int argc, char *argv[])
     else
         cout << "\tcounts";
 
+    if(computeSpatialVariance)
+        cout << "\tvariance";
+
     cout << endl;
 
 
@@ -391,7 +430,11 @@ int main(int argc, char *argv[])
             for (unsigned int j = 0; j < nBins[1]; ++j) {
                 if(j % binStride[1] != 0)
                     continue;
-                cout << "\t" << histo[(i/binStride[0])*nStridedBins[1] + j/binStride[1]]/scale2;
+                size_t idx = (i/binStride[0])*nStridedBins[1] + j/binStride[1];
+                cout << "\t" << histo[idx]/scale2;
+                if(computeSpatialVariance)
+                    if(!isnan(variance[idx]))
+                        cout << "\t" << variance[idx];
             }
             cout << endl;
         }
