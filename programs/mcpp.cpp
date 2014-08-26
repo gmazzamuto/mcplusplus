@@ -18,7 +18,7 @@ void usage(FILE *f) {
             "[options]:\n"
             "\t -h display help\n"
             "\t -w number of walkers (long long int, defaults to 1000000000)\n"
-            "\t -t number of threads (defaults to 2)\n"
+            "\t -t number of threads (defaults to 1)\n"
             "\n", progName);
 }
 
