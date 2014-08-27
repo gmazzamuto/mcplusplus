@@ -77,6 +77,7 @@ int main(int argc, char *argv[])
     }
 
     bool isValidH5 = false;
+    bool h5FileExisted = false;
 
     try {
         isValidH5 = h5File.isHdf5(inputFileName);
@@ -102,39 +103,46 @@ int main(int argc, char *argv[])
             outputFileName = "mcpp-output.h5";
             cerr << "WARNING: No output file name specified, saving data to " << outputFileName << endl;
         }
-        if(access(outputFileName.c_str(),R_OK)<0) {//the h5 file does not exist
+
+        if(access(outputFileName.c_str(),R_OK)<0) //the h5 file does not exist
+            h5FileExisted = false;
+        else
+            h5FileExisted = true;
+
+        if(!h5FileExisted) {
             cout << "Creating new file " << outputFileName << endl;
             file.newFromXML(inputFileName,outputFileName.c_str());
             sim = parser->simulation();
             sim->setSeed(0);
             file.close();
         }
-        else
-            cout << "Appending to " << outputFileName << endl;
-    }
-    else { //input file is H5
-        outputFileName = inputFileName;
-        cout << "Appending to " << outputFileName << endl;
     }
 
-    if(!file.openFile(outputFileName.c_str())) {
-        cerr << "ERROR: Cannot open " << outputFileName << endl;
-        exit(EXIT_FAILURE);
-    }
-    string xmlOnDisk = file.readXMLDescription();
-    if(xmlCmdLine != "") {
-        if(xmlOnDisk.compare(xmlCmdLine) != 0) {
-            cerr << endl;
-            cerr << "ERROR: The provided xml file does not match with the one found in " << outputFileName << ":"<< endl << endl;
-            cerr << xmlOnDisk << endl;
+    if(isValidH5)
+        outputFileName = inputFileName;
+
+    if(isValidH5 || h5FileExisted) { //input file is H5
+        cout << "Appending to " << outputFileName << endl;
+
+        if(!file.openFile(outputFileName.c_str())) {
+            cerr << "ERROR: Cannot open " << outputFileName << endl;
             exit(EXIT_FAILURE);
         }
+        string xmlOnDisk = file.readXMLDescription();
+        if(xmlCmdLine != "") {
+            if(xmlOnDisk.compare(xmlCmdLine) != 0) {
+                cerr << endl;
+                cerr << "ERROR: The provided xml file does not match with the one found in " << outputFileName << ":"<< endl << endl;
+                cerr << xmlOnDisk << endl;
+                exit(EXIT_FAILURE);
+            }
+        }
+
+        sim = file.simulation();
+        parser = file.xmlParser();
+
+        file.close();
     }
-
-    sim = file.simulation();
-    parser = file.xmlParser();
-
-    file.close();
 
     sim->setNWalkers(nWalkers);
     sim->setNThreads(nThreads);

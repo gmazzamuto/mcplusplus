@@ -217,10 +217,7 @@ void Simulation::run() {
             installSigTermHandler();
             sims.clear();
             sims.push_back(this);
-            if(multipleRNGStates.size() == 0) {
-                setSeed(0);
-            }
-            else
+            if(multipleRNGStates.size() > 0)
                 setGeneratorState(multipleRNGStates[0]);
         }
 
@@ -264,12 +261,10 @@ void Simulation::runMultipleThreads()
         if(n<remainder)
             nWalkers++;
         sim->setNWalkers(nWalkers);
-        if(n<multipleRNGStates.size()) {
-            sim->setSeed(n);
+        sim->setSeed(currentSeed()+n);
+        if(n<multipleRNGStates.size())
             sim->setGeneratorState(multipleRNGStates[n]);
-        }
-        else
-            sim->setSeed(n);
+
         sims.push_back(sim);
 
         //launch thread
