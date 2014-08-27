@@ -185,8 +185,13 @@ void GaussianBeamSource::init(MCfloat xFWHM, MCfloat yFWHM)
     this->xFWHM = xFWHM;
     this->yFWHM = yFWHM;
     AbstractDistribution *distr[2];
-    distr[0] = new NormalDistribution(0,xFWHM, this);
-    distr[1] = new NormalDistribution(0,yFWHM, this);
+    distr[0] = new NormalDistribution(0,1, this);
+    distr[1] = new NormalDistribution(0,1, this);
+    NormalDistribution *tempNorm;
+    tempNorm = (NormalDistribution*)distr[0];
+    tempNorm->setFWHM(xFWHM);
+    tempNorm = (NormalDistribution*)distr[1];
+    tempNorm->setFWHM(yFWHM);
     setr0Distribution(distr[0], distr[1], -1*std::numeric_limits<MCfloat>::infinity());
     setk0Distribution(new DeltaDistribution(1,this), new DeltaDistribution(1,this)); //to avoid generating a useless random number (sinTheta is 0)
 }
