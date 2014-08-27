@@ -180,6 +180,7 @@ public:
     MCfloat spin() const;
 
 private:
+    virtual BaseObject* clone_impl() const;
     MCfloat mean, scale;
 };
 

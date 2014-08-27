@@ -118,7 +118,6 @@ void NormalDistribution::setMean(MCfloat value) {
 /**
  * @brief Sets the FWHM of the normal distribution.
  * @param value
- * \todo Check that this function is working properly.
  */
 
 void NormalDistribution::setFWHM(MCfloat value) {
@@ -251,6 +250,11 @@ MCfloat Sech2Distribution::spin() const {
     return  mean + scale*log(p/(1.-p));
 }
 
+BaseObject *Sech2Distribution::clone_impl() const
+{
+    return new Sech2Distribution(mean,scale);
+}
+
 void Sech2Distribution::setScale(MCfloat value) {
     scale = value;
 }
@@ -266,7 +270,6 @@ void Sech2Distribution::setMean(MCfloat value) {
  *
  * Convenience function to set the scale
  * \f$ s = \dfrac{\textup{FWHM}}{4\ln(1+\sqrt{2})} \f$
- * \todo Check that this function is working properly.
  */
 
 void Sech2Distribution::setFWHM(MCfloat value) {
