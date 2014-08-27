@@ -92,6 +92,11 @@ private:
 
 /**
  * @brief Isotropic point source \f$ \delta (0,0,z_0) \delta (t) \f$.
+ *
+ * @warning Place this source carefully, i.e. not within, say, a non-scattering
+ * layer with high-to-low refractive index boundary conditions (because of total
+ * internal reflection the simulation would eventually get stuck indefinitely
+ * propagating trapped walkers).
  */
 
 class IsotropicPointSource : public Source
