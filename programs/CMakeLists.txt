@@ -29,9 +29,9 @@ add_executable(gaussianBeamTransformation gaussianBeamTransformation.cpp glwidge
 target_link_libraries(gaussianBeamTransformation MCPlusPlus GL ${QT_LIBRARIES})
 install (TARGETS gaussianBeamTransformation DESTINATION bin)
 
-add_executable(mcpp mcpp.cpp glwidget.cpp simulationviewer.cpp ${GLWidget_HEADERS_MOC} ${SimulationViewer_HEADERS_MOC})
-target_link_libraries(mcpp MCPlusPlus GL ${QT_LIBRARIES})
-install (TARGETS mcpp DESTINATION bin)
+add_executable(mcplusplus mcplusplus.cpp glwidget.cpp simulationviewer.cpp ${GLWidget_HEADERS_MOC} ${SimulationViewer_HEADERS_MOC})
+target_link_libraries(mcplusplus MCPlusPlus GL ${QT_LIBRARIES})
+install (TARGETS mcplusplus DESTINATION bin)
 
 add_executable(mcplot mcplot.cpp glwidget.cpp outputfileviewer.cpp ${GLWidget_HEADERS_MOC} ${OutputFileViewer_HEADERS_MOC})
 target_link_libraries(mcplot MCPlusPlus GL ${QT_LIBRARIES})
