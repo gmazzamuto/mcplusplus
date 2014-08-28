@@ -18,7 +18,7 @@ Material::Material()
  * @param um wavelength in micrometers
  */
 
-void Material::setWavelegth(MCfloat um) {
+void Material::setWavelength(MCfloat um) {
     n = dispersionRelation(um);
     v = LIGHT_SPEED/n;
 }

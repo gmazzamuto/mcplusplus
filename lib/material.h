@@ -21,7 +21,7 @@ public:
     MCfloat n;  /**< @brief refractive index (\f$ n \in \mathbb{R} \f$)*/
     MCfloat v;  /**< @brief phase velocity \note please beware of the difference between phase, group and energy velocity */
 
-    void setWavelegth(MCfloat um);
+    void setWavelength(MCfloat um);
 
 private:
     virtual MCfloat dispersionRelation(MCfloat lambda_um);

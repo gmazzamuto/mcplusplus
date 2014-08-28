@@ -312,7 +312,7 @@ void Simulation::runSingleThread() {
 
     for (unsigned int i = 0; i < nLayers+2; ++i) {
         Material *m = _sample->material(i);
-        m->setWavelegth(source->wavelength());
+        m->setWavelength(source->wavelength());
         mat[i]=*m;
         mus[i] = 1./mat[i].ls;
     }
