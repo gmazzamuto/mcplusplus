@@ -196,6 +196,7 @@ void XMLParser::parseAll() {
     sim->setWalkTimesSaveFlags(_walkTimesSaveFlags);
     sim->setExitKVectorsSaveFlags(_exitKVectorsSaveFlags);
     sim->setExitKVectorsDirsSaveFlags(_exitKVectorsDirsSaveFlags);
+    sim->setOutputFileName(_outputFileName.c_str());
 }
 
 void XMLParser::parseOutput()
