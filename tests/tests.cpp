@@ -19,7 +19,8 @@ void testBilayer() {
     cerr << ss.str();
 
     H5OutputFile file;
-    file.newFromXMLContent(ss.str(),outputFileName);
+    string xmlContent = ss.str();
+    file.newFromXMLContent(xmlContent,outputFileName);
     file.close();
 
     cerr << "parsing...." << endl;

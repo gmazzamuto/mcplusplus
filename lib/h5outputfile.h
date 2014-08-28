@@ -58,6 +58,7 @@ public:
     u_int64_t backReflected() const;
     const u_int64_t *photonCounters() const;
     void writeXMLDescription(const char *inputFile);
+    void writeXMLDescription(const string xmlDescription);
     string readXMLDescription();
     Simulation *simulation() const;
     XMLParser *xmlParser() const;

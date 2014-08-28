@@ -79,7 +79,7 @@ bool H5OutputFile::newFromXMLContent(const string xmlContent, const char *fileNa
 
     createDatasets(parser.walkTimesSaveFlags(),parser.exitPointsSaveFlags(),parser.exitKVectorsSaveFlags());
 
-    writeXMLDescription(xmlContent.c_str());
+    writeXMLDescription(xmlContent);
     return true;
 }
 
@@ -395,7 +395,12 @@ void H5OutputFile::writeXMLDescription(const char *inputFile)
     std::string str((std::istreambuf_iterator<char>(f)),
                     std::istreambuf_iterator<char>());
 
-    writeVLenString("XMLDescription", str);
+    writeXMLDescription(str);
+}
+
+void H5OutputFile::writeXMLDescription(const string xmlDescription)
+{
+    writeVLenString("XMLDescription", xmlDescription);
 }
 
 string H5OutputFile::readXMLDescription()
