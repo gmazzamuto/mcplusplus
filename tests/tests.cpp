@@ -12,7 +12,7 @@ void testBilayer() {
           "  <layer material=\"material2\" thickness=\"40\" />"
           "</MLSample>"
           "<source type=\"PencilBeamSource\" walkTime=\"0\"/>"
-          "<output walk-times=\"t\" exit-points=\"t\" exit-k=\"t\" exit-k-dirs=\"z\"/>"
+          "<output file=\"" << outputFileName <<  "\" walk-times=\"t\" exit-points=\"t\" exit-k=\"t\" exit-k-dirs=\"z\"/>"
           "<simulation time-origin-z=\"0\"/>"
           "</MCPlusPlus>";
 
@@ -31,7 +31,6 @@ void testBilayer() {
     Simulation *sim = parser.simulation();
     sim->setNWalkers(100000);
     sim->setNThreads(4);
-    sim->setOutputFileName(outputFileName);
 
     sim->run();
 
