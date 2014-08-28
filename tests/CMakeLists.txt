@@ -2,7 +2,7 @@ cmake_minimum_required (VERSION 2.8)
 
 include_directories(. ../lib)
 
-add_executable(testBilayer testBilayer.cpp)
+add_executable(testBilayer testBilayer.cpp tests.cpp)
 target_link_libraries(testBilayer MCPlusPlus)
 
 add_test(NAME "testBilayer" COMMAND testBilayer)
