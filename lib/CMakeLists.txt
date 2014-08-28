@@ -9,6 +9,7 @@ find_library(LIBHDF5 hdf5)
 find_library(LIBHDF5CPP hdf5_cpp)
 
 include_directories(.)
+include_directories(/usr/include/python2.7/)
 file(GLOB SRC . *.cpp)
 file(GLOB HEADERS . *.h)
 
@@ -20,9 +21,15 @@ if(SHARED_LIB)
 endif()
 
 add_library(MCPlusPlus ${LIB_TYPE} ${SRC} ${HEADERS})
+add_library(pymcplusplus SHARED ${SRC} ${HEADERS} libMCPlusPlus_wrap.cxx)
+set_target_properties(pymcplusplus PROPERTIES PREFIX "_")
+
 target_link_libraries(MCPlusPlus ${Boost_THREAD_LIBRARY} ${Boost_SYSTEM_LIBRARY} ${LIBHDF5} ${LIBHDF5CPP})
 install (TARGETS MCPlusPlus DESTINATION lib)
 install (FILES ${HEADERS} DESTINATION include/MCPlusPlus)
+
+target_link_libraries(pymcplusplus ${Boost_THREAD_LIBRARY} ${Boost_SYSTEM_LIBRARY} ${LIBHDF5} ${LIBHDF5CPP})
+install (TARGETS pymcplusplus DESTINATION lib)
 
 if(DOXYGEN_FOUND)
     #-- Configure the Template Doxyfile for our specific project
