@@ -21,14 +21,13 @@ if(SHARED_LIB)
 endif()
 
 add_library(MCPlusPlus ${LIB_TYPE} ${SRC} ${HEADERS})
-add_library(pymcplusplus SHARED ${SRC} ${HEADERS} libMCPlusPlus_wrap.cxx)
-set_target_properties(pymcplusplus PROPERTIES PREFIX "_")
-
 target_link_libraries(MCPlusPlus ${Boost_THREAD_LIBRARY} ${Boost_SYSTEM_LIBRARY} ${LIBHDF5} ${LIBHDF5CPP})
 install (TARGETS MCPlusPlus DESTINATION lib)
 install (FILES ${HEADERS} DESTINATION include/MCPlusPlus)
 
-target_link_libraries(pymcplusplus ${Boost_THREAD_LIBRARY} ${Boost_SYSTEM_LIBRARY} ${LIBHDF5} ${LIBHDF5CPP})
+add_library(pymcplusplus SHARED libMCPlusPlus_wrap.cxx)
+set_target_properties(pymcplusplus PROPERTIES PREFIX "_")
+target_link_libraries(pymcplusplus MCPlusPlus)
 install (TARGETS pymcplusplus DESTINATION lib)
 
 if(DOXYGEN_FOUND)
