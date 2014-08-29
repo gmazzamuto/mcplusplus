@@ -24,8 +24,6 @@
 #include <boost/property_tree/ptree.hpp>
 %}
 
-/* Let's just grab the original header files here */
-
 
 namespace boost {
   namespace random {}
@@ -36,19 +34,18 @@ namespace H5 {}
 
 typedef long long int u_int64_t;
 
-
+%include "walker.h"
 %include "baseobject.h"
 %include "baserandom.h"
-%include "costhetagenerator.h"
 %include "distributions.h"
+%include "costhetagenerator.h"
+%include "psigenerator.h"
+%include "source.h"
 %include "gaussianraybundlesource.h"
 %include "material.h"
 %include "MCglobal.h"
-%include "psigenerator.h"
 %include "sample.h"
 %include "simulation.h"
-%include "source.h"
-%include "walker.h"
 %include "xmlparser.h"
 %include <boost/random.hpp>
 %include <boost/property_tree/ptree.hpp>
