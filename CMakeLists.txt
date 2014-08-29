@@ -25,6 +25,12 @@ if(BUILD_PYTHON_BINDINGS)
     message(FATAL_ERROR
       "SWIG is needed to build the Python bindings. Please install it correctly")
   endif()
+
+  FIND_PACKAGE(PythonLibs)
+  if(NOT PYTHONLIBS_FOUND)
+    message(FATAL_ERROR
+      "Cannot find PythonLibs, unable to build Python bindings.")
+  endif()
 endif()
 
 option(SHARED_LIB "Build shared instead of static library" OFF)

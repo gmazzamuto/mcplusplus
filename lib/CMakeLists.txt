@@ -25,7 +25,7 @@ install (TARGETS MCPlusPlus DESTINATION lib)
 install (FILES ${HEADERS} DESTINATION include/MCPlusPlus)
 
 if(BUILD_PYTHON_BINDINGS)
-    include_directories(/usr/include/python2.7/)
+    include_directories(${PYTHON_INCLUDE_DIRS})
     add_library(pymcplusplus SHARED libMCPlusPlus_wrap.cxx)
     set_target_properties(pymcplusplus PROPERTIES PREFIX "_")
     target_link_libraries(pymcplusplus MCPlusPlus)
