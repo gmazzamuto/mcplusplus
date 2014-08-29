@@ -18,11 +18,9 @@ BaseObject::BaseObject(BaseObject *parent)
 }
 
 BaseObject::~BaseObject() {
-    if(!_hasAParent) {
-        deleteAllChildren();
-    }
-    else
+    if(_hasAParent)
         _parent->removeChild(this);
+    deleteAllChildren();
 }
 
 /**
