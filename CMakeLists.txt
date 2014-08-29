@@ -18,6 +18,15 @@ if(BUILD_DOCUMENTATION)
   endif()
 endif()
 
+option(BUILD_PYTHON_BINDINGS "Build Python bindings" OFF)
+if(BUILD_PYTHON_BINDINGS)
+  FIND_PACKAGE(SWIG)
+  if(NOT SWIG_FOUND)
+    message(FATAL_ERROR
+      "SWIG is needed to build the Python bindings. Please install it correctly")
+  endif()
+endif()
+
 option(SHARED_LIB "Build shared instead of static library" OFF)
 
 set(DOCUMENTATION_DIR ${CMAKE_INSTALL_PREFIX}/share/doc/MCPlusPlus)
