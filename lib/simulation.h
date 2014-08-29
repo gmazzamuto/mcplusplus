@@ -39,7 +39,13 @@ public:
     const Sample *sample() const;
     void setSaveTrajectoryEnabled(bool enabled = true);
     void setNWalkers(u_int64_t N);
+#ifdef SWIG
+    %apply SWIGTYPE *DISOWN {Sample *sample};
+#endif
     void setSample(Sample *sample);
+#ifdef SWIG
+    %apply SWIGTYPE *DISOWN {Source *source};
+#endif
     void setSource(Source *source);
     void setFresnelReflectionsEnabled(bool enable);
     void setNThreads(unsigned int value);

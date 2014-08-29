@@ -16,9 +16,22 @@ public:
     ~Source();
 
     void spin(Walker *walker) const;
+
+#ifdef SWIG
+    %apply SWIGTYPE *DISOWN {AbstractDistribution *x0Distribution, AbstractDistribution *y0Distribution};
+#endif
     void setr0Distribution(AbstractDistribution *x0Distribution, AbstractDistribution *y0Distribution, MCfloat _z0);
+
+#ifdef SWIG
+    %apply SWIGTYPE *DISOWN {AbstractDistribution *cosThetaDistr, AbstractDistribution *psiDistr};
+#endif
     void setk0Distribution(AbstractDistribution *cosThetaDistr, AbstractDistribution *psiDistr);
+
+#ifdef SWIG
+    %apply SWIGTYPE *DISOWN {AbstractDistribution *distr };
+#endif
     void setWalkTimeDistribution(AbstractDistribution *distr);
+
     void setWavelength(MCfloat um);
     MCfloat wavelength() const;
     MCfloat z0() const;
