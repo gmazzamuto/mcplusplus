@@ -11,9 +11,10 @@ endif(NOT EXISTS "@CMAKE_CURRENT_BINARY_DIR@/install_manifest.txt")
 
 file(READ "@CMAKE_CURRENT_BINARY_DIR@/install_manifest.txt" files)
 string(REGEX REPLACE "\n" ";" files "${files}")
+list(APPEND files "@CMAKE_INSTALL_PREFIX@/lib/pymcplusplus.pyc")
 list(REVERSE files)
 foreach (file ${files})
-    message(STATUS "Uninstalling \"$ENV{DESTDIR}${file}\"")
+    message(STATUS "Uninstalling \"${file}\"")
     if (EXISTS "$ENV{DESTDIR}${file}")
         execute_process(
             COMMAND @CMAKE_COMMAND@ -E remove "$ENV{DESTDIR}${file}"
@@ -27,4 +28,3 @@ foreach (file ${files})
         message(STATUS "File \"$ENV{DESTDIR}${file}\" does not exist.")
     endif (EXISTS "$ENV{DESTDIR}${file}")
 endforeach(file)
-

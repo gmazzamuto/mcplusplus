@@ -25,11 +25,14 @@ install (TARGETS MCPlusPlus DESTINATION lib)
 install (FILES ${HEADERS} DESTINATION include/MCPlusPlus)
 
 if(BUILD_PYTHON_BINDINGS)
+    add_custom_command(OUTPUT libMCPlusPlus_wrap.cxx
+                    COMMAND ${SWIG_EXECUTABLE} -c++ -Wall -python -outcurrentdir -I${Boost_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/libMCPlusPlus.i DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/libMCPlusPlus.i ${HEADERS})
     include_directories(${PYTHON_INCLUDE_DIRS})
-    add_library(pymcplusplus SHARED libMCPlusPlus_wrap.cxx)
+    add_library(pymcplusplus SHARED ${PROJECT_BINARY_DIR}/libMCPlusPlus_wrap.cxx)
     set_target_properties(pymcplusplus PROPERTIES PREFIX "_")
     target_link_libraries(pymcplusplus MCPlusPlus)
     install (TARGETS pymcplusplus DESTINATION lib)
+    install(FILES ${PROJECT_BINARY_DIR}/pymcplusplus.py DESTINATION lib)
 endif()
 
 if(DOXYGEN_FOUND)
