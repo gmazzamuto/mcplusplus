@@ -364,7 +364,7 @@ int main(int argc, char *argv[])
 
     if(computeSpatialVariance) {
         cerr << "computeSpatialVariance..." << endl;
-        for(size_t i; i < totStridedBins; i++)
+        for(size_t i=0; i < totStridedBins; i++)
             variance[i] /= histo[i];
     }
 
