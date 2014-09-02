@@ -12,7 +12,7 @@ include_directories(.)
 file(GLOB SRC . *.cpp)
 file(GLOB HEADERS . *.h)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fPIC")
 
 set(LIB_TYPE "STATIC")
 if(SHARED_LIB)
