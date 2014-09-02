@@ -35,10 +35,10 @@ int main() {
     file = new H5OutputFile();
     file->openFile(outputFileName);
 
-    if(file->transmitted() != 11536) fail();
+    if(file->transmitted() != 11537) fail();
     if(file->ballistic() != 0) fail();
-    if(file->reflected() != 180589) fail();
-    if(file->backReflected() != 7875) fail();
+    if(file->reflected() != 180585) fail();
+    if(file->backReflected() != 7878) fail();
 
     pass();
     return 0;
