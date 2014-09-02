@@ -43,7 +43,7 @@ void OutputFileViewer::drawTransmittedExitPoints()
     color = QColor((enum Qt::GlobalColor)(Qt::blue));
     glBegin(GL_POINTS);
     const MCfloat z = sample !=NULL ? sample->zBoundaries()->at(sample->nLayers()) : 0;
-    for (int i = 0; i < 2*transmitted; i+=2) {
+    for (u_int64_t i = 0; i < 2*transmitted; i+=2) {
         glColor3f( color.redF(), color.greenF(), color.blueF() );
         glVertex3f(transmittedExitPoints[i],transmittedExitPoints[i+1],z);
     }
@@ -56,7 +56,7 @@ void OutputFileViewer::drawReflectedExitPoints()
     color = QColor((enum Qt::GlobalColor)(Qt::gray));
     glBegin(GL_POINTS);
     const MCfloat z = sample !=NULL ? sample->zBoundaries()->at(0) : 0;
-    for (int i = 0; i < 2*reflected; i+=2) {
+    for (u_int64_t i = 0; i < 2*reflected; i+=2) {
         glColor3f( color.redF(), color.greenF(), color.blueF() );
         glVertex3f(reflectedExitPoints[i],reflectedExitPoints[i+1],z);
     }
@@ -68,7 +68,7 @@ void OutputFileViewer::drawSample() {
         return;
     const deque<MCfloat> * sampleUpperZBoundaries = sample->zBoundaries();
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    int i = 0;
+    size_t i = 0;
     float prev = 0;
 
     while(i<sampleUpperZBoundaries->size()) {

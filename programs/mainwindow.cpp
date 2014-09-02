@@ -95,8 +95,8 @@ void MyGLWidget::paint_GL_impl()
     glBegin(GL_LINES);
 
     QColor color;
-    int i = 0;
-    int l = 0;
+    size_t i = 0;
+    size_t l = 0;
     while(i < linePoints->size()) {
         color = QColor((enum Qt::GlobalColor)(Qt::darkGray+l%15));
         glColor3f( color.redF(), color.greenF(), color.blueF() );
