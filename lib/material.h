@@ -28,17 +28,34 @@ private:
 };
 
 
+
+
+/**
+ * @brief The Air class
+ *
+ * @todo parse Pressure, Temperature and RH?
+ */
+
 class Air : public Material
 {
 public:
     Air();
 
+    MCfloat Pressure; /**< @brief air pressure (Pa), default is 101400 Pa*/
+    MCfloat Temperature; /**< @brief air temperature (°C), default is 20°C */
+    MCfloat RH; /**< @brief relative humidity (percent), default is 30% */
+
 private:
     MCfloat dispersionRelation(MCfloat lambda_um);
+    MCfloat saturatedVapourPressure();
 };
 
 
 
+
+/**
+ * @brief Empty space
+ */
 
 class Vacuum : public Material {
 
@@ -79,6 +96,18 @@ private:
     MCfloat dispersionRelation(MCfloat lambda_um);
 };
 
+
+
+/**
+ * @brief Norland Optical Adhesive 65
+ *
+ * This material reproduces a UV-curing optical adhesive produced by Norland.
+ * Its dispersion relation has been implemented after the <a
+ * href="http://en.wikipedia.org/wiki/Sellmeier_equation">Sellmeier
+ * coefficients</a> as they have been measured by Thorlabs (see their <a
+ * href="http://www.thorlabs.de/newgrouppage9.cfm?objectgroup_id=196&pn=NOA65">
+ * Optical Properties tab</a> for further information).
+ */
 
 class NorlandOpticalAdhesive65 : public Material
 {

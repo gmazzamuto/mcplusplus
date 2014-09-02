@@ -32,53 +32,94 @@ void Material::setWavelength(MCfloat um) {
  */
 
 MCfloat Material::dispersionRelation(MCfloat lambda_um) {
+    MC_ASSERT_MSG(lambda_um > 0, "Invalid wavelength");
     return n;
 }
 
-/**
- * \todo implement http://emtoolbox.nist.gov/Wavelength/Edlen.asp formula with
- * predefined values and relative set methods
- */
+
+
 
 Air::Air() :
     Material()
 {
-    n = 1.00027499;
+    //n = 1.00027499;
+    Temperature = 20;
+    Pressure = 101400;
+    RH = 30;
 }
 
-// http://jartweb.net/blog/wp-content/uploads/2013/09/Chapter7.pdf
-// http://www.humboldtcanada.com/presentations_air/jennifer.pdf
-// Bonsch, Potulski, Metrologia 35 (1998) 133-139
-
-// x is the CO2 concentration, by volume
-// temperature in celsius
-// f water vapour pressure in Pa
-// P in Pa
 
 /**
- * @brief FreeSpace::dispersionRelation
- * @param lambda_um
- * @return
+ * @brief Air dispersion relation
  *
- * \todo implement dispersion relation
+ * Dispersion relation based on modified Edlén formulae. If not otherwise
+ * specified, temperature, pressure, and relative humidity default respectively
+ * to 20°C, 1014 hPa and 30%.
+ *
+ * @param lambda_um
+ * @return the refractive index of air
  */
 
+// sse also
+// http://jartweb.net/blog/wp-content/uploads/2013/09/Chapter7.pdf
+// http://www.humboldtcanada.com/presentations_air/jennifer.pdf
+
 MCfloat Air::dispersionRelation(MCfloat lambda_um) {
-// TODO
-    return n;
+    MC_ASSERT_MSG(lambda_um > 0, "Invalid wavelength");
+    MCfloat pv = (0.01*RH)*saturatedVapourPressure();
+    MCfloat S = pow(lambda_um,-2);
+    MCfloat dns = 8342.54E-8 + 2406147E-8 /(130 - S) + 15998E-8 /(38.9 - S);
+    MCfloat X = (1 + (0.601 - 0.00972*Temperature)*Pressure*1E-8)/(1 + 0.003661*Temperature);
+    MCfloat ntp = 1 + Pressure*dns*X/96095.43;
+    return ntp - (292.75/(Temperature + 273.15))*(3.7345 - 0.0401*S)*pv*1E-10;
+}
+
+/**
+ * @brief IAPWS formula for saturated vapour pressure
+ *
+ * Taken from <a
+ * href="http://emtoolbox.nist.gov/Wavelength/Documentation.asp#AppendixAI">Nist</a>
+ *
+ * @warning This particular implementation holds for temperatures above 0°C.
+ *
+ * @return \f$ p_\text{sv} (T) \f$
+ */
+
+MCfloat Air::saturatedVapourPressure()
+{
+    MCfloat T = Temperature + 273.15;
+
+    MCfloat K1 = 1.16705214528E+03;
+    MCfloat K2 = -7.24213167032E+05;
+    MCfloat K3 = -1.70738469401E+01;
+    MCfloat K4 = 1.20208247025E+04;
+    MCfloat K5 = -3.23255503223E+06;
+    MCfloat K6 = 1.49151086135E+01;
+    MCfloat K7 = -4.82326573616E+03;
+    MCfloat K8 = 4.05113405421E+05;
+    MCfloat K9 = -2.38555575678E-01;
+    MCfloat K10 = 6.50175348448E+02;
+
+    MCfloat Omega = T + K9/(T - K10);
+    MCfloat A = pow(Omega,2) + K1*Omega + K2;
+    MCfloat B = K3*pow(Omega,2) + K4*Omega + K5;
+    MCfloat C = K6*pow(Omega,2) + K7*Omega + K8;
+    MCfloat X = -B + sqrt(pow(B,2) -4*A*C);
+
+    return pow(2*C/X,4)*1E6;
 }
 
 
 GlassSlide::GlassSlide() :
     Material()
 {
-    n = 1.5203;
+    //n = 1.5203;
 }
 
 MCfloat GlassSlide::dispersionRelation(MCfloat lambda_um) {
     MC_ASSERT_MSG(lambda_um > 0, "Invalid wavelength");
     return sqrt(1 + 1.282086558597*pow(lambda_um,2)/(pow(lambda_um,2) - 0.01023694363174)
-                    + 0.05984826992046*pow(lambda_um,2)/(pow(lambda_um,2) - 12.09530215672));
+                + 0.05984826992046*pow(lambda_um,2)/(pow(lambda_um,2) - 12.09530215672));
 }
 
 
@@ -87,15 +128,11 @@ MCfloat GlassSlide::dispersionRelation(MCfloat lambda_um) {
 NorlandOpticalAdhesive65::NorlandOpticalAdhesive65() :
     Material()
 {
-    n = 1.514;
+    //n = 1.514;
 }
 
-/**
- * \copydoc Material::setWavelegth()
- *
- * Coefficients provided from <a href="http://www.thorlabs.de/newgrouppage9.cfm?objectgroup_id=196&pn=NOA65#196">Thorlabs</a>
- * (see under Optical Properties tab)
- */
+
+
 
 MCfloat NorlandOpticalAdhesive65::dispersionRelation(MCfloat lambda_um) {
     MC_ASSERT_MSG(lambda_um > 0, "Invalid wavelength");
