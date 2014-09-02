@@ -46,7 +46,7 @@ public:
     MCfloat RH; /**< @brief relative humidity (percent), default is 30% */
 
 private:
-    MCfloat dispersionRelation(MCfloat lambda_um);
+    virtual MCfloat dispersionRelation(MCfloat lambda_um);
     MCfloat saturatedVapourPressure();
 };
 
@@ -93,7 +93,7 @@ public:
     GlassSlide();
 
 private:
-    MCfloat dispersionRelation(MCfloat lambda_um);
+    virtual MCfloat dispersionRelation(MCfloat lambda_um);
 };
 
 
@@ -115,7 +115,7 @@ public:
     NorlandOpticalAdhesive65();
 
 private:
-    MCfloat dispersionRelation(MCfloat lambda_um);
+    virtual MCfloat dispersionRelation(MCfloat lambda_um);
 };
 
 #endif // MATERIAL_H
