@@ -94,9 +94,17 @@ you open:
 \code
 export PATH=/home/yourname/local/bin:$PATH
 export LD_LIBRARY_PATH=/home/yourname/local/lib:$LD_LIBRARY_PATH
+export PYTHONPATH=/home/giacomo/local/lib:$PYTHONPATH
 \endcode
 
 assuming, again, your installation prefix to be @c /home/yourname/local/. You
-can also place the two lines above in your shell's configuration file.
+can also place the lines above in your shell's configuration file.
 
+\subsection BuildOptions Build Options
+
+- @c BUILD_DOCUMENTATION Enables using Doxygen to build an HTML documentation.
+Run <tt>make documentation</tt> followed by <tt>make install</tt> to install
+the documentation in your installation path.
+
+- @c BUILD_PYTHON_BINDINGS Build bindings for Pyton.
 */
