@@ -22,6 +22,8 @@
 #include <H5Cpp.h>
 #include <boost/random.hpp>
 #include <boost/property_tree/ptree.hpp>
+#include "h5filehelper.h"
+#include "h5outputfile.h"
 %}
 
 
@@ -49,3 +51,5 @@ typedef long long int u_int64_t;
 %include "xmlparser.h"
 %include <boost/random.hpp>
 %include <boost/property_tree/ptree.hpp>
+%include "h5filehelper.h"
+%include "h5outputfile.h"

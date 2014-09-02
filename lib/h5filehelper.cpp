@@ -160,6 +160,7 @@ bool H5FileHelper::newFile(const char *fileName) {
     return true;
 }
 
+#ifndef SWIG  //this is to work around a link error
 bool H5FileHelper::newDataset(const char *datasetName, int ndims, const hsize_t *dims, const hsize_t *chunk_dim, PredType type)
 {
 #ifdef PRINT_DEBUG_MSG
@@ -191,6 +192,8 @@ bool H5FileHelper::newDataset(const char *datasetName, int ndims, const hsize_t 
 #endif
     return true;
 }
+#endif
+
 
 /**
  * @brief Checks for the existence of a particular dataset
