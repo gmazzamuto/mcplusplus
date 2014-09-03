@@ -6,13 +6,21 @@ Source::Source(BaseObject *parent) :
     BaseRandom(parent)
 {
     walkTimeDistribution = NULL;
+    addObjectToCheck((const BaseObject**)&walkTimeDistribution);
+
     cosThetaDistribution = NULL;
+    addObjectToCheck((const BaseObject**)&cosThetaDistribution);
+
     psiDistribution = NULL;
+    addObjectToCheck((const BaseObject**)&psiDistribution);
+
     for (int i = 0; i < 3; ++i) {
         r0Distribution[i] = NULL;
+        addObjectToCheck((const BaseObject**)&r0Distribution[i]);
     }
     _z0 = 0;
     setWavelength(-1);
+
 }
 
 Source::~Source()
@@ -116,6 +124,8 @@ PencilBeamSource::PencilBeamSource(BaseObject *parent) :
     Source(parent)
 {
     _z0 = -1*std::numeric_limits<MCfloat>::infinity();
+    clearObjectsToCheck();
+    addObjectToCheck((const BaseObject**)&walkTimeDistribution);
 }
 
 PencilBeamSource::~PencilBeamSource()

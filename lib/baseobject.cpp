@@ -56,6 +56,11 @@ BaseObject *BaseObject::clone_impl() const
     return new BaseObject();
 }
 
+bool BaseObject::sanityCheck_impl() const
+{
+    return true;
+}
+
 void BaseObject::deleteAllChildren() {
     BaseObject *child;
     while(!_childList.empty()) {
@@ -156,6 +161,31 @@ string BaseObject::typeName() const
     return str;
 }
 
+bool BaseObject::sanityCheck() const
+{
+    bool ok = true;
+    const BaseObject *obj;
+    std::list<const BaseObject *const *>::const_iterator iterator;
+    for (iterator = objectsToCheck.begin(); iterator != objectsToCheck.end(); ++iterator) {
+        const BaseObject *const *objpp = *iterator;
+        obj = *objpp;
+        if(obj == NULL) {
+            ok = false;
+            break;
+        }
+        ok = obj->sanityCheck();
+        if(!ok)
+            break;
+    }
+    if(ok)
+        ok = sanityCheck_impl();
+
+    if(!ok)
+        logMessage("Error: sanity check failed");
+
+    return ok;
+}
+
 string BaseObject::messagePrefix() const
 {
     time_t rawtime;
@@ -215,4 +245,14 @@ void BaseObject::logMessage(const char *fmt, ...) const
     str += fmt;
     str += "\n";
     printLogMessage(str.c_str(),arguments);
+}
+
+void BaseObject::addObjectToCheck(const BaseObject ** const obj)
+{
+    objectsToCheck.push_back((BaseObject **)obj);
+}
+
+void BaseObject::clearObjectsToCheck()
+{
+    objectsToCheck.clear();
 }

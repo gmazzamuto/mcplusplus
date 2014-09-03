@@ -49,17 +49,21 @@ public:
     bool wasCloned() const;
     void describe() const;
     string typeName() const;
+    bool sanityCheck() const;
 
 protected:
     void logMessage(const string &msg) const;
     void logMessage(const char* fmt, ...) const;
     bool _inheritsRandom;
+    void addObjectToCheck(const BaseObject ** const obj);
+    void clearObjectsToCheck();
 
 private:
     bool _hasAParent;
     BaseObject *_parent;
     list<BaseObject *> _childList;
     bool _wasCloned;
+    list<const BaseObject *const *> objectsToCheck;
 
     void removeChild(BaseObject *child);
     void deleteAllChildren();
@@ -69,6 +73,7 @@ private:
     virtual void addChild_impl(BaseObject *child);
     virtual void removeChild_impl(BaseObject *child);
     virtual BaseObject *clone_impl() const;
+    virtual bool sanityCheck_impl() const;
 
     string messagePrefix() const;
     void printLogMessage(const char *fmt, va_list arguments=NULL) const;

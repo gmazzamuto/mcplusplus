@@ -105,6 +105,8 @@ Simulation::Simulation(BaseObject *parent) :
     clear();
     mostRecentInstance = this;
     installSigUSR1Handler();
+    addObjectToCheck((const BaseObject**)&_sample);
+    addObjectToCheck((const BaseObject**)&source);
 }
 
 Simulation::~Simulation() {
@@ -208,6 +210,8 @@ void Simulation::setOutputFileName(const char *name)
  */
 
 void Simulation::run() {
+    if(!sanityCheck())
+        return;
     installSigUSR2Handler();
     time(&startTime);
 

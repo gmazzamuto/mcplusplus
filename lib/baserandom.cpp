@@ -96,6 +96,17 @@ void BaseRandom::setGeneratorState(string state)
     setRNG(mt);
 }
 
+bool BaseRandom::sanityCheck_impl() const
+{
+    if(hasAParent())
+        return true;
+
+    if(mt != NULL)
+        return true;
+    else
+        return false;
+}
+
 /**
  * @brief The seed currently used by the RNG
  * @return

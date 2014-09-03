@@ -69,6 +69,7 @@ private:
     MCfloat x0;
     virtual BaseObject* clone_impl() const;
     virtual void describe_impl() const;
+    virtual bool sanityCheck_impl() const;
 };
 
 

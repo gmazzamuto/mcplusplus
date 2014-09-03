@@ -79,6 +79,11 @@ void DeltaDistribution::describe_impl() const
     logMessage("x0 = %f", x0);
 }
 
+bool DeltaDistribution::sanityCheck_impl() const
+{
+    return true;
+}
+
 
 
 

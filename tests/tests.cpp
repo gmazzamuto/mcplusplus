@@ -31,6 +31,7 @@ void testBilayer() {
     Simulation *sim = parser.simulation();
     sim->setNWalkers(100000);
     sim->setNThreads(4);
+    sim->setSeed(0);
 
     sim->run();
 
