@@ -9,7 +9,7 @@
 H5OutputFile::H5OutputFile()
     : H5FileHelper()
 {
-    memset(_photonCounters,0,sizeof(u_int64_t));
+    memset(_photonCounters,0,4*sizeof(u_int64_t));
     _parser = new XMLParser();
     XMLParserEnabled = false;
 }
