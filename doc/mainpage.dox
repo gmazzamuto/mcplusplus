@@ -55,6 +55,8 @@ unique features such as:
 
 - XML input
 
+- Python bindings
+
   \section Download Download
 
   MCPlusPlus-1.0.tar.gz (100KB)
@@ -94,7 +96,7 @@ you open:
 \code
 export PATH=/home/yourname/local/bin:$PATH
 export LD_LIBRARY_PATH=/home/yourname/local/lib:$LD_LIBRARY_PATH
-export PYTHONPATH=/home/giacomo/local/lib:$PYTHONPATH
+export PYTHONPATH=/home/yourname/local/lib:$PYTHONPATH
 \endcode
 
 assuming, again, your installation prefix to be @c /home/yourname/local/. You
