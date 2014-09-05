@@ -210,8 +210,6 @@ void Simulation::setOutputFileName(const char *name)
  */
 
 void Simulation::run() {
-    if(!sanityCheck())
-        return;
     installSigUSR2Handler();
     time(&startTime);
 
@@ -296,6 +294,9 @@ void Simulation::runMultipleThreads()
 }
 
 void Simulation::runSingleThread() {
+    if(!sanityCheck())
+        return;
+
     clear();
     logMessage("starting... Number of walkers = %Lu, original seed = %u",nWalkers(), currentSeed());
     nLayers = _sample->nLayers();

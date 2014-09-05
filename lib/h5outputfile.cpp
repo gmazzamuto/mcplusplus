@@ -4,6 +4,8 @@
 #include <fstream>
 #include <string.h>
 
+#define MAX_RNGSTATE_STR_LEN 6900
+
 H5OutputFile::H5OutputFile()
     : H5FileHelper()
 {
@@ -269,6 +271,36 @@ void H5OutputFile::writeVLenString(const char *datasetName, const string str)
     dset.close();
 }
 
+void H5OutputFile::saveRNGState(uint seed, const string str) {
+    openDataSet("RNGStates");
+    if(seed > dims[0] - 1) {
+        hsize_t extDims[ndims];
+        extDims[0] = seed+1;
+
+        dataSet->extend(extDims);
+
+        *dataSpace = dataSet->getSpace();
+        dataSpace->getSimpleExtentDims(dims);
+    }
+
+    hsize_t offset[ndims], mdims[ndims];
+    offset[0] = seed;
+    mdims[0] = 1;
+    DataType dtype = dataSet->getDataType();
+
+    hsize_t _offset[ndims];
+    for (int i = 0; i < ndims; ++i)
+        _offset[i] = 0;
+
+    DataSpace memspace( ndims, mdims );
+    memspace.selectHyperslab(H5S_SELECT_SET, mdims, _offset);
+    dataSpace->selectHyperslab(H5S_SELECT_SET, mdims, offset);
+    dataSet->write(str.c_str(),dtype,memspace,*dataSpace);
+    memspace.close();
+
+    closeDataSet();
+}
+
 string H5OutputFile::readVLenString(const char *datasetName) const
 {
 #ifdef PRINT_DEBUG_MSG
@@ -305,12 +337,8 @@ bool H5OutputFile::openFile_impl()
         vector<string> RNGStates;
         _parser->parseString(readXMLDescription());
         uint s = 0;
-        while (1) {
-            stringstream ss;
-            ss << "RNGStates/seed";
-            ss << s;
-            if(!dataSetExists(ss.str().c_str()))
-                break;
+        openDataSet("RNGStates");
+        while (s<dims[0]) {
             RNGStates.push_back(readRNGState(s));
             s++;
         }
@@ -324,21 +352,37 @@ bool H5OutputFile::openFile_impl()
     return true;
 }
 
-void H5OutputFile::saveRNGState(const uint seed, const string s)
-{
-    stringstream ss;
-    ss << "RNGStates/seed";
-    ss << seed;
-    createRNGDataset(seed);
-    writeVLenString(ss.str().c_str(),s);
-}
-
 string H5OutputFile::readRNGState(const uint seed) const
 {
+    DataSet dset = file->openDataSet("RNGStates");
+    DataType dtype = dset.getDataType();
+
+    DataSpace dspace = dset.getSpace();
+
+    int ndims = dspace.getSimpleExtentNdims();
+
+    hsize_t offset[ndims], mdims[ndims];
+    offset[0] = seed;
+    mdims[0] = 1;
+
+    hsize_t _offset[ndims];
+    for (int i = 0; i < ndims; ++i)
+        _offset[i] = 0;
+
+    char buf[MAX_RNGSTATE_STR_LEN];
+
+    DataSpace memspace( ndims, mdims );
+    memspace.selectHyperslab(H5S_SELECT_SET, mdims, _offset);
+    dspace.selectHyperslab(H5S_SELECT_SET, mdims, offset);
+    dset.read(buf,dtype,memspace,dspace);
+
+    dspace.close();
+    dtype.close();
+    dset.close();
+
     stringstream ss;
-    ss << "RNGStates/seed";
-    ss << seed;
-    return readVLenString(ss.str().c_str());
+    ss << buf;
+    return ss.str();
 }
 
 void H5OutputFile::appendPhotonCounts(const u_int64_t transmitted, const u_int64_t ballistic, const u_int64_t reflected, const u_int64_t backReflected)
@@ -441,7 +485,7 @@ bool H5OutputFile::createDatasets(uint walkTimesSaveFlags, uint exitPointsSaveFl
         return false;
     }
 
-    newGroup("RNGStates");
+    createRNGDataset();
 
     if(exitPointsSaveFlags) {
         newGroup("exit-points");
@@ -493,23 +537,30 @@ bool H5OutputFile::createDatasets(uint walkTimesSaveFlags, uint exitPointsSaveFl
     return ret;
 }
 
-bool H5OutputFile::createRNGDataset(uint seed)
+bool H5OutputFile::createRNGDataset()
 {
     int ndims = 1;
-    hsize_t dims[ndims];
+    hsize_t dims[ndims], maxdims[ndims], chkdims[ndims];
     dims[0] = 1;
-    StrType dtype(0, H5T_VARIABLE);
-    DataSpace dspace(1,dims,dims);
+    maxdims[0] = H5S_UNLIMITED;
+    chkdims[0] = 1000;
+    StrType dtype(H5T_C_S1,MAX_RNGSTATE_STR_LEN);
+    size_t size = MAX_RNGSTATE_STR_LEN;
+    dtype.setSize(size);
+    DataSpace dspace(1,dims,maxdims);
     stringstream ss;
-    ss << "RNGStates/seed";
-    ss << seed;
+    ss << "RNGStates";
     if(!dataSetExists(ss.str().c_str())) {
 #ifdef PRINT_DEBUG_MSG
         logMessage("Creating dataset %s",ss.str().c_str());
 #endif
-        file->createDataSet(ss.str(),dtype,dspace);
+        DSetCreatPropList cparms;
+        cparms.setChunk(ndims,chkdims);
+        cparms.setDeflate(9);
+        file->createDataSet(ss.str(),dtype,dspace,cparms);
     }
     dtype.close();
     dspace.close();
+
     return true;
 }

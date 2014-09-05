@@ -66,7 +66,7 @@ public:
 
 private:
     bool createDatasets(uint walkTimesSaveFlags, uint exitPointsSaveFlags, uint exitKVectorsSaveFlags);
-    bool createRNGDataset(uint seed);
+    bool createRNGDataset();
     void appendTo1Ddataset(const char *datasetName, const MCfloat *buffer, const hsize_t size);
     bool loadFrom1Ddataset(const char *datasetName, MCfloat *destBuffer, const hsize_t *start, const hsize_t *count);
     void writeVLenString(const char *datasetName, const string str);
