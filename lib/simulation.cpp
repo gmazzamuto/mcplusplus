@@ -4,6 +4,7 @@
 #include <signal.h>
 
 #include <boost/math/special_functions/sign.hpp>
+#include <boost/math/constants/constants.hpp>
 #include <boost/thread.hpp>
 
 #include "h5outputfile.h"

@@ -7,6 +7,8 @@
 #include <boost/foreach.hpp>
 #include <boost/optional.hpp>
 
+#include <boost/math/constants/constants.hpp>
+
 using namespace boost::math::constants;
 using namespace boost;
 
