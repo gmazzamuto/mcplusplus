@@ -1,10 +1,13 @@
 #include <stdio.h>
-#include <QApplication>
-#include <QMainWindow>
 #include <fstream>
 #include "h5outputfile.h"
-#include "simulationviewer.h"
 #include "xmlparser.h"
+
+#ifdef HASQT
+#include <QApplication>
+#include <QMainWindow>
+#include "simulationviewer.h"
+#endif
 
 char *progName;
 
@@ -150,6 +153,8 @@ int main(int argc, char *argv[])
     sim->setOutputFileName(outputFileName.c_str());
     sim->run();
 
+#ifdef HASQT
+
     if(parser->showTrajectoryEnabled())
     {
         QApplication a(argc, argv);
@@ -164,7 +169,7 @@ int main(int argc, char *argv[])
 
         a.exec();
     }
-
+#endif
     return 0;
 }
 
