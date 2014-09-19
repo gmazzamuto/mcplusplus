@@ -16,6 +16,7 @@ class Material
 {
 public:
     Material();
+    virtual ~Material();
     MCfloat ls;  /**< @brief scattering mean free path*/
     MCfloat g;  /**< @brief scattering anisotropy factor \f$ g = \left\langle \cos \theta \right \rangle \f$*/
     MCfloat n;  /**< @brief refractive index (\f$ n \in \mathbb{R} \f$)*/
@@ -40,6 +41,7 @@ class Air : public Material
 {
 public:
     Air();
+    virtual ~Air();
 
     MCfloat Pressure; /**< @brief air pressure (Pa), default is 101400 Pa*/
     MCfloat Temperature; /**< @brief air temperature (°C), default is 20°C */
@@ -61,6 +63,7 @@ class Vacuum : public Material {
 
 public:
     Vacuum();
+    virtual ~Vacuum();
 };
 
 
@@ -91,6 +94,7 @@ class GlassSlide : public Material
 {
 public:
     GlassSlide();
+    virtual ~GlassSlide();
 
 private:
     virtual MCfloat dispersionRelation(MCfloat lambda_um);
@@ -113,6 +117,7 @@ class NorlandOpticalAdhesive65 : public Material
 {
 public:
     NorlandOpticalAdhesive65();
+    virtual ~NorlandOpticalAdhesive65();
 
 private:
     virtual MCfloat dispersionRelation(MCfloat lambda_um);

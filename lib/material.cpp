@@ -11,6 +11,11 @@ Material::Material()
     v = LIGHT_SPEED;
 }
 
+Material::~Material()
+{
+
+}
+
 /**
  * @brief Sets the refractive index and the speed of light in this medium
  * according to the given wavelength
@@ -46,6 +51,11 @@ Air::Air() :
     Temperature = 20;
     Pressure = 101400;
     RH = 30;
+}
+
+Air::~Air()
+{
+
 }
 
 
@@ -116,6 +126,11 @@ GlassSlide::GlassSlide() :
     //n = 1.5203;
 }
 
+GlassSlide::~GlassSlide()
+{
+
+}
+
 MCfloat GlassSlide::dispersionRelation(MCfloat lambda_um) {
     MC_ASSERT_MSG(lambda_um > 0, "Invalid wavelength");
     return sqrt(1 + 1.282086558597*pow(lambda_um,2)/(pow(lambda_um,2) - 0.01023694363174)
@@ -129,6 +144,11 @@ NorlandOpticalAdhesive65::NorlandOpticalAdhesive65() :
     Material()
 {
     //n = 1.514;
+}
+
+NorlandOpticalAdhesive65::~NorlandOpticalAdhesive65()
+{
+
 }
 
 
@@ -145,4 +165,9 @@ MCfloat NorlandOpticalAdhesive65::dispersionRelation(MCfloat lambda_um) {
 Vacuum::Vacuum() :
     Material()
 {
+}
+
+Vacuum::~Vacuum()
+{
+
 }
