@@ -7,9 +7,7 @@
 /**
  * @brief Ray-optic description of a Gaussian beam waist
  *
- * Modeled after Milsom, P.K. "A ray-optic, Monte Carlo, description of a
- * Gaussian beam waist - applied to reverse saturable absorption"
- * <em>Appl. Phys. B</em>, 70(4), 593-599 (April 2000).
+ * Modeled after \cite milsom2000ray
  *
  * The intensity distribution in a Gaussian beam is represented by a bundle of
  * rays in which each ray has a random pointing error. The construction of the
