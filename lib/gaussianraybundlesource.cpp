@@ -57,6 +57,8 @@ void GaussianRayBundleSource::init()
 {
     setZWaist(0);
     uRand = new UniformDistribution(0,1,this);
+    clearObjectsToCheck();
+    objectsToCheck.push_back((const BaseObject**)&walkTimeDistribution);
 }
 
 /**

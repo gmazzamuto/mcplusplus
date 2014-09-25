@@ -57,13 +57,13 @@ protected:
     bool _inheritsRandom;
     void addObjectToCheck(const BaseObject ** const obj);
     void clearObjectsToCheck();
+    list<const BaseObject *const *> objectsToCheck;
 
 private:
     bool _hasAParent;
     BaseObject *_parent;
     list<BaseObject *> _childList;
     bool _wasCloned;
-    list<const BaseObject *const *> objectsToCheck;
 
     void removeChild(BaseObject *child);
     void deleteAllChildren();
