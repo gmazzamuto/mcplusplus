@@ -59,11 +59,7 @@ BaseObject *Source::clone_impl() const
 
 void Source::cloneInto(Source *src) const
 {
-    for (int i = 0; i < 2; ++i) {
-        if(r0Distribution[i] != NULL)
-            src->r0Distribution[i] = (AbstractDistribution*)r0Distribution[i]->clone();
-    }
-    src->_z0 = z0();
+    src->setr0Distribution((AbstractDistribution*)r0Distribution[0]->clone(),(AbstractDistribution*)r0Distribution[1]->clone(),z0());
     if(cosThetaDistribution != NULL && psiDistribution != NULL)
         src->setk0Distribution((AbstractDistribution*)cosThetaDistribution->clone(),(AbstractDistribution*)psiDistribution->clone());
     if(walkTimeDistribution != NULL)
@@ -195,8 +191,8 @@ void GaussianBeamSource::init(MCfloat xFWHM, MCfloat yFWHM)
     this->xFWHM = xFWHM;
     this->yFWHM = yFWHM;
     AbstractDistribution *distr[2];
-    distr[0] = new NormalDistribution(0,1, this);
-    distr[1] = new NormalDistribution(0,1, this);
+    distr[0] = new NormalDistribution(0,1);
+    distr[1] = new NormalDistribution(0,1);
     NormalDistribution *tempNorm;
     tempNorm = (NormalDistribution*)distr[0];
     tempNorm->setFWHM(xFWHM);
