@@ -59,7 +59,8 @@ BaseObject *Source::clone_impl() const
 
 void Source::cloneInto(Source *src) const
 {
-    src->setr0Distribution((AbstractDistribution*)r0Distribution[0]->clone(),(AbstractDistribution*)r0Distribution[1]->clone(),z0());
+    if(r0Distribution[0] != NULL && r0Distribution[1] != NULL)
+        src->setr0Distribution((AbstractDistribution*)r0Distribution[0]->clone(),(AbstractDistribution*)r0Distribution[1]->clone(),z0());
     if(cosThetaDistribution != NULL && psiDistribution != NULL)
         src->setk0Distribution((AbstractDistribution*)cosThetaDistribution->clone(),(AbstractDistribution*)psiDistribution->clone());
     if(walkTimeDistribution != NULL)
