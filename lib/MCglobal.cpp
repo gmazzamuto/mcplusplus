@@ -41,3 +41,27 @@ string walkerTypeToString(uint index)
         break;
     }
 }
+
+unsigned int walkerSaveFlags(const string flags) {
+    unsigned int ret = 0;
+    for (unsigned int i = 0; i < flags.size(); ++i) {
+        switch (flags.at(i)) {
+        case 't':
+            ret |= FLAG_TRANSMITTED;
+            break;
+        case 'b':
+            ret |= FLAG_BALLISTIC;
+            break;
+        case 'r':
+            ret |= FLAG_REFLECTED;
+            break;
+        case 'k':
+            ret |= FLAG_BACKREFLECTED;
+            break;
+        default:
+            break;
+        }
+    }
+
+    return ret;
+}

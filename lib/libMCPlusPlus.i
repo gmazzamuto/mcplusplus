@@ -14,7 +14,6 @@
 #include "simulation.h"
 #include "source.h"
 #include "walker.h"
-#include "xmlparser.h"
 
 #include "h5filehelper.h"
 #include "h5outputfile.h"
@@ -48,7 +47,6 @@ typedef long long int u_int64_t;
 %include "MCglobal.h"
 %include "sample.h"
 %include "simulation.h"
-%include "xmlparser.h"
 %include <boost/random.hpp>
 %include <boost/property_tree/ptree.hpp>
 %include "h5filehelper.h"

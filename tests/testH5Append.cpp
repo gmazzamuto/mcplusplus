@@ -15,32 +15,33 @@ void fail() {
 }
 
 int main() {
-    testBilayer();
+    //FIXME
+    fail();
+//    testBilayer();
 
-    H5OutputFile *file = new H5OutputFile();
-    file->setXMLParserEnabled(true);
-    file->openFile(outputFileName);
+//    H5OutputFile *file = new H5OutputFile();
+//    file->openFile(outputFileName);
 
-    Simulation *sim = file->simulation();
+//    Simulation *sim = file->simulation();
 
-    sim->setNWalkers(100000);
-    sim->setNThreads(4);
+//    sim->setNWalkers(100000);
+//    sim->setNThreads(4);
 
-    sim->run();
+//    sim->run();
 
-    delete sim;
-    file->close();
-    delete file;
+//    delete sim;
+//    file->close();
+//    delete file;
 
-    file = new H5OutputFile();
-    file->openFile(outputFileName);
+//    file = new H5OutputFile();
+//    file->openFile(outputFileName);
 
-    if(file->transmitted() != 11537) fail();
-    if(file->ballistic() != 0) fail();
-    if(file->reflected() != 180585) fail();
-    if(file->backReflected() != 7878) fail();
+//    if(file->transmitted() != 11537) fail();
+//    if(file->ballistic() != 0) fail();
+//    if(file->reflected() != 180585) fail();
+//    if(file->backReflected() != 7878) fail();
 
-    pass();
+//    pass();
     return 0;
 }
 

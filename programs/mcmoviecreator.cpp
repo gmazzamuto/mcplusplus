@@ -1,6 +1,7 @@
 #include "mcmoviecreator.h"
 
 #include <QString>
+#include <cmath>
 
 #include "h5movie.h"
 

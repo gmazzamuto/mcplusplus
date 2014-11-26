@@ -23,10 +23,6 @@ if(QT4_FOUND)
     SET(MCPLUSPLUS_QTSRC glwidget.cpp simulationviewer.cpp)
 endif()
 
-add_executable(mcplusplus mcplusplus.cpp ${MCPLUSPLUS_QTSRC} ${GLWidget_HEADERS_MOC} ${SimulationViewer_HEADERS_MOC})
-target_link_libraries(mcplusplus MCPlusPlus ${MCPLUSPLUS_QTLIBS})
-install (TARGETS mcplusplus DESTINATION bin)
-
 add_executable(mchist mchist.cpp)
 target_link_libraries(mchist MCPlusPlus)
 install (TARGETS mchist DESTINATION bin)

@@ -23,24 +23,24 @@ uint entriesPerWalker[2] = {0, 0};
 
 void usage(FILE *f) {
     fprintf(f, "\n"
-            "usage: %s [options] inputFile.h5 [data] [data2]\n"
-            "\n"
-            "where data and data2 can be one of the following strings:\n"
-            "\t times\n"
-            "\t kz\n"
-            "\t points\n"
-            "\n"
-            "\tdata is mandatory\n"
-            "\tdata2 is optional and specifies binning in the 2nd dimension\n\n"
-            "[options]:\n"
-            "\t -h display help\n"
-            "\t -b [size] bin size (in deg for kz)\n"
-            "\t -c [size] bin size for 2nd dimension (in deg for kz)\n"
-            "\t -m [M] print only one bin every M bins\n"
-            "\t -n [N] print only one bin every N bins (2nd dim)\n"
-            "\t -v output also spatial variance (valid only for 1d histograms on time)\n"
-            "\t -t [tbrk] walker types (defaults to tb)\n"
-            "\n", progName);
+               "usage: %s [options] inputFile.h5 [data] [data2]\n"
+               "\n"
+               "where data and data2 can be one of the following strings:\n"
+               "\t times\n"
+               "\t kz\n"
+               "\t points\n"
+               "\n"
+               "\tdata is mandatory\n"
+               "\tdata2 is optional and specifies binning in the 2nd dimension\n\n"
+               "[options]:\n"
+               "\t -h display help\n"
+               "\t -b [size] bin size (in deg for kz)\n"
+               "\t -c [size] bin size for 2nd dimension (in deg for kz)\n"
+               "\t -m [M] print only one bin every M bins\n"
+               "\t -n [N] print only one bin every N bins (2nd dim)\n"
+               "\t -v output also spatial variance (valid only for 1d histograms on time)\n"
+               "\t -t [tbrk] walker types (defaults to tb)\n"
+               "\n", progName);
 }
 
 void preprocessData(DataGroup dataGroup, int dimension) {
@@ -177,10 +177,7 @@ int main(int argc, char *argv[])
             break;
 
         case 't':
-        {
-            XMLParser parser;
-            wFlags = parser.walkerSaveFlags(optarg);
-        }
+            wFlags = walkerSaveFlags(optarg);
             break;
 
         default:
@@ -268,21 +265,11 @@ int main(int argc, char *argv[])
         case DATA_POINTS:
             entriesPerWalker[d] = 2;
             break;
-        case DATA_K: {
-            XMLParser parser;
-            parser.setXMLContent(file.readXMLDescription());
-            parser.parseOutput();
-            if(!(parser.exitKVectorsDirsSaveFlags() & DIR_Z))
-            {
-                fprintf(stderr,"Error: file does not contain kz data\n");
-                usage(stderr);
-                exit(EXIT_FAILURE);
-            }
-            for (uint i = 0; i < 3; ++i) {
-                if(parser.exitKVectorsDirsSaveFlags() & (1 << i))
-                    entriesPerWalker[d]++;
-            }
-        }
+        case DATA_K:
+            //FIXME: assuming only kz values are stored in the dataset
+            entriesPerWalker[d] = 1;
+            break;
+
         default:
             break;
         }

@@ -79,10 +79,7 @@ int main(int argc, char *argv[])
             break;
 
         case 't':
-        {
-            XMLParser parser;
-            wFlags = parser.walkerSaveFlags(optarg);
-        }
+            wFlags = walkerSaveFlags(optarg);
             break;
 
         default:

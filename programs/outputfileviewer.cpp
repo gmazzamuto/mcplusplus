@@ -1,5 +1,4 @@
 #include "outputfileviewer.h"
-#include "xmlparser.h"
 
 OutputFileViewer::OutputFileViewer(const char *fileName, QWidget *parent) :
     GLWidget(parent)
@@ -10,9 +9,10 @@ OutputFileViewer::OutputFileViewer(const char *fileName, QWidget *parent) :
     file = new H5OutputFile();
     file->openFile(fileName);
 
-    XMLParser parser;
-    parser.parseString(file->readXMLDescription());
-    sample = parser.sample();
+//    FIXME XMLParser
+//    XMLParser parser;
+//    parser.parseString(file->readXMLDescription());
+//    sample = parser.sample();
 
     transmitted = file->transmitted();
     transmittedExitPoints = (MCfloat*)malloc(2*sizeof(MCfloat)*transmitted);

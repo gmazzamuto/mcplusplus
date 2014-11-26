@@ -1,34 +1,29 @@
 #include "tests.h"
 
 void testBilayer() {
-    stringstream ss;
-    ss << "<MCPlusPlus>"
-          "<materials>"
-          "<material name=\"material1\" n=\"1.5\" ls=\"1\" g=\"0\"/>"
-          "<material name=\"material2\" n=\"1.3\" ls=\"2\" g=\"0.5\"/>"
-          "</materials>"
-          "<MLSample left=\"Air\" right=\"Air\">"
-          "  <layer material=\"material1\" thickness=\"40\" />"
-          "  <layer material=\"material2\" thickness=\"40\" />"
-          "</MLSample>"
-          "<source type=\"PencilBeamSource\" walkTime=\"0\"/>"
-          "<output file=\"" << outputFileName <<  "\" walk-times=\"t\" exit-points=\"t\" exit-k=\"t\" exit-k-dirs=\"z\"/>"
-          "<simulation time-origin-z=\"0\"/>"
-          "</MCPlusPlus>";
+    Material mat1, mat2;
 
-    cerr << ss.str();
+    mat1.n=1.5;
+    mat1.ls = 1;
+    mat1.g = 0;
 
-    H5OutputFile file;
-    string xmlContent = ss.str();
-    file.newFromXMLContent(xmlContent,outputFileName);
-    file.close();
+    mat2.n=1.3;
+    mat2.ls = 2;
+    mat2.g = 0.5;
 
-    cerr << "parsing...." << endl;
-    XMLParser parser;
-    parser.setXMLContent(ss.str());
-    parser.parseAll();
+    Sample *sample = new Sample();
+    sample->addLayer(&mat1,40);
+    sample->addLayer(&mat2,40);
+    sample->setSurroundingEnvironment(new Air());
 
-    Simulation *sim = parser.simulation();
+    Source *src = new PencilBeamSource();
+    src->setWalkTimeDistribution(new DeltaDistribution(0));
+
+    Simulation *sim = new Simulation();
+    sim->setSample(sample);
+    sim->setSource(src);
+    sim->setOutputFileName(outputFileName);
+
     sim->setNWalkers(100000);
     sim->setNThreads(4);
     sim->setSeed(0);

@@ -1,7 +1,6 @@
 #ifndef H5OUTPUTFILE_H
 #define H5OUTPUTFILE_H
 
-#include "xmlparser.h"
 #include "h5filehelper.h"
 
 /**
@@ -11,9 +10,6 @@
  * The H5 files created by MCPlusPlus are organized in groups and datasets.
  *
  * The root group contains the following datasets:
- *
- * - XMLDescription: the
- * content of the provided XML file describing the simulation.
  *
  * - photon-counters: an array of 4 elements (one per walkerType), containing
  * the total number of photons of that type
@@ -38,8 +34,6 @@ public:
     virtual ~H5OutputFile();
 
     virtual bool newFile(const char *fileName, bool create_datasets=true);
-    bool newFromXML(const char *xmlFile, const char *fileName);
-    bool newFromXMLContent(const string xmlContent, const char *fileName);
     void appendExitKVectors(walkerType type, const MCfloat *buffer, const hsize_t size);
     void appendExitPoints(walkerType type, const MCfloat *buffer, const hsize_t size);
     void appendWalkTimes(walkerType type, const MCfloat *buffer, const hsize_t size);
@@ -57,12 +51,6 @@ public:
     u_int64_t reflected() const;
     u_int64_t backReflected() const;
     const u_int64_t *photonCounters() const;
-    void writeXMLDescription(const char *inputFile);
-    void writeXMLDescription(const string xmlDescription);
-    string readXMLDescription();
-    Simulation *simulation() const;
-    XMLParser *xmlParser() const;
-    void setXMLParserEnabled(bool enable);
 
 private:
     bool createDatasets(uint walkTimesSaveFlags, uint exitPointsSaveFlags, uint exitKVectorsSaveFlags);
@@ -74,9 +62,6 @@ private:
     bool openFile_impl();
 
     u_int64_t _photonCounters[4];
-
-    XMLParser *_parser;
-    bool XMLParserEnabled;
 };
 
 #endif // H5OUTPUTFILE_H

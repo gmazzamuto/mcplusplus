@@ -2,6 +2,7 @@
 #define TESTS_H
 
 #include "h5outputfile.h"
+#include "simulation.h"
 
 const char outputFileName[] = "testOutput.h5";
 

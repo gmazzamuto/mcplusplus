@@ -1,5 +1,4 @@
 #include "h5outputfile.h"
-#include "xmlparser.h"
 
 #include <fstream>
 #include <string.h>
@@ -10,13 +9,10 @@ H5OutputFile::H5OutputFile()
     : H5FileHelper()
 {
     memset(_photonCounters,0,4*sizeof(u_int64_t));
-    _parser = new XMLParser();
-    XMLParserEnabled = false;
 }
 
 H5OutputFile::~H5OutputFile()
 {
-    delete _parser;
 }
 
 bool H5OutputFile::newFile(const char *fileName, bool create_datasets)
@@ -31,57 +27,6 @@ bool H5OutputFile::newFile(const char *fileName, bool create_datasets)
         if(!ret)
             return false;
     }
-    return true;
-}
-
-/**
- * @brief Creates a new file based on the parameters specified in an XML file.
- * @param xmlFile
- * @param fileName
- * @return true on success, false on failure
- *
- * The given XML file is parsed by XMLParser and only the needed datasets are
- * created. The content of the XML file itself is copied in the dataset
- * "XMLDescription".
- */
-
-bool H5OutputFile::newFromXML(const char *xmlFile, const char *fileName)
-{
-    bool ret = newFile(fileName,false);
-    if(!ret)
-        return false;
-    XMLParser parser;
-    parser.setXMLFile(xmlFile);
-    parser.parseOutput();
-
-    createDatasets(parser.walkTimesSaveFlags(),parser.exitPointsSaveFlags(),parser.exitKVectorsSaveFlags());
-
-    writeXMLDescription(xmlFile);
-    return true;
-}
-
-/**
- * @brief Creates a new file based on the parameters specified in the given XML
- *        description.
- * @param xmlContent
- * @param fileName
- * @return true on success, false on failure
- *
- * As newFromXML(), but use the specified XML instead of reading it from a file.
- */
-
-bool H5OutputFile::newFromXMLContent(const string xmlContent, const char *fileName)
-{
-    bool ret = newFile(fileName,false);
-    if(!ret)
-        return false;
-    XMLParser parser;
-    parser.setXMLContent(xmlContent);
-    parser.parseOutput();
-
-    createDatasets(parser.walkTimesSaveFlags(),parser.exitPointsSaveFlags(),parser.exitKVectorsSaveFlags());
-
-    writeXMLDescription(xmlContent);
     return true;
 }
 
@@ -333,18 +278,6 @@ string H5OutputFile::readVLenString(const char *datasetName) const
 
 bool H5OutputFile::openFile_impl()
 {
-    if(XMLParserEnabled) {
-        vector<string> RNGStates;
-        _parser->parseString(readXMLDescription());
-        uint s = 0;
-        openDataSet("RNGStates");
-        while (s<dims[0]) {
-            RNGStates.push_back(readRNGState(s));
-            s++;
-        }
-        _parser->simulation()->setMultipleRNGStates(RNGStates);
-    }
-
     DataSet dSet = file->openDataSet("photon-counters");
     dSet.read(_photonCounters,dSet.getDataType());
     dSet.close();
@@ -432,41 +365,6 @@ const u_int64_t *H5OutputFile::photonCounters() const
     return _photonCounters;
 }
 
-void H5OutputFile::writeXMLDescription(const char *inputFile)
-{
-    //read whole file to string
-    std::ifstream f(inputFile);
-    std::string str((std::istreambuf_iterator<char>(f)),
-                    std::istreambuf_iterator<char>());
-
-    writeXMLDescription(str);
-}
-
-void H5OutputFile::writeXMLDescription(const string xmlDescription)
-{
-    writeVLenString("XMLDescription", xmlDescription);
-}
-
-string H5OutputFile::readXMLDescription()
-{
-    return readVLenString("XMLDescription");
-}
-
-Simulation *H5OutputFile::simulation() const
-{
-    return _parser->simulation();
-}
-
-XMLParser *H5OutputFile::xmlParser() const
-{
-    return _parser;
-}
-
-void H5OutputFile::setXMLParserEnabled(bool enable)
-{
-    XMLParserEnabled = enable;
-}
-
 bool H5OutputFile::createDatasets(uint walkTimesSaveFlags, uint exitPointsSaveFlags, uint exitKVectorsSaveFlags)
 {
 #define NWALKER_CHUNK sizeof(MCfloat) * 8192
@@ -526,13 +424,6 @@ bool H5OutputFile::createDatasets(uint walkTimesSaveFlags, uint exitPointsSaveFl
         if(exitKVectorsSaveFlags & FLAG_BACKREFLECTED)
             ret = newDataset("exit-k-vectors/back-reflected",ndims,dims,chunkDims);
     }
-
-    dims[0] = 1;
-    StrType dtype(0, H5T_VARIABLE);
-    DataSpace dspace(1,dims,dims);
-    file->createDataSet("XMLDescription",dtype,dspace);
-    dtype.close();
-    dspace.close();
 
     return ret;
 }
