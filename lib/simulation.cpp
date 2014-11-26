@@ -772,6 +772,9 @@ void Simulation::saveOutput()
     }
 
     file.appendPhotonCounts(photonCounters);
+
+    file.saveSample(_sample);
+
     file.close();
     logMessage("Data written to %s", outputFile);
 }

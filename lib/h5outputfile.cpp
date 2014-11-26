@@ -365,6 +365,55 @@ const u_int64_t *H5OutputFile::photonCounters() const
     return _photonCounters;
 }
 
+void H5OutputFile::saveSample(const Sample *sample)
+{
+    char datasetName[] = "sample";
+    if(dataSetExists(datasetName))
+        return;
+
+    int ndims = 2;
+    hsize_t dims[ndims], chunkDims[ndims];
+
+    hsize_t nLayers = sample->nLayers();
+
+    dims[1] = 4; chunkDims[1] = 4;
+    dims[0] = nLayers+2; chunkDims[0] = 1;
+    newDataset(datasetName,ndims,dims,chunkDims);
+
+    openDataSet(datasetName);
+    dims[1] = nLayers;
+    MCfloat buffer[(nLayers+2)*4];
+    const deque< MCfloat > *boundaries = sample->zBoundaries();
+
+    uint i = 0;
+    buffer[i++] = -1;
+    Material *mat = sample->material(0);
+    buffer[i++] = mat->n;
+    buffer[i++] = mat->ls;
+    buffer[i++] = mat->g;
+
+    for (uint n = 0; n < nLayers; ++n) {
+        buffer[i++] = boundaries->at(n+1) - boundaries->at(n);
+        Material *mat = sample->material(n+1);
+        buffer[i++] = mat->n;
+        buffer[i++] = mat->ls;
+        buffer[i++] = mat->g;
+    }
+
+    buffer[i++] = -1;
+    mat = sample->material(nLayers+1);
+    buffer[i++] = mat->n;
+    buffer[i++] = mat->ls;
+    buffer[i++] = mat->g;
+
+    hsize_t start[2], count[2];
+    start[0] = 0; start[1] = 0;
+    count[0] = nLayers+2; count[1] = 4;
+
+    writeHyperSlab(start, count, buffer);
+
+}
+
 bool H5OutputFile::createDatasets(uint walkTimesSaveFlags, uint exitPointsSaveFlags, uint exitKVectorsSaveFlags)
 {
 #define NWALKER_CHUNK sizeof(MCfloat) * 8192

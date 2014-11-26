@@ -17,9 +17,9 @@ class Material
 public:
     Material();
     virtual ~Material();
+    MCfloat n;  /**< @brief refractive index (\f$ n \in \mathbb{R} \f$)*/
     MCfloat ls;  /**< @brief scattering mean free path*/
     MCfloat g;  /**< @brief scattering anisotropy factor \f$ g = \left\langle \cos \theta \right \rangle \f$*/
-    MCfloat n;  /**< @brief refractive index (\f$ n \in \mathbb{R} \f$)*/
     MCfloat v;  /**< @brief phase velocity \note please beware of the difference between phase, group and energy velocity */
 
     void setWavelength(MCfloat um);
