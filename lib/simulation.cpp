@@ -481,7 +481,7 @@ unsigned int Simulation::layerAt(const MCfloat *r0) const {
  */
 
 void Simulation::move(const MCfloat length) {
-    if(walker.r1[2] > currLayerLowerBoundary && walker.r1[2] <= currLayerUpperBoundary)
+    if(walker.r1[2] >= currLayerLowerBoundary && walker.r1[2] <= currLayerUpperBoundary)
     {
         walker.swap_r0_r1();
         walker.swap_k0_k1();
