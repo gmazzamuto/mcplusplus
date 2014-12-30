@@ -61,7 +61,7 @@ enum directions {
     ALL_DIRS = 0xf,
 };
 
-enum DataGroup {
+enum MCData {
     DATA_NONE,
     DATA_POINTS,
     DATA_K,

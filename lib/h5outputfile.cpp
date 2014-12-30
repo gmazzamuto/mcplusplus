@@ -158,7 +158,7 @@ bool H5OutputFile::loadExitKVectors(walkerType type, MCfloat *destBuffer, const 
     return ret;
 }
 
-bool H5OutputFile::loadData(DataGroup group, walkerType type, MCfloat *destBuffer, const hsize_t *start, const hsize_t *count)
+bool H5OutputFile::loadData(MCData group, walkerType type, MCfloat *destBuffer, const hsize_t *start, const hsize_t *count)
 {
     stringstream ss;
     switch (group) {

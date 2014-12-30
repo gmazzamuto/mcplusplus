@@ -44,7 +44,7 @@ void usage(FILE *f) {
                "\n", progName);
 }
 
-void preprocessData(DataGroup dataGroup, int dimension) {
+void preprocessData(MCData dataGroup, int dimension) {
     MCfloat **_data = data[dimension];
 
     if(dataGroup == DATA_TIMES) {
@@ -193,7 +193,7 @@ int main(int argc, char *argv[])
     }
 
     const char *fileName = argv[optind++];
-    DataGroup dataGroup[2] = {DATA_NONE, DATA_NONE};
+    MCData dataGroup[2] = {DATA_NONE, DATA_NONE};
     const char *dataGroupString = argv[optind++];
     if(strcmp(dataGroupString,"times") == 0)
         dataGroup[0] = DATA_TIMES;
@@ -282,7 +282,7 @@ int main(int argc, char *argv[])
         for (uint type = 0; type < 4; type++) {
             if(dataGroup[i] != DATA_NONE && (wFlags & walkerTypeToFlag(type) )) {
                 data[i][type] = (MCfloat*)malloc(sizeof(MCfloat)*photonCounters[type]*entriesPerWalker[i]);
-                if(!file.loadData((DataGroup)dataGroup[i],(walkerType)type, data[i][type])) {
+                if(!file.loadData((MCData)dataGroup[i],(walkerType)type, data[i][type])) {
                     free(data[i][type]);
                     data[i][type] = NULL;
                 }
