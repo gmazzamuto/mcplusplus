@@ -1,6 +1,8 @@
 #include "walker.h"
 #include <string.h> //for memset()
 
+using namespace MCPP;
+
 Walker::Walker()
 {
     r0 = (MCfloat*)calloc(3,sizeof(MCfloat));

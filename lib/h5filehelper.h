@@ -14,6 +14,8 @@
 
 using namespace H5;
 
+namespace MCPP {
+
 /**
  * @brief The H5FileHelper class is a convenience wrapper around H5::H5File.
  */
@@ -66,4 +68,5 @@ private:
     virtual void closeDataSet_impl();
 };
 
+}
 #endif // H5FILEHELPER_H

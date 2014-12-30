@@ -1,6 +1,7 @@
 #include "baserandom.h"
 
 #include <fstream>
+using namespace MCPP;
 
 BaseRandom::BaseRandom(BaseObject *parent) :
     BaseObject(NULL), mt(NULL)

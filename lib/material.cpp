@@ -2,7 +2,7 @@
 #include <cmath>
 #include <limits>
 
-using namespace std;
+using namespace MCPP;
 
 Material::Material()
 {

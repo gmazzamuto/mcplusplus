@@ -5,6 +5,8 @@
 #include "sample.h"
 #include "costhetagenerator.h"
 
+namespace MCPP {
+
 /**
  * @brief The Simulation class is the core of the MC method
  *
@@ -139,4 +141,5 @@ private:
     void updateLayerVariables(const uint layer);
 };
 
+}
 #endif // SIMULATION_H

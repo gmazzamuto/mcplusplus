@@ -2,6 +2,8 @@
 #define COSTHETAGENERATOR_H
 #include "distributions.h"
 
+namespace MCPP {
+
 /**
  * @brief Spins the value of \f$ \cos \theta \f$ after a scattering event in
  * accordance with given anisotropy factor \f$ g \f$
@@ -20,4 +22,5 @@ private:
     MCfloat g;  /**< @brief scattering anisotropy factor*/
 };
 
+}
 #endif // COSTHETAGENERATOR_H

@@ -1,6 +1,8 @@
 /* File : pymcplusplus.i */
 %module pymcplusplus
 
+namespace MCPP {}
+
 %{
 #include "baseobject.h"
 #include "baserandom.h"
@@ -23,6 +25,8 @@
 #include <boost/property_tree/ptree.hpp>
 #include "h5filehelper.h"
 #include "h5outputfile.h"
+
+using namespace MCPP;
 %}
 
 

@@ -1,5 +1,7 @@
 #include "MCglobal.h"
 
+namespace MCPP {
+
 uint walkerFlagToType(walkerFlags flag)
 {
     uint ret = 0xffffffff;
@@ -64,4 +66,6 @@ unsigned int walkerSaveFlags(const string flags) {
     }
 
     return ret;
+}
+
 }

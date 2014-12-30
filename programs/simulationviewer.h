@@ -4,6 +4,8 @@
 #include "glwidget.h"
 #include "simulation.h"
 
+using namespace MCPP;
+
 class SimulationViewer : public GLWidget
 {
     Q_OBJECT

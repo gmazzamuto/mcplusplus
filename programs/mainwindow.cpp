@@ -3,6 +3,8 @@
 #include "gaussianraybundlesource.h"
 #include "glwidget.h"
 
+using namespace MCPP;
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
 {

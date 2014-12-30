@@ -4,6 +4,7 @@
 
 using namespace boost::math::constants;
 using namespace boost::math;
+using namespace MCPP;
 
 /**
  * @brief Constructs a cylindrically symmetric Gaussian ray-optics bundle

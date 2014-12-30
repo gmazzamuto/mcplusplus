@@ -5,6 +5,8 @@
 #include <QMainWindow>
 #include "simulationviewer.h"
 
+using namespace MCPP;
+
 int main(int argc, char *argv[])
 {
     Source *source = new Source();

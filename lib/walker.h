@@ -4,6 +4,8 @@
 #include "MCglobal.h"
 #include <vector>
 
+namespace MCPP {
+
 using namespace std;
 
 class Walker
@@ -34,4 +36,5 @@ public:
     MCfloat walkTime;  /**< @brief total walk time */
 };
 
+}
 #endif // WALKER_H

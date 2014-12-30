@@ -5,6 +5,8 @@
 #include <QRectF>
 #include "h5outputfile.h"
 
+using namespace MCPP;
+
 class MCMovieCreator : public H5FileHelper
 {
 

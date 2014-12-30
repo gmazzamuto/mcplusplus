@@ -4,6 +4,8 @@
 #include <cmath>
 #include "baserandom.h"
 
+namespace MCPP {
+
 /**
   * \defgroup Distributions Distributions
   * \brief Classes providing random distributions
@@ -185,4 +187,5 @@ private:
     MCfloat mean, scale;
 };
 
+}
 #endif // DISTRIBUTIONS_H

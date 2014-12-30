@@ -18,6 +18,8 @@ typedef float MCfloat;
 
 /*! \file */
 
+namespace MCPP {
+
 using namespace std;
 
 /**
@@ -72,5 +74,6 @@ extern uint walkerFlagToType(walkerFlags flag);
 extern walkerFlags walkerTypeToFlag(uint index);
 extern string walkerTypeToString(uint index);
 extern unsigned int walkerSaveFlags(const string flags);
+}
 
 #endif // MCGLOBAL_H

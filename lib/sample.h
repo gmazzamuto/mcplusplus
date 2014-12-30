@@ -6,6 +6,8 @@
 #include <vector>
 #include <deque>
 
+namespace MCPP {
+
 using namespace std;
 
 /**
@@ -35,4 +37,5 @@ private:
     virtual void describe_impl() const;
 };
 
+}
 #endif // SAMPLE_H

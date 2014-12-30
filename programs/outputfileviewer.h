@@ -5,6 +5,8 @@
 #include "glwidget.h"
 #include "h5outputfile.h"
 
+using namespace MCPP;
+
 class OutputFileViewer : public GLWidget
 {
     Q_OBJECT

@@ -3,7 +3,7 @@
 #include <boost/math/constants/constants.hpp>
 
 using namespace boost::math::constants;
-
+using namespace MCPP;
 
 
 

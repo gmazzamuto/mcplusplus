@@ -2,6 +2,8 @@
 
 #include <limits>
 
+using namespace MCPP;
+
 Sample::Sample(BaseObject *parent) :
     BaseObject(parent)
 {

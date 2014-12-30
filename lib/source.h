@@ -4,6 +4,8 @@
 #include "walker.h"
 #include "distributions.h"
 
+namespace MCPP {
+
 /**
  * @brief Base Source class: constructs and initializes a Walker according to
  * given source term modeling.
@@ -124,4 +126,5 @@ private:
     virtual void describe_impl() const;
 };
 
+}
 #endif // SOURCE_H

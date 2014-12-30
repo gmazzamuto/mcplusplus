@@ -12,6 +12,7 @@
 using namespace boost;
 using namespace boost::math;
 using namespace boost::math::constants;
+using namespace MCPP;
 
 Simulation *mainSimulation=NULL;
 Simulation *mostRecentInstance=NULL;
@@ -748,13 +749,16 @@ void Simulation::saveOutput()
         outputFile = "output.h5";
         logMessage("No output file name provided, writing to %s", outputFile);
         file.newFile(outputFile);
+        file.saveSample(_sample);
     }
     else if(access(outputFile,F_OK)<0) {
         file.newFile(outputFile);
+        file.saveSample(_sample);
     }
     else if(!file.openFile(outputFile)) {
         logMessage("Cannot open %s, writing to output.h5", outputFile);
         file.newFile("output.h5");
+        file.saveSample(_sample);
     }
 
     file.saveRNGState(currentSeed(), generatorState());
@@ -772,8 +776,6 @@ void Simulation::saveOutput()
     }
 
     file.appendPhotonCounts(photonCounters);
-
-    file.saveSample(_sample);
 
     file.close();
     logMessage("Data written to %s", outputFile);

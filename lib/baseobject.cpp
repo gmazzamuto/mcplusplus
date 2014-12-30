@@ -8,6 +8,8 @@
 #include <stdio.h>
 #include <vector>
 
+using namespace MCPP;
+
 BaseObject::BaseObject(BaseObject *parent)
 {
     _hasAParent = false;

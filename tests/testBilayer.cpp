@@ -2,6 +2,9 @@
 
 #include <iostream>
 
+using namespace std;
+using namespace MCPP;
+
 void pass() {
     cout << "testBilayer PASSED" << endl;
     remove(outputFileName);

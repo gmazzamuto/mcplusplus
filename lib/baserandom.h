@@ -6,6 +6,8 @@
 
 using namespace boost::random;
 
+namespace MCPP {
+
 /**
  * @brief The BaseRandom class is the base class for all the objects needing a
  * RNG.
@@ -67,4 +69,5 @@ private:
     virtual bool sanityCheck_impl() const;
 };
 
+}
 #endif // BASERANDOM_H

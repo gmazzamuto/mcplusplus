@@ -3,6 +3,8 @@
 
 #include <string.h>
 
+using namespace MCPP;
+
 H5FileHelper::H5FileHelper(BaseObject *parent) :
     BaseObject(parent)
 {

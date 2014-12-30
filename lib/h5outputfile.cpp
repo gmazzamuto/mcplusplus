@@ -5,6 +5,8 @@
 
 #define MAX_RNGSTATE_STR_LEN 6900
 
+using namespace MCPP;
+
 H5OutputFile::H5OutputFile()
     : H5FileHelper()
 {

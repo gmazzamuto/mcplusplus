@@ -3,6 +3,8 @@
 
 #include "MCglobal.h"
 
+namespace MCPP {
+
 const MCfloat LIGHT_SPEED = 299.792458; // um/ps
 //const MCfloat INV_LIGHT_SPEED = 1.0/LIGHT_SPEED;
 
@@ -123,4 +125,5 @@ private:
     virtual MCfloat dispersionRelation(MCfloat lambda_um);
 };
 
+}
 #endif // MATERIAL_H

@@ -3,6 +3,8 @@
 
 #include "h5filehelper.h"
 
+using namespace MCPP;
+
 class H5Movie : public H5FileHelper
 {
 public:

@@ -1,5 +1,7 @@
 #include "tests.h"
 
+using namespace MCPP;
+
 void testBilayer() {
     Material mat1, mat2;
 

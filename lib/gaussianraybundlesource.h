@@ -4,6 +4,8 @@
 #include "source.h"
 #include "sample.h"
 
+namespace MCPP {
+
 /**
  * @brief Ray-optic description of a Gaussian beam waist
  *
@@ -50,4 +52,5 @@ private:
     UniformDistribution *uRand;
 };
 
+}
 #endif // GAUSSIANRAYBUNDLESOURCE_H

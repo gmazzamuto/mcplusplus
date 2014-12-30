@@ -8,6 +8,7 @@
 
 using namespace boost::math::constants;
 using namespace std;
+using namespace MCPP;
 
 const char *progName;
 MCfloat minVal[2], maxVal[2];

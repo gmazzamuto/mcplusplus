@@ -1,5 +1,7 @@
 #include "costhetagenerator.h"
 
+using namespace MCPP;
+
 CosThetaGenerator::CosThetaGenerator(MCfloat g, BaseObject *parent) :
     AbstractDistribution(parent)
 {

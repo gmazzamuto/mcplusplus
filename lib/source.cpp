@@ -2,6 +2,8 @@
 #include "costhetagenerator.h"
 #include "psigenerator.h"
 
+using namespace MCPP;
+
 Source::Source(BaseObject *parent) :
     BaseRandom(parent)
 {

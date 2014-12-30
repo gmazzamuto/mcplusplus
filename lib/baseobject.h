@@ -8,7 +8,7 @@
 #include <cstdarg>
 #include <sstream>
 
-using namespace std;
+namespace MCPP {
 
 /**
  * @brief The BaseObject class is the base class for many MCPlusPlus objects.
@@ -80,5 +80,7 @@ private:
 
     virtual void describe_impl() const;
 };
+
+}
 
 #endif // BASEOBJECT_H
