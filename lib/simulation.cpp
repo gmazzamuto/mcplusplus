@@ -256,12 +256,12 @@ void Simulation::runMultipleThreads()
     sims.clear();
     installSigTermHandler();
 
-    unsigned int walkersPerThread = nWalkers()/_nThreads;
-    unsigned int remainder = nWalkers() % _nThreads;
+    u_int64_t walkersPerThread = nWalkers()/_nThreads;
+    u_int64_t remainder = nWalkers() % _nThreads;
 
     for (unsigned int n = 0; n < _nThreads; ++n) {
         Simulation *sim = (Simulation *)clone();
-        unsigned int nWalkers = walkersPerThread;
+        u_int64_t nWalkers = walkersPerThread;
         if(n<remainder)
             nWalkers++;
         sim->setNWalkers(nWalkers);
