@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
 
     sim->setSample(sample);
     sim->setSource(source);
-    sim->setNWalkers(atoi(argv[1]));
+    sim->setNWalkers(atoll(argv[1]));
     sim->setNThreads(atoi(argv[2]));
 
     sim->setSeed(0);
