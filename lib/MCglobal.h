@@ -4,9 +4,7 @@
 #include <iostream>
 #include <cstdlib>
 
-#ifndef DOUBLEPRECISION
 #define DOUBLEPRECISION
-#endif
 
 //#undef DOUBLEPRECISION
 

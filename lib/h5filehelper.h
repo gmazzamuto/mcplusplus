@@ -6,7 +6,13 @@
 
 #ifdef DOUBLEPRECISION
 #define MCH5FLOAT PredType::NATIVE_DOUBLE
-#else
+#endif
+
+#ifdef LONGDOUBLEPRECISION
+#define MCH5FLOAT PredType::NATIVE_LDOUBLE
+#endif
+
+#ifdef SINGLEPRECISION
 #define MCH5FLOAT PredType::NATIVE_FLOAT
 #endif
 

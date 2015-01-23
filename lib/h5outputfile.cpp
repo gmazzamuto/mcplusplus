@@ -441,39 +441,39 @@ bool H5OutputFile::createDatasets(uint walkTimesSaveFlags, uint exitPointsSaveFl
 
         dims[0] = 0; chunkDims[0] = 2*NWALKER_CHUNK;
         if(exitPointsSaveFlags & FLAG_TRANSMITTED)
-            ret = newDataset("exit-points/transmitted",ndims,dims,chunkDims);
+            ret = newDataset("exit-points/transmitted",ndims,dims,chunkDims,MCH5FLOAT);
         if(exitPointsSaveFlags & FLAG_BALLISTIC)
-            ret = newDataset("exit-points/ballistic",ndims,dims,chunkDims);
+            ret = newDataset("exit-points/ballistic",ndims,dims,chunkDims,MCH5FLOAT);
         if(exitPointsSaveFlags & FLAG_REFLECTED)
-            ret = newDataset("exit-points/reflected",ndims,dims,chunkDims);
+            ret = newDataset("exit-points/reflected",ndims,dims,chunkDims,MCH5FLOAT);
         if(exitPointsSaveFlags & FLAG_BACKREFLECTED)
-            ret = newDataset("exit-points/back-reflected",ndims,dims,chunkDims);
+            ret = newDataset("exit-points/back-reflected",ndims,dims,chunkDims,MCH5FLOAT);
     }
 
     if(walkTimesSaveFlags) {
         dims[0] = 0; chunkDims[0] = NWALKER_CHUNK;
         newGroup("walk-times");
         if(walkTimesSaveFlags & FLAG_TRANSMITTED)
-            ret = newDataset("walk-times/transmitted",ndims,dims,chunkDims);
+            ret = newDataset("walk-times/transmitted",ndims,dims,chunkDims,MCH5FLOAT);
         if(walkTimesSaveFlags & FLAG_BALLISTIC)
-            ret = newDataset("walk-times/ballistic",ndims,dims,chunkDims);
+            ret = newDataset("walk-times/ballistic",ndims,dims,chunkDims,MCH5FLOAT);
         if(walkTimesSaveFlags & FLAG_REFLECTED)
-            ret = newDataset("walk-times/reflected",ndims,dims,chunkDims);
+            ret = newDataset("walk-times/reflected",ndims,dims,chunkDims,MCH5FLOAT);
         if(walkTimesSaveFlags & FLAG_BACKREFLECTED)
-            ret = newDataset("walk-times/back-reflected",ndims,dims,chunkDims);
+            ret = newDataset("walk-times/back-reflected",ndims,dims,chunkDims,MCH5FLOAT);
     }
 
     if(exitKVectorsSaveFlags) {
         dims[0] = 0; chunkDims[0] = 3*NWALKER_CHUNK/2;
         newGroup("exit-k-vectors");
         if(exitKVectorsSaveFlags & FLAG_TRANSMITTED)
-            ret = newDataset("exit-k-vectors/transmitted",ndims,dims,chunkDims);
+            ret = newDataset("exit-k-vectors/transmitted",ndims,dims,chunkDims,MCH5FLOAT);
         if(exitKVectorsSaveFlags & FLAG_BALLISTIC)
-            ret = newDataset("exit-k-vectors/ballistic",ndims,dims,chunkDims);
+            ret = newDataset("exit-k-vectors/ballistic",ndims,dims,chunkDims,MCH5FLOAT);
         if(exitKVectorsSaveFlags & FLAG_REFLECTED)
-            ret = newDataset("exit-k-vectors/reflected",ndims,dims,chunkDims);
+            ret = newDataset("exit-k-vectors/reflected",ndims,dims,chunkDims,MCH5FLOAT);
         if(exitKVectorsSaveFlags & FLAG_BACKREFLECTED)
-            ret = newDataset("exit-k-vectors/back-reflected",ndims,dims,chunkDims);
+            ret = newDataset("exit-k-vectors/back-reflected",ndims,dims,chunkDims,MCH5FLOAT);
     }
 
     return ret;
