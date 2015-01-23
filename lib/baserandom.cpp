@@ -36,7 +36,7 @@ void BaseRandom::setSeed(unsigned int seed) {
     if(hasAParent() && parent()->inheritsRandom())
         return;
     _currentSeed = seed;
-    setRNG(new mt19937(seed));
+    setRNG(new MCEngine(seed));
 }
 
 /**
@@ -62,7 +62,7 @@ void BaseRandom::loadGeneratorState(const char *fileName)
     logMessage("Loading RNG state from: %s",fileName);
     ifstream file;
     file.open(fileName);
-    mt19937 *mt = new mt19937(0);
+    MCEngine *mt = new MCEngine(0);
     file >> *mt;
     setRNG(mt);
     file.close();
@@ -90,7 +90,7 @@ string BaseRandom::generatorState() const
 
 void BaseRandom::setGeneratorState(string state)
 {
-    mt19937 *mt = new mt19937(0);
+    MCEngine *mt = new MCEngine(0);
     stringstream ss;
     ss << state;
     ss >> *mt;
@@ -126,7 +126,7 @@ unsigned int BaseRandom::currentSeed() const
  * The specified RNG is propagated to all child BaseRandoms.
  */
 
-void BaseRandom::setRNG(mt19937 *mt) {
+void BaseRandom::setRNG(MCEngine *mt) {
     if(mt == NULL)
         return;
     if(!hasAParent() && this->mt != NULL)

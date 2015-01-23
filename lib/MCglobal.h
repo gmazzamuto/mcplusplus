@@ -11,9 +11,15 @@
 //#undef DOUBLEPRECISION
 
 #ifdef DOUBLEPRECISION
-typedef double MCfloat;
-#else
-typedef float MCfloat;
+    typedef double MCfloat;
+#endif
+
+#ifdef LONGDOUBLEPRECISION
+    typedef long double MCfloat;
+#endif
+
+#ifdef SINGLEPRECISION
+    typedef float MCfloat;
 #endif
 
 /*! \file */

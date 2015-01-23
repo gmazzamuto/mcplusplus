@@ -15,7 +15,7 @@ H5Movie::H5Movie() :
 void H5Movie::allocateFrameDataMemory() {
     if(frameData !=NULL)
         free(frameData);
-    frameData = new double[getNpixelsPerFrame()];
+    frameData = new MCfloat[getNpixelsPerFrame()];
 }
 
 void H5Movie::closeDataSet_impl()
@@ -36,7 +36,7 @@ void H5Movie::closeDataSet_impl()
  * If specified, it must be valid and big enough to hold all the frame data.
  */
 
-void H5Movie::loadFrame(hsize_t t, double *destBuffer) {
+void H5Movie::loadFrame(hsize_t t, MCfloat *destBuffer) {
     hsize_t start[3];
     hsize_t count[3];
     start[0] = 0;
@@ -45,7 +45,7 @@ void H5Movie::loadFrame(hsize_t t, double *destBuffer) {
     count[0] = getNx();
     count[1] = getNy();
     count[2] = 1;
-    double *buf = NULL;
+    MCfloat *buf = NULL;
     if(destBuffer==NULL) {
         if(frameData==NULL)
             allocateFrameDataMemory();
@@ -63,7 +63,7 @@ void H5Movie::loadFrame(hsize_t t, double *destBuffer) {
  * @param t The time frame to be written
  */
 
-void H5Movie::writeFrame(double *srcBuffer, hsize_t t) {
+void H5Movie::writeFrame(MCfloat *srcBuffer, hsize_t t) {
     hsize_t start[3];
     hsize_t count[3];
     start[0] = 0;

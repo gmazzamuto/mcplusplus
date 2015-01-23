@@ -8,6 +8,18 @@ using namespace boost::random;
 
 namespace MCPP {
 
+#ifdef DOUBLEPRECISION
+    typedef mt19937 MCEngine;
+#endif
+
+#ifdef LONGDOUBLEPRECISION
+    typedef mt19937_64 MCEngine;
+#endif
+
+#ifdef SINGLEPRECISION
+    typedef mt19937 MCEngine;
+#endif
+
 /**
  * @brief The BaseRandom class is the base class for all the objects needing a
  * RNG.
@@ -54,13 +66,13 @@ public:
     void setGeneratorState(string state);
 
 protected:
-    mt19937* mt;
+    MCEngine* mt;
     unsigned int _currentSeed;
 
 private:
     list<BaseRandom *> randomChildList;
 
-    void setRNG(mt19937 *mt);
+    void setRNG(MCEngine *mt);
     virtual void setRNG_impl();
     virtual void setParent_impl(BaseObject *parent);
     virtual void addChild_impl(BaseObject *child);
