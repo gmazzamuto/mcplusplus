@@ -377,10 +377,12 @@ int main(int argc, char *argv[])
         for (unsigned int i = 0; i < nBins[1]; ++i) {
             if(i % binStride[1] != 0)
                 continue;
+            MCfloat binCenter;
             if(dataGroup[1] == DATA_K)
-                cout << "\tb-" << cos(binSize[1]*(i+0.5));
+                binCenter = cos(binSize[1]*(i+0.5)/degPerRad);
             else
-                cout << "\tb-" << binSize[1]*(i+0.5);
+                binCenter = floor(minVal[1]/binSize[1])*binSize[1] + binSize[1]*(i+0.5);
+            cout << "\tb-" << binCenter;
         }
     else
         cout << "\tcounts";
