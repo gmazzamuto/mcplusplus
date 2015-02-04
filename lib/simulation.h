@@ -102,6 +102,8 @@ private:
     unsigned int nLayers;
     unsigned int layer0;
     unsigned int layer1;
+    MCfloat *r0, *r1;
+    MCfloat *k0, *k1;
     const vector<u_int64_t> *_nInteractions;
     MCfloat totalLengthInCurrentLayer;
     bool kNeedsToBeScattered;
@@ -130,6 +132,20 @@ private:
     virtual BaseObject* clone_impl() const;
 
     void saveOutput();
+
+    inline void swap_r0_r1()
+    {
+        MCfloat *temp = r1;
+        r1 = r0;
+        r0 = temp;
+    }
+
+    inline void swap_k0_k1()
+    {
+        MCfloat *temp = k1;
+        k1 = k0;
+        k0 = temp;
+    }
 
     unsigned int walkTimesSaveFlags, exitPointsSaveFlags, exitKVectorsDirsSaveFlags, exitKVectorsSaveFlags;
     vector<string> multipleRNGStates;
