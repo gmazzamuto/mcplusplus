@@ -29,6 +29,7 @@ public:
 //    void scale(u_int64_t totalNumberOfPhotons);
     void appendCounts(const Histogram *rhs);
     void dump() const;
+    void saveToFile(const char *fileName) const;
     void setScale(u_int64_t totalPhotons);
     u_int64_t *histo;
 

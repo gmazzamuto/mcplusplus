@@ -1,7 +1,10 @@
 #include "histogram.h"
 #include <cmath>
 
+#include "h5filehelper.h"
+
 #include <boost/math/constants/constants.hpp>
+
 
 using namespace boost::math::constants;
 
@@ -227,13 +230,44 @@ void Histogram::appendCounts(const Histogram *rhs)
 
 void Histogram::dump() const
 {
+    u_int64_t total = 0;
     for (size_t i = 0; i < nBins[0]; ++i) {
         for (size_t j = 0; j < nBins[1]; ++j) {
             size_t idx = i*nBins[1] + j;
             cout << histo[idx] << "\t";
+            total += histo[idx];
         }
         cout << endl;
     }
+    cout << "total: " << total << endl;
+}
+
+void Histogram::saveToFile(const char *fileName) const
+{
+    H5FileHelper *file = new H5FileHelper(0);
+    file->newFile(fileName);
+    hsize_t dims[2] = {nBins[0],nBins[1]};
+    hsize_t chunk_dim[2] = {nBins[0],nBins[1]};
+    file->newDataset("data",2,dims,chunk_dim);
+
+    MCfloat *data;
+    data = (MCfloat *)malloc(totBins*sizeof(MCfloat));
+    for (size_t i = 0; i < totBins; ++i) {
+        data[i] = 1.* histo[i] / scale;
+    }
+
+    hsize_t start[2];
+    hsize_t count[2];
+
+    start[0] = 0;
+    start[1] = 0;
+    count[0] = nBins[0];
+    count[1] = nBins[1];
+
+    file->writeHyperSlab(start, count, data);
+
+    free(data);
+    delete file;
 }
 
 void Histogram::setScale(u_int64_t totalPhotons)
