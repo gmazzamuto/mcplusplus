@@ -218,6 +218,11 @@ void Simulation::setOutputFileName(const char *name)
 void Simulation::run() {
     installSigUSR2Handler();
     time(&startTime);
+    for (size_t i = 0; i < hists.size(); ++i) {
+        Histogram *h = hists[i];
+        h->setScale(nWalkers());
+        h->initialize();
+    }
 
     if(_nThreads == 1) {
         if(!wasCloned()) {
@@ -229,7 +234,8 @@ void Simulation::run() {
                 setGeneratorState(multipleRNGStates[0]);
         }
 
-        runSingleThread();
+        if(!runSingleThread())
+            return;
 
         if(!wasCloned())
             saveOutput();
@@ -285,8 +291,14 @@ void Simulation::runMultipleThreads()
         thread->join();
 
         Simulation *sim = sims.at(n);
+
         for (uint i = 0; i < 4; ++i) {
             photonCounters[i] += sim->photonCounters[i];
+        }
+
+        for (size_t i = 0; i < hists.size(); ++i) {
+            Histogram *h = hists[i];
+            h->appendCounts((sim->hists[i]));
         }
 
         sim->saveOutput();
@@ -299,9 +311,9 @@ void Simulation::runMultipleThreads()
     }
 }
 
-void Simulation::runSingleThread() {
+bool Simulation::runSingleThread() {
     if(!sanityCheck())
-        return;
+        return false;
 
     clear();
     logMessage("starting... Number of walkers = %Lu, original seed = %u",nWalkers(), currentSeed());
@@ -328,6 +340,7 @@ void Simulation::runSingleThread() {
     this->mus = mus;
 
     n = 0;
+    nBuf = 0;
 
     MCfloat timeOffset = 0;
     MCfloat pos[3];
@@ -362,6 +375,9 @@ void Simulation::runSingleThread() {
     layer0 = numeric_limits<unsigned int>::max(); //otherwise updateLayerVariables() won't work
 
     while(n < _totalWalkers && !forceTermination) {
+        if(nBuf == WALKER_BUFSIZE)
+            flushHistogram();
+
         walkerExitedSample = false;
         vector<u_int64_t> nInteractions;
         _nInteractions = &nInteractions;
@@ -466,6 +482,8 @@ void Simulation::runSingleThread() {
     free(uzb);
     free(mat);
     free(mus);
+    flushHistogram();
+    return true;
 }
 
 /**
@@ -659,6 +677,13 @@ void Simulation::appendExitKVector(walkerType idx)
 void Simulation::appendWalker(walkerType idx)
 {
     photonCounters[idx]++;
+    Walker *w = &walkerBuf[nBuf++];
+
+    memcpy(w->r0, r0, 3*sizeof(MCfloat));
+    memcpy(w->k0, k1, 3*sizeof(MCfloat));
+    w->walkTime = walker.walkTime;
+    w->type = idx;
+
     walkerFlags flags = walkerTypeToFlag(idx);
 
     if(exitPointsSaveFlags & flags)
@@ -741,7 +766,21 @@ BaseObject* Simulation::clone_impl() const
     sim->exitKVectorsSaveFlags = exitKVectorsSaveFlags;
     sim->exitKVectorsDirsSaveFlags = exitKVectorsDirsSaveFlags;
     sim->setTimeOriginZ(timeOriginZ);
+    for (size_t i = 0; i < hists.size(); ++i) {
+        Histogram *h = hists[i];
+        sim->addHistogram((Histogram *)h->clone());
+    }
     return sim;
+}
+
+bool Simulation::sanityCheck_impl() const
+{
+    for (size_t i = 0; i < hists.size(); ++i) {
+        Histogram *h = hists[i];
+        if(!h->sanityCheck())
+            return false;
+    }
+    return true;
 }
 
 /**
@@ -789,6 +828,7 @@ void Simulation::saveOutput()
     file.appendPhotonCounts(photonCounters);
 
     file.close();
+
     logMessage("Data written to %s", outputFile);
 }
 
@@ -841,6 +881,15 @@ void Simulation::updateLayerVariables(const uint layer) {
         currLayerUpperBoundary = numeric_limits<MCfloat>::infinity();
 }
 
+void Simulation::flushHistogram()
+{
+    for (size_t i = 0; i < hists.size(); ++i) {
+        Histogram *h = hists[i];
+        h->run(walkerBuf,nBuf);
+    }
+    nBuf = 0;
+}
+
 void Simulation::setRNG_impl()
 {
     vector<string> states;
@@ -881,6 +930,12 @@ void Simulation::terminate()
 uint Simulation::nThreads()
 {
     return _nThreads;
+}
+
+void Simulation::addHistogram(Histogram *hist)
+{
+    hists.push_back(hist);
+    hist->setParent(this);
 }
 
 

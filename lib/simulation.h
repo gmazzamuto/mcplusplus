@@ -4,6 +4,9 @@
 #include "source.h"
 #include "sample.h"
 #include "costhetagenerator.h"
+#include "histogram.h"
+
+#define WALKER_BUFSIZE 1000
 
 namespace MCPP {
 
@@ -66,6 +69,7 @@ public:
     void setExitKVectorsDirsSaveFlags(unsigned int value);
     void terminate();
     uint nThreads();
+    void addHistogram(Histogram *hist);
 
 private:
     const Sample *_sample;
@@ -80,6 +84,7 @@ private:
     u_int64_t _totalWalkers;  /**< @brief total number of walkers to be simulated*/
     u_int64_t photonCounters[4];
     u_int64_t n;
+    uint nBuf;
 
     uint _nThreads;
 
@@ -110,6 +115,7 @@ private:
     bool walkerExitedSample;
     time_t startTime;
     Walker walker;
+    Walker walkerBuf[WALKER_BUFSIZE];
 
     MCfloat n0, n1, cosTheta1;
 
@@ -127,9 +133,10 @@ private:
     void appendWalker(walkerType idx);
 
     void runMultipleThreads();
-    void runSingleThread();
+    bool runSingleThread();
 
     virtual BaseObject* clone_impl() const;
+    virtual bool sanityCheck_impl() const;
 
     void saveOutput();
 
@@ -149,12 +156,14 @@ private:
 
     unsigned int walkTimesSaveFlags, exitPointsSaveFlags, exitKVectorsDirsSaveFlags, exitKVectorsSaveFlags;
     vector<string> multipleRNGStates;
+    vector<Histogram *> hists;
     bool forceTermination;
 
     virtual void describe_impl() const;
     void switchToLayer(const uint layer);
     virtual void setRNG_impl();
     void updateLayerVariables(const uint layer);
+    void flushHistogram();
 };
 
 }
