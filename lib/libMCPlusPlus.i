@@ -13,6 +13,7 @@ namespace MCPP {}
 #include "MCglobal.h"
 #include "psigenerator.h"
 #include "sample.h"
+#include "histogram.h"
 #include "simulation.h"
 #include "source.h"
 #include "walker.h"
@@ -50,6 +51,7 @@ typedef long long int u_int64_t;
 %include "material.h"
 %include "MCglobal.h"
 %include "sample.h"
+%include "histogram.h"
 %include "simulation.h"
 %include <boost/random.hpp>
 %include <boost/property_tree/ptree.hpp>

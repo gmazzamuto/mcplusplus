@@ -69,6 +69,9 @@ public:
     void setExitKVectorsDirsSaveFlags(unsigned int value);
     void terminate();
     uint nThreads();
+#ifdef SWIG
+    %apply SWIGTYPE *DISOWN {Histogram *hist};
+#endif
     void addHistogram(Histogram *hist);
     void setRawOutputEnabled(bool enable);
 

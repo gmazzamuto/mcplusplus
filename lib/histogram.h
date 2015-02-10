@@ -26,7 +26,6 @@ public:
     void setPhotonTypeFlags(int value);
     void run(const Walker * const buf, size_t bufSize);
     bool pickPhoton(const Walker * const w);
-//    void scale(u_int64_t totalNumberOfPhotons);
     void appendCounts(const Histogram *rhs);
     void dump() const;
     void saveToFile(const char *fileName) const;
