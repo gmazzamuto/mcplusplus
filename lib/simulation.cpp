@@ -263,6 +263,13 @@ void Simulation::run() {
         logMessage("%s\nCompleted in %.f seconds\n================\n",stream.str().c_str(), difftime(now,startTime));
     else
         logMessage("%s\nCompleted in %.f seconds (seed %u)\n================\n",stream.str().c_str(),difftime(now,startTime),currentSeed());
+
+    if(!wasCloned()) {
+        for (size_t i = 0; i < hists.size(); ++i) {
+            Histogram *h = hists[i];
+            h->saveToFile(outputFile);
+        }
+    }
 }
 
 void Simulation::runMultipleThreads()
