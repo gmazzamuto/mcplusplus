@@ -216,6 +216,10 @@ void Simulation::setOutputFileName(const char *name)
  */
 
 void Simulation::run() {
+    if(outputFile == NULL) {
+        outputFile = "output.h5";
+        logMessage("No output file name provided, using %s", outputFile);
+    }
     installSigUSR2Handler();
     time(&startTime);
     for (size_t i = 0; i < hists.size(); ++i) {
@@ -795,13 +799,7 @@ void Simulation::saveOutput()
 {
     H5OutputFile file;
 
-    if(outputFile == NULL) {
-        outputFile = "output.h5";
-        logMessage("No output file name provided, writing to %s", outputFile);
-        file.newFile(outputFile);
-        file.saveSample(_sample);
-    }
-    else if(access(outputFile,F_OK)<0) {
+    if(access(outputFile,F_OK)<0) {
         file.newFile(outputFile);
         file.saveSample(_sample);
     }
