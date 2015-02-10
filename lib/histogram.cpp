@@ -183,40 +183,6 @@ bool Histogram::pickPhoton(const Walker * const w)
     return pickPhoton_impl(w);
 }
 
-//void Histogram::scale(u_int64_t totalNumberOfPhotons)
-//{
-//    MCfloat scale1 = totalNumberOfPhotons;
-//    switch (type[0]) {
-//    case DATA_K:
-//        for (size_t i = 0; i < nBins[0]; ++i) {
-//            MCfloat scale2 = scale1*4.0*pi<MCfloat>()*sin((i+0.5)*binSize[0]/degPerRad)*sin(binSize[0]/2./degPerRad);
-//            for (size_t j = 0; j < nBins[1]; ++j)
-//                histo[i*nBins[1] + j] /= scale2;
-//        }
-//        break;
-
-//    case DATA_TIMES:
-//        for (size_t i = 0; i < nBins[0]; ++i) {
-//            MCfloat scale2 = scale1;
-//            for (size_t j = 0; j < nBins[1]; ++j)
-//                histo[i*nBins[1] + j] /= scale2;
-//        }
-//        break;
-
-//    case DATA_POINTS:
-//        for (size_t i = 0; i < nBins[0]; ++i) {
-//            MCfloat dr = binSize[0];
-//            MCfloat scale2 = scale1 * (2*pi<MCfloat>()*(i+0.5)*dr*dr);
-//            for (size_t j = 0; j < nBins[1]; ++j)
-//                histo[i*nBins[1] + j] /= scale2;
-//        }
-//        break;
-
-//    default:
-//        break;
-//    }
-//}
-
 void Histogram::appendCounts(const Histogram *rhs)
 {
     for (size_t i = 0; i < totBins; ++i) {
@@ -271,8 +237,34 @@ void Histogram::saveToFile(const char *fileName) const
     count[0] = nBins[0];
     count[1] = nBins[1];
 
-    for (size_t i = 0; i < totBins; ++i) {
-        data[i] = 1.* histo[i] / scale;
+    switch (type[0]) {
+    case DATA_K:
+        for (size_t i = 0; i < nBins[0]; ++i) {
+            MCfloat scale2 = scale*4.0*pi<MCfloat>()*sin((i+0.5)*binSize[0]/degPerRad)*sin(binSize[0]/2./degPerRad);
+            for (size_t j = 0; j < nBins[1]; ++j)
+                data[i] = 1. * histo[i*nBins[1] + j] / scale2;
+        }
+        break;
+
+    case DATA_TIMES:
+        for (size_t i = 0; i < nBins[0]; ++i) {
+            MCfloat scale2 = scale;
+            for (size_t j = 0; j < nBins[1]; ++j)
+                data[i] = 1. * histo[i*nBins[1] + j] / scale2;
+        }
+        break;
+
+    case DATA_POINTS:
+        for (size_t i = 0; i < nBins[0]; ++i) {
+            MCfloat dr = binSize[0];
+            MCfloat scale2 = scale * (2*pi<MCfloat>()*(i+0.5)*dr*dr);
+            for (size_t j = 0; j < nBins[1]; ++j)
+               data[i] = 1. * histo[i*nBins[1] + j] / scale2;
+        }
+        break;
+
+    default:
+        break;
     }
 
     file->writeHyperSlab(start, count, data);
