@@ -196,6 +196,36 @@ bool H5FileHelper::newDataset(const char *datasetName, int ndims, const hsize_t 
 }
 #endif
 
+#ifndef SWIG  //this is to work around a link error
+bool H5FileHelper::newDataset(const char *datasetName, int ndims, const hsize_t *dims, PredType type)
+{
+#ifdef PRINT_DEBUG_MSG
+    logMessage("Creating new dataset %s... ",datasetName);
+#endif
+    closeDataSet();
+
+    double fillvalue = 0.;
+    DSetCreatPropList plist;
+    plist.setFillValue(type, &fillvalue);
+
+    hsize_t maxdims[ndims];
+    memcpy(maxdims,dims,ndims*sizeof(hsize_t));
+
+    try {
+        dataSpace = new DataSpace (ndims, dims, maxdims);
+        dataSet  = new DataSet(file->createDataSet(datasetName, type, *dataSpace, plist));
+        openDataSet(datasetName);
+    }
+    catch (Exception error) {
+        logMessage("Cannot create dataset %s.\n", datasetName);
+        return false;
+    }
+#ifdef PRINT_DEBUG_MSG
+    logMessage("done.\n");
+#endif
+    return true;
+}
+#endif
 
 /**
  * @brief Checks for the existence of a particular dataset
@@ -318,7 +348,12 @@ void H5FileHelper::writeHyperSlab(const hsize_t *start, const hsize_t *count, co
         extDims[i] = start[i] + count[i];
     }
 
-    dataSet->extend(extDims);
+    for (int i = 0; i < ndims; ++i) {
+        if(extDims[i] > dims[i]) {
+            dataSet->extend(extDims);
+            break;
+        }
+    }
 
     *dataSpace = dataSet->getSpace();
     dataSpace->getSimpleExtentDims(dims);

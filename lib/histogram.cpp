@@ -247,8 +247,7 @@ void Histogram::saveToFile(const char *fileName) const
     H5FileHelper *file = new H5FileHelper(0);
     file->newFile(fileName);
     hsize_t dims[2] = {nBins[0],nBins[1]};
-    hsize_t chunk_dim[2] = {nBins[0],nBins[1]};
-    file->newDataset("data",2,dims,chunk_dim);
+    file->newDataset("data",2,dims);
 
     MCfloat *data;
     data = (MCfloat *)malloc(totBins*sizeof(MCfloat));
