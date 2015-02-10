@@ -238,13 +238,15 @@ void Histogram::saveToFile(const char *fileName) const
 
     file->writeHyperSlab(start, count, data);
 
+
+
     switch (type[0]) {
     case DATA_K:
         colNames[0] = "k";
         for (size_t i = 0; i < nBins[0]; ++i) {
             MCfloat scale2 = scale*4.0*pi<MCfloat>()*sin((i+0.5)*binSize[0]/degPerRad)*sin(binSize[0]/2./degPerRad);
             for (size_t j = 0; j < nBins[1]; ++j)
-                data[i] = 1. * histo[i*nBins[1] + j] / scale2;
+                data[i*nBins[1] + j] = 1. * histo[i*nBins[1] + j] / scale2;
         }
         break;
 
@@ -253,7 +255,7 @@ void Histogram::saveToFile(const char *fileName) const
         for (size_t i = 0; i < nBins[0]; ++i) {
             MCfloat scale2 = scale;
             for (size_t j = 0; j < nBins[1]; ++j)
-                data[i] = 1. * histo[i*nBins[1] + j] / scale2;
+                data[i*nBins[1] + j] = 1. * histo[i*nBins[1] + j] / scale2;
         }
         break;
 
@@ -263,7 +265,7 @@ void Histogram::saveToFile(const char *fileName) const
             MCfloat dr = binSize[0];
             MCfloat scale2 = scale * (2*pi<MCfloat>()*(i+0.5)*dr*dr);
             for (size_t j = 0; j < nBins[1]; ++j)
-               data[i] = 1. * histo[i*nBins[1] + j] / scale2;
+               data[i*nBins[1] + j] = 1. * histo[i*nBins[1] + j] / scale2;
         }
         break;
 
