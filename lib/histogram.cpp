@@ -246,14 +246,11 @@ void Histogram::saveToFile(const char *fileName) const
 {
     H5FileHelper *file = new H5FileHelper(0);
     file->newFile(fileName);
-    hsize_t dims[2] = {nBins[0],nBins[1]};
+    hsize_t dims[2] = {nBins[0],nBins[1]+1};
     file->newDataset("data",2,dims);
 
     MCfloat *data;
     data = (MCfloat *)malloc(totBins*sizeof(MCfloat));
-    for (size_t i = 0; i < totBins; ++i) {
-        data[i] = 1.* histo[i] / scale;
-    }
 
     hsize_t start[2];
     hsize_t count[2];
@@ -261,7 +258,22 @@ void Histogram::saveToFile(const char *fileName) const
     start[0] = 0;
     start[1] = 0;
     count[0] = nBins[0];
+    count[1] = 1;
+
+    for (size_t i = 0; i < nBins[0]; ++i) {
+        data[i] = 1.* firstBinCenter[0] + i*binSize[0];
+    }
+
+    file->writeHyperSlab(start, count, data);
+
+    start[0] = 0;
+    start[1] = 1;
+    count[0] = nBins[0];
     count[1] = nBins[1];
+
+    for (size_t i = 0; i < totBins; ++i) {
+        data[i] = 1.* histo[i] / scale;
+    }
 
     file->writeHyperSlab(start, count, data);
 
