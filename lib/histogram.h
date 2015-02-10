@@ -31,6 +31,7 @@ public:
     void dump() const;
     void saveToFile(const char *fileName) const;
     void setScale(u_int64_t totalPhotons);
+    void setName(const char *name);
     u_int64_t *histo;
 
 
@@ -38,6 +39,8 @@ private:
     virtual bool sanityCheck_impl() const;
     virtual bool pickPhoton_impl(const Walker * const w);
     virtual BaseObject* clone_impl() const;
+
+    const char *histName;
 
     enum MCData type[2];
     MCfloat min[2], max[2];

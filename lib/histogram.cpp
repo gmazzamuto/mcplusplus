@@ -211,12 +211,18 @@ void Histogram::dump() const
 
 void Histogram::saveToFile(const char *fileName) const
 {
+    const char *_dsName = histName;
+    if(_dsName == NULL)
+        _dsName = "histogram";
     H5FileHelper *file = new H5FileHelper(0);
-    file->newFile(fileName);
+    if(access(fileName,F_OK)<0)
+        file->newFile(fileName);
+    else
+        file->openFile(fileName);
     hsize_t dims[2] = {nBins[0],nBins[1]+1};
     if(computeSpatialVariance)
         dims[1]++;
-    file->newDataset("data",2,dims);
+    file->newDataset(_dsName,2,dims);
 
     uint ncols = dims[1];
     string colNames[ncols];
@@ -316,6 +322,11 @@ void Histogram::saveToFile(const char *fileName) const
 void Histogram::setScale(u_int64_t totalPhotons)
 {
     scale = totalPhotons;
+}
+
+void Histogram::setName(const char *name)
+{
+    histName = name;
 }
 
 bool Histogram::pickPhoton_impl(const Walker * const w)
