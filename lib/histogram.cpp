@@ -4,6 +4,7 @@
 #include "h5filehelper.h"
 
 #include <boost/math/constants/constants.hpp>
+#include <sstream>
 
 
 using namespace boost::math::constants;
@@ -217,6 +218,9 @@ void Histogram::saveToFile(const char *fileName) const
         dims[1]++;
     file->newDataset("data",2,dims);
 
+    uint ncols = dims[1];
+    string colNames[ncols];
+
     MCfloat *data;
     data = (MCfloat *)malloc(totBins*sizeof(MCfloat));
 
@@ -236,6 +240,7 @@ void Histogram::saveToFile(const char *fileName) const
 
     switch (type[0]) {
     case DATA_K:
+        colNames[0] = "k";
         for (size_t i = 0; i < nBins[0]; ++i) {
             MCfloat scale2 = scale*4.0*pi<MCfloat>()*sin((i+0.5)*binSize[0]/degPerRad)*sin(binSize[0]/2./degPerRad);
             for (size_t j = 0; j < nBins[1]; ++j)
@@ -244,6 +249,7 @@ void Histogram::saveToFile(const char *fileName) const
         break;
 
     case DATA_TIMES:
+        colNames[0] = "time";
         for (size_t i = 0; i < nBins[0]; ++i) {
             MCfloat scale2 = scale;
             for (size_t j = 0; j < nBins[1]; ++j)
@@ -252,6 +258,7 @@ void Histogram::saveToFile(const char *fileName) const
         break;
 
     case DATA_POINTS:
+        colNames[0] = "um";
         for (size_t i = 0; i < nBins[0]; ++i) {
             MCfloat dr = binSize[0];
             MCfloat scale2 = scale * (2*pi<MCfloat>()*(i+0.5)*dr*dr);
@@ -272,7 +279,10 @@ void Histogram::saveToFile(const char *fileName) const
     file->writeHyperSlab(start, count, data);
 
 
+
     if(computeSpatialVariance) {
+        colNames[2] = "variance";
+
         for (size_t i = 0; i < nBins[0]; ++i)
                 data[i] = variance[i] / histo[i];
 
@@ -283,6 +293,19 @@ void Histogram::saveToFile(const char *fileName) const
 
         file->writeHyperSlab(start, count, data);
     }
+
+    if(is1D())
+        colNames[1] = "normCounts";
+    else {
+        for (size_t j = 0; j < nBins[1]; ++j) {
+            stringstream ss;
+            ss << "b-" << firstBinCenter[1] + j*binSize[1];
+            colNames[j+1] = ss.str();
+        }
+    }
+
+    file->writeColumnNames(ncols,colNames);
+
 
     free(data);
     delete file;

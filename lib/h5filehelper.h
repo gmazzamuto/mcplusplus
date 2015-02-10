@@ -52,6 +52,7 @@ public:
     int getRank() const;
     const char *getDataSetName() const;
     const char *currentDataset() const;
+    void writeColumnNames(const uint nCols, string *vect);
 
 protected:
     H5File *file;

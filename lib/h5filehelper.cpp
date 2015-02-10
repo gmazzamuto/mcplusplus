@@ -440,3 +440,14 @@ const char* H5FileHelper::getDataSetName() const {
 const char *H5FileHelper::currentDataset() const {
     return dName;
 }
+
+void H5FileHelper::writeColumnNames(const uint nCols, string *vect)
+{
+    StrType str_type(0, H5T_VARIABLE);
+    hsize_t _dims[2];
+    _dims[0] = 1;
+    _dims[1] = nCols;
+    DataSpace att_space(2,_dims);
+    Attribute att = dataSet->createAttribute( "column_names", str_type, att_space );
+    att.write( str_type, vect );
+}
