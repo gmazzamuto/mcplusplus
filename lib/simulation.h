@@ -70,6 +70,7 @@ public:
     void terminate();
     uint nThreads();
     void addHistogram(Histogram *hist);
+    void setRawOutputEnabled(bool enable);
 
 private:
     const Sample *_sample;
@@ -138,7 +139,7 @@ private:
     virtual BaseObject* clone_impl() const;
     virtual bool sanityCheck_impl() const;
 
-    void saveOutput();
+    void saveRawOutput();
 
     inline void swap_r0_r1()
     {
@@ -158,6 +159,7 @@ private:
     vector<string> multipleRNGStates;
     vector<Histogram *> hists;
     bool forceTermination;
+    bool rawOutputEnabled;
 
     virtual void describe_impl() const;
     void switchToLayer(const uint layer);

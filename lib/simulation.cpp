@@ -104,6 +104,7 @@ Simulation::Simulation(BaseObject *parent) :
     exitKVectorsSaveFlags = 0;
     timeOriginZ = 0;
     deflCosine.setParent(this);
+    setRawOutputEnabled(false);
     r0 = (MCfloat*)calloc(3,sizeof(MCfloat));
     r1 = (MCfloat*)calloc(3,sizeof(MCfloat));
     k0 = (MCfloat*)calloc(3,sizeof(MCfloat));
@@ -242,7 +243,7 @@ void Simulation::run() {
             return;
 
         if(!wasCloned())
-            saveOutput();
+            saveRawOutput();
     }
     else {
         mainSimulation = this;
@@ -305,7 +306,7 @@ void Simulation::runMultipleThreads()
             h->appendCounts((sim->hists[i]));
         }
 
-        sim->saveOutput();
+        sim->saveRawOutput();
 
         if(mostRecentInstance == sim)
             mostRecentInstance = NULL;
@@ -759,7 +760,7 @@ void Simulation::setTimeOriginZ(const MCfloat z)
 
 BaseObject* Simulation::clone_impl() const
 {
-    Simulation *sim = new Simulation();
+    Simulation *sim = new Simulation(0);
     sim->saveTrajectory = saveTrajectory;
     sim->fresnelReflectionsEnabled = fresnelReflectionsEnabled;
     sim->setSource((Source*)source->clone());
@@ -770,6 +771,7 @@ BaseObject* Simulation::clone_impl() const
     sim->exitKVectorsSaveFlags = exitKVectorsSaveFlags;
     sim->exitKVectorsDirsSaveFlags = exitKVectorsDirsSaveFlags;
     sim->setTimeOriginZ(timeOriginZ);
+    sim->setRawOutputEnabled(rawOutputEnabled);
     for (size_t i = 0; i < hists.size(); ++i) {
         Histogram *h = hists[i];
         sim->addHistogram((Histogram *)h->clone());
@@ -795,19 +797,24 @@ bool Simulation::sanityCheck_impl() const
  * data is appended to it. In all other cases "output.h5" is used.
  */
 
-void Simulation::saveOutput()
+void Simulation::saveRawOutput()
 {
     H5OutputFile file;
 
     if(access(outputFile,F_OK)<0) {
-        file.newFile(outputFile);
-        file.saveSample(_sample);
+        file.newFile(outputFile,rawOutputEnabled);
     }
     else if(!file.openFile(outputFile)) {
         logMessage("Cannot open %s, writing to output.h5", outputFile);
         file.newFile("output.h5");
-        file.saveSample(_sample);
     }
+
+    file.saveSample(_sample);
+    file.appendPhotonCounts(photonCounters);
+
+    if(!rawOutputEnabled)
+        return;
+
 
     file.saveRNGState(currentSeed(), generatorState());
 
@@ -822,8 +829,6 @@ void Simulation::saveOutput()
         if(photonCounters[type] && exitKVectorsSaveFlags & walkerTypeToFlag(type))
             file.appendExitKVectors((walkerType)type, exitKVectors[type].data(),exitKVectors[type].size());
     }
-
-    file.appendPhotonCounts(photonCounters);
 
     file.close();
 
@@ -934,6 +939,11 @@ void Simulation::addHistogram(Histogram *hist)
 {
     hists.push_back(hist);
     hist->setParent(this);
+}
+
+void Simulation::setRawOutputEnabled(bool enable)
+{
+    rawOutputEnabled = enable;
 }
 
 

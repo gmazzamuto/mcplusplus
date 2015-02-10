@@ -24,6 +24,19 @@ bool H5OutputFile::newFile(const char *fileName, bool create_datasets)
     if(!ret)
         return false;
 
+    int ndims = 1;
+    hsize_t dims[ndims];
+    dims[0] = 4;
+    try {
+        DataSpace dspace(ndims, dims, dims);
+        DataSet  dset = file->createDataSet("photon-counters", PredType::NATIVE_INT64, dspace);
+        dspace.close();
+        dset.close();
+    }
+    catch (Exception error) {
+        logMessage("Cannot create dataset %s.\n", "photon-counters");
+    }
+
     if(create_datasets) {
         ret = createDatasets(FLAG_ALL_WALKERS, FLAG_ALL_WALKERS, FLAG_ALL_WALKERS);
         if(!ret)
@@ -422,17 +435,6 @@ bool H5OutputFile::createDatasets(uint walkTimesSaveFlags, uint exitPointsSaveFl
     int ndims = 1;
     hsize_t dims[ndims], chunkDims[ndims];
     bool ret = false;
-    dims[0] = 4;
-    try {
-        DataSpace dspace(ndims, dims, dims);
-        DataSet  dset = file->createDataSet("photon-counters", PredType::NATIVE_INT64, dspace);
-        dspace.close();
-        dset.close();
-    }
-    catch (Exception error) {
-        logMessage("Cannot create dataset %s.\n", "photon-counters");
-        return false;
-    }
 
     createRNGDataset();
 
