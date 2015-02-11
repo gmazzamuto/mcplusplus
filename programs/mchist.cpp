@@ -313,15 +313,21 @@ int main(int argc, char *argv[])
     u_int64_t *histo = (u_int64_t *)calloc(totStridedBins,sizeof(u_int64_t));
     MCfloat *variance = (MCfloat *)calloc(totStridedBins,sizeof(MCfloat));
     MCfloat degPerRad = 180/pi<MCfloat>();
+    MCfloat firstBinEdge[2];
+    firstBinEdge[0] = floor(minVal[0]/binSize[0])*binSize[0];
+    firstBinEdge[1] = floor(minVal[1]/binSize[1])*binSize[1];
+    MCfloat firstBinCenter[2];
+    firstBinCenter[0] = firstBinEdge[0] + binSize[0]*0.5;
+    firstBinCenter[1] = firstBinEdge[1] + binSize[1]*0.5;
     for (uint type = 0; type < 4; ++type) {
         if(histoData[0][type] == NULL)
             continue;
         for (u_int64_t i = 0; i < photonCounters[type]; ++i) {
             size_t index[2] = {0,0};
             if(dataGroup[0] == DATA_K)
-                index[0] = (acos(histoData[0][type][i])*degPerRad - minVal[0])/binSize[0];
+                index[0] = (acos(histoData[0][type][i])*degPerRad - firstBinEdge[0])/binSize[0];
             else
-                index[0] = (histoData[0][type][i]-minVal[0])/binSize[0];
+                index[0] = (histoData[0][type][i]-firstBinEdge[0])/binSize[0];
 
             if(index[0] >= nBins[0])
                 continue;
@@ -331,9 +337,9 @@ int main(int argc, char *argv[])
 
             if(histo2D) {
                 if(dataGroup[1] == DATA_K)
-                    index[1] = (acos(histoData[1][type][i])*degPerRad - minVal[1])/binSize[1];
+                    index[1] = (acos(histoData[1][type][i])*degPerRad - firstBinEdge[1])/binSize[1];
                 else
-                    index[1] = (histoData[1][type][i]-minVal[1])/binSize[1];
+                    index[1] = (histoData[1][type][i]-firstBinEdge[1])/binSize[1];
                 if(index[1] >= nBins[1])
                     continue;
                 if(index[1] % binStride[1] != 0)
@@ -398,7 +404,7 @@ int main(int argc, char *argv[])
         for (unsigned int i = 0; i < nBins[0]; ++i) {
             if(i % binStride[0] != 0)
                 continue;
-            MCfloat binCenter = cos(binSize[0]*(i+0.5)/degPerRad);
+            MCfloat binCenter = cos((firstBinCenter[0] + i*binSize[0])/degPerRad);
             MCfloat scale2 = scale1*4.0*pi<MCfloat>()*sin((i+0.5)*binSize[0]/degPerRad)*sin(binSize[0]/2./degPerRad);
             cout << binCenter;
             for (unsigned int j = 0; j < nBins[1]; ++j) {
@@ -414,7 +420,7 @@ int main(int argc, char *argv[])
         for (unsigned int i = 0; i < nBins[0]; ++i) {
             if(i % binStride[0] != 0)
                 continue;
-            MCfloat binCenter = floor(minVal[0]/binSize[0])*binSize[0] + binSize[0]*(i+0.5);
+            MCfloat binCenter = firstBinCenter[0] + i*binSize[0];
             MCfloat scale2 = scale1;
             cout << binCenter;
             for (unsigned int j = 0; j < nBins[1]; ++j) {
@@ -435,7 +441,7 @@ int main(int argc, char *argv[])
             if(i % binStride[0] != 0)
                 continue;
             MCfloat dr = binSize[0];
-            MCfloat binCenter = binSize[0]*(i+0.5);
+            MCfloat binCenter = firstBinCenter[0] + i*binSize[0];
             MCfloat scale2 = scale1 * (2*pi<MCfloat>()*(i+0.5)*dr*dr);
             cout << binCenter;
             for (unsigned int j = 0; j < nBins[1]; ++j) {
