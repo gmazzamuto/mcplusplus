@@ -26,7 +26,42 @@ void testBilayer() {
     sim->setSource(src);
     sim->setOutputFileName(outputFileName);
 
-    sim->setNWalkers(100000);
+
+    Histogram *hist = new Histogram(0);
+    hist->setType(DATA_TIMES);
+    hist->setPhotonTypeFlags(FLAG_TRANSMITTED);
+    hist->setMax(50);
+    hist->setBinSize(1);
+    hist->setName("times");
+    hist->setSpatialVarianceEnabled(true);
+    sim->addHistogram(hist);
+
+    hist = new Histogram(0);
+    hist->setType(DATA_POINTS);
+    hist->setPhotonTypeFlags(FLAG_TRANSMITTED);
+    hist->setMax(500);
+    hist->setBinSize(2);
+    hist->setName("points");
+    sim->addHistogram(hist);
+
+    hist = new Histogram(0);
+    hist->setType(DATA_K);
+    hist->setPhotonTypeFlags(FLAG_TRANSMITTED);
+    hist->setMax(90);
+    hist->setBinSize(5);
+    hist->setName("k");
+    sim->addHistogram(hist);
+
+    hist = new Histogram(0);
+    hist->setType(DATA_POINTS,DATA_TIMES);
+    hist->setPhotonTypeFlags(FLAG_TRANSMITTED);
+    hist->setMax(500,50);
+    hist->setBinSize(2,1);
+    hist->setName("points_vs_time");
+    sim->addHistogram(hist);
+
+
+    sim->setNWalkers(1000000);
     sim->setNThreads(4);
     sim->setSeed(0);
 

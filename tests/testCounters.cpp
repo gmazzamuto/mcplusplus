@@ -6,8 +6,8 @@ using namespace std;
 using namespace MCPP;
 
 void pass() {
-    cout << "testBilayer PASSED" << endl;
-    remove(outputFileName);
+    cout << "testCounters PASSED" << endl;
+//    remove(outputFileName);
     exit(EXIT_SUCCESS);
 }
 
@@ -18,17 +18,17 @@ void fail() {
 }
 
 int main() {
-
+    remove(outputFileName);
     testBilayer();
 
     H5OutputFile file;
 
     file.openFile(outputFileName);
 
-    if(file.transmitted() != 5768) fail();
+    if(file.transmitted() != 56838) fail();
     if(file.ballistic() != 0) fail();
-    if(file.reflected() != 90327) fail();
-    if(file.backReflected() != 3905) fail();
+    if(file.reflected() != 903189) fail();
+    if(file.backReflected() != 39973) fail();
 
     pass();
     return 0;
