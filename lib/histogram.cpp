@@ -27,6 +27,7 @@ Histogram::Histogram(BaseObject *parent) :
     computeSpatialVariance = false;
     photonTypeFlags = -1;
     scale = 1;
+    histName = "";
 }
 
 Histogram::~Histogram()
@@ -211,8 +212,8 @@ void Histogram::dump() const
 
 void Histogram::saveToFile(const char *fileName) const
 {
-    const char *_dsName = histName;
-    if(_dsName == NULL)
+    string _dsName = histName;
+    if(_dsName == "")
         _dsName = "histogram";
     H5FileHelper *file = new H5FileHelper(0);
     if(access(fileName,F_OK)<0)
@@ -222,7 +223,7 @@ void Histogram::saveToFile(const char *fileName) const
     hsize_t dims[2] = {nBins[0],nBins[1]+1};
     if(computeSpatialVariance)
         dims[1]++;
-    file->newDataset(_dsName,2,dims);
+    file->newDataset(_dsName.c_str(),2,dims);
 
     uint ncols = dims[1];
     string colNames[ncols];

@@ -39,7 +39,7 @@ private:
     virtual bool pickPhoton_impl(const Walker * const w);
     virtual BaseObject* clone_impl() const;
 
-    const char *histName;
+    string histName;
 
     enum MCData type[2];
     MCfloat min[2], max[2];
