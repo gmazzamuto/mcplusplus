@@ -15,9 +15,14 @@ namespace MCPP {
  *
  * In order to set up a simulation, you first have to specify a Sample and a
  * Source using setSample() and setSource(). Use setNWalkers() to specify the
- * total number of walkers to be simulated. The output file can be specified
- * using setOutputFileName(); output flags can be specified with their setter
- * functions: setWalkTimesSaveFlags(), etc.
+ * total number of walkers to be simulated.
+ *
+ * Several Histograms can be performed with every simulation; see addHistogram.
+ * The output file can be specified using setOutputFileName(). Additionally,
+ * raw output with the data of each single simulated photons can be enabled
+ * using setRawOutputEnabled(). In the latter case output flags can be
+ * specified with their setter functions: setWalkTimesSaveFlags(), etc.; keep
+ * in mind that this causes heavy memory usage and big output file sizes.
  *
  * Before running the simulation, a RNG has to be initialized by either calling
  * setSeed(), loadGeneratorState() or setGeneratorState(). Use run() to start
@@ -76,20 +81,60 @@ public:
     void setRawOutputEnabled(bool enable);
 
 private:
+    unsigned int layerAt(const MCfloat *r0) const;
+    void move(const MCfloat length);
+    void reflect();
+    void refract();
+
+    void appendTrajectoryPoint(MCfloat *point);
+    void appendWalkTime();
+    void appendExitPoint(walkerType type);
+    void appendExitKVector(walkerType type);
+    void appendWalker(walkerType type);
+
+    void runMultipleThreads();
+    bool runSingleThread();
+
+    void switchToLayer(const uint layer);
+    void updateLayerVariables(const uint layer);
+    void flushHistogram();
+    void saveRawOutput();
+
+    inline void swap_r0_r1()
+    {
+        MCfloat *temp = r1;
+        r1 = r0;
+        r0 = temp;
+    }
+
+    inline void swap_k0_k1()
+    {
+        MCfloat *temp = k1;
+        k1 = k0;
+        k0 = temp;
+    }
+
+    virtual BaseObject* clone_impl() const;
+    virtual bool sanityCheck_impl() const;
+    virtual void describe_impl() const;
+    virtual void setRNG_impl();
+
     const Sample *_sample;
     const Source *source;
 
     //flags
     bool saveTrajectory;
     bool fresnelReflectionsEnabled;
-    MCfloat timeOriginZ;
+    bool rawOutputEnabled;
+    unsigned int walkTimesSaveFlags, exitPointsSaveFlags, exitKVectorsDirsSaveFlags, exitKVectorsSaveFlags;
 
     //walker counters
     u_int64_t _totalWalkers;  /**< @brief total number of walkers to be simulated*/
     u_int64_t photonCounters[4];
     u_int64_t n;
-    uint nBuf;
 
+    uint nBuf;
+    MCfloat timeOriginZ;
     uint _nThreads;
 
     //trajectories
@@ -119,56 +164,13 @@ private:
     bool walkerExitedSample;
     time_t startTime;
     Walker walker;
-    Walker walkerBuf[WALKER_BUFSIZE];
-
     MCfloat n0, n1, cosTheta1;
 
     const char *outputFile;
-
-    unsigned int layerAt(const MCfloat *r0) const;
-    void move(const MCfloat length);
-    void reflect();
-    void refract();
-
-    void appendTrajectoryPoint(MCfloat *point);
-    void appendWalkTime();
-    void appendExitPoint(walkerType idx);
-    void appendExitKVector(walkerType idx);
-    void appendWalker(walkerType idx);
-
-    void runMultipleThreads();
-    bool runSingleThread();
-
-    virtual BaseObject* clone_impl() const;
-    virtual bool sanityCheck_impl() const;
-
-    void saveRawOutput();
-
-    inline void swap_r0_r1()
-    {
-        MCfloat *temp = r1;
-        r1 = r0;
-        r0 = temp;
-    }
-
-    inline void swap_k0_k1()
-    {
-        MCfloat *temp = k1;
-        k1 = k0;
-        k0 = temp;
-    }
-
-    unsigned int walkTimesSaveFlags, exitPointsSaveFlags, exitKVectorsDirsSaveFlags, exitKVectorsSaveFlags;
     vector<string> multipleRNGStates;
     vector<Histogram *> hists;
     bool forceTermination;
-    bool rawOutputEnabled;
-
-    virtual void describe_impl() const;
-    void switchToLayer(const uint layer);
-    virtual void setRNG_impl();
-    void updateLayerVariables(const uint layer);
-    void flushHistogram();
+    Walker walkerBuf[WALKER_BUFSIZE];
 };
 
 }

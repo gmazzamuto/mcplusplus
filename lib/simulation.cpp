@@ -669,44 +669,44 @@ void Simulation::appendTrajectoryPoint(MCfloat *point) {
     }
 }
 
-void Simulation::appendExitPoint(enum walkerType idx)
+void Simulation::appendExitPoint(enum walkerType type)
 {
-    exitPoints[idx].push_back(r0[0]);
-    exitPoints[idx].push_back(r0[1]);
+    exitPoints[type].push_back(r0[0]);
+    exitPoints[type].push_back(r0[1]);
 }
 
-void Simulation::appendExitKVector(walkerType idx)
+void Simulation::appendExitKVector(walkerType type)
 {
     // we must use k1 instead of k0 because the walker can leave the sample only
     // when it is moving away from an interface
     if(exitKVectorsDirsSaveFlags & DIR_X)
-        exitKVectors[idx].push_back(k1[0]);
+        exitKVectors[type].push_back(k1[0]);
     if(exitKVectorsDirsSaveFlags & DIR_Y)
-        exitKVectors[idx].push_back(k1[1]);
+        exitKVectors[type].push_back(k1[1]);
     if(exitKVectorsDirsSaveFlags & DIR_Z)
-        exitKVectors[idx].push_back(k1[2]);
+        exitKVectors[type].push_back(k1[2]);
 }
 
-void Simulation::appendWalker(walkerType idx)
+void Simulation::appendWalker(walkerType type)
 {
-    photonCounters[idx]++;
+    photonCounters[type]++;
     Walker *w = &walkerBuf[nBuf++];
 
     memcpy(w->r0, r0, 3*sizeof(MCfloat));
     memcpy(w->k0, k1, 3*sizeof(MCfloat));
     w->walkTime = walker.walkTime;
-    w->type = idx;
+    w->type = type;
 
-    walkerFlags flags = walkerTypeToFlag(idx);
+    walkerFlags flags = walkerTypeToFlag(type);
 
     if(exitPointsSaveFlags & flags)
-        appendExitPoint(idx);
+        appendExitPoint(type);
 
     if(walkTimesSaveFlags & flags)
-        walkTimes[idx].push_back(walker.walkTime);
+        walkTimes[type].push_back(walker.walkTime);
 
     if(exitKVectorsSaveFlags & flags)
-        appendExitKVector(idx);
+        appendExitKVector(type);
 }
 
 /**
@@ -943,11 +943,31 @@ uint Simulation::nThreads()
     return _nThreads;
 }
 
+/**
+ * @brief Adds a histogram to be performed during the simulation
+ * @param hist
+ *
+ * The simulation is automatically set as the histogram's parent. Histograms are
+ * performed live during the simulation, At the end of the simulation, histograms
+ * are saved in the H5 output file specified using setOutputFileName(), each in
+ * a different dataset according to their names.
+ */
+
 void Simulation::addHistogram(Histogram *hist)
 {
     hists.push_back(hist);
     hist->setParent(this);
 }
+
+/**
+ * @brief Enables raw output
+ * @param enable
+ *
+ * If enabled, per photon values are saved in the output file according to the
+ * specified flags. See setWalkTimesSaveFlags(), setExitPointsSaveFlags(),
+ * setExitKVectorsSaveFlags(). Keep in mind that this causes heavy memory usage
+ * and big output file sizes.
+ */
 
 void Simulation::setRawOutputEnabled(bool enable)
 {
