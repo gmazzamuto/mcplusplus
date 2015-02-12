@@ -68,7 +68,6 @@ private:
     H5E_auto2_t Efunc;
     void *EclientData;
 
-    void copyToInternalVariable(char **dest, const char *src);
     void resetErrorAutoPrint();
     bool _openFile(const char *fileName);
     void _openDataSet(const char *dataSetName);

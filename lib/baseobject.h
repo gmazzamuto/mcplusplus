@@ -7,6 +7,7 @@
 #include "MCglobal.h"
 #include <cstdarg>
 #include <sstream>
+#include <string.h>
 
 namespace MCPP {
 
@@ -58,6 +59,7 @@ protected:
     void addObjectToCheck(const BaseObject ** const obj);
     void clearObjectsToCheck();
     list<const BaseObject *const *> objectsToCheck;
+    void copyToInternalVariable(char **dest, const char *src);
 
 private:
     bool _hasAParent;

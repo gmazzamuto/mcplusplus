@@ -1,8 +1,6 @@
 #include "h5filehelper.h"
 #include <stdio.h>
 
-#include <string.h>
-
 using namespace MCPP;
 
 H5FileHelper::H5FileHelper(BaseObject *parent) :
@@ -406,13 +404,6 @@ void H5FileHelper::writeHyperSlab(const hsize_t *start, const hsize_t *count, co
     memspace.selectHyperslab(H5S_SELECT_SET, count, _start);
     dataSpace->selectHyperslab(H5S_SELECT_SET, count, start);
     dataSet->write(srcBuffer,PredType::NATIVE_UINT64,memspace,*dataSpace);
-}
-
-void H5FileHelper::copyToInternalVariable(char **dest, const char *src) {
-    if(*dest!=NULL)
-        free(*dest);
-    *dest = (char*)malloc(sizeof(char)*strlen(src)+1);
-    memcpy(*dest,src,strlen(src)+1);
 }
 
 void H5FileHelper::resetErrorAutoPrint() {

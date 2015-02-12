@@ -258,3 +258,10 @@ void BaseObject::clearObjectsToCheck()
 {
     objectsToCheck.clear();
 }
+
+void BaseObject::copyToInternalVariable(char **dest, const char *src) {
+    if(*dest!=NULL)
+        free(*dest);
+    *dest = (char*)malloc(sizeof(char)*strlen(src)+1);
+    memcpy(*dest,src,strlen(src)+1);
+}
