@@ -38,10 +38,15 @@ Histogram::~Histogram()
         free(variance);
 }
 
-void Histogram::setType(const MCData type1, const MCData type2)
+void Histogram::setDataDomain(const MCData type1, const MCData type2)
 {
     type[0] = type1;
     type[1] = type2;
+}
+
+void Histogram::setMax(const double max1)
+{
+    max[0] = max1;
 }
 
 void Histogram::setMax(const double max1, const double max2)
@@ -55,6 +60,11 @@ void Histogram::setMax2(const double max2)
     max[1] = max2;
 }
 
+void Histogram::setMin(const double min1)
+{
+    min[0] = min1;
+}
+
 void Histogram::setMin(const double min1, const double min2)
 {
     min[0] = min1;
@@ -64,6 +74,11 @@ void Histogram::setMin(const double min1, const double min2)
 void Histogram::setMin2(const double min2)
 {
     min[1] = min2;
+}
+
+void Histogram::setBinSize(const double binSize1)
+{
+    binSize[0] = binSize1;
 }
 
 void Histogram::setBinSize(const double binSize1, const double binSize2)
@@ -76,6 +91,13 @@ void Histogram::setBinSize2(const double binSize2)
 {
     binSize[1] = binSize2;
 }
+
+/**
+ * @brief Enable computation of time-resolved spatial variance
+ * @param enable
+ *
+ * \pre Histogram must be 1D in the time domain
+ */
 
 void Histogram::setSpatialVarianceEnabled(const bool enable)
 {
@@ -143,6 +165,10 @@ void Histogram::run(const Walker * const buf, size_t bufSize)
         case DATA_TIMES:
             index[0] = (w->walkTime - firstBinEdge[0])/binSize[0];
             break;
+
+        case DATA_NONE:
+        default:
+            return;
         }
 
         if(index[0] > nBins[0] -1)
@@ -163,6 +189,10 @@ void Histogram::run(const Walker * const buf, size_t bufSize)
             case DATA_TIMES:
                 index[1] = (w->walkTime - firstBinEdge[1])/binSize[1];
                 break;
+
+            case DATA_NONE:
+            default:
+                return;
             }
 
             if(index[1] > nBins[1] - 1)
@@ -177,7 +207,7 @@ void Histogram::run(const Walker * const buf, size_t bufSize)
     }
 }
 
-bool Histogram::pickPhoton(const Walker * const w)
+bool Histogram::pickPhoton(const Walker * const w) const
 {
     walkerFlags flag = walkerTypeToFlag(w->type);
     if(!(photonTypeFlags & flag))
@@ -330,7 +360,7 @@ void Histogram::setName(const char *name)
     histName = name;
 }
 
-bool Histogram::pickPhoton_impl(const Walker * const w)
+bool Histogram::pickPhoton_impl(const Walker * const w) const
 {
     return true;
 }

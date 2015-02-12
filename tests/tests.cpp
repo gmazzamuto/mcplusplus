@@ -28,7 +28,7 @@ void testBilayer() {
 
 
     Histogram *hist = new Histogram(0);
-    hist->setType(DATA_TIMES);
+    hist->setDataDomain(DATA_TIMES);
     hist->setPhotonTypeFlags(FLAG_TRANSMITTED);
     hist->setMax(50);
     hist->setBinSize(1);
@@ -37,7 +37,7 @@ void testBilayer() {
     sim->addHistogram(hist);
 
     hist = new Histogram(0);
-    hist->setType(DATA_POINTS);
+    hist->setDataDomain(DATA_POINTS);
     hist->setPhotonTypeFlags(FLAG_TRANSMITTED);
     hist->setMax(500);
     hist->setBinSize(2);
@@ -45,7 +45,7 @@ void testBilayer() {
     sim->addHistogram(hist);
 
     hist = new Histogram(0);
-    hist->setType(DATA_K);
+    hist->setDataDomain(DATA_K);
     hist->setPhotonTypeFlags(FLAG_TRANSMITTED);
     hist->setMax(90);
     hist->setBinSize(5);
@@ -53,7 +53,7 @@ void testBilayer() {
     sim->addHistogram(hist);
 
     hist = new Histogram(0);
-    hist->setType(DATA_POINTS,DATA_TIMES);
+    hist->setDataDomain(DATA_POINTS,DATA_TIMES);
     hist->setPhotonTypeFlags(FLAG_TRANSMITTED);
     hist->setMax(500,50);
     hist->setBinSize(2,1);
