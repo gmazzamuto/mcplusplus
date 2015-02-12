@@ -70,15 +70,16 @@ protected:
     unsigned int _currentSeed;
 
 private:
-    list<BaseRandom *> randomChildList;
-
     void setRNG(MCEngine *mt);
+
     virtual void setRNG_impl();
     virtual void setParent_impl(BaseObject *parent);
     virtual void addChild_impl(BaseObject *child);
     virtual void removeChild_impl(BaseObject *child);
     virtual BaseObject *clone_impl() const;
     virtual bool sanityCheck_impl() const;
+
+    list<BaseRandom *> randomChildList;
 };
 
 }

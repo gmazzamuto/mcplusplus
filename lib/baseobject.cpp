@@ -120,6 +120,16 @@ bool BaseObject::inheritsRandom() const {
     return _inheritsRandom;
 }
 
+/**
+ * @brief Returns a cloned instance of the current object
+ * @return A pointer to the newly created object
+ *
+ * The behaviour of this function is dependent on the object type. In
+ * particular, subclasses of BaseObject can provide their own specific
+ * implementation through clone_impl(). Cloned object are created without a
+ * parent.
+ */
+
 BaseObject *BaseObject::clone() const
 {
     BaseObject *clonedObject = clone_impl();
@@ -140,6 +150,8 @@ bool BaseObject::wasCloned() const
 
 /**
  * @brief Prints a description of the object and its main properties.
+ *
+ * Subclasses can provide their own specific behaviour through describe_impl().
  */
 
 void BaseObject::describe() const
@@ -162,6 +174,18 @@ string BaseObject::typeName() const
 #endif
     return str;
 }
+
+/**
+ * @brief Performs a series of integrity checks on internal data to ensure that
+ * the object is properly initialized and ready to be used
+ *
+ * @return true on success, false on failure
+ *
+ * This functions checks that the BaseObject pointers in the check list are not
+ * NULL and will call sanityCheck() on the pointed objects. Subclasses of
+ * BaseObject can provide their own specific implementation through
+ * sanityCheck_impl().
+ */
 
 bool BaseObject::sanityCheck() const
 {
@@ -248,6 +272,13 @@ void BaseObject::logMessage(const char *fmt, ...) const
     str += "\n";
     printLogMessage(str.c_str(),arguments);
 }
+
+/**
+ * @brief Adds a BaseObject pointer to the list of objects to be checked
+ * @param obj A pointer to a BaseObject pointer
+ *
+ * \see sanityCheck()
+ */
 
 void BaseObject::addObjectToCheck(const BaseObject ** const obj)
 {

@@ -55,32 +55,31 @@ public:
 protected:
     void logMessage(const string &msg) const;
     void logMessage(const char* fmt, ...) const;
-    bool _inheritsRandom;
     void addObjectToCheck(const BaseObject ** const obj);
     void clearObjectsToCheck();
-    list<const BaseObject *const *> objectsToCheck;
     void copyToInternalVariable(char **dest, const char *src);
 
+    bool _inheritsRandom;
+    list<const BaseObject *const *> objectsToCheck;
+
 private:
+    void removeChild(BaseObject *child);
+    void deleteAllChildren();
+    void addChild(BaseObject *child);
+    string messagePrefix() const;
+    void printLogMessage(const char *fmt, va_list arguments=NULL) const;
+
+    virtual BaseObject *clone_impl() const;
+    virtual void setParent_impl(BaseObject *parent);
+    virtual void addChild_impl(BaseObject *child);
+    virtual void removeChild_impl(BaseObject *child);
+    virtual bool sanityCheck_impl() const;
+    virtual void describe_impl() const;
+
     bool _hasAParent;
     BaseObject *_parent;
     list<BaseObject *> _childList;
     bool _wasCloned;
-
-    void removeChild(BaseObject *child);
-    void deleteAllChildren();
-    void addChild(BaseObject *child);
-
-    virtual void setParent_impl(BaseObject *parent);
-    virtual void addChild_impl(BaseObject *child);
-    virtual void removeChild_impl(BaseObject *child);
-    virtual BaseObject *clone_impl() const;
-    virtual bool sanityCheck_impl() const;
-
-    string messagePrefix() const;
-    void printLogMessage(const char *fmt, va_list arguments=NULL) const;
-
-    virtual void describe_impl() const;
 };
 
 }
