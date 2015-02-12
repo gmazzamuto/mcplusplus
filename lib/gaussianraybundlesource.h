@@ -30,16 +30,16 @@ namespace MCPP {
 class GaussianRayBundleSource : public Source
 {
 public:
-    GaussianRayBundleSource(MCfloat lensWaist, MCfloat waist, MCfloat lensDistance, BaseObject *parent=NULL);
-    GaussianRayBundleSource(MCfloat lensXWaist, MCfloat lensYWaist, MCfloat xWaist, MCfloat yWaist, MCfloat lensDistance, BaseObject *parent=NULL);
-    bool focus(MCfloat zWaistReal, Sample *sample);
-    void setZLens(MCfloat value);
+    GaussianRayBundleSource(double lensWaist, double waist, double lensDistance, BaseObject *parent=NULL);
+    GaussianRayBundleSource(double lensXWaist, double lensYWaist, double xWaist, double yWaist, double lensDistance, BaseObject *parent=NULL);
+    bool focus(double zWaistReal, Sample *sample);
+    void setZLens(double value);
 
 private:
     void init();
     virtual void spinDirection(Walker *walker) const;
     virtual void spinPosition(Walker *walker) const;
-    void setZWaist(MCfloat value);
+    void setZWaist(double value);
     MCfloat zWaist();
     MCfloat zLens() const;
     virtual void describe_impl() const;

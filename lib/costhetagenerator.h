@@ -12,9 +12,9 @@ namespace MCPP {
 class CosThetaGenerator : public AbstractDistribution
 {
 public:
-    CosThetaGenerator(MCfloat g=0, BaseObject *parent=NULL);
+    CosThetaGenerator(double g=0, BaseObject *parent=NULL);
 
-    void setg(MCfloat g);
+    void setg(double g);
     MCfloat spin() const;
 
 private:

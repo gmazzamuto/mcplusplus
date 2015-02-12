@@ -63,7 +63,7 @@ public:
     void setDisplayedAxisLength(float length);
 
 public slots:
-    void setScale(MCfloat value);
+    void setScale(double value);
     void setXRotation(int angle);
     void setYRotation(int angle);
     void setZRotation(int angle);

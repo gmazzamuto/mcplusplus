@@ -132,7 +132,7 @@ void GLWidget::setGrabFileName(const QString fileName)
     grabFileName = fileName;
 }
 
-void GLWidget::setScale(MCfloat value) {
+void GLWidget::setScale(double value) {
     if(value<1e-4)
         return;
     scale = value;

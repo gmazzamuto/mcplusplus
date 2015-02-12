@@ -18,7 +18,7 @@ using namespace MCPP;
  * The lensDistance parameter fully characterizes the lens convergence power. The two spot sizes refer
  */
 
-GaussianRayBundleSource::GaussianRayBundleSource(MCfloat lensWaist, MCfloat waist, MCfloat lensDistance, BaseObject *parent) :
+GaussianRayBundleSource::GaussianRayBundleSource(double lensWaist, double waist, double lensDistance, BaseObject *parent) :
     Source(parent)
 {
     xWaist=yWaist=waist;
@@ -43,7 +43,7 @@ GaussianRayBundleSource::GaussianRayBundleSource(MCfloat lensWaist, MCfloat wais
  * Non-cylindrically symmetric implementation
  */
 
-GaussianRayBundleSource::GaussianRayBundleSource(MCfloat lensXWaist, MCfloat lensYWaist, MCfloat xWaist, MCfloat yWaist, MCfloat lensDistance, BaseObject *parent) :
+GaussianRayBundleSource::GaussianRayBundleSource(double lensXWaist, double lensYWaist, double xWaist, double yWaist, double lensDistance, BaseObject *parent) :
     Source(parent)
 {
     xLensWaist=lensXWaist;
@@ -77,7 +77,7 @@ void GaussianRayBundleSource::init()
  * layers of different materials in between, use focus() instead.
  */
 
-void GaussianRayBundleSource::setZWaist(MCfloat value)
+void GaussianRayBundleSource::setZWaist(double value)
 {
     zWaistReal = value;
     zWaistInEnvironment = value;
@@ -104,7 +104,7 @@ MCfloat GaussianRayBundleSource::zWaist()
  * @param value
  */
 
-void GaussianRayBundleSource::setZLens(MCfloat value)
+void GaussianRayBundleSource::setZLens(double value)
 {
     zWaistInEnvironment = value + d;
     zWaistReal = zWaistInEnvironment;
@@ -153,7 +153,7 @@ BaseObject *GaussianRayBundleSource::clone_impl() const
  * \f$i\f$-th layer occurring between the lens and the waist position.
 */
 
-bool GaussianRayBundleSource::focus(MCfloat zWaist, Sample *sample)
+bool GaussianRayBundleSource::focus(double zWaist, Sample *sample)
 {
     int lensLayer, waistLayer;
     setZWaist(zWaist);

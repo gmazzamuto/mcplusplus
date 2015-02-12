@@ -13,12 +13,12 @@ public:
     virtual ~Histogram();
 
     void setType(const enum MCData type1, const enum MCData type2 = DATA_NONE);
-    void setMax(const MCfloat max1, const MCfloat max2 = 0);
-    void setMax2(const MCfloat max2);
-    void setMin(const MCfloat min1, const MCfloat min2 = 0);
-    void setMin2(const MCfloat min2);
-    void setBinSize(const MCfloat binSize1, const MCfloat binSize2 = 0);
-    void setBinSize2(const MCfloat binSize2);
+    void setMax(const double max1, const double max2 = 0);
+    void setMax2(const double max2);
+    void setMin(const double min1, const double min2 = 0);
+    void setMin2(const double min2);
+    void setBinSize(const double binSize1, const double binSize2 = 0);
+    void setBinSize2(const double binSize2);
     void setSpatialVarianceEnabled(const bool enable);
     bool is1D() const;
     bool is2D() const;

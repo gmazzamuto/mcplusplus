@@ -22,7 +22,7 @@ public:
 #ifdef SWIG
     %apply SWIGTYPE *DISOWN {AbstractDistribution *x0Distribution, AbstractDistribution *y0Distribution};
 #endif
-    void setr0Distribution(AbstractDistribution *x0Distribution, AbstractDistribution *y0Distribution, MCfloat _z0);
+    void setr0Distribution(AbstractDistribution *x0Distribution, AbstractDistribution *y0Distribution, double _z0);
 
 #ifdef SWIG
     %apply SWIGTYPE *DISOWN {AbstractDistribution *cosThetaDistr, AbstractDistribution *psiDistr};
@@ -34,7 +34,7 @@ public:
 #endif
     void setWalkTimeDistribution(AbstractDistribution *distr);
 
-    void setWavelength(MCfloat um);
+    void setWavelength(double um);
     MCfloat wavelength() const;
     MCfloat z0() const;
 
@@ -90,8 +90,8 @@ private:
 class GaussianBeamSource : public Source
 {
 public:
-    GaussianBeamSource(MCfloat FWHM, BaseObject *parent=NULL);
-    GaussianBeamSource(MCfloat xFWHM, MCfloat yFWHM, BaseObject *parent=NULL);
+    GaussianBeamSource(double FWHM, BaseObject *parent=NULL);
+    GaussianBeamSource(double xFWHM, double yFWHM, BaseObject *parent=NULL);
     ~GaussianBeamSource();
 
 private:
@@ -117,7 +117,7 @@ private:
 class IsotropicPointSource : public Source
 {
 public:
-    IsotropicPointSource(MCfloat z0, BaseObject *parent=NULL);
+    IsotropicPointSource(double z0, BaseObject *parent=NULL);
     ~IsotropicPointSource();
 
 private:

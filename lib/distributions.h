@@ -62,9 +62,9 @@ private:
 class DeltaDistribution : public AbstractDistribution
 {
 public:
-    DeltaDistribution(MCfloat center, BaseObject *parent=NULL);
+    DeltaDistribution(double center, BaseObject *parent=NULL);
 
-    void setCenter(MCfloat val);
+    void setCenter(double val);
     MCfloat spin() const;
 
 private:
@@ -88,12 +88,12 @@ private:
 class NormalDistribution : public AbstractDistribution
 {
 public:
-    NormalDistribution(MCfloat mean, MCfloat sigma, BaseObject *parent = NULL);
+    NormalDistribution(double mean, double sigma, BaseObject *parent = NULL);
     virtual ~NormalDistribution();
 
-    void setMean(MCfloat value);
-    void setSigma(MCfloat value);
-    void setFWHM(MCfloat value);
+    void setMean(double value);
+    void setSigma(double value);
+    void setFWHM(double value);
     virtual MCfloat spin() const;
 
 private:
@@ -117,7 +117,7 @@ private:
 class UniformDistribution : public AbstractDistribution
 {
 public:
-    UniformDistribution(MCfloat min, MCfloat max, BaseObject *parent=NULL);
+    UniformDistribution(double min, double max, BaseObject *parent=NULL);
 
     virtual MCfloat spin() const;
     MCfloat spinOpen() const;
@@ -144,10 +144,10 @@ class ExponentialDistribution : public AbstractDistribution
 {
 public:
     ExponentialDistribution(BaseObject *parent=NULL);
-    ExponentialDistribution(MCfloat lambda, BaseObject *parent=NULL);
+    ExponentialDistribution(double lambda, BaseObject *parent=NULL);
 
-    void setBeta(MCfloat value);
-    void setLambda(MCfloat value);
+    void setBeta(double value);
+    void setLambda(double value);
     MCfloat spin() const;
 
 private:
@@ -175,11 +175,11 @@ private:
 class Sech2Distribution : public AbstractDistribution
 {
 public:
-    Sech2Distribution(MCfloat mean, MCfloat scale, BaseObject* parent=NULL);
+    Sech2Distribution(double mean, double scale, BaseObject* parent=NULL);
 
-    void setMean(MCfloat value);
-    void setScale(MCfloat value);
-    void setFWHM(MCfloat value);
+    void setMean(double value);
+    void setScale(double value);
+    void setFWHM(double value);
     MCfloat spin() const;
 
 private:

@@ -19,8 +19,8 @@ class Sample : public BaseObject
 {
 public:
     Sample(BaseObject *parent=NULL);
-    void addLayer(Material *material, MCfloat thickness);
-    void addPreLayer(Material *material, MCfloat thickness);
+    void addLayer(Material *material, double thickness);
+    void addPreLayer(Material *material, double thickness);
     void setSurroundingEnvironment(Material *material);
     void setSurroundingEnvironment(Material *leftMaterial, Material *rightMaterial);
     unsigned int nLayers() const;

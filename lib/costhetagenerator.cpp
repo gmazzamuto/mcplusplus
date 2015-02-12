@@ -2,13 +2,13 @@
 
 using namespace MCPP;
 
-CosThetaGenerator::CosThetaGenerator(MCfloat g, BaseObject *parent) :
+CosThetaGenerator::CosThetaGenerator(double g, BaseObject *parent) :
     AbstractDistribution(parent)
 {
     setg(g);
 }
 
-void CosThetaGenerator::setg(MCfloat g) {
+void CosThetaGenerator::setg(double g) {
     this->g = g;
 }
 

@@ -44,35 +44,35 @@ void Histogram::setType(const MCData type1, const MCData type2)
     type[1] = type2;
 }
 
-void Histogram::setMax(const MCfloat max1, const MCfloat max2)
+void Histogram::setMax(const double max1, const double max2)
 {
     max[0] = max1;
     max[1] = max2;
 }
 
-void Histogram::setMax2(const MCfloat max2)
+void Histogram::setMax2(const double max2)
 {
     max[1] = max2;
 }
 
-void Histogram::setMin(const MCfloat min1, const MCfloat min2)
+void Histogram::setMin(const double min1, const double min2)
 {
     min[0] = min1;
     min[1] = min2;
 }
 
-void Histogram::setMin2(const MCfloat min2)
+void Histogram::setMin2(const double min2)
 {
     min[1] = min2;
 }
 
-void Histogram::setBinSize(const MCfloat binSize1, const MCfloat binSize2)
+void Histogram::setBinSize(const double binSize1, const double binSize2)
 {
     binSize[0] = binSize1;
     binSize[1] = binSize2;
 }
 
-void Histogram::setBinSize2(const MCfloat binSize2)
+void Histogram::setBinSize2(const double binSize2)
 {
     binSize[1] = binSize2;
 }

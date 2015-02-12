@@ -82,7 +82,7 @@ void Source::spin(Walker *walker) const {
     spinTime(walker);
 }
 
-void Source::setr0Distribution(AbstractDistribution *x0Distribution, AbstractDistribution *y0Distribution, MCfloat z0) {
+void Source::setr0Distribution(AbstractDistribution *x0Distribution, AbstractDistribution *y0Distribution, double z0) {
     x0Distribution->setParent(this);
     y0Distribution->setParent(this);
     r0Distribution[0] = x0Distribution;
@@ -103,7 +103,7 @@ void Source::setWalkTimeDistribution(AbstractDistribution *distr) {
     walkTimeDistribution->setParent(this);
 }
 
-void Source::setWavelength(MCfloat um) {
+void Source::setWavelength(double um) {
     wl = um;
 }
 
@@ -157,7 +157,7 @@ BaseObject *PencilBeamSource::clone_impl() const
  * @param parent
  */
 
-GaussianBeamSource::GaussianBeamSource(MCfloat FWHM, BaseObject *parent) :
+GaussianBeamSource::GaussianBeamSource(double FWHM, BaseObject *parent) :
     Source(parent)
 {
     init(FWHM,FWHM);
@@ -171,7 +171,7 @@ GaussianBeamSource::GaussianBeamSource(MCfloat FWHM, BaseObject *parent) :
  * @param parent
  */
 
-GaussianBeamSource::GaussianBeamSource(MCfloat xFWHM, MCfloat yFWHM, BaseObject *parent) :
+GaussianBeamSource::GaussianBeamSource(double xFWHM, double yFWHM, BaseObject *parent) :
     Source(parent)
 {
     init(xFWHM,yFWHM);
@@ -208,7 +208,7 @@ void GaussianBeamSource::init(MCfloat xFWHM, MCfloat yFWHM)
 
 
 
-IsotropicPointSource::IsotropicPointSource(MCfloat z0, BaseObject *parent) :
+IsotropicPointSource::IsotropicPointSource(double z0, BaseObject *parent) :
     Source(parent)
 {
     AbstractDistribution *distr[2];

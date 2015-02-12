@@ -26,7 +26,7 @@ Sample::Sample(BaseObject *parent) :
  * \f$ z=0 \f$.
  */
 
-void Sample::addLayer(Material *material, MCfloat thickness) {
+void Sample::addLayer(Material *material, double thickness) {
     _nLayers++;
     _zBoundaries.push_back(_zBoundaries.back() + thickness);
     materials.insert(materials.end()-1,material);
@@ -42,7 +42,7 @@ void Sample::addLayer(Material *material, MCfloat thickness) {
  * layer is placed in \f$ z=0 \f$.
  */
 
-void Sample::addPreLayer(Material *material, MCfloat thickness)
+void Sample::addPreLayer(Material *material, double thickness)
 {
     _nLayers++;
     _zBoundaries.push_front(_zBoundaries.front() - thickness);

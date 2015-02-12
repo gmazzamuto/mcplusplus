@@ -12,12 +12,12 @@ class MCMovieCreator : public H5FileHelper
 
 public:
     explicit MCMovieCreator(QString fileName, BaseObject *parent = 0);
-    void setBinSize(const MCfloat ps);
-    void setBinSizeX(const MCfloat um);
+    void setBinSize(const double ps);
+    void setBinSizeX(const double um);
     void setWalkerFlags(const unsigned int value);
     void setSquare(const QRectF rect);
     void createMovie(const QString fileName);
-    void setTimeRange(const MCfloat startTime, const MCfloat endTime);
+    void setTimeRange(const double startTime, const double endTime);
 
 private:
     MCfloat *dataTimes[4];

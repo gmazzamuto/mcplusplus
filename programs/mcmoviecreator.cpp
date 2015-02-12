@@ -108,18 +108,18 @@ void MCMovieCreator::createMovie(const QString fileName) {
     free(hist);
 }
 
-void MCMovieCreator::setTimeRange(const MCfloat startTime, const MCfloat endTime)
+void MCMovieCreator::setTimeRange(const double startTime, const double endTime)
 {
     this->startTime = startTime;
     this->endTime = endTime;
 }
 
-void MCMovieCreator::setBinSize(const MCfloat ps)
+void MCMovieCreator::setBinSize(const double ps)
 {
     binSize = ps;
 }
 
-void MCMovieCreator::setBinSizeX(const MCfloat um)
+void MCMovieCreator::setBinSizeX(const double um)
 {
     binSizeX = um;
 }
