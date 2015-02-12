@@ -160,6 +160,16 @@ bool H5FileHelper::newFile(const char *fileName) {
     return true;
 }
 
+/**
+ * @brief Creates an extendible dataset
+ * @param datasetName
+ * @param ndims
+ * @param dims
+ * @param chunk_dim
+ * @param type
+ * @return
+ */
+
 #ifndef SWIG  //this is to work around a link error
 bool H5FileHelper::newDataset(const char *datasetName, int ndims, const hsize_t *dims, const hsize_t *chunk_dim, PredType type)
 {
@@ -193,6 +203,15 @@ bool H5FileHelper::newDataset(const char *datasetName, int ndims, const hsize_t 
     return true;
 }
 #endif
+
+/**
+ * @brief Creates a fixed size dataset
+ * @param datasetName
+ * @param ndims
+ * @param dims
+ * @param type
+ * @return
+ */
 
 #ifndef SWIG  //this is to work around a link error
 bool H5FileHelper::newDataset(const char *datasetName, int ndims, const hsize_t *dims, PredType type)
@@ -431,6 +450,12 @@ const char* H5FileHelper::getDataSetName() const {
 const char *H5FileHelper::currentDataset() const {
     return dName;
 }
+
+/**
+ * @brief Writes a vector of strings in the attribute named "column_names"
+ * @param nCols The number of strings to be written
+ * @param vect Vector of strings to be written
+ */
 
 void H5FileHelper::writeColumnNames(const uint nCols, string *vect)
 {

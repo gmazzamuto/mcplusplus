@@ -62,17 +62,17 @@ protected:
     hsize_t *dims;
 
 private:
-    char *fName, *dName;
-    bool opened;
-
-    H5E_auto2_t Efunc;
-    void *EclientData;
-
     void resetErrorAutoPrint();
     bool _openFile(const char *fileName);
     void _openDataSet(const char *dataSetName);
     virtual bool openFile_impl();
     virtual void closeDataSet_impl();
+
+    char *fName, *dName;
+    bool opened;
+
+    H5E_auto2_t Efunc;
+    void *EclientData;
 };
 
 }
