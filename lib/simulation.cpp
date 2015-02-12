@@ -259,16 +259,17 @@ void Simulation::run() {
     time_t now;
     time(&now);
 
-    if(_nThreads > 1)
-        logMessage("%s\nCompleted in %.f seconds\n================\n",stream.str().c_str(), difftime(now,startTime));
-    else
+    if(wasCloned()) {
         logMessage("%s\nCompleted in %.f seconds (seed %u)\n================\n",stream.str().c_str(),difftime(now,startTime),currentSeed());
+        return;
+    }
 
-    if(!wasCloned()) {
-        for (size_t i = 0; i < hists.size(); ++i) {
-            Histogram *h = hists[i];
-            h->saveToFile(outputFile);
-        }
+
+    logMessage("%s\nCompleted in %.f seconds\n================\n",stream.str().c_str(), difftime(now,startTime));
+
+    for (size_t i = 0; i < hists.size(); ++i) {
+        Histogram *h = hists[i];
+        h->saveToFile(outputFile);
     }
 }
 
