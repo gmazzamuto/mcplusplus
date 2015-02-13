@@ -411,7 +411,10 @@ bool Simulation::runSingleThread() {
         swap_k0_k1();         //at first, the walker propagates
         kNeedsToBeScattered = false; //with the orignal k
 
-        appendTrajectoryPoint(r0);
+#ifdef ENABLE_TRAJECTORY
+        if(saveTrajectory)
+            appendTrajectoryPoint(r0);
+#endif
         nInteractions.insert(nInteractions.begin(),nLayers+2,0);
 
 #ifdef DEBUG_TRAJECTORY
@@ -454,7 +457,7 @@ bool Simulation::runSingleThread() {
                         k1[2] = -sinTheta*cosPsi*temp + cosTheta*k0[2];
                     }
 
-                    MCfloat mod = module(k1);
+                    MCfloat mod = sqrt(k1[0]*k1[0] + k1[1]*k1[1] + k1[2]*k1[2]);
                     k1[0]/=mod;
                     k1[1]/=mod;
                     k1[2]/=mod;
@@ -472,20 +475,37 @@ bool Simulation::runSingleThread() {
 #ifdef DEBUG_TRAJECTORY
             printf("\t%lf\n",k1[2]);
 #endif
-            move(length);
+
+            if(r1[2] >= currLayerLowerBoundary && r1[2] <= currLayerUpperBoundary)
+            {
+                swap_r0_r1();
+                swap_k0_k1();
+
+                totalLengthInCurrentLayer+=length;
+                kNeedsToBeScattered = true;
+            }
+            else
+                handleInterface();
+
 
 #ifdef DEBUG_TRAJECTORY
             printf("%d\t",layer0);
             printf("%lf\t%lf\t%lf\t\t%lf", r0[0], r0[1], r0[2],k0[2]);
 #endif
-            appendTrajectoryPoint(r0);
+
+#ifdef ENABLE_TRAJECTORY
+            if(saveTrajectory)
+                appendTrajectoryPoint(r0);
+#endif
 
             if(walkerExitedSample)
                 break;
         } //end of walker
 
+#ifdef ENABLE_TRAJECTORY
         if(saveTrajectory)
             trajectoryPoints->push_back(currentTrajectory);
+#endif
 
 #ifdef DEBUG_TRAJECTORY
         printf("\nwalker reached layer %d\n",layer0);
@@ -523,19 +543,7 @@ unsigned int Simulation::layerAt(const MCfloat *r0) const {
  * This function also takes care of handling the crossing of an interface
  */
 
-void Simulation::move(const MCfloat length) {
-    if(r1[2] >= currLayerLowerBoundary && r1[2] <= currLayerUpperBoundary)
-    {
-        swap_r0_r1();
-        swap_k0_k1();
-
-        totalLengthInCurrentLayer+=length;
-        kNeedsToBeScattered = true;
-        return;
-    }
-
-    //handle interface
-
+void Simulation::handleInterface() {
     MCfloat zBoundary=0;
     layer1 = layer0 + sign(k1[2]);
     zBoundary = upperZBoundaries[min(layer0,layer1)];
@@ -662,8 +670,6 @@ void Simulation::refract() {
 }
 
 void Simulation::appendTrajectoryPoint(MCfloat *point) {
-    if(!saveTrajectory)
-        return;
     for (int i = 0; i < 3; ++i) {
         currentTrajectory->push_back(point[i]);
     }

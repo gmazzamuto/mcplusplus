@@ -82,7 +82,7 @@ public:
 
 private:
     unsigned int layerAt(const MCfloat *r0) const;
-    void move(const MCfloat length);
+    void handleInterface();
     void reflect();
     void refract();
 
