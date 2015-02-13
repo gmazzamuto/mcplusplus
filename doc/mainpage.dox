@@ -33,23 +33,22 @@ Some excerpts rearranged from \cite svensson2013breakdown \cite contini1997photo
 
   \section Motivation Motivation
 
-As its name suggests, MCPlusPlus is entirely written in C++. We think that the
-Object-oriented programming (OOP) paradigm and the abstraction layer that it
-provides apply very well to the problem described above. OOP allows to
-encapsulate concepts as reusable objects, thus providing ease of maintenance,
-increased code understandability and modular architecture. With this powerful
-tool, we can implement a software package that is much more flexible than the
-most widely used MC codes, yet having equal to superior performance. The OOP
-makes it easy to expand and customize the code, that's why we can provide some
-unique features such as:
+MCPlusPlus is a Monte Carlo implementation of photon transport in turbid
+layered media. As its name suggests, MCPlusPlus is entirely written in C++. We
+think that the Object-oriented programming (OOP) paradigm and the abstraction
+layer that it provides apply very well to the problem described above. OOP
+allows to encapsulate concepts as reusable objects, thus providing ease of
+maintenance, increased code understandability and modular architecture. With
+this powerful tool, we can implement a software package that is much more
+flexible than the most widely used MC codes, yet having equal to superior
+performance. The OOP makes it easy to expand and customize the code, that's why
+we can provide some unique features such as:
 
 - customizable photon source (time distribution, k vector distribution)
 
-- time resolved statistics
+- optional raw output in binary format (H5)
 
-- resuming a previously run simulation, appending new statistics
-
-- granular output in binary format (H5)
+- flexible interface for multi-variate histogramming in binary format (H5)
 
 - multi threading
 
@@ -65,27 +64,27 @@ Extract the source tarball and create a new folder that will be used for
 compilation. This is called the build folder. Open a terminal in the build
 folder and issue the following command:
 
-\code cmake pathToSourceFolder\endcode
+\code $ cmake [ADDITIONAL_DEFINES] pathToSourceFolder\endcode
 
 where @c pathToSourceFolder is the absolute or relative path to the extracted
 source folder. This will prepare the files needed for compilation.
 
 If you wish to specify an installation path different from your system's
-default (for example you want to install in @c /home/yourname/local), append
-the following option to the command above:
+default (for example you want to install in @c /home/yourname/local), specify
+the following define in the command above:
 
 \code -DCMAKE_INSTALL_PREFIX=/home/yourname/local\endcode
 
-If you have dependencies installed in non-standard paths, for example in
-@c /home/yourname/local/include/, you can add that path to the @c cmake command
-line like this:
+If you have libraries and headers installed in non-standard paths, for example
+in @c /home/yourname/local/include or @c /home/yourname/local/lib, you can add
+those paths to the @c cmake command line like this:
 
-\code -DCMAKE_CXX_FLAGS=-I/home/yourname/local/include/\endcode
+\code -DCMAKE_LIBRARY_PATH=/home/yourname/local/lib -DCMAKE_CXX_FLAGS=-I/home/yourname/local/include/ \endcode
 
 Once @c cmake has been run, you can build the project and install it in the
 specified folder with the following command:
 
-\code make install\endcode
+\code $ make install\endcode
 
 If you installed in a local folder, in order to be able to use the software
 you'll have to export the following environment variables in every shell that
@@ -106,5 +105,5 @@ can also place the lines above in your shell's configuration file.
 Run <tt>make documentation</tt> followed by <tt>make install</tt> to install
 the documentation in your installation path.
 
-- @c BUILD_PYTHON_BINDINGS Build bindings for Pyton.
+- @c BUILD_PYTHON_BINDINGS Build bindings for Python.
 */
