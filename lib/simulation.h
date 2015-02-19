@@ -48,7 +48,8 @@ public:
 
     const Sample *sample() const;
     void setSaveTrajectoryEnabled(bool enabled = true);
-    void setNWalkers(u_int64_t N);
+    void setNPhotons(const u_int64_t N);
+    void setNWalkers(const u_int64_t N);
 #ifdef SWIG
     %apply SWIGTYPE *DISOWN {Sample *sample};
 #endif
@@ -59,8 +60,8 @@ public:
     void setSource(Source *source);
     void setFresnelReflectionsEnabled(bool enable);
     void setNThreads(unsigned int value);
-    u_int64_t nWalkers() const;
-    u_int64_t currentWalker() const;
+    u_int64_t nPhotons() const;
+    u_int64_t currentPhoton() const;
     void setOutputFileName(const char *name);
     void run();
     void clear();

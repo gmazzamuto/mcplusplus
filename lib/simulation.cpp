@@ -143,8 +143,13 @@ void Simulation::clear() {
  * @param N
  */
 
-void Simulation::setNWalkers(u_int64_t N) {
+void Simulation::setNPhotons(const u_int64_t N) {
     _totalWalkers = N;
+}
+
+void Simulation::setNWalkers(const u_int64_t N)
+{
+    setNPhotons(N);
 }
 
 /**
@@ -193,12 +198,12 @@ void Simulation::setNThreads(unsigned int value)
  * @return
  */
 
-u_int64_t Simulation::nWalkers() const
+u_int64_t Simulation::nPhotons() const
 {
     return _totalWalkers;
 }
 
-u_int64_t Simulation::currentWalker() const
+u_int64_t Simulation::currentPhoton() const
 {
     return n;
 }
@@ -225,7 +230,7 @@ void Simulation::run() {
     time(&startTime);
     for (size_t i = 0; i < hists.size(); ++i) {
         Histogram *h = hists[i];
-        h->setScale(nWalkers());
+        h->setScale(nPhotons());
         h->initialize();
     }
 
@@ -279,15 +284,15 @@ void Simulation::runMultipleThreads()
     sims.clear();
     installSigTermHandler();
 
-    u_int64_t walkersPerThread = nWalkers()/_nThreads;
-    u_int64_t remainder = nWalkers() % _nThreads;
+    u_int64_t walkersPerThread = nPhotons()/_nThreads;
+    u_int64_t remainder = nPhotons() % _nThreads;
 
     for (unsigned int n = 0; n < _nThreads; ++n) {
         Simulation *sim = (Simulation *)clone();
         u_int64_t nWalkers = walkersPerThread;
         if(n<remainder)
             nWalkers++;
-        sim->setNWalkers(nWalkers);
+        sim->setNPhotons(nWalkers);
         sim->setSeed(currentSeed()+n);
         if(n<multipleRNGStates.size())
             sim->setGeneratorState(multipleRNGStates[n]);
@@ -329,7 +334,7 @@ bool Simulation::runSingleThread() {
         return false;
 
     clear();
-    logMessage("starting... Number of walkers = %Lu, original seed = %u",nWalkers(), currentSeed());
+    logMessage("starting... Number of walkers = %Lu, original seed = %u",nPhotons(), currentSeed());
     nLayers = _sample->nLayers();
 
 
@@ -724,14 +729,14 @@ void Simulation::appendWalker(walkerType type)
 
 void Simulation::reportProgress() const
 {
-    string s = str( format("Seed %u: progress = %.1lf%% (%u / %u) ") % currentSeed() % (100.*currentWalker()/nWalkers()) % currentWalker() % nWalkers());
+    string s = str( format("Seed %u: progress = %.1lf%% (%u / %u) ") % currentSeed() % (100.*currentPhoton()/nPhotons()) % currentPhoton() % nPhotons());
     stringstream ss;
     ss << s;
-    if(currentWalker() > 0) {
+    if(currentPhoton() > 0) {
         time_t now;
         time(&now);
-        double secsPerWalker = difftime(now,startTime) / currentWalker();
-        time_t eta = now + secsPerWalker*(nWalkers()-currentWalker());
+        double secsPerWalker = difftime(now,startTime) / currentPhoton();
+        time_t eta = now + secsPerWalker*(nPhotons()-currentPhoton());
         struct tm * timeinfo;
         timeinfo = localtime (&eta);
         char buffer [80];

@@ -21,7 +21,7 @@ void testBilayer() {
     Source *src = new PencilBeamSource();
     src->setWalkTimeDistribution(new DeltaDistribution(0));
 
-    Simulation *sim = new Simulation();
+    Simulation *sim = new Simulation(0);
     sim->setSample(sample);
     sim->setSource(src);
     sim->setOutputFileName(outputFileName);
@@ -61,7 +61,7 @@ void testBilayer() {
     sim->addHistogram(hist);
 
 
-    sim->setNWalkers(1000000);
+    sim->setNPhotons(1000000);
     sim->setNThreads(4);
     sim->setSeed(0);
 

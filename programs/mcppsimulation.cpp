@@ -39,11 +39,11 @@ int main(int argc, char *argv[])
 
     sample->setSurroundingEnvironment(&freeSpace);
 
-    Simulation *sim = new Simulation();
+    Simulation *sim = new Simulation(0);
 
     sim->setSample(sample);
     sim->setSource(source);
-    sim->setNWalkers(atoll(argv[1]));
+    sim->setNPhotons(atoll(argv[1]));
     sim->setNThreads(atoi(argv[2]));
 
     sim->setSeed(0);

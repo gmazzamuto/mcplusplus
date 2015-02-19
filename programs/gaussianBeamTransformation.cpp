@@ -36,13 +36,13 @@ int main(int argc, char *argv[])
         exit(EXIT_FAILURE);
     }
 
-    Simulation *sim = new Simulation();
+    Simulation *sim = new Simulation(0);
 
     int n = 5000;
 
     sim->setSample(sample);
     sim->setSource(source);
-    sim->setNWalkers(n);
+    sim->setNPhotons(n);
     sim->setFresnelReflectionsEnabled(false);
 
     sim->setSeed(0);
