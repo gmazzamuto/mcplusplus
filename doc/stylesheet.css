@@ -47,7 +47,7 @@ div.headertitle {
         padding-top: 12px;
 }
 
-h1 {
+h1,h2 {
     margin: 0 auto;
     padding: 12px 12px 12px 12px;
 }

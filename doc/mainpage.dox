@@ -101,9 +101,177 @@ can also place the lines above in your shell's configuration file.
 
 \subsection BuildOptions Build Options
 
+The following options can be specified in the cmake command line preceded by @c
+-D, for example \code -DBUILD_PYTHON_BINDINGS=ON \endcode
+
+Boolean options:
 - @c BUILD_DOCUMENTATION Enables using Doxygen to build an HTML documentation.
 Run <tt>make documentation</tt> followed by <tt>make install</tt> to install
 the documentation in your installation path.
 
-- @c BUILD_PYTHON_BINDINGS Build bindings for Python.
+- @c BUILD_PYTHON_BINDINGS Build bindings for Python. Remember to set the
+@c PYTHONPATH environment variable as shown above.
+
+\section Tutorials Tutorials
+
+These simple tutorials are meant to showcase the easy and straightforward
+interface provided by MCPlusPlus.
+
+\subsection PythonTutorial Python Tutorial
+
+To take advantage of Python scripting you must compile MCPlusPlus with the @c
+-DBUILD_PYTHON_BINDINGS=ON flag and set the @c PYTHONPATH environment variable
+as described above.
+
+\code{.py}
+#!/usr/bin/python
+
+from pymcplusplus import *
+
+#define a sample consisting of two layers of different materials
+sample = Sample()
+
+mat = Material()
+mat.n = 1.5
+mat.g = 0
+mat.ls = 1000
+
+sample.addLayer(mat,1000)
+
+mat2 = Material()
+mat2.n = 1.3
+mat.g = 0.5
+mat.ls = 700
+
+sample.addLayer(mat2,500)
+
+externalMaterial = Material()
+externalMaterial.n = 1
+
+sample.setSurroundingEnvironment(externalMaterial)
+
+#define a photon source
+d0 = DeltaDistribution(0)
+
+source = PencilBeamSource()
+source.setWalkTimeDistribution(d0)
+
+#define the main simulation object, simulate 1e9 photons using 8 parallel threads
+#notice that each thread will use increasing seeds starting from 0
+sim = Simulation()
+sim.setSample(sample)
+sim.setSource(source)
+sim.setNPhotons(1000000000)
+sim.setNThreads(8)
+sim.setSeed(0)
+sim.setOutputFileName("example.h5")
+
+#define and add several histograms to the simulation
+
+# 1) a histogram of the exit times
+hist = Histogram()
+hist.setDataDomain(DATA_TIMES)
+hist.setPhotonTypeFlags(FLAG_TRANSMITTED)
+hist.setMax(1000)
+hist.setBinSize(2)
+hist.setName("times")
+hist.setSpatialVarianceEnabled(True)
+sim.addHistogram(hist)
+
+# 2) a histogram of the exit distances from the center
+hist = Histogram()
+hist.setDataDomain(DATA_POINTS);
+hist.setPhotonTypeFlags(FLAG_TRANSMITTED)
+hist.setMax(1000000)
+hist.setBinSize(50)
+hist.setName("points")
+sim.addHistogram(hist)
+
+# 3) a bivariate histogram of the exit distances as a function of time
+hist = Histogram()
+hist.setDataDomain(DATA_POINTS, DATA_TIMES)
+hist.setPhotonTypeFlags(FLAG_TRANSMITTED)
+hist.setMax(100000,1000)
+hist.setBinSize(500,2)
+hist.setName("points_vs_times")
+sim.addHistogram(hist)
+
+sim.run()
+\endcode
+
+Create a file @c example.py with the contents shown above. You can find this
+file also in the @c examples folder of the source tarball. Once you have
+created it, you probably need to grant it execution permissions using
+
+\code
+$ chmod +x example.py
+\endcode
+
+Then run the simulation by simply issuing
+\code
+$ ./example.py
+\endcode
+
+Here is an example of what the output may look like:
+
+\code
+[2015-02-19 17:17:03][MCPP::Simulation] starting... Number of walkers = 125000000, original seed = 0
+[2015-02-19 17:17:03][MCPP::Simulation] starting... Number of walkers = 125000000, original seed = 1
+[2015-02-19 17:17:03][MCPP::Simulation] starting... Number of walkers = 125000000, original seed = 2
+[2015-02-19 17:17:03][MCPP::Simulation] starting... Number of walkers = 125000000, original seed = 3
+[2015-02-19 17:17:03][MCPP::Simulation] starting... Number of walkers = 125000000, original seed = 7
+[2015-02-19 17:17:03][MCPP::Simulation] starting... Number of walkers = 125000000, original seed = 5
+[2015-02-19 17:17:03][MCPP::Simulation] starting... Number of walkers = 125000000, original seed = 6
+[2015-02-19 17:17:03][MCPP::Simulation] starting... Number of walkers = 125000000, original seed = 4
+[2015-02-19 17:17:04][MCPP::Simulation]
+
+================
+transmitted: 454581567
+ballistic: 225229317
+reflected: 278973129
+back-reflected: 41231183
+
+Completed in 6871 seconds
+================
+\endcode
+
+While the simulation runs, you can query its progress by sending a USR2 signal
+to the process. To do this, open another shell and issue:
+\code $ killall -USR2 example.py \endcode
+or
+\code
+$ kill -USR2 [pid of your process]
+\endcode
+
+Once the simulation has ended, the histogrammed data is saved in an H5 file
+named @c example.h5 as was specified in the script. This file contains several
+datasets, you can list them with the command
+
+\code
+$ h5ls example.h5
+photon-counters          Dataset {4}
+points                   Dataset {20001, 2}
+points_vs_times          Dataset {201, 502}
+sample                   Dataset {4, 4/Inf}
+times                    Dataset {501, 3}
+\endcode
+
+Notice the three datasets containg the histograms that were defined in the
+Python script: @c points, @c times and @c points_vs_times. You can inspect the
+file contents using a graphical viewer:
+
+\code
+$ hdfview example.h5
+\endcode
+
+or you can extract single datasets as text files:
+
+\code
+$ h5totxt -d [dataset name] example.h5 > dataset.txt
+\endcode
+
+In MATLAB you can directly load a dataset with:
+\code
+hdf5read('example.h5', 'dataset_name')
+\endcode
 */
