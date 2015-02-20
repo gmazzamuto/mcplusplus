@@ -25,10 +25,7 @@ externalMaterial.n = 1
 sample.setSurroundingEnvironment(externalMaterial)
 
 #define a photon source
-d0 = DeltaDistribution(0)
-
 source = PencilBeamSource()
-source.setWalkTimeDistribution(d0)
 
 #define the main simulation object, simulate 1e9 photons using 8 parallel threads.
 #notice that each thread will use increasing seeds starting from 0

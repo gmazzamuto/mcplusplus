@@ -122,6 +122,7 @@ MCfloat Source::z0() const
 PencilBeamSource::PencilBeamSource(BaseObject *parent) :
     Source(parent)
 {
+    setWalkTimeDistribution(new DeltaDistribution(0));
     _z0 = -1*std::numeric_limits<MCfloat>::infinity();
     clearObjectsToCheck();
     addObjectToCheck((const BaseObject**)&walkTimeDistribution);
