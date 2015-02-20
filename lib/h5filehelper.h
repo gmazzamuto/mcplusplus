@@ -16,7 +16,7 @@
 #define MCH5FLOAT PredType::NATIVE_FLOAT
 #endif
 
-#define PRINT_DEBUG_MSG
+//#define PRINT_DEBUG_MSG
 
 using namespace H5;
 
