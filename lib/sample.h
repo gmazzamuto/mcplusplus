@@ -1,7 +1,7 @@
 #ifndef SAMPLE_H
 #define SAMPLE_H
 
-#include <baseobject.h>
+#include "baseobject.h"
 #include "material.h"
 #include <vector>
 #include <deque>

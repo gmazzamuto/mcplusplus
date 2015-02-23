@@ -205,7 +205,8 @@ hdf5read('example.h5', 'dataset_name')
 \include example.cpp
 
 \code
-FIXME
-g++ -I/home/giacomo/local/include -I/home/giacomo/local/include/MCPlusPlus example.cpp -L/home/giacomo/local/lib -o example /home/giacomo/local/lib/libMCPlusPlus.a -lhdf5 -lhdf5_cpp -lboost_thread -lboost_system
+g++ -I/home/yourname/local/include example.cpp -L/home/yourname/local/lib -o example /home/yourname/local/lib/libMCPlusPlus.a -lhdf5 -lhdf5_cpp -lboost_thread -lboost_system
 \endcode
+
+assuming again MCPlusPlus installed in @c /home/yourname/local/.
 */
