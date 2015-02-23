@@ -204,9 +204,19 @@ hdf5read('example.h5', 'dataset_name')
 \subsection CppTutorial C++ Tutorial
 \include example.cpp
 
+Create a file example.py with the contents shown above. You can find this file
+also in the examples folder of the source tarball. Then compile it:
+
 \code
-g++ -I/home/yourname/local/include example.cpp -L/home/yourname/local/lib -o example /home/yourname/local/lib/libMCPlusPlus.a -lhdf5 -lhdf5_cpp -lboost_thread -lboost_system
+g++ -I/home/yourname/local/include -L/home/yourname/local/lib example.cpp -o example /home/yourname/local/lib/libMCPlusPlus.a -lhdf5 -lhdf5_cpp -lboost_thread -lboost_system
 \endcode
 
-assuming again MCPlusPlus installed in @c /home/yourname/local/.
+assuming again MCPlusPlus installed in @c /home/yourname/local/, and run it:
+
+\code
+$ ./example.py
+\endcode
+
+See the last part of \ref PythonTutorial "Python Tutorial" for an explanation
+of how to examine the output data.
 */
