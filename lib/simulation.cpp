@@ -255,20 +255,19 @@ void Simulation::run() {
         runMultipleThreads();
     }
 
+    time_t now;
+    time(&now);
+
+    if(wasCloned()) {
+        logMessage("Thread using seed %u completed in %.f seconds",currentSeed(),difftime(now,startTime));
+        return;
+    }
+
     stringstream stream;
     stream << "\n\n================\n";
     for (uint i = 0; i < 4; ++i) {
         stream << walkerTypeToString(i) << ": " << photonCounters[i] << endl;
     }
-
-    time_t now;
-    time(&now);
-
-    if(wasCloned()) {
-        logMessage("%s\nCompleted in %.f seconds (seed %u)\n================\n",stream.str().c_str(),difftime(now,startTime),currentSeed());
-        return;
-    }
-
 
     logMessage("%s\nCompleted in %.f seconds\n================\n",stream.str().c_str(), difftime(now,startTime));
 
