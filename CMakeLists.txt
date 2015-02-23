@@ -9,8 +9,8 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 #-- Add an Option to toggle the generation of the documentation
-option(BUILD_DOCUMENTATION "Use Doxygen to create the HTML based documentation" OFF)
-if(BUILD_DOCUMENTATION)
+option(ENABLE_DOCUMENTATION "Use Doxygen to create the HTML based documentation" OFF)
+if(ENABLE_DOCUMENTATION)
   FIND_PACKAGE(Doxygen)
   if(NOT DOXYGEN_FOUND)
     message(FATAL_ERROR

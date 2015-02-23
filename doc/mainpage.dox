@@ -105,7 +105,7 @@ The following options can be specified in the cmake command line preceded by @c
 -D, for example \code -DBUILD_PYTHON_BINDINGS=ON \endcode
 
 Boolean options:
-- @c BUILD_DOCUMENTATION Enables using Doxygen to build an HTML documentation.
+- @c ENABLE_DOCUMENTATION Enables using Doxygen to build an HTML documentation.
 Run <tt>make documentation</tt> followed by <tt>make install</tt> to install
 the documentation in your installation path.
 
