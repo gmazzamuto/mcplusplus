@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
     mat.g = 0;
     mat.ls = 1000;
 
-    sample->addLayer(&mat,1000);
+    sample->addLayer(&mat,1000); //add a layer of material mat and thickness 1000um
 
     Material mat2;
     mat2.n = 1.3;
@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
     Source *source = new PencilBeamSource(0);
 
     // define the main simulation object, simulate 1e9 photons using 8 parallel threads.
-    // notice that each thread will use increasing seeds starting from 0
+    // note that each thread will use increasing seeds starting from 0
     Simulation *sim = new Simulation(0);
     sim->setSample(sample);
     sim->setSource(source);
@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
 
 
 
-    //  define and add several histograms to the simulation
+    // define and add several histograms to the simulation
     Histogram *hist;
 
     // 1) a histogram of the exit times

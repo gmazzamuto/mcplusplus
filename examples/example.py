@@ -10,6 +10,7 @@ mat.n = 1.5
 mat.g = 0
 mat.ls = 1000
 
+#add a layer of material mat and thickness 1000um
 sample.addLayer(mat,1000)
 
 mat2 = Material()
@@ -28,7 +29,7 @@ sample.setSurroundingEnvironment(externalMaterial)
 source = PencilBeamSource()
 
 #define the main simulation object, simulate 1e9 photons using 8 parallel threads.
-#notice that each thread will use increasing seeds starting from 0
+#note that each thread will use increasing seeds starting from 0
 sim = Simulation()
 sim.setSample(sample)
 sim.setSource(source)
