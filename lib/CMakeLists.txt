@@ -35,11 +35,3 @@ if(BUILD_PYTHON_BINDINGS)
     install(FILES ${PROJECT_BINARY_DIR}/pymcplusplus.py DESTINATION lib)
 endif()
 
-if(DOXYGEN_FOUND)
-    #-- Configure the Template Doxyfile for our specific project
-    set(DOXYGEN_OUTDIR ${DOCUMENTATION_DIR}/libMCPlusPlus)
-    configure_file(Doxyfile.in
-                   ${PROJECT_BINARY_DIR}/Doxyfile  @ONLY)
-    add_custom_target(libMCPlusPlus-documentation SOURCES DoxygenLayout.xml DEPENDS run_install
-                      COMMAND mkdir -p  ${DOXYGEN_OUTDIR} && ${DOXYGEN_EXECUTABLE} ${PROJECT_BINARY_DIR}/Doxyfile WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
-endif()
