@@ -5,6 +5,8 @@
 using namespace std;
 using namespace MCPP;
 
+const char outputFileName[] = "testHistogram.h5";
+
 void pass() {
     cout << "testHistogram PASSED" << endl;
     remove(outputFileName);
@@ -19,8 +21,7 @@ void fail() {
 
 int main() {
 
-    if(access(outputFileName,F_OK)<0)
-        testBilayer();
+    testBilayer(outputFileName);
 
     H5OutputFile file;
 

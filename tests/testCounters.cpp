@@ -5,9 +5,11 @@
 using namespace std;
 using namespace MCPP;
 
+const char outputFileName[] = "testCounters.h5";
+
 void pass() {
     cout << "testCounters PASSED" << endl;
-//    remove(outputFileName);
+    remove(outputFileName);
     exit(EXIT_SUCCESS);
 }
 
@@ -19,7 +21,7 @@ void fail() {
 
 int main() {
     remove(outputFileName);
-    testBilayer();
+    testBilayer(outputFileName);
 
     H5OutputFile file;
 

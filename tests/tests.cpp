@@ -2,7 +2,7 @@
 
 using namespace MCPP;
 
-void testBilayer() {
+void testBilayer(const char *outputFileName) {
     Material mat1, mat2;
 
     mat1.n=1.5;
