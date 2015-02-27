@@ -468,7 +468,7 @@ bool Simulation::runSingleThread() {
                 }
             }
             else { //no scattering
-                length = numeric_limits<MCfloat>::infinity(); //move() will take the walker to the closest interface
+                length = numeric_limits<MCfloat>::infinity(); //handleInterface() will take the walker to the closest interface
             }
 
             //compute new position
