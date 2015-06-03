@@ -28,12 +28,12 @@ sample.setSurroundingEnvironment(externalMaterial)
 #define a photon source
 source = PencilBeamSource()
 
-#define the main simulation object, simulate 1e9 photons using 8 parallel threads.
+#define the main simulation object, simulate 1e6 photons using 8 parallel threads.
 #note that each thread will use increasing seeds starting from 0
 sim = Simulation()
 sim.setSample(sample)
 sim.setSource(source)
-sim.setNPhotons(1000000000)
+sim.setNPhotons(1000000)
 sim.setNThreads(8)
 sim.setSeed(0)
 sim.setOutputFileName("example.h5")

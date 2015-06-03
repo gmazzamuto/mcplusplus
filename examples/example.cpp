@@ -6,35 +6,36 @@ using namespace MCPP;
 int main(int argc, char *argv[])
 {
     // define a sample consisting of two layers of different materials
-    Sample *sample = new Sample(0);
+    Sample *sample = new Sample();
 
-    Vacuum vacuum;
-    Material mat;
+    Material *mat = new Material();
 
-    mat.n = 1.5;
-    mat.g = 0;
-    mat.ls = 1000;
+    mat->n = 1.5;
+    mat->g = 0;
+    mat->ls = 1000;
 
-    sample->addLayer(&mat,1000); //add a layer of material mat and thickness 1000um
+    sample->addLayer(mat,1000); //add a layer of material mat and thickness 1000um
 
-    Material mat2;
-    mat2.n = 1.3;
-    mat2.g = 0.5;
-    mat2.ls = 700;
+    Material *mat2 = new Material();
+    mat2->n = 1.3;
+    mat2->g = 0.5;
+    mat2->ls = 700;
 
-    sample->addLayer(&mat2,700);
+    sample->addLayer(mat2,700);
 
-    sample->setSurroundingEnvironment(&vacuum);
+
+    Vacuum *vacuum = new Vacuum();
+    sample->setSurroundingEnvironment(vacuum);
 
     // define a photon source
     Source *source = new PencilBeamSource(0);
 
-    // define the main simulation object, simulate 1e9 photons using 8 parallel threads.
+    // define the main simulation object, simulate 1e6 photons using 8 parallel threads.
     // note that each thread will use increasing seeds starting from 0
     Simulation *sim = new Simulation(0);
     sim->setSample(sample);
     sim->setSource(source);
-    sim->setNPhotons(1000000000);
+    sim->setNPhotons(1000000);
     sim->setNThreads(8);
     sim->setSeed(0);
     sim->setOutputFileName("example.h5");
