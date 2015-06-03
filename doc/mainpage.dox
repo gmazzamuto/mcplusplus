@@ -112,6 +112,8 @@ the documentation in your installation path.
 - @c BUILD_PYTHON_BINDINGS Build bindings for Python. Remember to set the
 @c PYTHONPATH environment variable as shown above.
 
+- @c ENABLE_TRAJECTORY Enable functions for saving trajectory points in memory.
+
 \section Tutorials Tutorials
 
 These simple tutorials are meant to showcase the easy and straightforward

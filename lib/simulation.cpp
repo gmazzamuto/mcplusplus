@@ -990,6 +990,14 @@ void Simulation::setWalkTimesSaveFlags(unsigned int value)
     walkTimesSaveFlags = value;
 }
 
+/**
+ * @brief Enables saving trajectory points in memory.
+ * @param enabled
+ *
+ *
+ * This function works only if the library is compiled with the
+ * ENABLE_TRAJECTORY option, which defaults to false for performance reasons.
+ */
 
 void Simulation::setSaveTrajectoryEnabled(bool enabled) {
     saveTrajectory = enabled;
