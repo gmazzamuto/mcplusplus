@@ -39,7 +39,6 @@ set(DOCUMENTATION_DIR ${CMAKE_INSTALL_PREFIX}/share/doc/MCPlusPlus)
 
 add_subdirectory(doc)
 add_subdirectory(lib)
-add_subdirectory(programs)
 add_subdirectory(tests)
 
 add_custom_target(documentation)
