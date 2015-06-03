@@ -34,6 +34,10 @@ if(BUILD_PYTHON_BINDINGS)
 endif()
 
 option(SHARED_LIB "Build shared instead of static library" OFF)
+option(ENABLE_TRAJECTORY "Enable saving of trajectory points" OFF)
+if(ENABLE_TRAJECTORY)
+    message(STATUS "Saving of trajectories enabled")
+endif()
 
 set(DOCUMENTATION_DIR ${CMAKE_INSTALL_PREFIX}/share/doc/MCPlusPlus)
 

@@ -19,6 +19,10 @@ if(SHARED_LIB)
    set(LIB_TYPE "SHARED")
 endif()
 
+if(ENABLE_TRAJECTORY)
+    ADD_DEFINITIONS(-DENABLE_TRAJECTORY)
+endif()
+
 add_library(MCPlusPlus ${LIB_TYPE} ${SRC} ${HEADERS})
 target_link_libraries(MCPlusPlus ${Boost_THREAD_LIBRARY} ${Boost_SYSTEM_LIBRARY} ${LIBHDF5} ${LIBHDF5CPP})
 install (TARGETS MCPlusPlus DESTINATION lib)
