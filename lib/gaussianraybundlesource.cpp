@@ -102,6 +102,9 @@ MCfloat GaussianRayBundleSource::zWaist()
 /**
  * @brief Sets the lens position \f$ z_\text{lens} = z_\text{waist} - d\f$
  * @param value
+ *
+ *
+ * The default lens position is such that \f$ z_\text{waist}=0 \f$.
  */
 
 void GaussianRayBundleSource::setZLens(double value)
