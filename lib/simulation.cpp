@@ -117,6 +117,9 @@ Simulation::Simulation(BaseObject *parent) :
 }
 
 Simulation::~Simulation() {
+    for (unsigned int i = 0; i < trajectoryPoints->size(); ++i) {
+        delete trajectoryPoints->at(i);
+    }
     delete trajectoryPoints;
     if(mostRecentInstance == this)
         mostRecentInstance = NULL;
