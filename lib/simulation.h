@@ -69,7 +69,6 @@ public:
     void reportProgress() const;
     void setMultipleRNGStates(const vector<string> states);
     void setTimeOriginZ(const MCfloat z);
-    void setTimeDistributionZ(const MCfloat z);
     void setWalkTimesSaveFlags(unsigned int value);
     void setExitPointsSaveFlags(unsigned int value);
     void setExitKVectorsSaveFlags(unsigned int value);
@@ -129,7 +128,7 @@ private:
     bool fresnelReflectionsEnabled;
     bool rawOutputEnabled;
     unsigned int walkTimesSaveFlags, exitPointsSaveFlags, exitKVectorsDirsSaveFlags, exitKVectorsSaveFlags;
-    MCfloat timeOriginZ, timeDistributionZ;
+    MCfloat timeOriginZ;
 
     //walker counters
     u_int64_t _totalWalkers;  /**< @brief total number of walkers to be simulated*/

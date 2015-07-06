@@ -103,7 +103,6 @@ Simulation::Simulation(BaseObject *parent) :
     exitKVectorsDirsSaveFlags = 0;
     exitKVectorsSaveFlags = 0;
     timeOriginZ = 0;
-    timeDistributionZ = 0;
     deflCosine.setParent(this);
     setRawOutputEnabled(false);
     r0 = (MCfloat*)calloc(3,sizeof(MCfloat));
@@ -393,8 +392,6 @@ bool Simulation::runSingleThread() {
     }
     timeOffset *= -1 * sign<MCfloat>(timeOriginZ - source->z0());
 
-    MCfloat timeOffsetNoSample = (timeDistributionZ - source->z0()) / materials[initialLayer].v;
-
     layer0 = numeric_limits<unsigned int>::max(); //otherwise updateLayerVariables() won't work
 
     while(n < _totalWalkers && !forceTermination) {
@@ -413,18 +410,13 @@ bool Simulation::runSingleThread() {
         if(r0[2] == -1*numeric_limits<MCfloat>::infinity())
             r0[2] = leftPoint;
 
-        walker.walkTime += (timeOffset + timeOffsetNoSample);
+        walker.walkTime += timeOffset;
 
         totalLengthInCurrentLayer = 0;
         updateLayerVariables(initialLayer);
 
         swap_k0_k1();         //at first, the walker propagates
         kNeedsToBeScattered = false; //with the orignal k
-
-        if(walker.r0[2] != timeDistributionZ) {
-            MCfloat s = (timeDistributionZ - walker.r0[2]) / walker.k0[2];
-            walker.walkTime += (-s/currentMaterial->v);
-        }
 
 #ifdef ENABLE_TRAJECTORY
         if(saveTrajectory)
@@ -785,11 +777,6 @@ void Simulation::setMultipleRNGStates(const vector<string> states)
 void Simulation::setTimeOriginZ(const MCfloat z)
 {
     timeOriginZ = z;
-}
-
-void Simulation::setTimeDistributionZ(const MCfloat z)
-{
-    timeDistributionZ = z;
 }
 
 BaseObject* Simulation::clone_impl() const

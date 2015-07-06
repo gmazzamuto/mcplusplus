@@ -18,12 +18,15 @@ using namespace MCPP;
  * The lensDistance parameter fully characterizes the lens convergence power. The two spot sizes refer
  */
 
-GaussianRayBundleSource::GaussianRayBundleSource(double lensWaist, double waist, double lensDistance, BaseObject *parent) :
+GaussianRayBundleSource::GaussianRayBundleSource(double lensWaist, double waist, double lensDistance, MCPP::Material *env, BaseObject *parent) :
     Source(parent)
 {
     xWaist=yWaist=waist;
     xLensWaist=yLensWaist=lensWaist;
     d=lensDistance;
+    environment = env;
+    if(environment == NULL)
+        environment = new Vacuum();
     init();
 }
 
@@ -43,7 +46,7 @@ GaussianRayBundleSource::GaussianRayBundleSource(double lensWaist, double waist,
  * Non-cylindrically symmetric implementation
  */
 
-GaussianRayBundleSource::GaussianRayBundleSource(double lensXWaist, double lensYWaist, double xWaist, double yWaist, double lensDistance, BaseObject *parent) :
+GaussianRayBundleSource::GaussianRayBundleSource(double lensXWaist, double lensYWaist, double xWaist, double yWaist, double lensDistance, MCPP::Material *env, BaseObject *parent) :
     Source(parent)
 {
     xLensWaist=lensXWaist;
@@ -51,6 +54,9 @@ GaussianRayBundleSource::GaussianRayBundleSource(double lensXWaist, double lensY
     this->xWaist=xWaist;
     this->yWaist=yWaist;
     d=lensDistance;
+    environment = env;
+    if(environment == NULL)
+        environment = new Vacuum();
     init();
 }
 
@@ -112,6 +118,20 @@ void GaussianRayBundleSource::setZLens(double value)
     zWaistInEnvironment = value + d;
     zWaistReal = zWaistInEnvironment;
     _z0 = zLens();
+}
+
+void GaussianRayBundleSource::setWavelength(double um)
+{
+    Source::setWavelength(um);
+    environment->setWavelength(um);
+}
+
+void GaussianRayBundleSource::spinTime(Walker *walker)
+{
+    walker->walkTime = walkTimeDistribution->spin();
+    MCfloat timeOffsetNoSample = d / environment->v;
+    MCfloat s = d / walker->k0[2];
+    walker->walkTime += (timeOffsetNoSample-s/environment->v);
 }
 
 MCfloat GaussianRayBundleSource::zLens() const

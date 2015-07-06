@@ -34,7 +34,7 @@ public:
 #endif
     void setWalkTimeDistribution(AbstractDistribution *distr);
 
-    void setWavelength(double um);
+    virtual void setWavelength(double um);
     MCfloat wavelength() const;
     MCfloat z0() const;
 
@@ -45,7 +45,7 @@ protected:
     AbstractDistribution *walkTimeDistribution;
     virtual void spinDirection(Walker *walker) const;
     virtual void spinPosition(Walker *walker) const;
-    void spinTime(Walker *walker) const;
+    virtual void spinTime(Walker *walker) const;
     virtual BaseObject *clone_impl() const;
     void cloneInto(Source *src) const;
     MCfloat _z0;

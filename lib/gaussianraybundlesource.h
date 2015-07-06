@@ -30,10 +30,14 @@ namespace MCPP {
 class GaussianRayBundleSource : public Source
 {
 public:
-    GaussianRayBundleSource(double lensWaist, double waist, double lensDistance, BaseObject *parent=NULL);
-    GaussianRayBundleSource(double lensXWaist, double lensYWaist, double xWaist, double yWaist, double lensDistance, BaseObject *parent=NULL);
+    GaussianRayBundleSource(double lensWaist, double waist, double lensDistance, MCPP::Material *env=NULL, BaseObject *parent=NULL);
+    GaussianRayBundleSource(double lensXWaist, double lensYWaist, double xWaist, double yWaist, double lensDistance, MCPP::Material *env=NULL, BaseObject *parent=NULL);
     bool focus(double zWaistReal, Sample *sample);
     void setZLens(double value);
+    virtual void setWavelength(double um);
+
+protected:
+    virtual void spinTime(Walker *walker);
 
 private:
     void init();
@@ -50,6 +54,7 @@ private:
     MCfloat d;
     MCfloat zWaistInEnvironment;
     UniformDistribution *uRand;
+    Material *environment;
 };
 
 }
