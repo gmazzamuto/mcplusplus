@@ -37,7 +37,7 @@ public:
     virtual void setWavelength(double um);
 
 protected:
-    virtual void spinTime(Walker *walker);
+    virtual void spinTime(Walker *walker) const;
 
 private:
     void init();

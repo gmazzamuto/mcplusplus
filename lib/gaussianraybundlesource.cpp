@@ -126,7 +126,7 @@ void GaussianRayBundleSource::setWavelength(double um)
     environment->setWavelength(um);
 }
 
-void GaussianRayBundleSource::spinTime(Walker *walker)
+void GaussianRayBundleSource::spinTime(Walker *walker) const
 {
     walker->walkTime = walkTimeDistribution->spin();
     MCfloat timeOffsetNoSample = d / environment->v;
