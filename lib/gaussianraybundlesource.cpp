@@ -18,7 +18,7 @@ using namespace MCPP;
  * The lensDistance parameter fully characterizes the lens convergence power. The two spot sizes refer
  */
 
-GaussianRayBundleSource::GaussianRayBundleSource(double lensWaist, double waist, double lensDistance, MCPP::Material *env, BaseObject *parent) :
+GaussianRayBundleSource::GaussianRayBundleSource(double lensWaist, double waist, double lensDistance, Material *env, BaseObject *parent) :
     Source(parent)
 {
     xWaist=yWaist=waist;
@@ -46,7 +46,7 @@ GaussianRayBundleSource::GaussianRayBundleSource(double lensWaist, double waist,
  * Non-cylindrically symmetric implementation
  */
 
-GaussianRayBundleSource::GaussianRayBundleSource(double lensXWaist, double lensYWaist, double xWaist, double yWaist, double lensDistance, MCPP::Material *env, BaseObject *parent) :
+GaussianRayBundleSource::GaussianRayBundleSource(double lensXWaist, double lensYWaist, double xWaist, double yWaist, double lensDistance, Material *env, BaseObject *parent) :
     Source(parent)
 {
     xLensWaist=lensXWaist;
