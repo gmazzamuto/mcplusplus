@@ -40,6 +40,7 @@ if(ENABLE_TRAJECTORY)
 endif()
 
 set(DOCUMENTATION_DIR ${CMAKE_INSTALL_PREFIX}/share/doc/MCPlusPlus)
+set(LIBSRC_DIR "${CMAKE_CURRENT_SOURCE_DIR}/lib")
 
 add_subdirectory(doc)
 add_subdirectory(lib)
