@@ -1,4 +1,4 @@
-#include "h5outputfile.h"
+#include <MCPlusPlus/h5outputfile.h>
 
 #include <fstream>
 #include <string.h>

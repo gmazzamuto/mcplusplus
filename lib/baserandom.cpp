@@ -1,4 +1,4 @@
-#include "baserandom.h"
+#include <MCPlusPlus/baserandom.h>
 
 #include <fstream>
 using namespace MCPP;

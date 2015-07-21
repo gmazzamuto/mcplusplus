@@ -4,28 +4,28 @@
 namespace MCPP {}
 
 %{
-#include "baseobject.h"
-#include "baserandom.h"
-#include "costhetagenerator.h"
-#include "distributions.h"
-#include "material.h"
-#include "sample.h"
-#include "gaussianraybundlesource.h"
-#include "MCglobal.h"
-#include "psigenerator.h"
-#include "histogram.h"
-#include "simulation.h"
-#include "source.h"
-#include "walker.h"
+#include <MCPlusPlus/baseobject.h>
+#include <MCPlusPlus/baserandom.h>
+#include <MCPlusPlus/costhetagenerator.h>
+#include <MCPlusPlus/distributions.h>
+#include <MCPlusPlus/material.h>
+#include <MCPlusPlus/sample.h>
+#include <MCPlusPlus/gaussianraybundlesource.h>
+#include <MCPlusPlus/MCglobal.h>
+#include <MCPlusPlus/psigenerator.h>
+#include <MCPlusPlus/histogram.h>
+#include <MCPlusPlus/simulation.h>
+#include <MCPlusPlus/source.h>
+#include <MCPlusPlus/walker.h>
 
-#include "h5filehelper.h"
-#include "h5outputfile.h"
+#include <MCPlusPlus/h5filehelper.h>
+#include <MCPlusPlus/h5outputfile.h>
 
 #include <H5Cpp.h>
 #include <boost/random.hpp>
 #include <boost/property_tree/ptree.hpp>
-#include "h5filehelper.h"
-#include "h5outputfile.h"
+#include <MCPlusPlus/h5filehelper.h>
+#include <MCPlusPlus/h5outputfile.h>
 
 using namespace MCPP;
 %}
@@ -40,20 +40,20 @@ namespace H5 {}
 
 typedef long long int u_int64_t;
 
-%include "walker.h"
-%include "baseobject.h"
-%include "baserandom.h"
-%include "distributions.h"
-%include "costhetagenerator.h"
-%include "psigenerator.h"
-%include "source.h"
-%include "material.h"
-%include "sample.h"
-%include "gaussianraybundlesource.h"
-%include "MCglobal.h"
-%include "histogram.h"
-%include "simulation.h"
+%include "include/MCPlusPlus/walker.h"
+%include "include/MCPlusPlus/baseobject.h"
+%include "include/MCPlusPlus/baserandom.h"
+%include "include/MCPlusPlus/distributions.h"
+%include "include/MCPlusPlus/costhetagenerator.h"
+%include "include/MCPlusPlus/psigenerator.h"
+%include "include/MCPlusPlus/source.h"
+%include "include/MCPlusPlus/material.h"
+%include "include/MCPlusPlus/sample.h"
+%include "include/MCPlusPlus/gaussianraybundlesource.h"
+%include "include/MCPlusPlus/MCglobal.h"
+%include "include/MCPlusPlus/histogram.h"
+%include "include/MCPlusPlus/simulation.h"
 %include <boost/random.hpp>
 %include <boost/property_tree/ptree.hpp>
-%include "h5filehelper.h"
-%include "h5outputfile.h"
+%include "include/MCPlusPlus/h5filehelper.h"
+%include "include/MCPlusPlus/h5outputfile.h"

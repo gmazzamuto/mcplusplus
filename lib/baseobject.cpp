@@ -1,4 +1,4 @@
-#include "baseobject.h"
+#include <MCPlusPlus/baseobject.h>
 
 #include <ctime>
 #ifdef __GNUC__

@@ -1,4 +1,4 @@
-#include "h5filehelper.h"
+#include <MCPlusPlus/h5filehelper.h>
 #include <stdio.h>
 
 using namespace MCPP;

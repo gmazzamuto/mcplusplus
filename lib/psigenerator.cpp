@@ -1,4 +1,4 @@
-#include "psigenerator.h"
+#include <MCPlusPlus/psigenerator.h>
 
 #include <boost/math/constants/constants.hpp>
 

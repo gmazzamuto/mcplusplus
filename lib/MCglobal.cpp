@@ -1,4 +1,4 @@
-#include "MCglobal.h"
+#include <MCPlusPlus/MCglobal.h>
 
 namespace MCPP {
 

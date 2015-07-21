@@ -1,4 +1,4 @@
-#include "material.h"
+#include <MCPlusPlus/material.h>
 #include <cmath>
 #include <limits>
 

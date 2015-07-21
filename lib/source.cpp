@@ -1,6 +1,6 @@
-#include "source.h"
-#include "costhetagenerator.h"
-#include "psigenerator.h"
+#include <MCPlusPlus/source.h>
+#include <MCPlusPlus/costhetagenerator.h>
+#include <MCPlusPlus/psigenerator.h>
 
 using namespace MCPP;
 

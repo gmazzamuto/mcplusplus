@@ -1,7 +1,7 @@
-#include "histogram.h"
+#include <MCPlusPlus/histogram.h>
 #include <cmath>
 
-#include "h5filehelper.h"
+#include <MCPlusPlus/h5filehelper.h>
 
 #include <boost/math/constants/constants.hpp>
 #include <sstream>

@@ -1,4 +1,4 @@
-#include "gaussianraybundlesource.h"
+#include <MCPlusPlus/gaussianraybundlesource.h>
 
 #include <boost/math/special_functions/erf.hpp>
 

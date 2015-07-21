@@ -1,4 +1,4 @@
-#include "walker.h"
+#include <MCPlusPlus/walker.h>
 #include <string.h> //for memset()
 
 using namespace MCPP;

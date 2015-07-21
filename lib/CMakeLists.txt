@@ -8,9 +8,9 @@ include_directories( ${Boost_INCLUDE_DIRS} )
 find_library(LIBHDF5 hdf5)
 find_library(LIBHDF5CPP hdf5_cpp)
 
-include_directories(.)
+include_directories(include)
 file(GLOB SRC . *.cpp)
-file(GLOB HEADERS . *.h)
+file(GLOB HEADERS include/MCPlusPlus/*.h)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fPIC")
 

@@ -1,4 +1,4 @@
-#include "sample.h"
+#include <MCPlusPlus/sample.h>
 
 #include <limits>
 

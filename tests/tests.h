@@ -1,8 +1,8 @@
 #ifndef TESTS_H
 #define TESTS_H
 
-#include "h5outputfile.h"
-#include "simulation.h"
+#include <MCPlusPlus/h5outputfile.h>
+#include <MCPlusPlus/simulation.h>
 
 void testBilayer(const char *outputFileName);
 

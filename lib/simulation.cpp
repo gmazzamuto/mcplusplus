@@ -1,13 +1,13 @@
-#include "simulation.h"
-#include "distributions.h"
-#include "psigenerator.h"
+#include <MCPlusPlus/simulation.h>
+#include <MCPlusPlus/distributions.h>
+#include <MCPlusPlus/psigenerator.h>
 #include <signal.h>
 
 #include <boost/math/special_functions/sign.hpp>
 #include <boost/math/constants/constants.hpp>
 #include <boost/thread.hpp>
 
-#include "h5outputfile.h"
+#include <MCPlusPlus/h5outputfile.h>
 
 using namespace boost;
 using namespace boost::math;

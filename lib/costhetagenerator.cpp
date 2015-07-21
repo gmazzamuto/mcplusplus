@@ -1,4 +1,4 @@
-#include "costhetagenerator.h"
+#include <MCPlusPlus/costhetagenerator.h>
 
 using namespace MCPP;
 

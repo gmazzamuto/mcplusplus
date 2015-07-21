@@ -1,4 +1,4 @@
-#include "distributions.h"
+#include <MCPlusPlus/distributions.h>
 
 #include <boost/math/constants/constants.hpp>
 
