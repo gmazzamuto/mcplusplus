@@ -24,7 +24,10 @@ namespace MCPP {
  * The lens can be positioned in space by calling either focus() or setZLens()
  * to specify the waist and the lens position respectively.
  *
- * Time distribution is left unspecified, and must be set serparately.
+ * Time distribution is left unspecified, and must be set serparately. The
+ * specified time distribution is valid at the waist position, assuming
+ * propagation from the lens to the waist occurring in the environment material
+ * specified in the constructor.
  */
 
 class GaussianRayBundleSource : public Source

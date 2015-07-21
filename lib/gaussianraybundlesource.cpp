@@ -12,10 +12,13 @@ using namespace MCPP;
  * @param waist minimum spot size
  * @param lensDistance distance \f$ d \f$ between the beam waist and the
  *        focusing lens
+ * @param env the environment Material where the lens is placed (defaults to Vacuum())
  * @param parent
  *
  *
- * The lensDistance parameter fully characterizes the lens convergence power. The two spot sizes refer
+ * The lensDistance parameter fully characterizes the lens convergence power.
+ * The two spot sizes refer to the beam size at the lens position and at the
+ * waist.
  */
 
 GaussianRayBundleSource::GaussianRayBundleSource(double lensWaist, double waist, double lensDistance, Material *env, BaseObject *parent) :
@@ -40,6 +43,7 @@ GaussianRayBundleSource::GaussianRayBundleSource(double lensWaist, double waist,
  * @param yWaist minimum spot size along the \f$ y \f$ axis
  * @param lensDistance distance \f$ d \f$ between the beam waist and the
  *        focusing lens
+ * @param env the environment Material where the lens is placed (defaults to Vacuum())
  * @param parent
  *
  *
