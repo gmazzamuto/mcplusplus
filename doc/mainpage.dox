@@ -58,6 +58,23 @@ we can provide some unique features such as:
 
   MCPlusPlus-1.0.tar.gz (100KB)
 
+  \section License License
+
+This program is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+this program. If not, see http://www.gnu.org/licenses/.
+
+Authors: Giacomo Mazzamuto and Lorenzo Pattelli, European Laboratory for
+Non-Linear Spectroscopy (LENS)
+
   \section HowToInstall How to install
 
 Extract the source tarball and create a new folder that will be used for
