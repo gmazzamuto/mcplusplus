@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 2.8)
 
-include_directories(. ../lib)
+include_directories(. ../lib/include)
 
 add_executable(testCounters testCounters.cpp tests.cpp)
 target_link_libraries(testCounters MCPlusPlus)
