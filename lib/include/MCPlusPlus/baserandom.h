@@ -21,6 +21,7 @@
 #include <boost/random.hpp>
 #include "baseobject.h"
 
+using namespace boost;
 using namespace boost::random;
 
 namespace MCPP {
