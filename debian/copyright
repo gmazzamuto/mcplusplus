@@ -1,6 +1,6 @@
 Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: mcplusplus
-Source: http://www.lens.unifi.it/quantum-nanophotonics/MCPlusPlus/
+Source: http://www.lens.unifi.it/quantum-nanophotonics/mcplusplus/
 
 Files: *
 Copyright: 2015 Giacomo Mazzamuto mazzamuto@lens.unifi.it
