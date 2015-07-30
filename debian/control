@@ -1,0 +1,11 @@
+Source: mcplusplus
+Maintainer: Giacomo Mazzamuto <mazzamuto@lens.unifi.it>
+Section: misc
+Priority: optional
+Standards-Version: 3.9.2
+Build-Depends: cmake (>= 2.8), libboost-all-dev, libhdf5-dev, swig
+
+Package: mcplusplus
+Architecture: i386 amd64
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: A Monte Carlo C++ code for radiative transfer.
