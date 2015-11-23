@@ -35,7 +35,7 @@ int main() {
     file.loadAll(buf);
     idx = 29*2+1;
     result = buf[idx];
-    expectedResult = 1.6724756731690697E-6;
+    expectedResult = 1.6765219852815755E-6;
     relativeError = fabs((result - expectedResult) / expectedResult);
     if(relativeError > 1e-13) fail();
 
@@ -49,7 +49,7 @@ int main() {
 
     idx = 29*3+2;
     result = buf[idx];
-    expectedResult = 14063.28343893917;
+    expectedResult = 14054.42441032245;
     relativeError = fabs((result - expectedResult) / expectedResult);
     if(relativeError > 1e-13) fail();
 
@@ -65,7 +65,7 @@ int main() {
     file.loadAll(buf);
     idx = 20*52+10;
     result = buf[idx];
-    expectedResult = 1.5139128733131508E-7;
+    expectedResult = 1.513912873313151E-7;
     relativeError = fabs((result - expectedResult) / expectedResult);
     if(relativeError > 1e-13) fail();
 

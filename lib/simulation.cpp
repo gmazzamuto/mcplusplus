@@ -26,6 +26,8 @@
 
 #include <MCPlusPlus/h5outputfile.h>
 
+#define COSZERO (1.0-1.0E-12)
+
 using namespace boost;
 using namespace boost::math;
 using namespace boost::math::constants;
@@ -469,7 +471,7 @@ bool Simulation::runSingleThread() {
                     sincosf(psi,&sinPsi,&cosPsi);
 #endif
 
-                    if(fabs(k0[2]) > 0.999999) {
+                    if(fabs(k0[2]) > COSZERO) {
                         k1[0] = sinTheta*cosPsi;
                         k1[1] = sinTheta*sinPsi;
                         k1[2] = cosTheta*sign<MCfloat>(k0[2]);
@@ -603,7 +605,6 @@ void Simulation::handleInterface() {
             reflect();
         }
         else {
-#define COSZERO (1.0-1.0E-12)
             MCfloat r;
             cosTheta1 = sqrt(1 - pow(sinTheta1,2)); //will also be used by refract()
             if(fresnelReflectionsEnabled)
