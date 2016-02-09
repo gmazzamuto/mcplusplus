@@ -1,5 +1,5 @@
-mcplusplus (2015.07.30) UNRELEASED; urgency=medium
+mcplusplus (2016.02.09) UNRELEASED; urgency=low
 
   * Initial release.
 
- -- Giacomo Mazzamuto <mazzamuto@lens.unifi.it>  Thu, 30 Jul 2015 14:52:29 +0200
+ -- Giacomo Mazzamuto <mazzamuto@lens.unifi.it>  Tue, 09 Feb 2016 15:31:58 +0100
