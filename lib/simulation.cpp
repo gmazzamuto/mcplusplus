@@ -248,6 +248,11 @@ void Simulation::run() {
         outputFile = "output.h5";
         logMessage("No output file name provided, using %s", outputFile);
     }
+    if(access(outputFile,F_OK)>=0) {
+        logMessage("File %s already exists. Aborting.", outputFile);
+        return;
+    }
+
     installSigUSR2Handler();
     time(&startTime);
     for (size_t i = 0; i < hists.size(); ++i) {
