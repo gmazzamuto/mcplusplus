@@ -515,8 +515,10 @@ bool Simulation::runSingleThread() {
                 totalLengthInCurrentLayer+=length;
                 kNeedsToBeScattered = true;
             }
-            else
+            else {
                 handleInterface();
+                checkIfWalkerExitedSample();
+            }
 
 
 #ifdef DEBUG_TRAJECTORY
@@ -568,7 +570,8 @@ unsigned int Simulation::layerAt(const MCfloat *r0) const {
 }
 
 /**
- * @brief Moves the walker across an interface
+ * @brief Moves the walker to an interface, handling reflections and
+ * refractions
  */
 
 void Simulation::handleInterface() {
@@ -640,8 +643,9 @@ void Simulation::handleInterface() {
                 refract();
         }
     }
+}
 
-    //check if walker exited the sample
+void Simulation::checkIfWalkerExitedSample() {
     if(layer0 == nLayers + 1) {
         bool diffuselyTransmitted = false;
         for (unsigned int i = 1; i <= nLayers; ++i) {

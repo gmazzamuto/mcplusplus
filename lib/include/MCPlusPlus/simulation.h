@@ -101,6 +101,7 @@ public:
 private:
     unsigned int layerAt(const MCfloat *r0) const;
     void handleInterface();
+    void checkIfWalkerExitedSample();
     void reflect();
     void refract();
 
