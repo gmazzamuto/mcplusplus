@@ -568,10 +568,7 @@ unsigned int Simulation::layerAt(const MCfloat *r0) const {
 }
 
 /**
- * @brief Moves the walker according to r1 and k1.
- * @param length
- *
- * This function also takes care of handling the crossing of an interface
+ * @brief Moves the walker across an interface
  */
 
 void Simulation::handleInterface() {
