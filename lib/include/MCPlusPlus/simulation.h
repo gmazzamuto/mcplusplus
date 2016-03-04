@@ -102,6 +102,7 @@ private:
     unsigned int layerAt(const MCfloat *r0) const;
     void handleInterface();
     void checkIfWalkerExitedSample();
+    MCfloat reflectionProbability();
     void reflect();
     void refract();
 
@@ -183,7 +184,7 @@ private:
     bool walkerExitedSample;
     time_t startTime;
     Walker walker;
-    MCfloat n0, n1, cosTheta1;
+    MCfloat n0, n1, cosTheta1, sinTheta0, sinTheta1;
 
     const char *outputFile;
     vector<string> multipleRNGStates;
