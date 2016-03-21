@@ -86,7 +86,7 @@ private:
     virtual void closeDataSet_impl();
 
     char *fName, *dName;
-    bool opened;
+    bool opened, dsOpened;
 
     H5E_auto2_t Efunc;
     void *EclientData;

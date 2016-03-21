@@ -27,6 +27,7 @@ H5FileHelper::H5FileHelper(BaseObject *parent) :
     fName = NULL;
     dName = NULL;
     opened = false;
+    dsOpened = false;
     file = NULL;
     dataSpace = NULL;
     dataSet = NULL;
@@ -76,7 +77,10 @@ const hsize_t *H5FileHelper::extentDims() const
  */
 
 void H5FileHelper::closeDataSet() {
-    if(dataSet!=NULL) {
+    if(dsOpened) {
+#ifdef PRINT_DEBUG_MSG
+    logMessage("Closing dataset %s... ", dName);
+#endif
         dataSpace->close();
         delete dataSpace;
         dataSpace = NULL;
@@ -88,6 +92,8 @@ void H5FileHelper::closeDataSet() {
         if(dims!=NULL)
             free(dims);
         dims = NULL;
+
+        dsOpened = false;
     }
 
     closeDataSet_impl();
@@ -207,7 +213,9 @@ bool H5FileHelper::newDataset(const char *datasetName, int ndims, const hsize_t 
 
     try {
         dataSpace = new DataSpace (ndims, dims, maxdims);
-        dataSet  = new DataSet(file->createDataSet(datasetName, type, *dataSpace, plist));
+        file->createDataSet(datasetName, type, *dataSpace, plist);
+        dataSpace->close();
+        delete dataSpace;
         openDataSet(datasetName);
     }
     catch (Exception error) {
@@ -288,9 +296,7 @@ bool H5FileHelper::openDataSet(const char *dataSetName) {
         return false;
     }
 
-    copyToInternalVariable(&dName,dataSetName);
-
-    _openDataSet(dName);
+    _openDataSet(dataSetName);
 
     ndims = dataSpace->getSimpleExtentNdims();
     dims = (hsize_t *)malloc(ndims*sizeof(hsize_t));
@@ -312,6 +318,8 @@ void H5FileHelper::newGroup(const char *name)
 void H5FileHelper::_openDataSet(const char *dataSetName) {
     dataSet = new DataSet (file->openDataSet(dataSetName));
     dataSpace = new DataSpace (dataSet->getSpace());
+    copyToInternalVariable(&dName,dataSetName);
+    dsOpened = true;
 }
 
 bool H5FileHelper::openFile_impl()
