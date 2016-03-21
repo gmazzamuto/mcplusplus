@@ -41,7 +41,6 @@ Histogram::Histogram(BaseObject *parent) :
     binSize[1] = 0;
     histo = NULL;
     moments = NULL;
-    momentExponents = NULL;
     totExponents = 0;
     computeSpatialMoments = false;
     photonTypeFlags = -1;
@@ -56,9 +55,6 @@ Histogram::~Histogram()
     }
     if(moments != NULL) {
         free(moments);
-    }
-    if(momentExponents != NULL) {
-        free(momentExponents);
     }
 }
 
@@ -117,9 +113,8 @@ void Histogram::setBinSize2(const double binSize2)
 }
 
 /**
- * @brief Enable computation of time-resolved spatial moments
- * @param exponents Array containing a list of exponents
- * @param n Number of exponents
+ * @brief Add an exponent for spatial moment computation
+ * @param exponent
  *
  * Time-resolved spatial moments are computed as \f$ \langle | \rho |^p \rangle =
  * \frac{1}{N}\sum_{n=1}^N |\rho_n(t)|^p\f$
@@ -127,12 +122,9 @@ void Histogram::setBinSize2(const double binSize2)
  * \pre Histogram must be 1D in the time domain
  */
 
-void Histogram::enableSpatialMoments(const double *exponents, const size_t n)
+void Histogram::addMomentExponent(const double exponent)
 {
-    computeSpatialMoments = true;
-    totExponents = n;
-    momentExponents = (double *)malloc(totExponents*sizeof(double));
-    memcpy(momentExponents,exponents,totExponents*sizeof(double));
+    momentExponents.push_back(exponent);
 }
 
 bool Histogram::is1D() const
@@ -149,6 +141,8 @@ bool Histogram::initialize()
 {
     if(!sanityCheck())
         return false;
+    computeSpatialMoments = !momentExponents.empty();
+    totExponents = momentExponents.size();
     degPerRad = 180/pi<MCfloat>();
     nBins[0] = ceil((max[0] - min[0]) / binSize[0]) + 1; //+1 for overflow bin
     if(is2D())
@@ -167,6 +161,7 @@ bool Histogram::initialize()
     firstBinEdge[1] = min[1];
     firstBinCenter[0] = firstBinEdge[0] + binSize[0]*0.5;
     firstBinCenter[1] = firstBinEdge[1] + binSize[1]*0.5;
+
     return true;
 }
 
@@ -424,7 +419,9 @@ BaseObject *Histogram::clone_impl() const
     h->scale = scale;
 
     if(computeSpatialMoments) {
-        h->enableSpatialMoments(momentExponents,totExponents);
+        for (size_t i = 0; i < totExponents; ++i) {
+            h->addMomentExponent(momentExponents.at(i));
+        }
     }
 
 //    h->initialize();

@@ -33,8 +33,7 @@ void testBilayer(const char *outputFileName) {
     hist->setMax(50);
     hist->setBinSize(1);
     hist->setName("times");
-    double exponents[1] = {2};
-    hist->enableSpatialMoments(exponents,1);
+    hist->addMomentExponent(2);
     sim->addHistogram(hist);
 
     hist = new Histogram(0);

@@ -67,7 +67,7 @@ public:
     void setBinSize(const double binSize1);
     void setBinSize(const double binSize1, const double binSize2);
     void setBinSize2(const double binSize2);
-    void enableSpatialMoments(const double *exponents, const size_t n);
+    void addMomentExponent(const double exponent);
     bool is1D() const;
     bool is2D() const;
     bool initialize();
@@ -99,9 +99,8 @@ private:
     MCfloat *moments;
 
     MCfloat degPerRad;
-    size_t totBins;
-    size_t totExponents;
-    double *momentExponents;
+    size_t totBins, totExponents;
+    vector<double> momentExponents;
     u_int64_t scale;
     u_int64_t *histo;
 };
