@@ -40,8 +40,10 @@ Histogram::Histogram(BaseObject *parent) :
     binSize[0] = 0;
     binSize[1] = 0;
     histo = NULL;
-    variance = NULL;
-    computeSpatialVariance = false;
+    moments = NULL;
+    momentExponents = NULL;
+    totExponents = 0;
+    computeSpatialMoments = false;
     photonTypeFlags = -1;
     scale = 1;
     histName = "";
@@ -49,10 +51,15 @@ Histogram::Histogram(BaseObject *parent) :
 
 Histogram::~Histogram()
 {
-    if(histo != NULL)
+    if(histo != NULL) {
         free(histo);
-    if(variance != NULL)
-        free(variance);
+    }
+    if(moments != NULL) {
+        free(moments);
+    }
+    if(momentExponents != NULL) {
+        free(momentExponents);
+    }
 }
 
 void Histogram::setDataDomain(const MCData type1, const MCData type2)
@@ -110,15 +117,22 @@ void Histogram::setBinSize2(const double binSize2)
 }
 
 /**
- * @brief Enable computation of time-resolved spatial variance
- * @param enable
+ * @brief Enable computation of time-resolved spatial moments
+ * @param exponents Array containing a list of exponents
+ * @param n Number of exponents
+ *
+ * Time-resolved spatial moments are computed as \f$ \langle | \rho |^p \rangle =
+ * \frac{1}{N}\sum_{n=1}^N |\rho_n(t)|^p\f$
  *
  * \pre Histogram must be 1D in the time domain
  */
 
-void Histogram::setSpatialVarianceEnabled(const bool enable)
+void Histogram::enableSpatialMoments(const double *exponents, const size_t n)
 {
-    computeSpatialVariance = enable;
+    computeSpatialMoments = true;
+    totExponents = n;
+    momentExponents = (double *)malloc(totExponents*sizeof(double));
+    memcpy(momentExponents,exponents,totExponents*sizeof(double));
 }
 
 bool Histogram::is1D() const
@@ -143,10 +157,11 @@ bool Histogram::initialize()
         nBins[1] = 1;
     totBins = nBins[0]*nBins[1];
     histo = (u_int64_t *)calloc(totBins,sizeof(u_int64_t));
-    if(computeSpatialVariance)
-        variance = (MCfloat *)calloc(totBins,sizeof(MCfloat));
+    if(computeSpatialMoments) {
+        moments = (MCfloat *)calloc(totExponents*totBins,sizeof(MCfloat));
+    }
     else
-        variance = NULL;
+        moments = NULL;
 
     firstBinEdge[0] = min[0];
     firstBinEdge[1] = min[1];
@@ -217,9 +232,11 @@ void Histogram::run(const Walker * const buf, size_t bufSize)
         }
         size_t idx =  index[0]*nBins[1] + index[1];
         histo[idx]++;
-        if(computeSpatialVariance) {
-            MCfloat module2 = pow(w->r0[0], 2) + pow(w->r0[1], 2);
-            variance[idx] += module2;
+        if(computeSpatialMoments) {
+            MCfloat module = sqrt(pow(w->r0[0], 2) + pow(w->r0[1], 2));
+            for (size_t i = 0; i < totExponents; ++i) {
+                moments[totBins*i+idx] += pow(module,momentExponents[i]);
+            }
         }
     }
 }
@@ -237,9 +254,12 @@ void Histogram::appendCounts(const Histogram *rhs)
     for (size_t i = 0; i < totBins; ++i) {
         histo[i] += rhs->histo[i];
     }
-    if(variance != NULL && rhs->variance!= NULL)
-        for (size_t i = 0; i < totBins; ++i) {
-            variance[i] += rhs->variance[i];
+    if(moments != NULL && rhs->moments!= NULL) {
+        for (size_t i = 0; i < totExponents; ++i) {
+                for (size_t idx = 0; idx < totBins; ++idx) {
+                    moments[totBins*i+idx] += rhs->moments[totBins*i+idx];
+            }
+        }
     }
 }
 
@@ -268,8 +288,8 @@ void Histogram::saveToFile(const char *fileName) const
     else
         file->openFile(fileName);
     hsize_t dims[2] = {nBins[0],nBins[1]+1};
-    if(computeSpatialVariance)
-        dims[1]++;
+    if(computeSpatialMoments)
+        dims[1]+=totExponents;
     file->newDataset(_dsName.c_str(),2,dims);
 
     uint ncols = dims[1];
@@ -336,18 +356,24 @@ void Histogram::saveToFile(const char *fileName) const
 
 
 
-    if(computeSpatialVariance) {
-        colNames[2] = "variance";
+    if(computeSpatialMoments) {
+        for (size_t i = 0; i < totExponents; ++i) {
 
-        for (size_t i = 0; i < nBins[0]; ++i)
-                data[i] = variance[i] / histo[i];
+            ostringstream strs;
+            strs << "mom_" << momentExponents[i];
 
-        start[0] = 0;
-        start[1] = 2;
-        count[0] = nBins[0];
-        count[1] = 1;
+            colNames[2+i] = strs.str();
 
-        file->writeHyperSlab(start, count, data);
+            for (size_t idx = 0; idx < nBins[0]; ++idx)
+                    data[idx] = moments[totBins*i+idx] / histo[idx];
+
+            start[0] = 0;
+            start[1] = 2+i;
+            count[0] = nBins[0];
+            count[1] = 1;
+
+            file->writeHyperSlab(start, count, data);
+        }
     }
 
     if(is1D())
@@ -393,10 +419,15 @@ BaseObject *Histogram::clone_impl() const
     h->max[1] = max[1];
     h->binSize[0] = binSize[0];
     h->binSize[1] = binSize[1];
-    h->computeSpatialVariance = computeSpatialVariance;
+    h->computeSpatialMoments = computeSpatialMoments;
     h->photonTypeFlags = photonTypeFlags;
     h->scale = scale;
-    h->initialize();
+
+    if(computeSpatialMoments) {
+        h->enableSpatialMoments(momentExponents,totExponents);
+    }
+
+//    h->initialize();
     return h;
 }
 
@@ -414,7 +445,7 @@ bool Histogram::sanityCheck_impl() const
         return false;
     if(is2D() && max[1] - min[1] <= 0)
         return false;
-    if(computeSpatialVariance) {
+    if(computeSpatialMoments) {
         if(is2D())
             return false;
         if(type[0] != DATA_TIMES)

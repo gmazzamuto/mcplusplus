@@ -874,9 +874,11 @@ void Simulation::saveRawOutput()
     file.saveSample(_sample);
     file.appendPhotonCounts(photonCounters);
 
-    if(!rawOutputEnabled)
-        return;
 
+    if(!rawOutputEnabled) {
+        file.close();
+        return;
+    }
 
     file.saveRNGState(currentSeed(), generatorState());
 
