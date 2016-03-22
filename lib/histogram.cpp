@@ -290,8 +290,8 @@ void Histogram::saveToFile(const char *fileName) const
     uint ncols = dims[1];
     string colNames[ncols];
 
-    MCfloat *data;
-    data = (MCfloat *)malloc(totBins*sizeof(MCfloat));
+    double *data; //convert all histograms to double
+    data = (double *)malloc(totBins*sizeof(double));
 
     hsize_t start[2];
     hsize_t count[2];
@@ -305,7 +305,7 @@ void Histogram::saveToFile(const char *fileName) const
     count[0] = nBins[0];
     count[1] = 1;
 
-    file->writeHyperSlab(start, count, data);
+    file->writeHyperSlabDouble(start, count, data);
 
 
 
@@ -347,7 +347,7 @@ void Histogram::saveToFile(const char *fileName) const
     count[0] = nBins[0];
     count[1] = nBins[1];
 
-    file->writeHyperSlab(start, count, data);
+    file->writeHyperSlabDouble(start, count, data);
 
 
 
@@ -367,7 +367,7 @@ void Histogram::saveToFile(const char *fileName) const
             count[0] = nBins[0];
             count[1] = 1;
 
-            file->writeHyperSlab(start, count, data);
+            file->writeHyperSlabDouble(start, count, data);
         }
     }
 

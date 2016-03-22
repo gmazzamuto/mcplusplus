@@ -21,17 +21,7 @@
 #include "baseobject.h"
 #include <H5Cpp.h>
 
-#ifdef DOUBLEPRECISION
 #define MCH5FLOAT PredType::NATIVE_DOUBLE
-#endif
-
-#ifdef LONGDOUBLEPRECISION
-#define MCH5FLOAT PredType::NATIVE_LDOUBLE
-#endif
-
-#ifdef SINGLEPRECISION
-#define MCH5FLOAT PredType::NATIVE_FLOAT
-#endif
 
 //#define PRINT_DEBUG_MSG
 
