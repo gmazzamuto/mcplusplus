@@ -47,7 +47,7 @@ hist.setPhotonTypeFlags(FLAG_TRANSMITTED)
 hist.setMax(1000)
 hist.setBinSize(2)
 hist.setName("times")
-hist.setSpatialVarianceEnabled(True)
+hist.addMomentExponent(2)  #compute spatial variance
 sim.addHistogram(hist)
 
 # 2) a histogram of the exit distances from the center
