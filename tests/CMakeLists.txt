@@ -1,5 +1,8 @@
 cmake_minimum_required (VERSION 2.8)
 
+FIND_PACKAGE(HDF5 REQUIRED CXX)
+include_directories(${HDF5_INCLUDE_DIRS})
+
 include_directories(. ../lib/include)
 
 add_executable(testCounters testCounters.cpp tests.cpp)

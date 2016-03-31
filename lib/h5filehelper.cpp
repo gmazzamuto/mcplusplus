@@ -517,10 +517,19 @@ const char *H5FileHelper::currentDataset() const {
 void H5FileHelper::writeColumnNames(const uint nCols, string *vect)
 {
     StrType str_type(0, H5T_VARIABLE);
-    hsize_t _dims[2];
-    _dims[0] = 1;
-    _dims[1] = nCols;
-    DataSpace att_space(2,_dims);
-    Attribute att = dataSet->createAttribute( "column_names", str_type, att_space );
-    att.write( str_type, vect );
+
+    stringstream ss;
+
+    for (uint i = 0; i < nCols; ++i) {
+        ss << vect[i];
+        if(i != nCols-1)
+            ss << ",";
+    }
+
+    DataSpace attr_dataspace = DataSpace(H5S_SCALAR);
+
+    const H5std_string strwritebuf (ss.str().c_str());
+
+    Attribute myatt_in = dataSet->createAttribute("column_names", str_type, attr_dataspace);
+    myatt_in.write(str_type, strwritebuf);
 }

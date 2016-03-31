@@ -5,8 +5,8 @@ FIND_PACKAGE(Boost REQUIRED thread system)
 SET(Boost_USE_MULTITHREAD ON)
 include_directories( ${Boost_INCLUDE_DIRS} )
 
-find_library(LIBHDF5 hdf5)
-find_library(LIBHDF5CPP hdf5_cpp)
+FIND_PACKAGE(HDF5 REQUIRED CXX)
+include_directories(${HDF5_INCLUDE_DIRS})
 
 include_directories(include)
 file(GLOB SRC . *.cpp)
@@ -24,7 +24,7 @@ if(ENABLE_TRAJECTORY)
 endif()
 
 add_library(MCPlusPlus ${LIB_TYPE} ${SRC} ${HEADERS})
-target_link_libraries(MCPlusPlus ${Boost_THREAD_LIBRARY} ${Boost_SYSTEM_LIBRARY} ${LIBHDF5} ${LIBHDF5CPP})
+target_link_libraries(MCPlusPlus ${Boost_THREAD_LIBRARY} ${Boost_SYSTEM_LIBRARY} ${HDF5_LIBRARIES})
 install (TARGETS MCPlusPlus DESTINATION lib)
 install (FILES ${HEADERS} DESTINATION include/MCPlusPlus)
 
