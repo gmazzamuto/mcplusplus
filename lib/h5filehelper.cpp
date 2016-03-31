@@ -416,6 +416,38 @@ void H5FileHelper::writeHyperSlab(const hsize_t *start, const hsize_t *count, co
     dataSet->write(srcBuffer,MCH5FLOAT,memspace,*dataSpace);
 }
 
+void H5FileHelper::writeHyperSlabDouble(const hsize_t *start, const hsize_t *count, const double *srcBuffer) {
+    hsize_t extDims[ndims];
+    for (int i = 0; i < ndims; ++i) {
+        extDims[i] = start[i] + count[i];
+    }
+
+    for (int i = 0; i < ndims; ++i) {
+        if(extDims[i] > dims[i]) {
+            dataSet->extend(extDims);
+            break;
+        }
+    }
+
+    *dataSpace = dataSet->getSpace();
+    dataSpace->getSimpleExtentDims(dims);
+
+#ifdef PRINT_DEBUG_MSG
+    for (int i = 0; i < ndims; ++i) {
+        logMessage("writeHyperSlab dim%d: [%llu %llu]",i,start[i],start[i]+count[i]-1);
+    }
+#endif
+
+    hsize_t _start[ndims];
+    for (int i = 0; i < ndims; ++i)
+        _start[i] = 0;
+
+    DataSpace memspace( ndims, count );
+    memspace.selectHyperslab(H5S_SELECT_SET, count, _start);
+    dataSpace->selectHyperslab(H5S_SELECT_SET, count, start);
+    dataSet->write(srcBuffer,PredType::NATIVE_DOUBLE,memspace,*dataSpace);
+}
+
 /**
  * @brief Writes a hyperslab in the current dataset
  * @param start Offset of the start of hyperslab

@@ -71,6 +71,7 @@ public:
     const char *currentDataset() const;
     void writeColumnNames(const uint nCols, string *vect);
 
+    void writeHyperSlabDouble(const hsize_t *start, const hsize_t *count, const double *srcBuffer);
 protected:
     H5File *file;
     DataSet *dataSet;
