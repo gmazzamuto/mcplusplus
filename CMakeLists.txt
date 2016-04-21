@@ -31,9 +31,6 @@ add_subdirectory(doc)
 add_subdirectory(lib)
 add_subdirectory(tests)
 
-add_custom_target(documentation)
-add_dependencies(documentation main-documentation libMCPlusPlus-documentation)
-
 add_custom_target(run_install COMMAND make install)
 
 # uninstall target
