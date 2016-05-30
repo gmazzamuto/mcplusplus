@@ -360,7 +360,7 @@ bool Simulation::runSingleThread() {
         return false;
 
     clear();
-    logMessage("starting... Number of walkers = %Lu, original seed = %u",nPhotons(), currentSeed());
+    logMessage("starting... Number of walkers = %llu, original seed = %u",nPhotons(), currentSeed());
     nLayers = _sample->nLayers();
 
 
