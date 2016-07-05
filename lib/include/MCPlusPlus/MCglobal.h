@@ -89,7 +89,7 @@ enum MCData {
     DATA_TIMES,
 };
 
-#define MC_ASSERT_MSG(x, msg) if(!x) { cerr << "=========== ERROR ===========" << endl; cerr << "msg" << endl; abort(); }
+#define MC_ASSERT_MSG(x, msg) if(!(x)) { cerr << "=========== ERROR ===========" << endl; cerr << "msg" << endl; abort(); }
 
 extern uint walkerFlagToType(walkerFlags flag);
 extern walkerFlags walkerTypeToFlag(uint index);
