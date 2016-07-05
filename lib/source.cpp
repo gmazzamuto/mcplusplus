@@ -38,7 +38,7 @@ Source::Source(BaseObject *parent) :
         addObjectToCheck((const BaseObject**)&r0Distribution[i]);
     }
     _z0 = 0;
-    setWavelength(-1);
+    setWavelength(1);
 
 }
 

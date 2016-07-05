@@ -26,6 +26,8 @@ namespace MCPP {
 /**
  * @brief Base Source class: constructs and initializes a Walker according to
  * given source term modeling.
+ *
+ * The default wavelength is set to \f$ \SI{1}{\micro\metre} \f$.
  */
 
 class Source : public BaseRandom
