@@ -18,7 +18,7 @@ if(BUILD_PYTHON_BINDINGS)
       "SWIG is needed to build the Python bindings. Please install it correctly")
   endif()
 
-  FIND_PACKAGE(PythonLibs)
+  FIND_PACKAGE(PythonLibs 2 REQUIRED)
   if(NOT PYTHONLIBS_FOUND)
     message(FATAL_ERROR
       "Cannot find PythonLibs, unable to build Python bindings.")
