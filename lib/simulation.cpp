@@ -457,7 +457,10 @@ bool Simulation::runSingleThread() {
         while(1) {
             //spin k1 (i.e. scatter) only if the material is scattering
             if(currentMaterial->ls != numeric_limits<MCfloat>::infinity()) {
-                length = exponential_distribution<MCfloat>(currentMus)(*mt);
+                /* using long double moves the truncation of the exponential
+                 * distribution to 44 times the mfp, then we cast to MCfloat
+                */
+                length = exponential_distribution<long double>(currentMus)(*mt);
                 if(kNeedsToBeScattered) {
                     nInteractions[layer0]++;
 

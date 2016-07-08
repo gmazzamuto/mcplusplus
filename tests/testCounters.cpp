@@ -27,10 +27,10 @@ int main() {
 
     file.openFile(outputFileName);
 
-    if(file.transmitted() != 56838) fail();
+    if(file.transmitted() != 56426) fail();
     if(file.ballistic() != 0) fail();
-    if(file.reflected() != 903189) fail();
-    if(file.backReflected() != 39973) fail();
+    if(file.reflected() != 903482) fail();
+    if(file.backReflected() != 40092) fail();
 
     pass();
     return 0;

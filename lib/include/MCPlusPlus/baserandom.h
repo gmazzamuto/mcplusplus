@@ -26,17 +26,11 @@ using namespace boost::random;
 
 namespace MCPP {
 
-#ifdef DOUBLEPRECISION
-    typedef mt19937 MCEngine;
-#endif
+/* using 64 bit version does not affect performance significantly (time spent
+ * drawing numbers is negligible)
+*/
 
-#ifdef LONGDOUBLEPRECISION
-    typedef mt19937_64 MCEngine;
-#endif
-
-#ifdef SINGLEPRECISION
-    typedef mt19937 MCEngine;
-#endif
+typedef mt19937_64 MCEngine;
 
 /**
  * @brief The BaseRandom class is the base class for all the objects needing a
