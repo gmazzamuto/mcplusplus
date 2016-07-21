@@ -152,6 +152,8 @@ Simulation::~Simulation() {
     delete trajectoryPoints;
     if(mostRecentInstance == this)
         mostRecentInstance = NULL;
+    if(outputFile != NULL)
+        free(outputFile);
 }
 
 /**
@@ -242,7 +244,7 @@ u_int64_t Simulation::currentPhoton() const
 
 void Simulation::setOutputFileName(const char *name)
 {
-    outputFile = name;
+    copyToInternalVariable(&outputFile,name);
 }
 
 /**
@@ -840,7 +842,7 @@ BaseObject* Simulation::clone_impl() const
     sim->fresnelReflectionsEnabled = fresnelReflectionsEnabled;
     sim->setSource((Source*)source->clone());
     sim->_sample = _sample;
-    sim->outputFile = outputFile;
+    sim->setOutputFileName(outputFile);
     sim->exitPointsSaveFlags = exitPointsSaveFlags;
     sim->walkTimesSaveFlags = walkTimesSaveFlags;
     sim->exitKVectorsSaveFlags = exitKVectorsSaveFlags;

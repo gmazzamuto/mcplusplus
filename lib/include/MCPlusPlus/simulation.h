@@ -186,7 +186,7 @@ private:
     Walker walker;
     MCfloat n0, n1, cosTheta1, sinTheta0, sinTheta1;
 
-    const char *outputFile;
+    char *outputFile;
     vector<string> multipleRNGStates;
     vector<Histogram *> hists;
     bool forceTermination;
