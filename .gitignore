@@ -1,6 +1,6 @@
 *.user
-#.gitignore
 .directory
 *.autosave
 *.dat
 *~
+CMakeLists.txt.user*
