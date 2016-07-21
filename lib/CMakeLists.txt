@@ -17,14 +17,14 @@ if(BUILD_PYTHON_BINDINGS)
       "correctly")
   endif()
 
-  FIND_PACKAGE(PythonLibs 2 REQUIRED)
+  FIND_PACKAGE(PythonLibs 3 REQUIRED)
   if(NOT PYTHONLIBS_FOUND)
     message(FATAL_ERROR
       "Cannot find PythonLibs, unable to build Python bindings.")
   endif()
 
     add_custom_command(OUTPUT libMCPlusPlus_wrap.cxx
-        COMMAND ${SWIG_EXECUTABLE} -c++ -Wall -python -outcurrentdir
+        COMMAND ${SWIG_EXECUTABLE} -c++ -Wall -python -py3 -outcurrentdir
         -I${Boost_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/libMCPlusPlus.i
         DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/libMCPlusPlus.i ${HEADERS})
     include_directories(${PYTHON_INCLUDE_DIRS})
