@@ -1,5 +1,3 @@
-cmake_minimum_required (VERSION 2.8)
-
 project(libMCPlusPlus)
 
 FIND_PACKAGE(Boost REQUIRED thread system)
@@ -55,7 +53,8 @@ if(ENABLE_TRAJECTORY)
 endif()
 
 add_library(MCPlusPlus ${LIB_TYPE} ${SRC} ${HEADERS})
-target_link_libraries(MCPlusPlus ${Boost_THREAD_LIBRARY} ${Boost_SYSTEM_LIBRARY} ${HDF5_LIBRARIES})
+target_link_libraries(MCPlusPlus ${Boost_THREAD_LIBRARY}
+    ${Boost_SYSTEM_LIBRARY} ${HDF5_LIBRARIES})
 install (TARGETS MCPlusPlus DESTINATION lib)
 install (FILES ${HEADERS} DESTINATION include/MCPlusPlus)
 
