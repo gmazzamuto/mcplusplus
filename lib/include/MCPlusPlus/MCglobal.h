@@ -21,9 +21,9 @@
 #include <iostream>
 #include <cstdlib>
 
+#ifndef NDEFAULTPRECISION
 #define DOUBLEPRECISION
-
-//#undef DOUBLEPRECISION
+#endif
 
 #ifdef DOUBLEPRECISION
     typedef double MCfloat;

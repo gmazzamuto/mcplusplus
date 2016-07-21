@@ -26,7 +26,17 @@
 
 #include <MCPlusPlus/h5outputfile.h>
 
+#ifdef SINGLEPRECISION
+#define COSZERO (1.0-1.0E-5)
+#endif
+
+#ifdef DOUBLEPRECISION
 #define COSZERO (1.0-1.0E-12)
+#endif
+
+#ifdef LONGDOUBLEPRECISION
+#define COSZERO (1.0-1.0E-30)
+#endif
 
 using namespace boost;
 using namespace boost::math;
