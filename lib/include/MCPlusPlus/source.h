@@ -39,14 +39,18 @@ public:
     void spin(Walker *walker) const;
 
 #ifdef SWIG
-    %apply SWIGTYPE *DISOWN {AbstractDistribution *x0Distribution, AbstractDistribution *y0Distribution};
+    %apply SWIGTYPE *DISOWN {AbstractDistribution *x0Distribution,
+                AbstractDistribution *y0Distribution};
 #endif
-    void setr0Distribution(AbstractDistribution *x0Distribution, AbstractDistribution *y0Distribution, double _z0);
+    void setr0Distribution(AbstractDistribution *x0Distribution,
+                           AbstractDistribution *y0Distribution, double _z0);
 
 #ifdef SWIG
-    %apply SWIGTYPE *DISOWN {AbstractDistribution *cosThetaDistr, AbstractDistribution *psiDistr};
+    %apply SWIGTYPE *DISOWN {AbstractDistribution *cosThetaDistr,
+                AbstractDistribution *psiDistr};
 #endif
-    void setk0Distribution(AbstractDistribution *cosThetaDistr, AbstractDistribution *psiDistr);
+    void setk0Distribution(AbstractDistribution *cosThetaDistr,
+                           AbstractDistribution *psiDistr);
 
 #ifdef SWIG
     %apply SWIGTYPE *DISOWN {AbstractDistribution *distr };

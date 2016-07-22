@@ -38,8 +38,10 @@ public:
     virtual ~Material();
     double n;  /**< @brief refractive index (\f$ n \in \mathbb{R} \f$)*/
     double ls;  /**< @brief scattering mean free path*/
-    double g;  /**< @brief scattering anisotropy factor \f$ g = \left\langle \cos \theta \right \rangle \f$*/
-    double v;  /**< @brief phase velocity \note please beware of the difference between phase, group and energy velocity */
+    double g;  /**< @brief scattering anisotropy factor
+                    \f$ g = \left\langle \cos \theta \right \rangle \f$ */
+    double v;  /**< @brief phase velocity \note please beware of the difference
+                    between phase, group and energy velocity */
 
     void setWavelength(double um);
 

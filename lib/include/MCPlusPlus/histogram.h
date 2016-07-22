@@ -57,7 +57,8 @@ public:
     Histogram(BaseObject *parent=NULL);
     virtual ~Histogram();
 
-    void setDataDomain(const enum MCData type1, const enum MCData type2 = DATA_NONE);
+    void setDataDomain(const enum MCData type1,
+                       const enum MCData type2 = DATA_NONE);
     void setMax(const double max1);
     void setMax(const double max1, const double max2);
     void setMax2(const double max2);

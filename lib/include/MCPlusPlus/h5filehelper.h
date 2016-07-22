@@ -44,13 +44,18 @@ public:
     void newGroup(const char *name);
     virtual bool newFile(const char *fileName);
 #ifndef SWIG //this is to work around a link error
-    bool newDataset(const char *datasetName, int ndims, const hsize_t *dims, const hsize_t *chunk_dim, PredType type=MCH5FLOAT);
-    bool newDataset(const char *datasetName, int ndims, const hsize_t *dims, PredType type=MCH5FLOAT);
+    bool newDataset(const char *datasetName, int ndims, const hsize_t *dims,
+                    const hsize_t *chunk_dim, PredType type=MCH5FLOAT);
+    bool newDataset(const char *datasetName, int ndims, const hsize_t *dims,
+                    PredType type=MCH5FLOAT);
 #endif
     bool dataSetExists(const char *dataSetName) const;
-    void loadHyperSlab(const hsize_t *start, const hsize_t *count, MCfloat *destBuffer);
-    void writeHyperSlab(const hsize_t *start, const hsize_t *count, const MCfloat *srcBuffer);
-    void writeHyperSlab(const hsize_t *start, const hsize_t *count, const u_int64_t *srcBuffer);
+    void loadHyperSlab(const hsize_t *start, const hsize_t *count,
+                       MCfloat *destBuffer);
+    void writeHyperSlab(const hsize_t *start, const hsize_t *count,
+                        const MCfloat *srcBuffer);
+    void writeHyperSlab(const hsize_t *start, const hsize_t *count,
+                        const u_int64_t *srcBuffer);
     void loadAll(MCfloat *destBuffer);
     void close();
     void closeDataSet();
@@ -61,7 +66,8 @@ public:
     const char *currentDataset() const;
     void writeColumnNames(const uint nCols, string *vect);
 
-    void writeHyperSlabDouble(const hsize_t *start, const hsize_t *count, const double *srcBuffer);
+    void writeHyperSlabDouble(const hsize_t *start, const hsize_t *count,
+                              const double *srcBuffer);
 protected:
     H5File *file;
     DataSet *dataSet;

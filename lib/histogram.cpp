@@ -116,8 +116,8 @@ void Histogram::setBinSize2(const double binSize2)
  * @brief Add an exponent for spatial moment computation
  * @param exponent
  *
- * Time-resolved spatial moments are computed as \f$ \langle | \rho |^p \rangle =
- * \frac{1}{N}\sum_{n=1}^N |\rho_n(t)|^p\f$
+ * Time-resolved spatial moments are computed as
+ * \f$ \langle | \rho |^p \rangle = \frac{1}{N}\sum_{n=1}^N |\rho_n(t)|^p\f$
  *
  * \pre Histogram must be 1D in the time domain
  */
@@ -143,16 +143,16 @@ bool Histogram::initialize()
         return false;
     computeSpatialMoments = !momentExponents.empty();
     totExponents = momentExponents.size();
-    degPerRad = 180/pi<MCfloat>();
+    degPerRad = 180 / pi<MCfloat>();
     nBins[0] = ceil((max[0] - min[0]) / binSize[0]) + 1; //+1 for overflow bin
     if(is2D())
         nBins[1] = ceil((max[1] - min[1]) / binSize[1]) + 1;
     else
         nBins[1] = 1;
     totBins = nBins[0]*nBins[1];
-    histo = (u_int64_t *)calloc(totBins,sizeof(u_int64_t));
+    histo = (u_int64_t *)calloc(totBins, sizeof(u_int64_t));
     if(computeSpatialMoments) {
-        moments = (MCfloat *)calloc(totExponents*totBins,sizeof(MCfloat));
+        moments = (MCfloat *)calloc(totExponents * totBins, sizeof(MCfloat));
     }
     else
         moments = NULL;
@@ -177,20 +177,21 @@ void Histogram::run(const Walker * const buf, size_t bufSize)
         if(!pickPhoton(w))
             continue;
 
-        size_t index[2] = {0,0};
+        size_t index[2] = {0, 0};
         switch(type[0]) {
         case DATA_K:
-            index[0] = (acos(w->k0[2])*degPerRad - firstBinEdge[0])/binSize[0];
+            index[0] =
+                    (acos(w->k0[2])*degPerRad - firstBinEdge[0]) / binSize[0];
             break;
 
         case DATA_POINTS: {
             MCfloat module = sqrt(pow(w->r0[0], 2) + pow(w->r0[1], 2));
-            index[0] = (module - firstBinEdge[0])/binSize[0];
+            index[0] = (module - firstBinEdge[0]) / binSize[0];
         }
             break;
 
         case DATA_TIMES:
-            index[0] = (w->walkTime - firstBinEdge[0])/binSize[0];
+            index[0] = (w->walkTime - firstBinEdge[0]) / binSize[0];
             break;
 
         case DATA_NONE:
@@ -204,17 +205,18 @@ void Histogram::run(const Walker * const buf, size_t bufSize)
         if(is2D()) {
             switch(type[1]) {
             case DATA_K:
-                index[1] = (acos(w->k0[2])*degPerRad - firstBinEdge[1])/binSize[1];
+                index[1] = (acos(w->k0[2]) * degPerRad - firstBinEdge[1])
+                        / binSize[1];
                 break;
 
             case DATA_POINTS: {
                 MCfloat module = sqrt(pow(w->r0[0], 2) + pow(w->r0[1], 2));
-                index[1] = (module - firstBinEdge[1])/binSize[1];
+                index[1] = (module - firstBinEdge[1]) / binSize[1];
             }
                 break;
 
             case DATA_TIMES:
-                index[1] = (w->walkTime - firstBinEdge[1])/binSize[1];
+                index[1] = (w->walkTime - firstBinEdge[1]) / binSize[1];
                 break;
 
             case DATA_NONE:
@@ -225,12 +227,12 @@ void Histogram::run(const Walker * const buf, size_t bufSize)
             if(index[1] > nBins[1] - 1)
                 index[1] = nBins[1] - 1;
         }
-        size_t idx =  index[0]*nBins[1] + index[1];
+        size_t idx =  index[0] * nBins[1] + index[1];
         histo[idx]++;
         if(computeSpatialMoments) {
             MCfloat module = sqrt(pow(w->r0[0], 2) + pow(w->r0[1], 2));
             for (size_t i = 0; i < totExponents; ++i) {
-                moments[totBins*i+idx] += pow(module,momentExponents[i]);
+                moments[totBins * i + idx] += pow(module, momentExponents[i]);
             }
         }
     }
@@ -252,7 +254,8 @@ void Histogram::appendCounts(const Histogram *rhs)
     if(moments != NULL && rhs->moments!= NULL) {
         for (size_t i = 0; i < totExponents; ++i) {
                 for (size_t idx = 0; idx < totBins; ++idx) {
-                    moments[totBins*i+idx] += rhs->moments[totBins*i+idx];
+                    moments[totBins * i + idx]
+                            += rhs->moments[totBins * i + idx];
             }
         }
     }
@@ -263,7 +266,7 @@ void Histogram::dump() const
     u_int64_t total = 0;
     for (size_t i = 0; i < nBins[0]; ++i) {
         for (size_t j = 0; j < nBins[1]; ++j) {
-            size_t idx = i*nBins[1] + j;
+            size_t idx = i * nBins[1] + j;
             cout << histo[idx] << "\t";
             total += histo[idx];
         }
@@ -278,14 +281,14 @@ void Histogram::saveToFile(const char *fileName) const
     if(_dsName == "")
         _dsName = "histogram";
     H5FileHelper *file = new H5FileHelper(0);
-    if(access(fileName,F_OK)<0)
+    if(access(fileName, F_OK)<0)
         file->newFile(fileName);
     else
         file->openFile(fileName);
-    hsize_t dims[2] = {nBins[0],nBins[1]+1};
+    hsize_t dims[2] = {nBins[0], nBins[1]+1};
     if(computeSpatialMoments)
-        dims[1]+=totExponents;
-    file->newDataset(_dsName.c_str(),2,dims);
+        dims[1] += totExponents;
+    file->newDataset(_dsName.c_str(), 2, dims);
 
     uint ncols = dims[1];
     string colNames[ncols];
@@ -297,7 +300,7 @@ void Histogram::saveToFile(const char *fileName) const
     hsize_t count[2];
 
     for (size_t i = 0; i < nBins[0]; ++i) {
-        data[i] = 1.* firstBinCenter[0] + i*binSize[0];
+        data[i] = 1.* firstBinCenter[0] + i * binSize[0];
     }
 
     start[0] = 0;
@@ -313,9 +316,11 @@ void Histogram::saveToFile(const char *fileName) const
     case DATA_K:
         colNames[0] = "k";
         for (size_t i = 0; i < nBins[0]; ++i) {
-            MCfloat scale2 = scale*4.0*pi<MCfloat>()*sin((i+0.5)*binSize[0]/degPerRad)*sin(binSize[0]/2./degPerRad);
+            MCfloat scale2 = scale * 4.0 *pi<MCfloat>()
+                    * sin((i + 0.5) * binSize[0] / degPerRad)
+                    * sin(binSize[0] / 2. /degPerRad);
             for (size_t j = 0; j < nBins[1]; ++j)
-                data[i*nBins[1] + j] = 1. * histo[i*nBins[1] + j] / scale2;
+                data[i * nBins[1] + j] = 1. * histo[i * nBins[1] + j] / scale2;
         }
         break;
 
@@ -324,7 +329,7 @@ void Histogram::saveToFile(const char *fileName) const
         for (size_t i = 0; i < nBins[0]; ++i) {
             MCfloat scale2 = scale;
             for (size_t j = 0; j < nBins[1]; ++j)
-                data[i*nBins[1] + j] = 1. * histo[i*nBins[1] + j] / scale2;
+                data[i * nBins[1] + j] = 1. * histo[i * nBins[1] + j] / scale2;
         }
         break;
 
@@ -332,9 +337,9 @@ void Histogram::saveToFile(const char *fileName) const
         colNames[0] = "um";
         for (size_t i = 0; i < nBins[0]; ++i) {
             MCfloat dr = binSize[0];
-            MCfloat scale2 = scale * (2*pi<MCfloat>()*(i+0.5)*dr*dr);
+            MCfloat scale2 = scale * (2 * pi<MCfloat>() * (i + 0.5) * dr * dr);
             for (size_t j = 0; j < nBins[1]; ++j)
-               data[i*nBins[1] + j] = 1. * histo[i*nBins[1] + j] / scale2;
+               data[i*nBins[1] + j] = 1. * histo[i * nBins[1] + j] / scale2;
         }
         break;
 
@@ -360,10 +365,10 @@ void Histogram::saveToFile(const char *fileName) const
             colNames[2+i] = strs.str();
 
             for (size_t idx = 0; idx < nBins[0]; ++idx)
-                    data[idx] = moments[totBins*i+idx] / histo[idx];
+                    data[idx] = moments[totBins * i + idx] / histo[idx];
 
             start[0] = 0;
-            start[1] = 2+i;
+            start[1] = 2 + i;
             count[0] = nBins[0];
             count[1] = 1;
 
@@ -376,12 +381,12 @@ void Histogram::saveToFile(const char *fileName) const
     else {
         for (size_t j = 0; j < nBins[1]; ++j) {
             stringstream ss;
-            ss << "b-" << firstBinCenter[1] + j*binSize[1];
-            colNames[j+1] = ss.str();
+            ss << "b-" << firstBinCenter[1] + j * binSize[1];
+            colNames[j + 1] = ss.str();
         }
     }
 
-    file->writeColumnNames(ncols,colNames);
+    file->writeColumnNames(ncols, colNames);
 
 
     free(data);

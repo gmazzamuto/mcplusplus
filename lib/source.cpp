@@ -49,13 +49,13 @@ Source::~Source()
 
 void Source::spinDirection(Walker *walker) const {
     MCfloat cosTheta = cosThetaDistribution->spin();
-    MCfloat sinTheta = sqrt(1 - pow(cosTheta,2));
+    MCfloat sinTheta = sqrt(1 - pow(cosTheta, 2));
     MCfloat psi = psiDistribution->spin();
     MCfloat cosPsi = cos(psi);
     MCfloat sinPsi = sin(psi);
 
-    walker->k0[0] = sinTheta*cosPsi;
-    walker->k0[1] = sinTheta*sinPsi;
+    walker->k0[0] = sinTheta * cosPsi;
+    walker->k0[1] = sinTheta * sinPsi;
     walker->k0[2] = cosTheta;
 }
 
@@ -79,11 +79,16 @@ BaseObject *Source::clone_impl() const
 void Source::cloneInto(Source *src) const
 {
     if(r0Distribution[0] != NULL && r0Distribution[1] != NULL)
-        src->setr0Distribution((AbstractDistribution*)r0Distribution[0]->clone(),(AbstractDistribution*)r0Distribution[1]->clone(),z0());
+        src->setr0Distribution(
+                    (AbstractDistribution*)r0Distribution[0]->clone(),
+                    (AbstractDistribution*)r0Distribution[1]->clone(), z0());
     if(cosThetaDistribution != NULL && psiDistribution != NULL)
-        src->setk0Distribution((AbstractDistribution*)cosThetaDistribution->clone(),(AbstractDistribution*)psiDistribution->clone());
+        src->setk0Distribution(
+                    (AbstractDistribution*)cosThetaDistribution->clone(),
+                    (AbstractDistribution*)psiDistribution->clone());
     if(walkTimeDistribution != NULL)
-        src->setWalkTimeDistribution((AbstractDistribution*)walkTimeDistribution->clone());
+        src->setWalkTimeDistribution(
+                    (AbstractDistribution*)walkTimeDistribution->clone());
     src->setWavelength(wl);
 }
 
@@ -94,12 +99,16 @@ void Source::cloneInto(Source *src) const
 
 void Source::spin(Walker *walker) const {
     walker->reset();
-    spinPosition(walker); //the calling order is critical! GaussianRayBundleSource must spin the walker's position BEFORE calculating the direction vector
+    // the calling order is critical! GaussianRayBundleSource must spin the
+    // walker's position BEFORE calculating the direction vector
+    spinPosition(walker);
     spinDirection(walker);
     spinTime(walker);
 }
 
-void Source::setr0Distribution(AbstractDistribution *x0Distribution, AbstractDistribution *y0Distribution, double z0) {
+void Source::setr0Distribution(AbstractDistribution *x0Distribution,
+                               AbstractDistribution *y0Distribution,
+                               double z0) {
     x0Distribution->setParent(this);
     y0Distribution->setParent(this);
     r0Distribution[0] = x0Distribution;
@@ -108,7 +117,8 @@ void Source::setr0Distribution(AbstractDistribution *x0Distribution, AbstractDis
     this->_z0 = z0;
 }
 
-void Source::setk0Distribution(AbstractDistribution *cosThetaDistr, AbstractDistribution *psiDistr) {
+void Source::setk0Distribution(AbstractDistribution *cosThetaDistr,
+                               AbstractDistribution *psiDistr) {
     cosThetaDistribution = cosThetaDistr;
     cosThetaDistribution->setParent(this);
     psiDistribution = psiDistr;
@@ -189,7 +199,8 @@ GaussianBeamSource::GaussianBeamSource(double FWHM, BaseObject *parent) :
  * @param parent
  */
 
-GaussianBeamSource::GaussianBeamSource(double xFWHM, double yFWHM, BaseObject *parent) :
+GaussianBeamSource::GaussianBeamSource(double xFWHM, double yFWHM,
+                                       BaseObject *parent) :
     Source(parent)
 {
     init(xFWHM,yFWHM);
@@ -212,15 +223,19 @@ void GaussianBeamSource::init(MCfloat xFWHM, MCfloat yFWHM)
     this->xFWHM = xFWHM;
     this->yFWHM = yFWHM;
     AbstractDistribution *distr[2];
-    distr[0] = new NormalDistribution(0,1);
-    distr[1] = new NormalDistribution(0,1);
+    distr[0] = new NormalDistribution(0, 1);
+    distr[1] = new NormalDistribution(0, 1);
     NormalDistribution *tempNorm;
     tempNorm = (NormalDistribution*)distr[0];
     tempNorm->setFWHM(xFWHM);
     tempNorm = (NormalDistribution*)distr[1];
     tempNorm->setFWHM(yFWHM);
-    setr0Distribution(distr[0], distr[1], -1*std::numeric_limits<MCfloat>::infinity());
-    setk0Distribution(new DeltaDistribution(1,this), new DeltaDistribution(1,this)); //to avoid generating a useless random number (sinTheta is 0)
+    setr0Distribution(distr[0], distr[1],
+            -1 * std::numeric_limits<MCfloat>::infinity());
+
+    //to avoid generating a useless random number (sinTheta is 0)
+    setk0Distribution(new DeltaDistribution(1, this),
+                      new DeltaDistribution(1, this));
 }
 
 
@@ -233,7 +248,8 @@ IsotropicPointSource::IsotropicPointSource(double z0, BaseObject *parent) :
     distr[0] = new DeltaDistribution(0);
     distr[1] = new DeltaDistribution(0);
     setr0Distribution(distr[0], distr[1], z0);
-    setk0Distribution(new CosThetaGenerator(0,this), new IsotropicPsiGenerator(this));
+    setk0Distribution(new CosThetaGenerator(0, this),
+                      new IsotropicPsiGenerator(this));
 }
 
 IsotropicPointSource::~IsotropicPointSource()

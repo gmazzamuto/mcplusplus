@@ -46,7 +46,8 @@ bool H5OutputFile::newFile(const char *fileName, bool create_datasets)
     dims[0] = 4;
     try {
         DataSpace dspace(ndims, dims, dims);
-        DataSet  dset = file->createDataSet("photon-counters", PredType::NATIVE_INT64, dspace);
+        DataSet dset = file->createDataSet("photon-counters",
+                                           PredType::NATIVE_INT64, dspace);
         dspace.close();
         dset.close();
     }
@@ -55,88 +56,97 @@ bool H5OutputFile::newFile(const char *fileName, bool create_datasets)
     }
 
     if(create_datasets) {
-        ret = createDatasets(FLAG_ALL_WALKERS, FLAG_ALL_WALKERS, FLAG_ALL_WALKERS);
+        ret = createDatasets(FLAG_ALL_WALKERS, FLAG_ALL_WALKERS,
+                             FLAG_ALL_WALKERS);
         if(!ret)
             return false;
     }
     return true;
 }
 
-void H5OutputFile::appendExitKVectors(walkerType type, const MCfloat *buffer, const hsize_t size)
+void H5OutputFile::appendExitKVectors(walkerType type, const MCfloat *buffer,
+                                      const hsize_t size)
 {
     switch (type) {
     case TRANSMITTED:
-        appendTo1Ddataset("exit-k-vectors/transmitted",buffer,size);
+        appendTo1Ddataset("exit-k-vectors/transmitted", buffer, size);
         break;
     case BALLISTIC:
-        appendTo1Ddataset("exit-k-vectors/ballistic",buffer,size);
+        appendTo1Ddataset("exit-k-vectors/ballistic", buffer, size);
         break;
     case REFLECTED:
-        appendTo1Ddataset("exit-k-vectors/reflected",buffer,size);
+        appendTo1Ddataset("exit-k-vectors/reflected", buffer, size);
         break;
     case BACKREFLECTED:
-        appendTo1Ddataset("exit-k-vectors/back-reflected",buffer,size);
+        appendTo1Ddataset("exit-k-vectors/back-reflected", buffer, size);
         break;
     default:
         break;
     }
 }
 
-void H5OutputFile::appendExitPoints(walkerType type, const MCfloat *buffer, const hsize_t size)
+void H5OutputFile::appendExitPoints(walkerType type, const MCfloat *buffer,
+                                    const hsize_t size)
 {
     switch (type) {
     case TRANSMITTED:
-        appendTo1Ddataset("exit-points/transmitted",buffer,size);
+        appendTo1Ddataset("exit-points/transmitted", buffer, size);
         break;
     case BALLISTIC:
-        appendTo1Ddataset("exit-points/ballistic",buffer,size);
+        appendTo1Ddataset("exit-points/ballistic", buffer, size);
         break;
     case REFLECTED:
-        appendTo1Ddataset("exit-points/reflected",buffer,size);
+        appendTo1Ddataset("exit-points/reflected", buffer, size);
         break;
     case BACKREFLECTED:
-        appendTo1Ddataset("exit-points/back-reflected",buffer,size);
+        appendTo1Ddataset("exit-points/back-reflected", buffer, size);
         break;
     default:
         break;
     }
 }
 
-void H5OutputFile::appendWalkTimes(walkerType type, const MCfloat *buffer, const hsize_t size)
+void H5OutputFile::appendWalkTimes(walkerType type, const MCfloat *buffer,
+                                   const hsize_t size)
 {
     switch (type) {
     case TRANSMITTED:
-        appendTo1Ddataset("walk-times/transmitted",buffer,size);
+        appendTo1Ddataset("walk-times/transmitted", buffer, size);
         break;
     case BALLISTIC:
-        appendTo1Ddataset("walk-times/ballistic",buffer,size);
+        appendTo1Ddataset("walk-times/ballistic", buffer, size);
         break;
     case REFLECTED:
-        appendTo1Ddataset("walk-times/reflected",buffer,size);
+        appendTo1Ddataset("walk-times/reflected", buffer, size);
         break;
     case BACKREFLECTED:
-        appendTo1Ddataset("walk-times/back-reflected",buffer,size);
+        appendTo1Ddataset("walk-times/back-reflected", buffer, size);
         break;
     default:
         break;
     }
 }
 
-bool H5OutputFile::loadExitPoints(walkerType type, MCfloat *destBuffer, const hsize_t *start, const hsize_t *count)
+bool H5OutputFile::loadExitPoints(walkerType type, MCfloat *destBuffer,
+                                  const hsize_t *start, const hsize_t *count)
 {
     bool ret = false;
     switch (type) {
     case TRANSMITTED:
-        ret = loadFrom1Ddataset("exit-points/transmitted",destBuffer,start,count);
+        ret = loadFrom1Ddataset("exit-points/transmitted", destBuffer, start,
+                                count);
         break;
     case BALLISTIC:
-        ret = loadFrom1Ddataset("exit-points/ballistic",destBuffer,start,count);
+        ret = loadFrom1Ddataset("exit-points/ballistic", destBuffer, start,
+                                count);
         break;
     case REFLECTED:
-        ret = loadFrom1Ddataset("exit-points/reflected",destBuffer,start,count);
+        ret = loadFrom1Ddataset("exit-points/reflected", destBuffer, start,
+                                count);
         break;
     case BACKREFLECTED:
-        ret = loadFrom1Ddataset("exit-points/back-reflected",destBuffer,start,count);
+        ret = loadFrom1Ddataset("exit-points/back-reflected", destBuffer, start,
+                                count);
         break;
     default:
         break;
@@ -144,21 +154,26 @@ bool H5OutputFile::loadExitPoints(walkerType type, MCfloat *destBuffer, const hs
     return ret;
 }
 
-bool H5OutputFile::loadWalkTimes(walkerType type, MCfloat *destBuffer, const hsize_t *start, const hsize_t *count)
+bool H5OutputFile::loadWalkTimes(walkerType type, MCfloat *destBuffer,
+                                 const hsize_t *start, const hsize_t *count)
 {
     bool ret = false;
     switch (type) {
     case TRANSMITTED:
-        ret = loadFrom1Ddataset("walk-times/transmitted",destBuffer,start,count);
+        ret = loadFrom1Ddataset("walk-times/transmitted", destBuffer, start,
+                                count);
         break;
     case BALLISTIC:
-        ret = loadFrom1Ddataset("walk-times/ballistic",destBuffer,start,count);
+        ret = loadFrom1Ddataset("walk-times/ballistic", destBuffer, start,
+                                count);
         break;
     case REFLECTED:
-        ret = loadFrom1Ddataset("walk-times/reflected",destBuffer,start,count);
+        ret = loadFrom1Ddataset("walk-times/reflected", destBuffer, start,
+                                count);
         break;
     case BACKREFLECTED:
-        ret = loadFrom1Ddataset("walk-times/back-reflected",destBuffer,start,count);
+        ret = loadFrom1Ddataset("walk-times/back-reflected", destBuffer, start,
+                                count);
         break;
     default:
         break;
@@ -166,21 +181,26 @@ bool H5OutputFile::loadWalkTimes(walkerType type, MCfloat *destBuffer, const hsi
     return ret;
 }
 
-bool H5OutputFile::loadExitKVectors(walkerType type, MCfloat *destBuffer, const hsize_t *start, const hsize_t *count)
+bool H5OutputFile::loadExitKVectors(walkerType type, MCfloat *destBuffer,
+                                    const hsize_t *start, const hsize_t *count)
 {
     bool ret = false;
     switch (type) {
     case TRANSMITTED:
-        ret = loadFrom1Ddataset("exit-k-vectors/transmitted",destBuffer,start,count);
+        ret = loadFrom1Ddataset("exit-k-vectors/transmitted", destBuffer, start,
+                                count);
         break;
     case BALLISTIC:
-        ret = loadFrom1Ddataset("exit-k-vectors/ballistic",destBuffer,start,count);
+        ret = loadFrom1Ddataset("exit-k-vectors/ballistic", destBuffer, start,
+                                count);
         break;
     case REFLECTED:
-        ret = loadFrom1Ddataset("exit-k-vectors/reflected",destBuffer,start,count);
+        ret = loadFrom1Ddataset("exit-k-vectors/reflected", destBuffer, start,
+                                count);
         break;
     case BACKREFLECTED:
-        ret = loadFrom1Ddataset("exit-k-vectors/back-reflected",destBuffer,start,count);
+        ret = loadFrom1Ddataset("exit-k-vectors/back-reflected", destBuffer,
+                                start, count);
         break;
     default:
         break;
@@ -188,7 +208,8 @@ bool H5OutputFile::loadExitKVectors(walkerType type, MCfloat *destBuffer, const 
     return ret;
 }
 
-bool H5OutputFile::loadData(MCData group, walkerType type, MCfloat *destBuffer, const hsize_t *start, const hsize_t *count)
+bool H5OutputFile::loadData(MCData group, walkerType type, MCfloat *destBuffer,
+                            const hsize_t *start, const hsize_t *count)
 {
     stringstream ss;
     switch (group) {
@@ -206,10 +227,11 @@ bool H5OutputFile::loadData(MCData group, walkerType type, MCfloat *destBuffer, 
     }
 
     ss << "/" << walkerTypeToString(type);
-    return loadFrom1Ddataset(ss.str().c_str(),destBuffer,start,count);
+    return loadFrom1Ddataset(ss.str().c_str(), destBuffer, start, count);
 }
 
-void H5OutputFile::appendTo1Ddataset(const char *datasetName, const MCfloat *buffer, const hsize_t size) {
+void H5OutputFile::appendTo1Ddataset(const char *datasetName, const MCfloat *buffer,
+                                     const hsize_t size) {
     if(!size)
         return;
     openDataSet(datasetName);
@@ -217,15 +239,17 @@ void H5OutputFile::appendTo1Ddataset(const char *datasetName, const MCfloat *buf
     hsize_t dims[1];
     *dims = *extentDims();
 
-    writeHyperSlab(dims,&size,buffer);
+    writeHyperSlab(dims, &size, buffer);
 }
 
-bool H5OutputFile::loadFrom1Ddataset(const char *datasetName, MCfloat *destBuffer, const hsize_t *start, const hsize_t *count)
+bool H5OutputFile::loadFrom1Ddataset(const char *datasetName,
+                                     MCfloat *destBuffer, const hsize_t *start,
+                                     const hsize_t *count)
 {
     if(!openDataSet(datasetName))
         return false;
     if(count!=NULL)
-        loadHyperSlab(start,count,destBuffer);
+        loadHyperSlab(start, count, destBuffer);
     else
         loadAll(destBuffer);
     return true;
@@ -243,7 +267,7 @@ void H5OutputFile::writeVLenString(const char *datasetName, const string str)
 
     DataSet dset = file->openDataSet(datasetName);
     DataType dtype = dset.getDataType();
-    dset.write((void*)wdata,dtype);
+    dset.write((void*)wdata, dtype);
 
     dset.close();
 }
@@ -252,7 +276,7 @@ void H5OutputFile::saveRNGState(uint seed, const string str) {
     openDataSet("RNGStates");
     if(seed > dims[0] - 1) {
         hsize_t extDims[ndims];
-        extDims[0] = seed+1;
+        extDims[0] = seed + 1;
 
         dataSet->extend(extDims);
 
@@ -269,10 +293,10 @@ void H5OutputFile::saveRNGState(uint seed, const string str) {
     for (int i = 0; i < ndims; ++i)
         _offset[i] = 0;
 
-    DataSpace memspace( ndims, mdims );
+    DataSpace memspace(ndims, mdims);
     memspace.selectHyperslab(H5S_SELECT_SET, mdims, _offset);
     dataSpace->selectHyperslab(H5S_SELECT_SET, mdims, offset);
-    dataSet->write(str.c_str(),dtype,memspace,*dataSpace);
+    dataSet->write(str.c_str(), dtype, memspace, *dataSpace);
     memspace.close();
 
     closeDataSet();
@@ -299,7 +323,7 @@ string H5OutputFile::readVLenString(const char *datasetName) const
         str = buf[0];
 
     if(buf[0] != NULL)
-        H5Dvlen_reclaim(dtype.getId(),dspace.getId(),H5P_DEFAULT,buf);
+        H5Dvlen_reclaim(dtype.getId(), dspace.getId(), H5P_DEFAULT, buf);
 
     dset.close();
     dspace.close();
@@ -311,7 +335,7 @@ string H5OutputFile::readVLenString(const char *datasetName) const
 bool H5OutputFile::openFile_impl()
 {
     DataSet dSet = file->openDataSet("photon-counters");
-    dSet.read(_photonCounters,dSet.getDataType());
+    dSet.read(_photonCounters, dSet.getDataType());
     dSet.close();
 
     return true;
@@ -339,7 +363,7 @@ string H5OutputFile::readRNGState(const uint seed) const
     DataSpace memspace( ndims, mdims );
     memspace.selectHyperslab(H5S_SELECT_SET, mdims, _offset);
     dspace.selectHyperslab(H5S_SELECT_SET, mdims, offset);
-    dset.read(buf,dtype,memspace,dspace);
+    dset.read(buf, dtype, memspace, dspace);
 
     dspace.close();
     dtype.close();
@@ -350,7 +374,10 @@ string H5OutputFile::readRNGState(const uint seed) const
     return ss.str();
 }
 
-void H5OutputFile::appendPhotonCounts(const u_int64_t transmitted, const u_int64_t ballistic, const u_int64_t reflected, const u_int64_t backReflected)
+void H5OutputFile::appendPhotonCounts(const u_int64_t transmitted,
+                                      const u_int64_t ballistic,
+                                      const u_int64_t reflected,
+                                      const u_int64_t backReflected)
 {
     _photonCounters[TRANSMITTED] += transmitted;
     _photonCounters[BALLISTIC] += ballistic;
@@ -409,12 +436,12 @@ void H5OutputFile::saveSample(const Sample *sample)
     hsize_t nLayers = sample->nLayers();
 
     dims[1] = 4; chunkDims[1] = 4;
-    dims[0] = nLayers+2; chunkDims[0] = 1;
+    dims[0] = nLayers + 2; chunkDims[0] = 1;
     newDataset(datasetName,ndims,dims,chunkDims);
 
     openDataSet(datasetName);
     dims[1] = nLayers;
-    MCfloat buffer[(nLayers+2)*4];
+    MCfloat buffer[(nLayers + 2) * 4];
     const deque< MCfloat > *boundaries = sample->zBoundaries();
 
     uint i = 0;
@@ -425,28 +452,30 @@ void H5OutputFile::saveSample(const Sample *sample)
     buffer[i++] = mat->g;
 
     for (uint n = 0; n < nLayers; ++n) {
-        buffer[i++] = boundaries->at(n+1) - boundaries->at(n);
-        Material *mat = sample->material(n+1);
+        buffer[i++] = boundaries->at(n + 1) - boundaries->at(n);
+        Material *mat = sample->material(n + 1);
         buffer[i++] = mat->n;
         buffer[i++] = mat->ls;
         buffer[i++] = mat->g;
     }
 
     buffer[i++] = -1;
-    mat = sample->material(nLayers+1);
+    mat = sample->material(nLayers + 1);
     buffer[i++] = mat->n;
     buffer[i++] = mat->ls;
     buffer[i++] = mat->g;
 
     hsize_t start[2], count[2];
     start[0] = 0; start[1] = 0;
-    count[0] = nLayers+2; count[1] = 4;
+    count[0] = nLayers + 2; count[1] = 4;
 
     writeHyperSlab(start, count, buffer);
 
 }
 
-bool H5OutputFile::createDatasets(uint walkTimesSaveFlags, uint exitPointsSaveFlags, uint exitKVectorsSaveFlags)
+bool H5OutputFile::createDatasets(uint walkTimesSaveFlags,
+                                  uint exitPointsSaveFlags,
+                                  uint exitKVectorsSaveFlags)
 {
 #define NWALKER_CHUNK sizeof(MCfloat) * 8192
     int ndims = 1;
@@ -458,41 +487,53 @@ bool H5OutputFile::createDatasets(uint walkTimesSaveFlags, uint exitPointsSaveFl
     if(exitPointsSaveFlags) {
         newGroup("exit-points");
 
-        dims[0] = 0; chunkDims[0] = 2*NWALKER_CHUNK;
+        dims[0] = 0; chunkDims[0] = 2 * NWALKER_CHUNK;
         if(exitPointsSaveFlags & FLAG_TRANSMITTED)
-            ret = newDataset("exit-points/transmitted",ndims,dims,chunkDims,MCH5FLOAT);
+            ret = newDataset("exit-points/transmitted", ndims, dims, chunkDims,
+                             MCH5FLOAT);
         if(exitPointsSaveFlags & FLAG_BALLISTIC)
-            ret = newDataset("exit-points/ballistic",ndims,dims,chunkDims,MCH5FLOAT);
+            ret = newDataset("exit-points/ballistic", ndims, dims, chunkDims,
+                             MCH5FLOAT);
         if(exitPointsSaveFlags & FLAG_REFLECTED)
-            ret = newDataset("exit-points/reflected",ndims,dims,chunkDims,MCH5FLOAT);
+            ret = newDataset("exit-points/reflected", ndims, dims, chunkDims,
+                             MCH5FLOAT);
         if(exitPointsSaveFlags & FLAG_BACKREFLECTED)
-            ret = newDataset("exit-points/back-reflected",ndims,dims,chunkDims,MCH5FLOAT);
+            ret = newDataset("exit-points/back-reflected", ndims, dims,
+                             chunkDims, MCH5FLOAT);
     }
 
     if(walkTimesSaveFlags) {
         dims[0] = 0; chunkDims[0] = NWALKER_CHUNK;
         newGroup("walk-times");
         if(walkTimesSaveFlags & FLAG_TRANSMITTED)
-            ret = newDataset("walk-times/transmitted",ndims,dims,chunkDims,MCH5FLOAT);
+            ret = newDataset("walk-times/transmitted",ndims, dims, chunkDims,
+                             MCH5FLOAT);
         if(walkTimesSaveFlags & FLAG_BALLISTIC)
-            ret = newDataset("walk-times/ballistic",ndims,dims,chunkDims,MCH5FLOAT);
+            ret = newDataset("walk-times/ballistic", ndims, dims, chunkDims,
+                             MCH5FLOAT);
         if(walkTimesSaveFlags & FLAG_REFLECTED)
-            ret = newDataset("walk-times/reflected",ndims,dims,chunkDims,MCH5FLOAT);
+            ret = newDataset("walk-times/reflected", ndims, dims, chunkDims,
+                             MCH5FLOAT);
         if(walkTimesSaveFlags & FLAG_BACKREFLECTED)
-            ret = newDataset("walk-times/back-reflected",ndims,dims,chunkDims,MCH5FLOAT);
+            ret = newDataset("walk-times/back-reflected", ndims, dims, chunkDims,
+                             MCH5FLOAT);
     }
 
     if(exitKVectorsSaveFlags) {
-        dims[0] = 0; chunkDims[0] = 3*NWALKER_CHUNK/2;
+        dims[0] = 0; chunkDims[0] = 3 * NWALKER_CHUNK / 2;
         newGroup("exit-k-vectors");
         if(exitKVectorsSaveFlags & FLAG_TRANSMITTED)
-            ret = newDataset("exit-k-vectors/transmitted",ndims,dims,chunkDims,MCH5FLOAT);
+            ret = newDataset("exit-k-vectors/transmitted", ndims, dims,
+                             chunkDims, MCH5FLOAT);
         if(exitKVectorsSaveFlags & FLAG_BALLISTIC)
-            ret = newDataset("exit-k-vectors/ballistic",ndims,dims,chunkDims,MCH5FLOAT);
+            ret = newDataset("exit-k-vectors/ballistic", ndims, dims, chunkDims,
+                             MCH5FLOAT);
         if(exitKVectorsSaveFlags & FLAG_REFLECTED)
-            ret = newDataset("exit-k-vectors/reflected",ndims,dims,chunkDims,MCH5FLOAT);
+            ret = newDataset("exit-k-vectors/reflected", ndims, dims, chunkDims,
+                             MCH5FLOAT);
         if(exitKVectorsSaveFlags & FLAG_BACKREFLECTED)
-            ret = newDataset("exit-k-vectors/back-reflected",ndims,dims,chunkDims,MCH5FLOAT);
+            ret = newDataset("exit-k-vectors/back-reflected", ndims, dims,
+                             chunkDims, MCH5FLOAT);
     }
 
     return ret;
@@ -505,20 +546,20 @@ bool H5OutputFile::createRNGDataset()
     dims[0] = 1;
     maxdims[0] = H5S_UNLIMITED;
     chkdims[0] = 1000;
-    StrType dtype(H5T_C_S1,MAX_RNGSTATE_STR_LEN);
+    StrType dtype(H5T_C_S1, MAX_RNGSTATE_STR_LEN);
     size_t size = MAX_RNGSTATE_STR_LEN;
     dtype.setSize(size);
-    DataSpace dspace(1,dims,maxdims);
+    DataSpace dspace(1, dims, maxdims);
     stringstream ss;
     ss << "RNGStates";
     if(!dataSetExists(ss.str().c_str())) {
 #ifdef PRINT_DEBUG_MSG
-        logMessage("Creating dataset %s",ss.str().c_str());
+        logMessage("Creating dataset %s", ss.str().c_str());
 #endif
         DSetCreatPropList cparms;
-        cparms.setChunk(ndims,chkdims);
+        cparms.setChunk(ndims, chkdims);
         cparms.setDeflate(9);
-        file->createDataSet(ss.str(),dtype,dspace,cparms);
+        file->createDataSet(ss.str(), dtype, dspace, cparms);
     }
     dtype.close();
     dspace.close();

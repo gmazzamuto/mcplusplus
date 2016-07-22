@@ -42,7 +42,7 @@ Material::~Material()
 
 void Material::setWavelength(double um) {
     n = dispersionRelation(um);
-    v = LIGHT_SPEED/n;
+    v = LIGHT_SPEED / n;
 }
 
 /**
@@ -93,12 +93,14 @@ Air::~Air()
 
 MCfloat Air::dispersionRelation(MCfloat lambda_um) {
     MC_ASSERT_MSG(lambda_um > 0, "Invalid wavelength");
-    MCfloat pv = (0.01*RH)*saturatedVapourPressure();
-    MCfloat S = pow(lambda_um,-2);
-    MCfloat dns = 8342.54E-8 + 2406147E-8 /(130 - S) + 15998E-8 /(38.9 - S);
-    MCfloat X = (1 + (0.601 - 0.00972*Temperature)*Pressure*1E-8)/(1 + 0.003661*Temperature);
-    MCfloat ntp = 1 + Pressure*dns*X/96095.43;
-    return ntp - (292.75/(Temperature + 273.15))*(3.7345 - 0.0401*S)*pv*1E-10;
+    MCfloat pv = (0.01 * RH) * saturatedVapourPressure();
+    MCfloat S = pow(lambda_um, -2);
+    MCfloat dns = 8342.54E-8 + 2406147E-8 / (130 - S) + 15998E-8 / (38.9 - S);
+    MCfloat X = (1 + (0.601 - 0.00972 * Temperature) * Pressure * 1E-8)
+            / (1 + 0.003661 * Temperature);
+    MCfloat ntp = 1 + Pressure * dns * X / 96095.43;
+    return ntp - (292.75 / (Temperature + 273.15)) * (3.7345 - 0.0401 * S) * pv
+            * 1E-10;
 }
 
 /**
@@ -127,13 +129,13 @@ MCfloat Air::saturatedVapourPressure()
     MCfloat K9 = -2.38555575678E-01;
     MCfloat K10 = 6.50175348448E+02;
 
-    MCfloat Omega = T + K9/(T - K10);
-    MCfloat A = pow(Omega,2) + K1*Omega + K2;
-    MCfloat B = K3*pow(Omega,2) + K4*Omega + K5;
-    MCfloat C = K6*pow(Omega,2) + K7*Omega + K8;
-    MCfloat X = -B + sqrt(pow(B,2) -4*A*C);
+    MCfloat Omega = T + K9 / (T - K10);
+    MCfloat A = pow(Omega, 2) + K1 * Omega + K2;
+    MCfloat B = K3 * pow(Omega, 2) + K4 * Omega + K5;
+    MCfloat C = K6 * pow(Omega, 2) + K7 * Omega + K8;
+    MCfloat X = -B + sqrt(pow(B, 2) - 4 * A * C);
 
-    return pow(2*C/X,4)*1E6;
+    return pow(2 * C / X, 4) * 1E6;
 }
 
 
@@ -150,8 +152,10 @@ GlassSlide::~GlassSlide()
 
 MCfloat GlassSlide::dispersionRelation(MCfloat lambda_um) {
     MC_ASSERT_MSG(lambda_um > 0, "Invalid wavelength");
-    return sqrt(1 + 1.282086558597*pow(lambda_um,2)/(pow(lambda_um,2) - 0.01023694363174)
-                + 0.05984826992046*pow(lambda_um,2)/(pow(lambda_um,2) - 12.09530215672));
+    return sqrt(1 + 1.282086558597 * pow(lambda_um, 2) / (pow(lambda_um, 2)
+                                                          - 0.01023694363174)
+                + 0.05984826992046 * pow(lambda_um, 2) / (pow(lambda_um, 2)
+                                                          - 12.09530215672));
 }
 
 
@@ -173,7 +177,8 @@ NorlandOpticalAdhesive65::~NorlandOpticalAdhesive65()
 
 MCfloat NorlandOpticalAdhesive65::dispersionRelation(MCfloat lambda_um) {
     MC_ASSERT_MSG(lambda_um > 0, "Invalid wavelength");
-    return 1.50631 + 5.43562E-3/pow(lambda_um,2) + 27.7798E-6/pow(lambda_um,4);
+    return 1.50631 + 5.43562E-3 / pow(lambda_um, 2) + 27.7798E-6 /
+            pow(lambda_um, 4);
 }
 
 

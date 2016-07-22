@@ -39,7 +39,8 @@ public:
     void addLayer(Material *material, double thickness);
     void addPreLayer(Material *material, double thickness);
     void setSurroundingEnvironment(Material *material);
-    void setSurroundingEnvironment(Material *leftMaterial, Material *rightMaterial);
+    void setSurroundingEnvironment(Material *leftMaterial,
+                                   Material *rightMaterial);
     unsigned int nLayers() const;
     const deque<MCfloat> *zBoundaries() const;
     Material *material(unsigned int layerIndex) const;

@@ -151,7 +151,9 @@ void BaseRandom::setRNG(MCEngine *mt) {
     this->mt = mt;
     setRNG_impl();
     std::list<BaseRandom *>::const_iterator iterator;
-    for (iterator = randomChildList.begin(); iterator != randomChildList.end(); ++iterator) {
+    for (iterator = randomChildList.begin();
+         iterator != randomChildList.end();
+         ++iterator) {
         BaseRandom *rnd = *iterator;
         rnd->_currentSeed = _currentSeed;
         rnd->setRNG(mt);

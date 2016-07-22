@@ -106,7 +106,8 @@ bool DeltaDistribution::sanityCheck_impl() const
 
 // Normal (Gaussian) distribution
 
-NormalDistribution::NormalDistribution(double mean, double sigma, BaseObject *parent) :
+NormalDistribution::NormalDistribution(double mean, double sigma,
+                                       BaseObject *parent) :
     AbstractDistribution(parent)
 {
     this->mean = mean;
@@ -155,7 +156,8 @@ MCfloat NormalDistribution::spin() const {
 
 // Uniform disribution
 
-UniformDistribution::UniformDistribution(double min, double max, BaseObject *parent) :
+UniformDistribution::UniformDistribution(double min, double max,
+                                         BaseObject *parent) :
     AbstractDistribution(parent)
 {
     this->min = min;
@@ -213,7 +215,8 @@ ExponentialDistribution::ExponentialDistribution(BaseObject *parent) :
  * @param parent
  */
 
-ExponentialDistribution::ExponentialDistribution(double lambda, BaseObject *parent) :
+ExponentialDistribution::ExponentialDistribution(double lambda,
+                                                 BaseObject *parent) :
     AbstractDistribution(parent)
 {
     setLambda(lambda);
@@ -256,7 +259,8 @@ MCfloat ExponentialDistribution::spin() const {
 
 // Sech2 (Logistic) distribution
 
-Sech2Distribution::Sech2Distribution(double mean, double scale, BaseObject *parent) :
+Sech2Distribution::Sech2Distribution(double mean, double scale,
+                                     BaseObject *parent) :
     AbstractDistribution(parent)
 {
     this->mean = mean;

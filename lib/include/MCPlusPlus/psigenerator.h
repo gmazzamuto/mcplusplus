@@ -22,8 +22,8 @@
 namespace MCPP {
 
 /**
- * @brief The IsotropicPsiGenerator class generates the azimuthal scattering angle
- * uniformly in the interval \f$ \psi \in [0, 2\pi) \f$.
+ * @brief The IsotropicPsiGenerator class generates the azimuthal scattering
+ * angle uniformly in the interval \f$ \psi \in [0, 2\pi) \f$.
  */
 
 class IsotropicPsiGenerator : public AbstractDistribution

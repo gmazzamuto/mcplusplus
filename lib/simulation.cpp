@@ -49,11 +49,11 @@ vector<boost::thread*> threads;
 vector<Simulation *> sims;
 
 MCfloat module(const MCfloat *x) {
-    return sqrt(x[0]*x[0] + x[1]*x[1] + x[2]*x[2]);
+    return sqrt(x[0] * x[0] + x[1] * x[1] + x[2] * x[2]);
 }
 
 MCfloat module2D(const MCfloat x, const MCfloat y) {
-    return sqrt(x*x + y*y);
+    return sqrt(x * x + y * y);
 }
 
 void sigUsr1Handler(int sig, siginfo_t *siginfo, void *context) {
@@ -78,23 +78,23 @@ void sigUsr2Handler(int sig, siginfo_t *siginfo, void *context) {
 
 void installSigUSR1Handler() {
     struct sigaction sa;
-    memset(&sa,0,sizeof(sa));
+    memset(&sa, 0, sizeof(sa));
     sa.sa_sigaction = sigUsr1Handler;
     sa.sa_flags = SA_SIGINFO;
-    sigaction(SIGUSR1,&sa,NULL);
+    sigaction(SIGUSR1, &sa, NULL);
 }
 
 void installSigUSR2Handler() {
     struct sigaction sa;
-    memset(&sa,0,sizeof(sa));
+    memset(&sa, 0, sizeof(sa));
     sa.sa_sigaction = sigUsr2Handler;
     sa.sa_flags = SA_SIGINFO;
-    sigaction(SIGUSR2,&sa,NULL);
+    sigaction(SIGUSR2, &sa, NULL);
 }
 
 void sigTermHandler(int sig, siginfo_t *siginfo, void *context) {
     fprintf(stderr, "SIGTERM received... closing all threads\n");
-    for(uint i=0;i<sims.size();i++) {
+    for(uint i=0; i<sims.size(); i++) {
         Simulation *sim = sims.at(i);
         if(sim == NULL)
             continue;
@@ -104,10 +104,10 @@ void sigTermHandler(int sig, siginfo_t *siginfo, void *context) {
 
 void installSigTermHandler() {
     struct sigaction sa;
-    memset(&sa,0,sizeof(sa));
+    memset(&sa, 0, sizeof(sa));
     sa.sa_sigaction = sigTermHandler;
     sa.sa_flags = SA_SIGINFO;
-    sigaction(SIGTERM,&sa,NULL);
+    sigaction(SIGTERM, &sa, NULL);
 }
 
 void workerFunc(Simulation *sim) {
@@ -134,10 +134,10 @@ Simulation::Simulation(BaseObject *parent) :
     timeOriginZ = 0;
     deflCosine.setParent(this);
     setRawOutputEnabled(false);
-    r0 = (MCfloat*)calloc(3,sizeof(MCfloat));
-    r1 = (MCfloat*)calloc(3,sizeof(MCfloat));
-    k0 = (MCfloat*)calloc(3,sizeof(MCfloat));
-    k1 = (MCfloat*)calloc(3,sizeof(MCfloat));
+    r0 = (MCfloat*)calloc(3, sizeof(MCfloat));
+    r1 = (MCfloat*)calloc(3, sizeof(MCfloat));
+    k0 = (MCfloat*)calloc(3, sizeof(MCfloat));
+    k1 = (MCfloat*)calloc(3, sizeof(MCfloat));
     clear();
     mostRecentInstance = this;
     installSigUSR1Handler();
@@ -260,7 +260,7 @@ void Simulation::run() {
         outputFile = "output.h5";
         logMessage("No output file name provided, using %s", outputFile);
     }
-    if(access(outputFile,F_OK)>=0) {
+    if(access(outputFile,F_OK) >= 0) {
         logMessage("File %s already exists. Aborting.", outputFile);
         return;
     }
@@ -298,7 +298,8 @@ void Simulation::run() {
     time(&now);
 
     if(wasCloned()) {
-        logMessage("Thread using seed %u completed in %.f seconds",currentSeed(),difftime(now,startTime));
+        logMessage("Thread using seed %u completed in %.f seconds",
+                   currentSeed(), difftime(now, startTime));
         return;
     }
 
@@ -308,7 +309,8 @@ void Simulation::run() {
         stream << walkerTypeToString(i) << ": " << photonCounters[i] << endl;
     }
 
-    logMessage("%s\nCompleted in %.f seconds\n================\n",stream.str().c_str(), difftime(now,startTime));
+    logMessage("%s\nCompleted in %.f seconds\n================\n",
+               stream.str().c_str(), difftime(now, startTime));
 
     for (size_t i = 0; i < hists.size(); ++i) {
         Histogram *h = hists[i];
@@ -338,7 +340,7 @@ void Simulation::runMultipleThreads()
         sims.push_back(sim);
 
         //launch thread
-        threads.push_back(new boost::thread(workerFunc,sims.at(n)));
+        threads.push_back(new boost::thread(workerFunc, sims.at(n)));
     }
 
     //wait for all threads to finish
@@ -372,23 +374,24 @@ bool Simulation::runSingleThread() {
         return false;
 
     clear();
-    logMessage("starting... Number of walkers = %llu, original seed = %u",nPhotons(), currentSeed());
+    logMessage("starting... Number of walkers = %llu, original seed = %u",
+               nPhotons(), currentSeed());
     nLayers = _sample->nLayers();
 
 
-    MCfloat *uzb = (MCfloat*)malloc((nLayers+2)*sizeof(MCfloat));
-    Material *mat = (Material*)malloc((nLayers+2)*sizeof(Material));
-    MCfloat *mus = (MCfloat*)malloc((nLayers+2)*sizeof(MCfloat));
+    MCfloat *uzb = (MCfloat*)malloc((nLayers + 2) * sizeof(MCfloat));
+    Material *mat = (Material*)malloc((nLayers + 2) * sizeof(Material));
+    MCfloat *mus = (MCfloat*)malloc((nLayers + 2) * sizeof(MCfloat));
 
-    for (unsigned int i = 0; i < nLayers+1; ++i) {
+    for (unsigned int i = 0; i < nLayers + 1; ++i) {
         uzb[i]=_sample->zBoundaries()->at(i);
     }
 
-    for (unsigned int i = 0; i < nLayers+2; ++i) {
+    for (unsigned int i = 0; i < nLayers + 2; ++i) {
         Material *m = _sample->material(i);
         m->setWavelength(source->wavelength());
-        mat[i]=*m;
-        mus[i] = 1./mat[i].ls;
+        mat[i] = *m;
+        mus[i] = 1. / mat[i].ls;
     }
 
     upperZBoundaries = uzb;
@@ -408,27 +411,32 @@ bool Simulation::runSingleThread() {
     layer1 = layerAt(pos);
 
     uint initialLayer = layer0;
-    uint leftLayer = min(layer0,layer1);
-    uint rightLayer = max(layer0,layer1);
+    uint leftLayer = min(layer0, layer1);
+    uint rightLayer = max(layer0, layer1);
     MCfloat leftPoint = min(source->z0(), timeOriginZ);
     if(leftPoint == -1*numeric_limits<MCfloat>::infinity()) {
-        leftPoint = min(upperZBoundaries[0],timeOriginZ);
+        leftPoint = min(upperZBoundaries[0], timeOriginZ);
         initialLayer = 0;
     }
     MCfloat rightPoint = max(source->z0(), timeOriginZ);
     if(leftLayer != rightLayer) { //add first and last portion of distance
-        timeOffset += (upperZBoundaries[leftLayer] - leftPoint)/materials[leftLayer].v;
-        timeOffset += (rightPoint - upperZBoundaries[rightLayer - 1])/materials[rightLayer].v;
+        timeOffset += (upperZBoundaries[leftLayer] - leftPoint)
+                / materials[leftLayer].v;
+        timeOffset += (rightPoint - upperZBoundaries[rightLayer - 1])
+                / materials[rightLayer].v;
         for (uint i = leftLayer + 1; i <= rightLayer - 1 ; ++i) {
-            timeOffset += (upperZBoundaries[i] - upperZBoundaries[i-1])/materials[i].v;
+            timeOffset += (upperZBoundaries[i] - upperZBoundaries[i-1])
+                    / materials[i].v;
         }
     }
     else {
-        timeOffset += fabs(rightPoint - leftPoint)/materials[leftLayer].v;
+        timeOffset += fabs(rightPoint - leftPoint)
+                / materials[leftLayer].v;
     }
     timeOffset *= -1 * sign<MCfloat>(timeOriginZ - source->z0());
 
-    layer0 = numeric_limits<unsigned int>::max(); //otherwise updateLayerVariables() won't work
+    // layer0 must be initialized for updateLayerVariables()
+    layer0 = numeric_limits<unsigned int>::max();
 
     while(n < _totalWalkers && !forceTermination) {
         if(nBuf == WALKER_BUFSIZE)
@@ -441,9 +449,9 @@ bool Simulation::runSingleThread() {
             currentTrajectory = new vector<MCfloat>();
 
         source->spin(&walker);
-        memcpy(r0,walker.r0,3*sizeof(MCfloat));
-        memcpy(k0,walker.k0,3*sizeof(MCfloat));
-        if(r0[2] == -1*numeric_limits<MCfloat>::infinity())
+        memcpy(r0,walker.r0, 3 * sizeof(MCfloat));
+        memcpy(k0,walker.k0, 3 * sizeof(MCfloat));
+        if(r0[2] == -1 * numeric_limits<MCfloat>::infinity())
             r0[2] = leftPoint;
 
         walker.walkTime += timeOffset;
@@ -451,18 +459,19 @@ bool Simulation::runSingleThread() {
         totalLengthInCurrentLayer = 0;
         updateLayerVariables(initialLayer);
 
-        swap_k0_k1();         //at first, the walker propagates
-        kNeedsToBeScattered = false; //with the orignal k
+        // at first, the walker propagates with the orignal k
+        swap_k0_k1();
+        kNeedsToBeScattered = false;
 
 #ifdef ENABLE_TRAJECTORY
         if(saveTrajectory)
             appendTrajectoryPoint(r0);
 #endif
-        nInteractions.insert(nInteractions.begin(),nLayers+2,0);
+        nInteractions.insert(nInteractions.begin(), nLayers + 2, 0);
 
 #ifdef DEBUG_TRAJECTORY
-        printf("%d\t",layer0);
-        printf("%lf\t%lf\t%lf\t\t%lf", r0[0], r0[1], r0[2],k0[2]);
+        printf("%d\t", layer0);
+        printf("%lf\t%lf\t%lf\t\t%lf", r0[0], r0[1], r0[2], k0[2]);
 #endif
 
         MCfloat length;
@@ -470,64 +479,73 @@ bool Simulation::runSingleThread() {
             //spin k1 (i.e. scatter) only if the material is scattering
             if(currentMaterial->ls != numeric_limits<MCfloat>::infinity()) {
                 /* using long double moves the truncation of the exponential
-                 * distribution to 44 times the mfp, then we cast to MCfloat
-                */
+                 * distribution to 44 times the mfp, then we cast to MCfloat */
                 length = exponential_distribution<long double>(currentMus)(*mt);
                 if(kNeedsToBeScattered) {
                     nInteractions[layer0]++;
 
                     MCfloat cosTheta = deflCosine.spin();
-                    MCfloat sinTheta = sqrt(1-pow(cosTheta,2));
-                    MCfloat psi = uniform_01<MCfloat>()(*mt)*two_pi<MCfloat>(); //uniform in [0,2pi)
+                    MCfloat sinTheta = sqrt(1 - pow(cosTheta, 2));
+                    //uniform in [0,2pi)
+                    MCfloat psi = uniform_01<MCfloat>()(*mt) * two_pi<MCfloat>();
                     MCfloat cosPsi, sinPsi;
 
 #ifdef DOUBLEPRECISION
-                    sincos(psi,&sinPsi,&cosPsi);
+                    sincos(psi, &sinPsi, &cosPsi);
 #endif
 #ifdef LONGDOUBLEPRECISION
-                    sincosl(psi,&sinPsi,&cosPsi);
+                    sincosl(psi, &sinPsi, &cosPsi);
 #endif
 #ifdef SINGLEPRECISION
-                    sincosf(psi,&sinPsi,&cosPsi);
+                    sincosf(psi, &sinPsi, &cosPsi);
 #endif
 
                     if(fabs(k0[2]) > COSZERO) {
-                        k1[0] = sinTheta*cosPsi;
-                        k1[1] = sinTheta*sinPsi;
-                        k1[2] = cosTheta*sign<MCfloat>(k0[2]);
+                        k1[0] = sinTheta * cosPsi;
+                        k1[1] = sinTheta * sinPsi;
+                        k1[2] = cosTheta * sign<MCfloat>(k0[2]);
                     }
                     else {
-                        MCfloat temp = sqrt(1-pow(k0[2],2));
-                        k1[0] = (sinTheta*(k0[0]*k0[2]*cosPsi - k0[1]*sinPsi))/temp + cosTheta*k0[0];
-                        k1[1] = (sinTheta*(k0[1]*k0[2]*cosPsi + k0[0]*sinPsi))/temp + cosTheta*k0[1];
-                        k1[2] = -sinTheta*cosPsi*temp + cosTheta*k0[2];
+                        MCfloat temp = sqrt(1 - pow(k0[2], 2));
+                        k1[0] = (sinTheta
+                                 * (k0[0] * k0[2] * cosPsi - k0[1] * sinPsi))
+                                / temp + cosTheta * k0[0];
+                        k1[1] = (sinTheta
+                                 * (k0[1] * k0[2] * cosPsi + k0[0] * sinPsi))
+                                / temp + cosTheta * k0[1];
+                        k1[2] = -sinTheta * cosPsi * temp + cosTheta * k0[2];
                     }
 
-                    MCfloat mod = sqrt(k1[0]*k1[0] + k1[1]*k1[1] + k1[2]*k1[2]);
-                    k1[0]/=mod;
-                    k1[1]/=mod;
-                    k1[2]/=mod;
+                    MCfloat mod = sqrt(k1[0] * k1[0] + k1[1] * k1[1]
+                            + k1[2] * k1[2]);
+                    k1[0] /= mod;
+                    k1[1] /= mod;
+                    k1[2] /= mod;
                 }
             }
-            else { //no scattering
-                length = numeric_limits<MCfloat>::infinity(); //handleInterface() will take the walker to the closest interface
+            else //no scattering
+            {
+                // handleInterface() will take the walker to the closest
+                // interface
+                length = numeric_limits<MCfloat>::infinity();
             }
 
             //compute new position
-            r1[0] = r0[0] + length*k1[0];
-            r1[1] = r0[1] + length*k1[1];
-            r1[2] = r0[2] + length*k1[2];
+            r1[0] = r0[0] + length * k1[0];
+            r1[1] = r0[1] + length * k1[1];
+            r1[2] = r0[2] + length * k1[2];
 
 #ifdef DEBUG_TRAJECTORY
             printf("\t%lf\n",k1[2]);
 #endif
 
-            if(r1[2] >= currLayerLowerBoundary && r1[2] <= currLayerUpperBoundary)
+            if(r1[2] >= currLayerLowerBoundary
+                    && r1[2] <= currLayerUpperBoundary)
             {
                 swap_r0_r1();
                 swap_k0_k1();
 
-                totalLengthInCurrentLayer+=length;
+                totalLengthInCurrentLayer += length;
                 kNeedsToBeScattered = true;
             }
             else {
@@ -537,8 +555,8 @@ bool Simulation::runSingleThread() {
 
 
 #ifdef DEBUG_TRAJECTORY
-            printf("%d\t",layer0);
-            printf("%lf\t%lf\t%lf\t\t%lf", r0[0], r0[1], r0[2],k0[2]);
+            printf("%d\t", layer0);
+            printf("%lf\t%lf\t%lf\t\t%lf", r0[0], r0[1], r0[2], k0[2]);
 #endif
 
 #ifdef ENABLE_TRAJECTORY
@@ -556,7 +574,7 @@ bool Simulation::runSingleThread() {
 #endif
 
 #ifdef DEBUG_TRAJECTORY
-        printf("\nwalker reached layer %d\n",layer0);
+        printf("\nwalker reached layer %d\n", layer0);
 #endif
         n++;
     }
@@ -577,7 +595,7 @@ bool Simulation::runSingleThread() {
 
 unsigned int Simulation::layerAt(const MCfloat *r0) const {
     MCfloat z = r0[2];
-    for (unsigned int i = 0; i < nLayers+1; ++i) {
+    for (unsigned int i = 0; i < nLayers + 1; ++i) {
         if(z <= sample()->zBoundaries()->at(i))
             return i;
     }
@@ -590,19 +608,20 @@ unsigned int Simulation::layerAt(const MCfloat *r0) const {
  */
 
 void Simulation::handleInterface() {
-    MCfloat zBoundary=0;
+    MCfloat zBoundary = 0;
     layer1 = layer0 + sign(k1[2]);
-    zBoundary = upperZBoundaries[min(layer0,layer1)];
+    zBoundary = upperZBoundaries[min(layer0, layer1)];
 
     MCfloat t = (zBoundary - r0[2]) / k1[2];
+    // move to intersection with interface, r1 is now meaningless
     for (int i = 0; i < 3; ++i) {
-        r0[i] = r0[i] + k1[i]*t; //move to intersection with interface, r1 is now meaningless
+        r0[i] = r0[i] + k1[i] * t;
     }
 
-    totalLengthInCurrentLayer+=t;
+    totalLengthInCurrentLayer += t;
     kNeedsToBeScattered = false;
 
-    //so we updated r0, now it's time to update k0
+    // so we updated r0, now it's time to update k0
 
     n0 = materials[layer0].n;
     n1 = materials[layer1].n;
@@ -615,8 +634,8 @@ void Simulation::handleInterface() {
     }
     else { //handle reflection and refraction
 
-        sinTheta0 = sqrt(1 - pow(k1[2],2));
-        sinTheta1 = n0*sinTheta0/n1;
+        sinTheta0 = sqrt(1 - pow(k1[2], 2));
+        sinTheta1 = n0 * sinTheta0 / n1;
 
         if(sinTheta1 > 1) {
 #ifdef DEBUG_TRAJECTORY
@@ -625,7 +644,7 @@ void Simulation::handleInterface() {
             reflect();
         }
         else {
-            cosTheta1 = sqrt(1 - pow(sinTheta1,2)); //will also be used by refract()
+            cosTheta1 = sqrt(1 - pow(sinTheta1, 2)); //will also be used by refract()
             if(fresnelReflectionsEnabled)
             {
                 MCfloat r = reflectionProbability();
@@ -686,8 +705,12 @@ void Simulation::checkIfWalkerExitedSample() {
 
 MCfloat Simulation::reflectionProbability() {
     MCfloat r;
-    MCfloat cThetaSum, cThetaDiff; //cos(Theta0 + Theta1) and cos(Theta0 - Theta1)
-    MCfloat sThetaSum, sThetaDiff; //sin(Theta0 + Theta1) and sin(Theta0 - Theta1)
+
+    //cos(Theta0 + Theta1) and cos(Theta0 - Theta1)
+    MCfloat cThetaSum, cThetaDiff;
+
+    //sin(Theta0 + Theta1) and sin(Theta0 - Theta1)
+    MCfloat sThetaSum, sThetaDiff;
 
     MCfloat cosTheta0 = fabs(k1[2]);
 
@@ -696,11 +719,13 @@ MCfloat Simulation::reflectionProbability() {
         r *= r;
     }
     else { //general case
-        cThetaSum = cosTheta0*cosTheta1 - sinTheta0*sinTheta1;
-        cThetaDiff = cosTheta0*cosTheta1 + sinTheta0*sinTheta1;
-        sThetaSum = sinTheta0*cosTheta1 + cosTheta0*sinTheta1;
-        sThetaDiff = sinTheta0*cosTheta1 - cosTheta0*sinTheta1;
-        r = 0.5*sThetaDiff*sThetaDiff*(cThetaDiff*cThetaDiff+cThetaSum*cThetaSum)/(sThetaSum*sThetaSum*cThetaDiff*cThetaDiff);
+        cThetaSum = cosTheta0 * cosTheta1 - sinTheta0 * sinTheta1;
+        cThetaDiff = cosTheta0 * cosTheta1 + sinTheta0 * sinTheta1;
+        sThetaSum = sinTheta0 * cosTheta1 + cosTheta0 * sinTheta1;
+        sThetaDiff = sinTheta0 * cosTheta1 - cosTheta0 * sinTheta1;
+        r = 0.5 * sThetaDiff * sThetaDiff
+                * (cThetaDiff * cThetaDiff + cThetaSum * cThetaSum)
+                / (sThetaSum * sThetaSum * cThetaDiff * cThetaDiff);
     }
     return r;
 }
@@ -723,11 +748,11 @@ void Simulation::refract() {
     printf("refract ...\n");
 #endif
 
-    if(fabs(k1[2]) <= COSZERO)  //not normal incidence
+    if(fabs(k1[2]) <= COSZERO)  // not normal incidence
     {
         k1[0] *= n0/n1;
         k1[1] *= n0/n1;
-        k1[2] = sign<MCfloat>(k1[2])*cosTheta1; //cosTheta1 is positive
+        k1[2] = sign<MCfloat>(k1[2]) * cosTheta1; // cosTheta1 is positive
     }
     switchToLayer(layer1);
 }
@@ -761,8 +786,8 @@ void Simulation::appendWalker(walkerType type)
     photonCounters[type]++;
     Walker *w = &walkerBuf[nBuf++];
 
-    memcpy(w->r0, r0, 3*sizeof(MCfloat));
-    memcpy(w->k0, k1, 3*sizeof(MCfloat));
+    memcpy(w->r0, r0, 3 * sizeof(MCfloat));
+    memcpy(w->k0, k1, 3 * sizeof(MCfloat));
     w->walkTime = walker.walkTime;
     w->type = type;
 
@@ -787,18 +812,22 @@ void Simulation::appendWalker(walkerType type)
 
 void Simulation::reportProgress() const
 {
-    string s = str( format("Seed %u: progress = %.1lf%% (%u / %u) ") % currentSeed() % (100.*currentPhoton()/nPhotons()) % currentPhoton() % nPhotons());
+    string s = str(format("Seed %u: progress = %.1lf%% (%u / %u) ")
+                   % currentSeed()
+                   % (100.*currentPhoton()/nPhotons())
+                   % currentPhoton()
+                   % nPhotons());
     stringstream ss;
     ss << s;
     if(currentPhoton() > 0) {
         time_t now;
         time(&now);
         double secsPerWalker = difftime(now,startTime) / currentPhoton();
-        time_t eta = now + secsPerWalker*(nPhotons()-currentPhoton());
+        time_t eta = now + secsPerWalker * (nPhotons() - currentPhoton());
         struct tm * timeinfo;
         timeinfo = localtime (&eta);
         char buffer [80];
-        strftime (buffer,80,"%F %T",timeinfo);
+        strftime (buffer, 80, "%F %T", timeinfo);
         ss << "ETA: " << buffer;
     }
     logMessage(ss.str());
@@ -878,8 +907,8 @@ void Simulation::saveRawOutput()
 {
     H5OutputFile file;
 
-    if(access(outputFile,F_OK)<0) {
-        file.newFile(outputFile,rawOutputEnabled);
+    if(access(outputFile, F_OK)<0) {
+        file.newFile(outputFile, rawOutputEnabled);
     }
     else if(!file.openFile(outputFile)) {
         logMessage("Cannot open %s, writing to output.h5", outputFile);
@@ -900,13 +929,17 @@ void Simulation::saveRawOutput()
     for (uint type = 0; type < 4; ++type) {
         //exit points
         if(photonCounters[type] && exitPointsSaveFlags & walkerTypeToFlag(type))
-            file.appendExitPoints((walkerType)type, exitPoints[type].data(),exitPoints[type].size());
+            file.appendExitPoints((walkerType)type, exitPoints[type].data(),
+                                  exitPoints[type].size());
         //walk times
         if(photonCounters[type] && walkTimesSaveFlags & walkerTypeToFlag(type))
-            file.appendWalkTimes((walkerType)type, walkTimes[type].data(),walkTimes[type].size());
+            file.appendWalkTimes((walkerType)type, walkTimes[type].data(),
+                                 walkTimes[type].size());
         //exit k vectors
-        if(photonCounters[type] && exitKVectorsSaveFlags & walkerTypeToFlag(type))
-            file.appendExitKVectors((walkerType)type, exitKVectors[type].data(),exitKVectors[type].size());
+        if(photonCounters[type]
+                && exitKVectorsSaveFlags & walkerTypeToFlag(type))
+            file.appendExitKVectors((walkerType)type, exitKVectors[type].data(),
+                                    exitKVectors[type].size());
     }
 
     file.close();
@@ -933,7 +966,7 @@ void Simulation::describe_impl() const
 
 void Simulation::switchToLayer(const uint layer)
 {
-    walker.walkTime += totalLengthInCurrentLayer/currentMaterial->v;
+    walker.walkTime += totalLengthInCurrentLayer / currentMaterial->v;
     totalLengthInCurrentLayer = 0;
     updateLayerVariables(layer);
 }
@@ -950,13 +983,13 @@ void Simulation::updateLayerVariables(const uint layer) {
     if(layer0 == layer)
         return;
     layer0=layer;
-    currentMaterial=&materials[layer0];
+    currentMaterial = &materials[layer0];
     deflCosine.setg(currentMaterial->g);
     currentMus = mus[layer0];
     if(layer0 == 0)
         currLayerLowerBoundary = -numeric_limits<MCfloat>::infinity();
     else
-        currLayerLowerBoundary = upperZBoundaries[layer0-1];
+        currLayerLowerBoundary = upperZBoundaries[layer0 - 1];
     if(layer0 <= nLayers)
         currLayerUpperBoundary = upperZBoundaries[layer0];
     else
@@ -967,7 +1000,7 @@ void Simulation::flushHistogram()
 {
     for (size_t i = 0; i < hists.size(); ++i) {
         Histogram *h = hists[i];
-        h->run(walkerBuf,nBuf);
+        h->run(walkerBuf, nBuf);
     }
     nBuf = 0;
 }

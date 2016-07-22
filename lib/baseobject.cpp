@@ -209,7 +209,9 @@ bool BaseObject::sanityCheck() const
     bool ok = true;
     const BaseObject *obj;
     std::list<const BaseObject *const *>::const_iterator iterator;
-    for (iterator = objectsToCheck.begin(); iterator != objectsToCheck.end(); ++iterator) {
+    for (iterator = objectsToCheck.begin();
+         iterator != objectsToCheck.end();
+         ++iterator) {
         const BaseObject *const *objpp = *iterator;
         obj = *objpp;
         if(obj == NULL) {

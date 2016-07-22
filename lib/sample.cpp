@@ -46,7 +46,7 @@ Sample::Sample(BaseObject *parent) :
 void Sample::addLayer(Material *material, double thickness) {
     _nLayers++;
     _zBoundaries.push_back(_zBoundaries.back() + thickness);
-    materials.insert(materials.end()-1,material);
+    materials.insert(materials.end() - 1, material);
 }
 
 /**
@@ -63,7 +63,7 @@ void Sample::addPreLayer(Material *material, double thickness)
 {
     _nLayers++;
     _zBoundaries.push_front(_zBoundaries.front() - thickness);
-    materials.insert(materials.begin()+1,material);
+    materials.insert(materials.begin() + 1,material);
 }
 
 /**
@@ -82,7 +82,8 @@ void Sample::setSurroundingEnvironment(Material *material) {
  * @param rightMaterial
  */
 
-void Sample::setSurroundingEnvironment(Material *leftMaterial, Material *rightMaterial) {
+void Sample::setSurroundingEnvironment(Material *leftMaterial,
+                                       Material *rightMaterial) {
     materials.pop_back();
     materials.pop_front();
     materials.push_front(leftMaterial);
@@ -154,7 +155,8 @@ void Sample::describe_impl() const
         const Material *mat = materials.at(i);
         ss << "Layer  " << i;
         if(i > 0 && i <= _nLayers)
-            ss << " thickness = " << _zBoundaries.at(i) - _zBoundaries.at(i-1) << "\t";
+            ss << " thickness = " <<
+                  _zBoundaries.at(i) - _zBoundaries.at(i-1) << "\t";
         else
             ss << " thickness = infinity";
         ss << "\tMaterial: n = " << mat->n << "\tv = " << mat->v;

@@ -146,11 +146,15 @@ private:
     bool saveTrajectory;
     bool fresnelReflectionsEnabled;
     bool rawOutputEnabled;
-    unsigned int walkTimesSaveFlags, exitPointsSaveFlags, exitKVectorsDirsSaveFlags, exitKVectorsSaveFlags;
+    unsigned int walkTimesSaveFlags;
+    unsigned int exitPointsSaveFlags;
+    unsigned int exitKVectorsDirsSaveFlags;
+    unsigned int exitKVectorsSaveFlags;
     MCfloat timeOriginZ;
 
     //walker counters
-    u_int64_t _totalWalkers;  /**< @brief total number of walkers to be simulated*/
+    u_int64_t _totalWalkers;  /**< @brief total number of walkers to be
+                                   simulated*/
     u_int64_t photonCounters[4];
     u_int64_t n;
 
