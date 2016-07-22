@@ -1,5 +1,9 @@
 project(libMCPlusPlus)
 
+include_directories(include)
+file(GLOB SRC . *.cpp)
+file(GLOB HEADERS include/MCPlusPlus/*.h)
+
 FIND_PACKAGE(Boost REQUIRED thread system)
 SET(Boost_USE_MULTITHREAD ON)
 include_directories( ${Boost_INCLUDE_DIRS} )
@@ -36,10 +40,6 @@ if(BUILD_PYTHON_BINDINGS)
     install(FILES ${PROJECT_BINARY_DIR}/pymcplusplus.py DESTINATION lib)
 endif()
 
-
-include_directories(include)
-file(GLOB SRC . *.cpp)
-file(GLOB HEADERS include/MCPlusPlus/*.h)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fPIC")
 
