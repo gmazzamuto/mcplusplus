@@ -27,8 +27,8 @@ Sample::Sample(BaseObject *parent) :
     _nLayers=0;
     _zBoundaries.push_back(0);
 
-    materials.push_front(new Vacuum());
-    materials.push_back(new Vacuum());
+    materials.push_front(&vacuum);
+    materials.push_back(&vacuum);
 }
 
 /**

@@ -4,6 +4,7 @@ using namespace MCPP;
 
 void testBilayer(const char *outputFileName) {
     Material mat1, mat2;
+    Air air;
 
     mat1.n=1.5;
     mat1.ls = 1;
@@ -16,7 +17,7 @@ void testBilayer(const char *outputFileName) {
     Sample *sample = new Sample();
     sample->addLayer(&mat1,40);
     sample->addLayer(&mat2,40);
-    sample->setSurroundingEnvironment(new Air());
+    sample->setSurroundingEnvironment(&air);
 
     Source *src = new PencilBeamSource();
     src->setWalkTimeDistribution(new DeltaDistribution(0));

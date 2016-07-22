@@ -387,7 +387,7 @@ void Histogram::saveToFile(const char *fileName) const
     }
 
     file->writeColumnNames(ncols, colNames);
-
+    file->close();
 
     free(data);
     delete file;

@@ -52,6 +52,7 @@ private:
     deque<MCfloat> _zBoundaries;
     deque<Material*> materials;
 
+    Vacuum vacuum;
     virtual void describe_impl() const;
 };
 

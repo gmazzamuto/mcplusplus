@@ -154,6 +154,10 @@ Simulation::~Simulation() {
         mostRecentInstance = NULL;
     if(outputFile != NULL)
         free(outputFile);
+    free(r0);
+    free(r1);
+    free(k0);
+    free(k1);
 }
 
 /**
@@ -366,6 +370,7 @@ void Simulation::runMultipleThreads()
 
         sims.at(n) = NULL;
         delete sim;
+        delete thread;
     }
 }
 

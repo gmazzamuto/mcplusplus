@@ -183,13 +183,18 @@ void BaseObject::describe() const
 
 string BaseObject::typeName() const
 {
-    string str;
+    char *buf;
+    size_t length = 80;
+    buf = (char *)malloc(length*sizeof(char));
+    int status = -1;
 #ifdef __GNUC__
-    str = abi::__cxa_demangle(typeid(*this).name(), 0, 0, 0);
-#else
-    str = "UNKNOWN OBJECT";
+    abi::__cxa_demangle(typeid(*this).name(), buf, &length, &status);
 #endif
-    return str;
+    if(status < 0)
+        sprintf(buf, "UNKNOWN OBJECT");
+    string s = string(buf);
+    free(buf);
+    return s;
 }
 
 /**

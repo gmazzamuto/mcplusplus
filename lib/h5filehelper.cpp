@@ -260,6 +260,8 @@ bool H5FileHelper::newDataset(const char *datasetName, int ndims,
         dataSpace = new DataSpace (ndims, dims, maxdims);
         dataSet  = new DataSet(file->createDataSet(datasetName, type,
                                                    *dataSpace, plist));
+        delete dataSet;
+        delete dataSpace;
         openDataSet(datasetName);
     }
     catch (Exception error) {
