@@ -236,7 +236,7 @@ g++ -I/home/yourname/local/include -L/home/yourname/local/lib example.cpp -o exa
 assuming again MCPlusPlus installed in @c /home/yourname/local/, and run it:
 
 \code
-$ ./example.py
+$ ./example
 \endcode
 
 See the last part of \ref PythonTutorial "Python Tutorial" for an explanation
