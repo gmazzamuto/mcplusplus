@@ -444,6 +444,10 @@ bool Simulation::runSingleThread() {
     layer0 = numeric_limits<unsigned int>::max();
 
     while(n < _totalWalkers && !forceTermination) {
+#ifdef DEBUG_TRAJECTORY
+        printf("===============\nNew walker\n");
+#endif
+
         if(nBuf == WALKER_BUFSIZE)
             flushHistogram();
 
@@ -580,7 +584,7 @@ bool Simulation::runSingleThread() {
 #endif
 
 #ifdef DEBUG_TRAJECTORY
-        printf("\nwalker reached layer %d\n", layer0);
+        printf("\t%lf\nwalker reached layer %d\n", k1[2], layer0);
 #endif
         n++;
     }
