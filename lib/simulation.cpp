@@ -454,6 +454,7 @@ bool Simulation::runSingleThread() {
             currentTrajectory = new vector<MCfloat>();
 
         source->spin(&walker);
+        memset(k1, 0, 3 * sizeof(MCfloat));
         memcpy(r0,walker.r0, 3 * sizeof(MCfloat));
         memcpy(k0,walker.k0, 3 * sizeof(MCfloat));
         if(r0[2] == -1 * numeric_limits<MCfloat>::infinity())
