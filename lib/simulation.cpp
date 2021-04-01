@@ -261,7 +261,7 @@ void Simulation::setOutputFileName(const char *name)
 
 void Simulation::run() {
     if(outputFile == NULL) {
-        outputFile = "output.h5";
+        sprintf(outputFile, "output.h5");
         logMessage("No output file name provided, using %s", outputFile);
     }
     if(access(outputFile,F_OK) >= 0) {
@@ -822,13 +822,14 @@ void Simulation::appendWalker(walkerType type)
 
 void Simulation::reportProgress() const
 {
-    string s = str(format("Seed %u: progress = %.1lf%% (%u / %u) ")
-                   % currentSeed()
-                   % (100.*currentPhoton()/nPhotons())
-                   % currentPhoton()
-                   % nPhotons());
+    char buffer [80];
+    sprintf(buffer, "Seed %u: progress = %.1lf%% (%lu / %lu) ",
+            currentSeed(),
+            (100.*currentPhoton()/nPhotons()),
+            currentPhoton(),
+            nPhotons());
     stringstream ss;
-    ss << s;
+    ss << buffer;
     if(currentPhoton() > 0) {
         time_t now;
         time(&now);
@@ -836,7 +837,6 @@ void Simulation::reportProgress() const
         time_t eta = now + secsPerWalker * (nPhotons() - currentPhoton());
         struct tm * timeinfo;
         timeinfo = localtime (&eta);
-        char buffer [80];
         strftime (buffer, 80, "%F %T", timeinfo);
         ss << "ETA: " << buffer;
     }
