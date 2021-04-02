@@ -96,11 +96,11 @@ private:
 
     MCfloat firstBinCenter[2];
     MCfloat firstBinEdge[2];
-    size_t nBins[2];
+    uint64_t nBins[2];
     MCfloat *moments;
 
     MCfloat degPerRad;
-    size_t totBins, totExponents;
+    uint64_t totBins, totExponents;
     vector<double> momentExponents;
     u_int64_t scale;
     u_int64_t *histo;
