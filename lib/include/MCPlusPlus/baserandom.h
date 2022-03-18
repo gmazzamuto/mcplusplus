@@ -30,7 +30,7 @@ namespace MCPP {
  * drawing numbers is negligible)
 */
 
-typedef mt19937_64 MCEngine;
+typedef boost::random::mt19937_64 MCEngine;
 
 /**
  * @brief The BaseRandom class is the base class for all the objects needing a

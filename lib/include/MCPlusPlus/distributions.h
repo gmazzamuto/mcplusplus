@@ -117,7 +117,7 @@ private:
     void reconstructDistribution();
     virtual BaseObject* clone_impl() const;
 
-    normal_distribution<MCfloat> *distribution;
+    boost::random::normal_distribution<MCfloat> *distribution;
     MCfloat mean, sigma;
 };
 
@@ -139,11 +139,11 @@ public:
     virtual MCfloat spin() const;
     MCfloat spinOpen() const;
 
-private:    
+private:
     void reconstructDistribution();
     virtual BaseObject* clone_impl() const;
 
-    uniform_real_distribution<MCfloat> distribution;
+    boost::random::uniform_real_distribution<MCfloat> distribution;
     MCfloat min, max;
 };
 
@@ -171,7 +171,7 @@ private:
     void reconstructDistribution();
     virtual BaseObject* clone_impl() const;
 
-    exponential_distribution<MCfloat> distribution;
+    boost::random::exponential_distribution<MCfloat> distribution;
     MCfloat lambda;
 };
 
