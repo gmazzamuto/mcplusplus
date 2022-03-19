@@ -624,9 +624,9 @@ void Simulation::handleInterface() {
 
     MCfloat t = (zBoundary - r0[2]) / k1[2];
     // move to intersection with interface, r1 is now meaningless
-    for (int i = 0; i < 3; ++i) {
-        r0[i] = r0[i] + k1[i] * t;
-    }
+    r0[0] = r0[0] + k1[0] * t;
+    r0[1] = r0[1] + k1[1] * t;
+    r0[2] = zBoundary;
 
     totalLengthInCurrentLayer += t;
     kNeedsToBeScattered = false;
